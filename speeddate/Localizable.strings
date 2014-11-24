@@ -1,0 +1,19 @@
+/* 
+  Localizable.strings
+  speeddate
+
+  Created by studio76 on 16.10.14.
+  Copyright (c) 2014 Studio76. All rights reserved.
+*/
+
+
+///SIDEBAR MENU SECTION
+
+"start_match"      = "Start Match";
+"menu_message"     = "Message";
+"menu_profile"     = "Profile";
+"menu_share"       = "Share&Invite";
+"menu_vip"         = "Vip member";
+"menu_terms"       = "Terms";
+"menu_app"         = "Useful applications";
+"menu_logout"      = "Logout";

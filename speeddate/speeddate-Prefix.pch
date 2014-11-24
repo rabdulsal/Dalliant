@@ -1,0 +1,54 @@
+//
+//  Prefix header
+//
+//  The contents of this file are implicitly included at the beginning of every source file.
+//
+
+#import <Availability.h>
+
+#define receivedMessage @"receivedMessage"
+
+#ifndef __IPHONE_5_0
+#warning "This project uses features only available in iOS SDK 5.0 and later."
+#endif
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+    #import <Parse/Parse.h>
+    #import <Parse/PFObject+Subclass.h>
+    #import "SWRevealViewController.h"
+#endif
+#define YELLOW_COLOR [UIColor colorWithRed:0.82 green:0.91 blue:0.32 alpha:1]
+#define RED_COLOR [UIColor colorWithRed:0.82 green:0.91 blue:0.32 alpha:1] /*#cb0048*/
+#define BLACK_COLOR [UIColor blackColor]
+#define BLUE_COLOR [UIColor colorWithRed:0.0/255.0 green:168.0/255.0 blue:255.0/255.0 alpha:1.0]
+#define BLUEDARK_COLOR [UIColor colorWithRed:34.0/255.0 green:213.0/255.0 blue:181.0/255.0 alpha:1.0]
+#define WHITE_COLOR [UIColor whiteColor]
+#define GRAY_COLOR [UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1]
+#define ORANGE_COLOR [UIColor colorWithRed:0.98 green:0.41 blue:0 alpha:1]
+#define JOHN_GRAY [UIColor colorWithRed:0.83 green:0.82 blue:0.79 alpha:1];
+#define JOHN_ROCK [UIColor colorWithRed:0.52 green:0.55 blue:0.55 alpha:1];
+#define JOHN_SPHERE [UIColor colorWithRed:0.54 green:0.52 blue:0.50 alpha:1];
+#define JOHN_DARK [UIColor colorWithRed:0.26 green:0.29 blue:0.30 alpha:1];
+#define JOHN_SAND [UIColor colorWithRed:0.78 green:0.72 blue:0.62 alpha:1];
+#define JOHN_WOOD [UIColor colorWithRed:0.57 green:0.38 blue:0.24 alpha:1];
+
+#define ORANGE_DEEP_COLOR [UIColor colorWithRed:237.0/255.0 green:157.0/255.0 blue:17.0/255.0 alpha:1.0]
+#define SEA_COLOR         [UIColor colorWithRed:3.0/255.0 green:184.0/255.0 blue:156.0/255.0 alpha:1.0]
+#define SEA_DEEP_COLOR    [UIColor colorWithRed:3.0/255.0 green:133.0/255.0 blue:113.0/255.0 alpha:1.0]
+
+#define KEYBOARD_HEIGHT 217.0
+#define MAX_AGE 99+1
+#define MIN_AGE 18
+#define DEFAULT_DISTANCE 20
+
+#define MENU_GRAY_DEEP        [UIColor colorWithRed:52.0/255.0 green:56.0/255.0 blue:60.0/255.0 alpha:1.0]
+#define MENU_BLUE             [UIColor colorWithRed:61.0/255.0 green:191.0/255.0 blue:217.0/255.0 alpha:1.0]
+#define MENU_GRAY_LIGHT       [UIColor colorWithRed:60.0/255.0 green:64.0/255.0 blue:68.0/255.0 alpha:1.0]
+
+#define RED_LIGHT             [UIColor colorWithRed:241.0/255.0 green:91.0/255.0 blue:78.0/255.0 alpha:1.0]
+#define RED_DEEP              [UIColor colorWithRed:194.0/255.0 green:69.0/255.0 blue:59.0/255.0 alpha:1.0]
+#define RED_OMNY              [UIColor colorWithRed:255.0/255.0 green:178.0/255.0 blue:171.0/255.0 alpha:1.0]
+
+
