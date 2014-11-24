@@ -1281,4 +1281,7 @@
 
 
 
+- (IBAction)backToPreferences:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
+}
 @end

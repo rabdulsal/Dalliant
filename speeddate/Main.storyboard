@@ -826,11 +826,14 @@
                     </view>
                     <navigationItem key="navigationItem" id="Xce-6S-nEr">
                         <nil key="title"/>
-                        <barButtonItem key="leftBarButtonItem" image="bubble" id="7Gj-y8-gJo">
+                        <barButtonItem key="leftBarButtonItem" title="Preferences" id="7Gj-y8-gJo">
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <action selector="backToPreferences:" destination="aqZ-SE-PFE" id="hwg-dd-e5N"/>
+                            </connections>
                         </barButtonItem>
                         <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="T8I-K2-bjb">
-                            <rect key="frame" x="55" y="-18" width="257" height="80"/>
+                            <rect key="frame" x="106" y="-18" width="206" height="80"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <state key="normal" image="sdlogo.png">
                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -843,14 +846,13 @@
                         <outlet property="activityLabel" destination="aVY-JI-f2V" id="COR-sD-u3h"/>
                         <outlet property="dislikeButton" destination="AeO-SB-QWK" id="Sqc-wg-DRG"/>
                         <outlet property="likeButton" destination="1J8-9X-ye5" id="Rkv-fM-0e9"/>
-                        <outlet property="sidebarButton" destination="7Gj-y8-gJo" id="2XD-pa-WrM"/>
                         <segue destination="rDU-7y-piv" kind="modal" identifier="match" id="BiY-fr-kOo"/>
                         <segue destination="IsN-PA-W7G" kind="push" identifier="config" id="oXm-ri-1Lw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ki1-Uz-LU0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1461" y="59"/>
+            <point key="canvasLocation" x="976" y="298"/>
         </scene>
         <!--Applications-->
         <scene sceneID="9Xr-ZS-IUi">
@@ -946,7 +948,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QTR-7U-6v7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="886" y="431"/>
+            <point key="canvasLocation" x="772" y="1883"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="sc0-VA-FxC">
@@ -2212,7 +2214,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rXd-bm-WVB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1351" y="-677"/>
+            <point key="canvasLocation" x="1615" y="-349"/>
         </scene>
         <!--Match Filters-->
         <scene sceneID="73x-Na-ffI">
@@ -2716,6 +2718,12 @@
                         <barButtonItem key="leftBarButtonItem" image="bubble" id="Xq4-wa-qj1">
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" image="heart_menu.png" id="ffE-DJ-QqG">
+                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <segue destination="aqZ-SE-PFE" kind="push" identifier="startBaeDar" id="WJE-pO-Iht"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
@@ -2793,14 +2801,14 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="MjG-Tl-7wb"/>
         <segue reference="VlF-20-DHW"/>
         <segue reference="Qh3-Ge-Ehw"/>
         <segue reference="tAX-qX-dGH"/>
-        <segue reference="MjG-Tl-7wb"/>
         <segue reference="gPx-w2-9WG"/>
-        <segue reference="U3T-S3-jZm"/>
-        <segue reference="vo7-ud-5cu"/>
+        <segue reference="WJE-pO-Iht"/>
         <segue reference="oXm-ri-1Lw"/>
+        <segue reference="vo7-ud-5cu"/>
         <segue reference="h7w-Ho-pqn"/>
         <segue reference="Qy0-fE-0Nr"/>
     </inferredMetricsTieBreakers>

@@ -19,4 +19,6 @@
 
 @property(nonatomic, strong) GADBannerView *adBanner;
 
+- (IBAction)backToPreferences:(id)sender;
+
 @end
