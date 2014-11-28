@@ -146,8 +146,6 @@
         self.vipMemberCell.backgroundColor = [UIColor clearColor];
         self.termsCell.backgroundColor = [UIColor clearColor];
         self.userNearCell.backgroundColor = [UIColor clearColor];
-        
-        NSLog(@"ProfileVC Run");
     }
     
     if (indexPath.row == 3) {
@@ -160,8 +158,6 @@
         self.vipMemberCell.backgroundColor = [UIColor clearColor];
         self.termsCell.backgroundColor = [UIColor clearColor];
         self.appCell.backgroundColor = [UIColor clearColor];
-        
-        NSLog(@"NearMeVC Run");
     }
 
 // ----------------------------------- REMOVE -----------------------------------------

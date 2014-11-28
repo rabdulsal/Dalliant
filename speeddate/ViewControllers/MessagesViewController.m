@@ -189,6 +189,8 @@
     }
     return self.usersArray.count;
 }
+
+#pragma mark - TAP TABLEVIEWCELL SEGUE TO CHAT
 /*
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -293,21 +295,13 @@
         
     }];
     
-    
-    
-    
-    
-    
 }
 
 #pragma mark GADRequest generation
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     
-    
-    
     return 0;
-
     
 }
 

@@ -49,6 +49,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    NSLog(@"UserNearMeVC run");
+    /*
 #if (TARGET_IPHONE_SIMULATOR)
     
 #else
@@ -59,7 +61,7 @@
     
 #endif
     
-    [self checkFirstTime];
+    //[self checkFirstTime];
     
     _sidebarButton.target = self.revealViewController;
     _sidebarButton.action = @selector(revealToggle:);
@@ -68,8 +70,8 @@
     self.navigationController.navigationBar.barTintColor = RED_LIGHT;
     self.navigationItem.title = @"Speed Dating";
     
-    self.photoArray =[[NSMutableArray alloc]init];
-    
+    self.photoArray =[[NSMutableArray alloc]init];*/
+    /*
     PFQuery* curQuery = [UserParseHelper query];
     
     [curQuery whereKey:@"username" equalTo:[UserParseHelper currentUser].username];
@@ -96,10 +98,10 @@
     }
 
     
-    self.segmentedControl.selectedSegmentIndex = 2;
+    self.segmentedControl.selectedSegmentIndex = 2;*/
     
 }
-
+/*
 #pragma mark - LOCATION MANAGER SERVICES
 
 -(void)currentLocationIdentifier
@@ -199,7 +201,7 @@
     }];
     
     
-}
+}*/
 
 #pragma mark - COLLECTIONVIEW LAYOUT
 
@@ -257,7 +259,7 @@
     return cell;
 }
 
-
+/*
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
     
@@ -328,7 +330,8 @@
     
     [self queryParseMethod];
     
-}
+    
+}*/
 
 
 @end

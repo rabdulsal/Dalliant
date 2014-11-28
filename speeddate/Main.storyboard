@@ -826,14 +826,14 @@
                     </view>
                     <navigationItem key="navigationItem" id="Xce-6S-nEr">
                         <nil key="title"/>
-                        <barButtonItem key="leftBarButtonItem" title="Preferences" id="7Gj-y8-gJo">
+                        <barButtonItem key="leftBarButtonItem" title="Filters" id="7Gj-y8-gJo">
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="backToPreferences:" destination="aqZ-SE-PFE" id="hwg-dd-e5N"/>
                             </connections>
                         </barButtonItem>
                         <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="T8I-K2-bjb">
-                            <rect key="frame" x="106" y="-18" width="206" height="80"/>
+                            <rect key="frame" x="61" y="-18" width="251" height="80"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <state key="normal" image="sdlogo.png">
                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -846,8 +846,9 @@
                         <outlet property="activityLabel" destination="aVY-JI-f2V" id="COR-sD-u3h"/>
                         <outlet property="dislikeButton" destination="AeO-SB-QWK" id="Sqc-wg-DRG"/>
                         <outlet property="likeButton" destination="1J8-9X-ye5" id="Rkv-fM-0e9"/>
-                        <segue destination="rDU-7y-piv" kind="modal" identifier="match" id="BiY-fr-kOo"/>
+                        <segue destination="rDU-7y-piv" kind="modal" identifier="test_match" id="BiY-fr-kOo"/>
                         <segue destination="IsN-PA-W7G" kind="push" identifier="config" id="oXm-ri-1Lw"/>
+                        <segue destination="km2-NM-f36" kind="push" identifier="viewMatches" id="y3F-dK-Mda"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ki1-Uz-LU0" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -929,7 +930,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5nJ-ws-5nA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2398" y="383"/>
+            <point key="canvasLocation" x="1384" y="753"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="2AV-06-Mvh">
@@ -1088,7 +1089,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rch-tC-hrL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="755" y="1090"/>
+            <point key="canvasLocation" x="1719" y="239"/>
         </scene>
         <!--Who See me-->
         <scene sceneID="Bb4-p6-ZMC">
@@ -1283,7 +1284,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FiK-9G-PdV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1827" y="690"/>
+            <point key="canvasLocation" x="1970" y="840"/>
         </scene>
         <!--Your Profile-->
         <scene sceneID="ugs-0I-qKD">
@@ -1949,7 +1950,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5LK-z1-DqZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1226" y="1394"/>
+            <point key="canvasLocation" x="1301" y="1607"/>
         </scene>
         <!--User Messages View Controller-->
         <scene sceneID="obj-N2-ofK">
@@ -2214,7 +2215,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rXd-bm-WVB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1615" y="-349"/>
+            <point key="canvasLocation" x="1553" y="-407"/>
         </scene>
         <!--Match Filters-->
         <scene sceneID="73x-Na-ffI">
@@ -2766,6 +2767,24 @@
             </objects>
             <point key="canvasLocation" x="385" y="1165"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="zqs-zp-7Xg">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cEk-hW-G6w" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="oHl-BV-lJ4" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="50V-pt-1Sk">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="km2-NM-f36" kind="relationship" relationship="rootViewController" id="n1P-ch-ajp"/>
+                    </connections>
+                </navigationController>
+            </objects>
+            <point key="canvasLocation" x="2806" y="-265"/>
+        </scene>
     </scenes>
     <resources>
         <image name="about.png" width="36" height="36"/>
@@ -2801,15 +2820,16 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="MjG-Tl-7wb"/>
+        <segue reference="U3T-S3-jZm"/>
         <segue reference="VlF-20-DHW"/>
         <segue reference="Qh3-Ge-Ehw"/>
         <segue reference="tAX-qX-dGH"/>
         <segue reference="gPx-w2-9WG"/>
-        <segue reference="WJE-pO-Iht"/>
-        <segue reference="oXm-ri-1Lw"/>
+        <segue reference="MjG-Tl-7wb"/>
         <segue reference="vo7-ud-5cu"/>
-        <segue reference="h7w-Ho-pqn"/>
+        <segue reference="oXm-ri-1Lw"/>
+        <segue reference="y3F-dK-Mda"/>
         <segue reference="Qy0-fE-0Nr"/>
+        <segue reference="h7w-Ho-pqn"/>
     </inferredMetricsTieBreakers>
 </document>

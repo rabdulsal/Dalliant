@@ -16,6 +16,9 @@
  -------------------------------------------------------------------------------------------------
  ---------------------------------------------------------------------------------------------- */
 #import "MatchViewController.h"
+#import "UserNearMeViewController.h"
+#import "MainViewController.h"
+#import "SidebarTableViewController.h"
 #define MARGIN 50
 
 @interface MatchViewController ()
@@ -35,12 +38,6 @@
     self.matchingButton.layer.borderWidth = 1.0;
     self.matchingButton.layer.borderColor = WHITE_COLOR.CGColor;
 
-}
-
-
-- (IBAction)keepMatching:(id)sender
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -89,6 +86,31 @@
     } completion:^(BOOL finished) {
 
     }];
+}
+
+// START CHAT BUTTON
+
+- (IBAction)keepMatching:(id)sender
+{
+    // Dismiss ViewController and Pop to UserNearMeViewController
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
+    // Pop to RootViewController
+    //[self performSegueWithIdentifier:@"viewMatches" sender:nil];
+    
+}
+
+#pragma mark - GESTURE RECOGNIZER
+
+- (void) setTapGestureRecognizer
+{
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    [self.matchingButton addGestureRecognizer:tap];
+}
+
+- (void)handleTap:(UITapGestureRecognizer *)tap
+{
+    NSLog(@"MatchingButton was tapped");
 }
 
 /* ----------------------------------------------------------------------------------------------

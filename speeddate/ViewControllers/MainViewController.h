@@ -18,6 +18,7 @@
 }
 
 @property(nonatomic, strong) GADBannerView *adBanner;
+@property (assign, nonatomic) BOOL *matched;
 
 - (IBAction)backToPreferences:(id)sender;
 

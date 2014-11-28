@@ -31,6 +31,7 @@
 #import "IAPHelper.h"
 #import <StoreKit/StoreKit.h>
 #import "RageIAPHelper.h"
+#import "User.h"
 
 #define IS_IPHONE_5 ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )568 ) < DBL_EPSILON )
 #define labelHeight 20
@@ -57,6 +58,7 @@
     BOOL inAnimation;
     CALayer *waveLayer;
     NSTimer *animateTimer;
+    User *user;
 }
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *sidebarButton;
 @property (strong, nonatomic) UIView *profileView;
@@ -105,6 +107,9 @@
 
 @property (nonatomic,retain) UIView *bannerView;
 
+@property (strong) NSDictionary *match;
+@property (strong) NSMutableArray *noMatch;
+
 @end
 
 @implementation MainViewController
@@ -128,7 +133,10 @@
     }];
 
 #endif
-
+    user = [User singleObj];
+    
+    _matched = false;
+    
     [self.activityIndicator startAnimating];
     PFQuery* curQuery = [UserParseHelper query];
     [curQuery whereKey:@"username" equalTo:[UserParseHelper currentUser].username];
@@ -138,7 +146,8 @@
             self.userPhoto = [UIImage imageWithData:data];
         }];
         if (self.curUser.geoPoint != nil) {
-            [self getMatches];
+            //[self getMatches];
+            [self performSegueWithIdentifier:@"test_match" sender:nil];
         } else {
             [self currentLocationIdentifier];
         }
@@ -169,6 +178,8 @@
     [self.view.layer addSublayer:waveLayer];
    
     [waveLayer setHidden:NO];
+    
+    //[self performSegueWithIdentifier:@"test_match" sender:nil];
 
 }
 
@@ -190,6 +201,11 @@
     }
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [self checkIncomingViewController];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -197,6 +213,18 @@
     [self performSelector:@selector(startAnimation) withObject:nil];
     
 }
+
+- (void)checkIncomingViewController
+{
+    NSLog(@"Matched checked");
+    
+    if (_matched) {
+        NSLog(@"Matched run");
+        [self performSegueWithIdentifier:@"viewMatches" sender:nil];
+    }
+}
+
+#pragma mark - LOCATION IDENTIFIER
 
 -(void)currentLocationIdentifier
 {
@@ -222,12 +250,15 @@
     [UserParseHelper currentUser].geoPoint = [PFGeoPoint geoPointWithLatitude:self.currentLocation.coordinate.latitude longitude:self.currentLocation.coordinate.longitude];
     self.curUser.geoPoint = [PFGeoPoint geoPointWithLatitude:self.currentLocation.coordinate.latitude longitude:self.currentLocation.coordinate.longitude];
     [[UserParseHelper currentUser] saveEventually];
-    [self getMatches];
+    //[self getMatches];
+    [self performSegueWithIdentifier:@"test_match" sender:nil];
 }
+
+#pragma mark - GET MATCHES
 
 - (void)getMatches
 {
-  ;
+    // Fetch PossibleMatch
     PFQuery *query = [PossibleMatchHelper query];
     [query whereKey:@"toUser" equalTo:self.curUser];
     [query whereKey:@"match" equalTo:@"YES"];
@@ -244,11 +275,17 @@
     if (self.curUser.distance.doubleValue == 0.0) {
         self.curUser.distance = [NSNumber numberWithInt:100];
     }
+    
+    // Query Nearby Users based on gender
     [userQuery whereKey:@"geoPoint" nearGeoPoint:self.curUser.geoPoint withinKilometers:self.curUser.distance.doubleValue];
     [userQuery whereKey:@"email" matchesKey:@"fromUserEmail" inQuery:query];
+    
+    // If User is Female, look for Male
     if (self.curUser.sexuality.integerValue == 0) {
         [userQuery whereKey:@"isMale" equalTo:@"true"];
     }
+    
+    // If User is Male, look for Female
     if (self.curUser.sexuality.integerValue == 1) {
         [userQuery whereKey:@"isMale" equalTo:@"false"];
     }
@@ -305,6 +342,102 @@
     }];
 }
 
+#pragma mark - MATCH FILTER
+/*
+- (void)matchGender
+{
+    if ([user.genderPref isEqualToString:_match.gender]) {
+        [self matchBodyType];
+    } else {
+        [_noMatch addObject:_match];
+    }
+}
+
+- (void)matchBodyType
+{
+    if([user.bodyTypePref isEqualToString:snapshot.value[@"body_type"]]) {
+        
+    } else {
+        [_noMatch addObject:_match];
+    }
+    
+}
+
+- (void)matchRelationshipStatus
+{
+    if ([user.relationshipStatusPref isEqualToString:snapshot.value[@"relationship_status"]]) {
+        
+    } else {
+        [_noMatch addObject:_match];
+    }
+}
+
+- (void)matchRomanticPreference
+{
+    if ([user.romanticPreference isEqualToString:snapshot.value[@"romantic_preference"]]) {
+        
+    } else {
+        [_noMatch addObject:_match];
+    }
+    
+}
+
+- (void)matchKids
+{
+    if ([user.kidsOkay == snapshot.value[@"kids_okay"]]) {
+        
+    } else {
+        [_noMatch addObject:_match];
+    }
+}
+
+- (void)matchDrinking
+{
+    if([user.drinkingOkay == snapshot.value[@"drinking_okay"]]) {
+        
+    } else {
+        [_noMatch addObject:_match];
+    }
+}
+
+- (void)matchSmoking
+{
+    if ([user.smokingOkay == snapshot.value[@"smoking_okay"]]) {
+        
+    } else {
+        [_noMatch addObject:_match];
+    }
+}
+
+- (void)matchDrugUse
+{
+    if ([user.drugsOkay == snapshot.value[@"drugs_okay"]]) {
+        
+    } else {
+        [_noMatch addObject:_match];
+    }
+}
+
+- (void)matchBodyArt
+{
+    if ([user.bodyArtOkay == snapshot.value[@"bodyart_okay"]]) {
+        
+    } else {
+        [_noMatch addObject:_match];
+    }
+}
+
+- (void)compareActivities
+{
+    for (UIButton *userPreference in userPreferences) {
+        for (int i = 0; i < [matchPreferences count]; i++) {
+            if (userPreference == matchPreferences[i]) {
+                [mutualPrefs addObject:matchPreferences[i]];
+            }
+        }
+    }
+}
+*/
 - (void) firstPlacement
 {
     UserParseHelper* aUser = self.posibleMatchesArray.firstObject;
@@ -1003,6 +1136,14 @@
     }
 }
 
+#pragma mark - LIKE A PROFILE
+
+/* ---------------------------------------------------------------
+ 
+                    SETS UP SEGUE IDENTIFIER
+ 
+ --------------------------------------------------------------- */
+
 - (void)likeAProfile
 {
   
@@ -1163,7 +1304,7 @@
     }
 }
 
-#pragma mark = MATCH SEGUE
+#pragma mark - MATCH SEGUE
 
 // ----------------------- MATCHING SEGUE PUSHES TO MATCH_VIEW_CONTROLLER --------------------------
 
@@ -1177,6 +1318,17 @@
 
         vc.userImage = self.userPhoto;
         vc.matchImage = self.matchPhoto;
+        vc.matchUser = self.otherUser;
+        vc.user = self.curUser;
+    }else if ([segue.identifier isEqualToString:@"test_match"]) {
+        
+        _matched = true;
+        
+        MatchViewController *vc = segue.destinationViewController;
+        vc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+        
+        vc.userImage = self.userPhoto;
+        vc.matchImage = self.userPhoto;
         vc.matchUser = self.otherUser;
         vc.user = self.curUser;
     }
