@@ -258,7 +258,8 @@
 
 - (void)getMatches
 {
-    // Fetch PossibleMatch
+    // Fetch PossibleMatch ------------------------------------------------------------------
+    
     PFQuery *query = [PossibleMatchHelper query];
     [query whereKey:@"toUser" equalTo:self.curUser];
     [query whereKey:@"match" equalTo:@"YES"];
@@ -271,12 +272,13 @@
     PFQuery* userQuery = [UserParseHelper query];
     [userQuery whereKey:@"objectId" doesNotMatchKey:@"objectId" inQuery:checkQuery];
    
+    // --------------------------------------------------------------------------------------
     
     if (self.curUser.distance.doubleValue == 0.0) {
         self.curUser.distance = [NSNumber numberWithInt:100];
     }
     
-    // Query Nearby Users based on gender
+    // Query Nearby Users based on distance
     [userQuery whereKey:@"geoPoint" nearGeoPoint:self.curUser.geoPoint withinKilometers:self.curUser.distance.doubleValue];
     [userQuery whereKey:@"email" matchesKey:@"fromUserEmail" inQuery:query];
     

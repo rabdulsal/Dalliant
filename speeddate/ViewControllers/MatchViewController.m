@@ -11,7 +11,7 @@
 
 *** TINDER-LIKE VIEW SHOWING YOU MADE A MATCH WITH OPTION TO CHAT OR CONTINUE PLAYING
 
-*** NO SEGUE, MAYBE TAKE IMAGE OF USERS TOGETHER AND PLACE INTO TOP OF CHAT VIEW
+*** CHANGE THIS VIEW TO NOTIFY USER OF N-NUMBER OF MATCHES AT 5 MINUTE INTERVALS
  
  -------------------------------------------------------------------------------------------------
  ---------------------------------------------------------------------------------------------- */
@@ -118,7 +118,7 @@
  
  *** TINDER-LIKE VIEW SHOWING YOU MADE A MATCH WITH OPTION TO CHAT OR CONTINUE PLAYING
  
-*** CHANGE AND PULL IN CODE FROM USER_PROFILE_VIEWCONTROLLER
+ *** CHANGE THIS VIEW TO NOTIFY USER OF N-NUMBER OF MATCHES AT 5 MINUTE INTERVALS
  
  -------------------------------------------------------------------------------------------------
  ---------------------------------------------------------------------------------------------- */
