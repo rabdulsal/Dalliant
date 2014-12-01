@@ -12,6 +12,9 @@
 #import "WhoSeeMeHelper.h"
 #import "MBProgressHUD.h"
 
+/*
+ _profilePhoto has not been set
+ */
 
 @interface UserProfileViewController ()<MBProgressHUDDelegate,UIActionSheetDelegate>{
     
