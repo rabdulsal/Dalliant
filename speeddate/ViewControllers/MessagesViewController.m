@@ -32,6 +32,8 @@
 @property NSArray *filteredAllUsersArray;
 @property (weak, nonatomic) IBOutlet UIButton *cameraButton;
 @property NSMutableArray *messages;
+
+
 @end
 
 @implementation MessagesViewController
@@ -42,6 +44,7 @@
     [super viewDidLoad];
     _sidebarButton.target = self.revealViewController;
     _sidebarButton.action = @selector(revealToggle:);
+    
     
     [self.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];
     UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 48, 20)];
@@ -171,13 +174,26 @@
     } else {
         dateFormatter.dateStyle = NSDateFormatterShortStyle;
     }
+    
     cell.dateLabel.text = [dateFormatter stringFromDate:[message createdAt]];
     UIView *bgColorView = [[UIView alloc] init];
     bgColorView.backgroundColor = RED_COLOR;
     [cell setSelectedBackgroundView:bgColorView];
     [user.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+        
         cell.userImageView.image = [UIImage imageWithData:data];
+        
     }];
+    
+    // Configure Blur
+    UIVisualEffect *blurEffect;
+    blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+    
+    UIVisualEffectView *visualEffectView;
+    visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+    
+    visualEffectView.frame = cell.userImageView.bounds;
+    [cell.userImageView addSubview:visualEffectView];
     
     return cell;
 }

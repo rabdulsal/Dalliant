@@ -1073,17 +1073,12 @@
                         <color key="backgroundColor" red="0.94509803920000002" green="0.35686274509999999" blue="0.30588235289999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Find users" id="R8O-R6-lHI">
-                        <barButtonItem key="leftBarButtonItem" image="bubble" id="gpX-AH-kmV">
-                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Find users" id="R8O-R6-lHI"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="imagesCollection" destination="lK7-nR-Mk7" id="SD5-2e-wdf"/>
                         <outlet property="segmentedControl" destination="AqW-DY-8FG" id="9W6-ly-j79"/>
-                        <outlet property="sidebarButton" destination="gpX-AH-kmV" id="CeM-zI-4gF"/>
                         <outlet property="upgradeVip" destination="ixG-Hp-0wE" id="xhf-oT-UBx"/>
                     </connections>
                 </viewController>
@@ -2770,7 +2765,6 @@
         <!--Navigation Controller-->
         <scene sceneID="zqs-zp-7Xg">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="cEk-hW-G6w" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="oHl-BV-lJ4" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="50V-pt-1Sk">
@@ -2782,6 +2776,7 @@
                         <segue destination="km2-NM-f36" kind="relationship" relationship="rootViewController" id="n1P-ch-ajp"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cEk-hW-G6w" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2806" y="-265"/>
         </scene>
@@ -2820,16 +2815,16 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="U3T-S3-jZm"/>
+        <segue reference="MjG-Tl-7wb"/>
         <segue reference="VlF-20-DHW"/>
         <segue reference="Qh3-Ge-Ehw"/>
-        <segue reference="tAX-qX-dGH"/>
         <segue reference="gPx-w2-9WG"/>
-        <segue reference="MjG-Tl-7wb"/>
-        <segue reference="oXm-ri-1Lw"/>
+        <segue reference="tAX-qX-dGH"/>
+        <segue reference="U3T-S3-jZm"/>
+        <segue reference="vo7-ud-5cu"/>
         <segue reference="y3F-dK-Mda"/>
-        <segue reference="Qy0-fE-0Nr"/>
+        <segue reference="oXm-ri-1Lw"/>
         <segue reference="h7w-Ho-pqn"/>
-        <segue reference="QOt-cj-Bjn"/>
+        <segue reference="Qy0-fE-0Nr"/>
     </inferredMetricsTieBreakers>
 </document>

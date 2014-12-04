@@ -232,7 +232,6 @@
     
     [cell.profileImage sd_setImageWithURL:imgUrl placeholderImage:[UIImage imageNamed:@"1024_gm.png"]];
     
-    
     double distance = [_cellUser.geoPoint distanceInKilometersTo:self.mainUser.geoPoint];
     if ([_cellUser.geoPoint distanceInKilometersTo:self.mainUser.geoPoint] < 1) {
         distance = 1;
