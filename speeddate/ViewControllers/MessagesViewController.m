@@ -11,14 +11,13 @@
 #import "MessageParse.h"
 #import "UserTableViewCell.h"
 #import "UserMessagesViewController.h"
-
 #import "GADBannerView.h"
 #import "GADRequest.h"
 #import "GADInterstitial.h"
 #import "RageIAPHelper.h"
 #import <StoreKit/StoreKit.h>
 #import "IAPHelper.h"
-
+#import <TDBadgedCell.h>
 
 #define SECONDS_DAY 24*60*60
 
@@ -45,6 +44,7 @@
     _sidebarButton.target = self.revealViewController;
     _sidebarButton.action = @selector(revealToggle:);
     
+    mainUser = [User singleObj];
     
     [self.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];
     UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 48, 20)];
@@ -203,6 +203,12 @@
     if (self.searchTextField.text.length) {
         return self.filteredAllUsersArray.count;
     }
+    
+    if (_usersArray.count) {
+        mainUser.numberOfConvos = [[NSString alloc] initWithFormat:@"%lu", (unsigned long)_usersArray.count];
+        NSLog(@"%@", mainUser.numberOfConvos);
+    }
+    
     return self.usersArray.count;
 }
 

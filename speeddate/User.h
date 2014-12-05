@@ -17,6 +17,7 @@
 @property (strong, nonatomic) NSString *userRef;
 @property (strong, nonatomic) NSString *userImage;
 @property (strong, nonatomic) CLLocation *location;
+@property (strong, nonatomic) NSString *numberOfConvos;
 
 // Profile -------------------------------------------------
 

@@ -11,6 +11,7 @@
 #import "GADInterstitial.h"
 #import "GADAdNetworkExtras.h"
 #import "config.h"
+#import "User.h"
 
 @class GADBannerView;
 @class GADRequest;
@@ -19,6 +20,7 @@
     
     GADBannerView *adBanner;
     int frameSize;
+    User *mainUser;
     
 }
 
