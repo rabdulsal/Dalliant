@@ -11,14 +11,13 @@
 #import "MessageParse.h"
 #import "UserTableViewCell.h"
 #import "UserMessagesViewController.h"
-
 #import "GADBannerView.h"
 #import "GADRequest.h"
 #import "GADInterstitial.h"
 #import "RageIAPHelper.h"
 #import <StoreKit/StoreKit.h>
 #import "IAPHelper.h"
-
+#import <TDBadgedCell.h>
 
 #define SECONDS_DAY 24*60*60
 
@@ -32,6 +31,8 @@
 @property NSArray *filteredAllUsersArray;
 @property (weak, nonatomic) IBOutlet UIButton *cameraButton;
 @property NSMutableArray *messages;
+
+
 @end
 
 @implementation MessagesViewController
@@ -42,6 +43,8 @@
     [super viewDidLoad];
     _sidebarButton.target = self.revealViewController;
     _sidebarButton.action = @selector(revealToggle:);
+    
+    mainUser = [User singleObj];
     
     [self.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];
     UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 48, 20)];
@@ -171,13 +174,26 @@
     } else {
         dateFormatter.dateStyle = NSDateFormatterShortStyle;
     }
+    
     cell.dateLabel.text = [dateFormatter stringFromDate:[message createdAt]];
     UIView *bgColorView = [[UIView alloc] init];
     bgColorView.backgroundColor = RED_COLOR;
     [cell setSelectedBackgroundView:bgColorView];
     [user.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+        
         cell.userImageView.image = [UIImage imageWithData:data];
+        
     }];
+    
+    // Configure Blur
+    UIVisualEffect *blurEffect;
+    blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+    
+    UIVisualEffectView *visualEffectView;
+    visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+    
+    visualEffectView.frame = cell.userImageView.bounds;
+    [cell.userImageView addSubview:visualEffectView];
     
     return cell;
 }
@@ -187,6 +203,12 @@
     if (self.searchTextField.text.length) {
         return self.filteredAllUsersArray.count;
     }
+    
+    if (_usersArray.count) {
+        mainUser.numberOfConvos = [[NSString alloc] initWithFormat:@"%lu", (unsigned long)_usersArray.count];
+        NSLog(@"%@", mainUser.numberOfConvos);
+    }
+    
     return self.usersArray.count;
 }
 

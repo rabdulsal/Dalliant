@@ -21,9 +21,15 @@
 #import "UIImage+Resize.h"
 #import "config.h"
 #import "UserParseHelper.h"
+#import "User.h"
+#import <TDBadgedCell.h>
+
 #define DOCUMENTS [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject]
 
 @interface SidebarTableViewController ()
+{
+    User *user;
+}
 @property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *matchImageView;
 @property (weak, nonatomic) IBOutlet UILabel *profileLabel;
@@ -36,7 +42,8 @@
 @property (weak, nonatomic) IBOutlet UIImageView *avatarImageView;
 @property (weak, nonatomic) IBOutlet UILabel *matchLabel;
 @property (weak, nonatomic) IBOutlet UITableViewCell *cellMatch;
-@property (weak, nonatomic) IBOutlet UITableViewCell *cellMessage;
+//@property (weak, nonatomic) IBOutlet UITableViewCell *cellMessage;
+@property (weak, nonatomic) IBOutlet TDBadgedCell *cellMessage;
 @property (weak, nonatomic) IBOutlet UITableViewCell *profileCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *vipMemberCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *termsCell;
@@ -61,6 +68,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    user = [User singleObj];
+    
     self.profileCell.backgroundColor = RED_LIGHT;
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back-m.png"]];
 
@@ -91,6 +101,16 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    // ------------ MESSAGES BADGE -------------------
+    
+    if (user.numberOfConvos) {
+        _cellMessage.badgeString = user.numberOfConvos;
+        _cellMessage.badge.radius = 5;
+        _cellMessage.badge.fontSize = 15;
+        _cellMessage.badgeColor = [UIColor whiteColor];
+    }
+    
+    // ------------------------------------------------
     
     if ([animationMenu isEqualToString:@"YES"]) {
      
@@ -109,6 +129,7 @@
                                     CGRect cellFrame = cell.frame;
                                     cellFrame.origin.x += cellFrame.size.width;
                                     cell.frame = cellFrame;
+                                    
                                 } completion:^(BOOL finished) {
                                     
                                 }];

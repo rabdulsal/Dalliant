@@ -24,13 +24,28 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     UIScrollView *scroll = [[UIScrollView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
 	scroll.backgroundColor = RED_LIGHT;
 	scroll.delegate = self;
+    
 	self.imageView = [[UIImageView alloc] initWithImage:self.image];
-	scroll.contentSize = self.imageView.frame.size;
-	[scroll addSubview:self.imageView];
-
+    
+    // Configure Blur [ TURN INTO CATEGORY ]
+    UIVisualEffect *blurEffect;
+    blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+    
+    UIVisualEffectView *visualEffectView;
+    visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+    
+    visualEffectView.frame = _imageView.bounds;
+    [_imageView addSubview:visualEffectView];
+    
+	scroll.contentSize = _imageView.frame.size;
+	[scroll addSubview:_imageView];
+    
+    // --------------------------------------------------------
+    
 	scroll.minimumZoomScale = scroll.frame.size.width / self.imageView.frame.size.width;
 	scroll.maximumZoomScale = 4.0;
 	[scroll setZoomScale:scroll.minimumZoomScale];
