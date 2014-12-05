@@ -1,0 +1,10 @@
+PODS:
+  - TDBadgedCell (2.6)
+
+DEPENDENCIES:
+  - TDBadgedCell
+
+SPEC CHECKSUMS:
+  TDBadgedCell: e683b5557d12ea4e28a8d6ac20b6e394abc2c1fe
+
+COCOAPODS: 0.35.0
