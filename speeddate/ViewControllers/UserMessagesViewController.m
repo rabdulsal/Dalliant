@@ -18,7 +18,6 @@
 @interface UserMessagesViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 {
     User *mainUser;
-    BOOL *requestReveal;
 }
 @property NSMutableArray *messages;
 @property (weak, nonatomic) IBOutlet UITextField *textField;

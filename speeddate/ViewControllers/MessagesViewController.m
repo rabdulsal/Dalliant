@@ -199,10 +199,9 @@
         
         // Configure Blur ---------------------------------------------------------------
         
-        if (!mainUser.isRevealed) { // <-- Test purposes - change to check isRevealed on Matched User
+        if (!mainUser.isRevealed) { // <-- Test purposes - change to check isRevealed on Matched User - NOT WORKING
             [self blurImages:cell.userImageView];
-            
-            
+            NSLog(@"Blur code run b/c User not revealed");
         }
         
     }];
