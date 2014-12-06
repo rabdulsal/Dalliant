@@ -15,6 +15,9 @@
 #import "GADInterstitial.h"
 
 @interface UserMessagesViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
+{
+    BOOL *isRevealed;
+}
 @property NSMutableArray *messages;
 @property (weak, nonatomic) IBOutlet UITextField *textField;
 @property (weak, nonatomic) IBOutlet UIView *messagesView;
@@ -34,8 +37,9 @@
     [self getPhotos];
     [self getMessages];
 
-
-    self.title = self.toUserParse.nickname;
+    // Wrap in 'isRevealed' conditional
+    isRevealed = false;
+    
     UIBarButtonItem *barButton = [[UIBarButtonItem alloc] init];
     barButton.title = @"";
     self.navigationController.navigationBar.topItem.backBarButtonItem = barButton;
@@ -62,6 +66,25 @@
     [self.navigationController popViewControllerAnimated:YES];
     
 }
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:YES];
+    
+    // Conditional - if User has NOT Revealed identity
+    if (!isRevealed) {
+        self.title = @"Chat";
+        UIImage *btnImage = [UIImage imageNamed:@"user"];
+        [_cameraButton setImage:btnImage forState:UIControlStateNormal];
+    } else {
+        self.title = self.toUserParse.nickname;
+        UIImage *btnImage = [UIImage imageNamed:@"camera2"];
+        [_cameraButton setImage:btnImage forState:UIControlStateNormal];
+    }
+    
+}
+
+#pragma mark - Send Button Pressed
 
 - (IBAction)sendPressed:(id)sender
 {
@@ -148,6 +171,13 @@
     if (message.image && [message.fromUserParse.objectId isEqualToString:self.toUserParse.objectId]) {
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"toCellImage" forIndexPath:indexPath];
         cell.userImageView.image = self.toPhoto;
+        
+        // Blur conditional ********************
+        
+        [self blurImages:cell.userImageView];
+        
+        // *************************************
+        
         cell.dateLabel.text = [dateFormatter stringFromDate:[message createdAt]];
         __block UIImage *image;
         [message.image getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
@@ -175,6 +205,13 @@
     if (!message.image && !message.sendImage &&[message.fromUserParse.objectId isEqualToString:self.toUserParse.objectId]) {
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"toCell" forIndexPath:indexPath];
         cell.userImageView.image = self.toPhoto;
+        
+        // Blur conditional ********************
+        
+        [self blurImages:cell.userImageView];
+        
+        // *************************************
+        
         cell.messageLabel.textColor = WHITE_COLOR;
     }
     UIView *view = [cell.contentView viewWithTag:666];
@@ -222,8 +259,7 @@
         [cell.contentView sendSubviewToBack:bubbleView];
 
     }
-
-
+    
     return cell;
 }
 
@@ -247,7 +283,7 @@
     return self.messages.count;
 }
 
-#pragma mark - Other Stuff
+#pragma mark - Get Messages
 
 - (void)getMessages
 {
@@ -277,6 +313,8 @@
         }
     }];
 }
+
+#pragma mark - Get Message w/ Notification
 
 - (void)getNewMessage:(NSNotification *)note
 {
@@ -337,6 +375,18 @@
 
 }
 
+- (void)blurImages:(UIImageView *)imageView
+{
+    UIVisualEffect *blurEffect;
+    blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+    
+    UIVisualEffectView *visualEffectView;
+    visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+    
+    visualEffectView.frame = imageView.bounds;
+    [imageView addSubview:visualEffectView];
+}
+
 - (void)scrollCollectionView
 {
     if (self.messages.count > 0) {
@@ -369,14 +419,20 @@
                         }];
 }
 
+#pragma mark - Send Photo Camera Press
 
 - (IBAction)sendPhoto:(id)sender
 {
     [self hiddeKeyBoard];
     UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
     imagePickerController.delegate = self;
+    
+    // if-conditional for using camera vs. photolibrary
     imagePickerController.sourceType =  UIImagePickerControllerSourceTypePhotoLibrary;
     [self presentViewController:imagePickerController animated:YES completion:nil];
+    
+    // Reveal Test
+    isRevealed = true;
 }
 
 #pragma mark - TextField Delegate
@@ -469,6 +525,7 @@
     }
 }
 
+#pragma mark - Report / UnMatch Actionsheet
 
 - (IBAction)actionPressed:(id)sender
 {

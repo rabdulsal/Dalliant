@@ -1982,7 +1982,7 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="RQ4-La-IbU">
                                         <rect key="frame" x="12" y="8" width="25" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" image="camera2">
+                                        <state key="normal">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
@@ -2788,7 +2788,6 @@
         <image name="arrow" width="307" height="230"/>
         <image name="birthday" width="30" height="30"/>
         <image name="bubble" width="22" height="19"/>
-        <image name="camera2" width="128" height="128"/>
         <image name="dislike" width="80" height="80"/>
         <image name="email" width="128" height="128"/>
         <image name="genderz.png" width="30" height="29"/>
