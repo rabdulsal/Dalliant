@@ -18,6 +18,7 @@
 @property (strong, nonatomic) NSString *userImage;
 @property (strong, nonatomic) CLLocation *location;
 @property (strong, nonatomic) NSString *numberOfConvos;
+@property (assign, nonatomic) BOOL *isRevealed;
 
 // Profile -------------------------------------------------
 

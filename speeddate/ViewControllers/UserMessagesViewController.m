@@ -13,10 +13,12 @@
 #import "GADBannerView.h"
 #import "GADRequest.h"
 #import "GADInterstitial.h"
+#import "User.h"
 
 @interface UserMessagesViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 {
-    BOOL *isRevealed;
+    User *mainUser;
+    BOOL *requestReveal;
 }
 @property NSMutableArray *messages;
 @property (weak, nonatomic) IBOutlet UITextField *textField;
@@ -38,7 +40,7 @@
     [self getMessages];
 
     // Wrap in 'isRevealed' conditional
-    isRevealed = false;
+    mainUser = [User singleObj];
     
     UIBarButtonItem *barButton = [[UIBarButtonItem alloc] init];
     barButton.title = @"";
@@ -72,7 +74,7 @@
     [super viewWillAppear:YES];
     
     // Conditional - if User has NOT Revealed identity
-    if (!isRevealed) {
+    if (!mainUser.isRevealed) {
         self.title = @"Chat";
         UIImage *btnImage = [UIImage imageNamed:@"user"];
         [_cameraButton setImage:btnImage forState:UIControlStateNormal];
@@ -173,8 +175,9 @@
         cell.userImageView.image = self.toPhoto;
         
         // Blur conditional ********************
-        
-        [self blurImages:cell.userImageView];
+        if (!mainUser.isRevealed) {
+            [self blurImages:cell.userImageView];
+        }
         
         // *************************************
         
@@ -208,7 +211,9 @@
         
         // Blur conditional ********************
         
-        [self blurImages:cell.userImageView];
+        if (!mainUser.isRevealed) {
+            [self blurImages:cell.userImageView];
+        }
         
         // *************************************
         
@@ -375,6 +380,8 @@
 
 }
 
+#pragma mark - Blur Images
+
 - (void)blurImages:(UIImageView *)imageView
 {
     UIVisualEffect *blurEffect;
@@ -423,16 +430,21 @@
 
 - (IBAction)sendPhoto:(id)sender
 {
-    [self hiddeKeyBoard];
-    UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
-    imagePickerController.delegate = self;
-    
-    // if-conditional for using camera vs. photolibrary
-    imagePickerController.sourceType =  UIImagePickerControllerSourceTypePhotoLibrary;
-    [self presentViewController:imagePickerController animated:YES completion:nil];
-    
-    // Reveal Test
-    isRevealed = true;
+    if (!mainUser.isRevealed) {
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Send Reveal request?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Yes", nil];
+        [actionSheet showInView:self.view];
+        
+    } else {
+        
+        [self hiddeKeyBoard];
+        UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+        imagePickerController.delegate = self;
+        
+        // if-conditional for using camera vs. photolibrary
+        imagePickerController.sourceType =  UIImagePickerControllerSourceTypePhotoLibrary;
+        [self presentViewController:imagePickerController animated:YES completion:nil];
+
+    }
 }
 
 #pragma mark - TextField Delegate
@@ -558,13 +570,25 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex == 0) {
-        UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Report" message:@"Are you sure you want to report this user? The conversation will be deleted." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Report", nil];
-        [av show];
+    if (!mainUser.isRevealed) {
+        
+        mainUser.isRevealed = true;
+        self.title = self.toUserParse.nickname;
+        UIImage *btnImage = [UIImage imageNamed:@"camera2"];
+        [_cameraButton setImage:btnImage forState:UIControlStateNormal];
+        
+    } else {
+        
+        if (buttonIndex == 0) {
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Report" message:@"Are you sure you want to report this user? The conversation will be deleted." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Report", nil];
+            [av show];
+        }
+        if (buttonIndex == 1) {
+            [self deleteConversation];
+        }
+        
     }
-    if (buttonIndex == 1) {
-        [self deleteConversation];
-    }
+    
 }
 
 #pragma mark - UIAlertViewDelegate

@@ -14,6 +14,7 @@
 #import "GADRequest.h"
 #import "config.h"
 #import "RageIAPHelper.h"
+#import "User.h"
 #import <StoreKit/StoreKit.h>
 
 #define DEFAULT_DESCRIPTION  @"Please fill information about you"
@@ -26,6 +27,7 @@
     NSArray *allproduct;
     int count;
     SKProduct *findProduct;
+    User *mainUser;
 }
 @property (weak, nonatomic) IBOutlet UILabel *ageLabel;
 @property (weak, nonatomic) IBOutlet UILabel *genderLabel;
@@ -86,7 +88,8 @@
 {
     [super viewDidLoad];
     //[self checkPurchase];
-    
+    mainUser = [User singleObj];
+    mainUser.isRevealed = false;
     _sidebarButton.target = self.revealViewController;
     _sidebarButton.action = @selector(revealToggle:);
     [self.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];

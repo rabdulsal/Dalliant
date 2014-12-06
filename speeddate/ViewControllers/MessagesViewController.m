@@ -130,7 +130,7 @@
     }];
 }
 
-#pragma mark TableView Delegate
+#pragma mark TableView Delegate - Includes Blurring
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -144,7 +144,21 @@
         user = [self.usersArray objectAtIndex:indexPath.row];
     }
     
-    cell.nameTextLabel.text = user.nickname;
+    // Revealed conditional -----------------------------------------------------
+    
+    if (!mainUser.isRevealed) { // <-- Test purposes, change to test isRevealed on Matched User
+        if ([user.isMale isEqualToString:@"true"]) {
+            NSString *matchGender = @"Male";
+            cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
+        } else {
+            NSString *matchGender = @"Female";
+            cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
+        }
+        
+    } else cell.nameTextLabel.text = user.nickname;
+    
+    // ----------------------------------------------------------------------------
+    
     cell.nameTextLabel.textColor = WHITE_COLOR;
     cell.userImageView.layer.cornerRadius = cell.userImageView.frame.size.width / 2;
     cell.userImageView.clipsToBounds = YES;
@@ -183,19 +197,31 @@
         
         cell.userImageView.image = [UIImage imageWithData:data];
         
+        // Configure Blur ---------------------------------------------------------------
+        
+        if (!mainUser.isRevealed) { // <-- Test purposes - change to check isRevealed on Matched User
+            [self blurImages:cell.userImageView];
+            
+            
+        }
+        
     }];
     
-    // Configure Blur
+    return cell;
+}
+
+#pragma mark - Blur Images
+
+- (void)blurImages:(UIImageView *)imageView
+{
     UIVisualEffect *blurEffect;
     blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
     
     UIVisualEffectView *visualEffectView;
     visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
     
-    visualEffectView.frame = cell.userImageView.bounds;
-    [cell.userImageView addSubview:visualEffectView];
-    
-    return cell;
+    visualEffectView.frame = imageView.bounds;
+    [imageView addSubview:visualEffectView];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -206,7 +232,6 @@
     
     if (_usersArray.count) {
         mainUser.numberOfConvos = [[NSString alloc] initWithFormat:@"%lu", (unsigned long)_usersArray.count];
-        NSLog(@"%@", mainUser.numberOfConvos);
     }
     
     return self.usersArray.count;
@@ -312,9 +337,7 @@
                 
             }];
             
-            
         }
-        
     }];
     
 }
