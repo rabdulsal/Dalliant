@@ -26,6 +26,7 @@
 @property UIImage *toPhoto;
 @property UIImage *fromPhoto;
 @property (weak, nonatomic) IBOutlet UIButton *cameraButton;
+@property (strong, nonatomic) UIVisualEffectView *blurImageView;
 @end
 
 @implementation UserMessagesViewController
@@ -35,6 +36,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    if (!mainUser.isRevealed) {
+        self.title = @"Chat";
+        UIImage *btnImage = [UIImage imageNamed:@"user"];
+        [_cameraButton setImage:btnImage forState:UIControlStateNormal];
+    }
+    
     [self getPhotos];
     [self getMessages];
 
@@ -71,17 +79,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
-    
-    // Conditional - if User has NOT Revealed identity
-    if (!mainUser.isRevealed) {
-        self.title = @"Chat";
-        UIImage *btnImage = [UIImage imageNamed:@"user"];
-        [_cameraButton setImage:btnImage forState:UIControlStateNormal];
-    } else {
-        self.title = self.toUserParse.nickname;
-        UIImage *btnImage = [UIImage imageNamed:@"camera2"];
-        [_cameraButton setImage:btnImage forState:UIControlStateNormal];
-    }
     
 }
 
@@ -386,11 +383,13 @@
     UIVisualEffect *blurEffect;
     blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
     
-    UIVisualEffectView *visualEffectView;
-    visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+    // BlurImageCell conditional
     
-    visualEffectView.frame = imageView.bounds;
-    [imageView addSubview:visualEffectView];
+    _blurImageView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+        
+    _blurImageView.frame = imageView.bounds;
+    [imageView addSubview:_blurImageView];
+    
 }
 
 - (void)scrollCollectionView
@@ -429,7 +428,7 @@
 
 - (IBAction)sendPhoto:(id)sender
 {
-    if (!mainUser.isRevealed) {
+    if (!mainUser.isRevealed) { // <-- Change to check on Matched User attribute
         UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Send Reveal request?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Yes", nil];
         [actionSheet showInView:self.view];
         
@@ -565,16 +564,24 @@
     }];
 }
 
-#pragma mark - ActionSheetDelegate
+#pragma mark - ActionSheetDelegate - Reveal Transition
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (!mainUser.isRevealed) {
+    if (!mainUser.isRevealed) { // <-- Change to isRevealed attribute on Matched User
         
         mainUser.isRevealed = true;
         self.title = self.toUserParse.nickname;
+        
+        [_blurImageView removeFromSuperview];
+        
         UIImage *btnImage = [UIImage imageNamed:@"camera2"];
         [_cameraButton setImage:btnImage forState:UIControlStateNormal];
+        
+        UIView *parent = self.view.superview;
+        [self.view removeFromSuperview];
+        self.view = nil; // unloads the view
+        [parent addSubview:self.view]; //reloads the view from the nib
         
     } else {
         
