@@ -41,6 +41,13 @@
         self.title = @"Chat";
         UIImage *btnImage = [UIImage imageNamed:@"user"];
         [_cameraButton setImage:btnImage forState:UIControlStateNormal];
+    } else {
+        self.title = self.toUserParse.nickname;
+        
+        [_blurImageView removeFromSuperview];
+        
+        UIImage *btnImage = [UIImage imageNamed:@"camera2"];
+        [_cameraButton setImage:btnImage forState:UIControlStateNormal];
     }
     
     [self getPhotos];
@@ -571,13 +578,8 @@
     if (!mainUser.isRevealed) { // <-- Change to isRevealed attribute on Matched User
         
         mainUser.isRevealed = true;
-        self.title = self.toUserParse.nickname;
         
-        [_blurImageView removeFromSuperview];
-        
-        UIImage *btnImage = [UIImage imageNamed:@"camera2"];
-        [_cameraButton setImage:btnImage forState:UIControlStateNormal];
-        
+        // Reload View
         UIView *parent = self.view.superview;
         [self.view removeFromSuperview];
         self.view = nil; // unloads the view
