@@ -244,7 +244,53 @@
 -(IBAction)faceLogin:(id)sender{
     
     NSArray *permissions = @[@"public_profile", @"email", @"user_friends", @"user_birthday", @"user_about_me", @"user_photos"];
+    //NSArray *permissions = @[];
     
+    // Login PFUser using Facebook
+    [ProgressHUD show:@"Signing in..." Interaction:NO];
+    [PFFacebookUtils logInWithPermissions:permissions block:^(PFUser *user, NSError *error) {
+        
+        if (!user) {
+            NSString *errorMessage = nil;
+            if (!error) {
+                NSLog(@"Uh oh. The user cancelled the Facebook login.");
+                errorMessage = @"Uh oh. The user cancelled the Facebook login.";
+            } else if ([[[error userInfo] objectForKey:@"com.facebook.sdk:ErrorLoginFailedReason"]
+                        isEqualToString:@"com.facebook.sdk:SystemLoginDisallowedWithoutError"])
+            { // Facebook Login not allowed on Device
+                NSLog(@"Uh oh. An error occurred: %@", error);
+                errorMessage = @"Please go to Device Settings > Facebook > Toggle 'On' Allow Dalliant to Use Facebook";
+                
+                [ProgressHUD showError:errorMessage];
+            }
+            else {
+                NSLog(@"Uh oh. An error occurred: %@", error);
+                errorMessage = [error localizedDescription];
+                
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log In Error"
+                                                                message:errorMessage
+                                                               delegate:nil
+                                                      cancelButtonTitle:nil
+                                                      otherButtonTitles:@"Dismiss", nil];
+                [alert show];
+            }
+            
+        } else {
+            if (user != nil)
+            {
+                if (user[PF_USER_FACEBOOKID] == nil)
+                {
+                    [self requestFacebook:user];
+                }
+                else [self userLoggedIn:user];
+            }
+            else [ProgressHUD showError:[error.userInfo valueForKey:@"error"]];
+        }
+    }];
+    
+    
+    /* TOUCHID LOGIN JUNK
+     
     NSUserDefaults *touchFb = [NSUserDefaults standardUserDefaults];
     NSString *touchFbString = [touchFb objectForKey:@"touchId"];
     
@@ -347,7 +393,7 @@
          else [ProgressHUD showError:[error.userInfo valueForKey:@"error"]];
      }];
         
-    }
+    }*/
 }
 
 - (void)requestFacebook:(PFUser *)user

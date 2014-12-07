@@ -83,6 +83,17 @@
     return YES;
 }
 
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    return [FBAppCall handleOpenURL:url
+                  sourceApplication:sourceApplication
+                        withSession:[PFFacebookUtils session]];
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    [FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
+}
+
 - (void)application:(UIApplication *)application
 didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
 
@@ -144,13 +155,10 @@ didReceiveRemoteNotification:(NSNotification *)userInfo {
                     self.userStart = objects.firstObject;
                     self.userStart.online = @"no";
                     [self.userStart saveEventually];
-                    NSLog(@"go out2 success");
+                    NSLog(@"backgrounding success");
                     
                 }];
             }
-
-            
-            
           //  while(TRUE)
            // {
            //     NSLog(@"Background time Remaining: %f",[[UIApplication sharedApplication] backgroundTimeRemaining]);
@@ -167,18 +175,13 @@ didReceiveRemoteNotification:(NSNotification *)userInfo {
     {
         NSLog(@"Multitasking Not Supported");
     }
-    
-    
-    
-    
-    
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    NSLog(@"go out1");
+    NSLog(@"App Did Enter Background");
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -202,16 +205,11 @@ didReceiveRemoteNotification:(NSNotification *)userInfo {
 
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application
-{
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    NSLog(@"go out3");
-}
-
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    NSLog(@"go out4");
+    [[PFFacebookUtils session] close];
+    NSLog(@"App Will Terminate");
 }
 
 
