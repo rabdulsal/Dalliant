@@ -848,12 +848,12 @@
                         <outlet property="likeButton" destination="1J8-9X-ye5" id="Rkv-fM-0e9"/>
                         <segue destination="rDU-7y-piv" kind="modal" identifier="test_match" id="BiY-fr-kOo"/>
                         <segue destination="IsN-PA-W7G" kind="push" identifier="config" id="oXm-ri-1Lw"/>
-                        <segue destination="kXu-jt-bDQ" kind="push" identifier="viewMatches" id="56I-XJ-j5T"/>
+                        <segue destination="km2-NM-f36" kind="push" identifier="viewMatches" id="y3F-dK-Mda"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ki1-Uz-LU0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="975" y="347"/>
+            <point key="canvasLocation" x="976" y="298"/>
         </scene>
         <!--Applications-->
         <scene sceneID="9Xr-ZS-IUi">
@@ -1279,7 +1279,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FiK-9G-PdV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1993" y="878"/>
+            <point key="canvasLocation" x="1970" y="840"/>
         </scene>
         <!--Your Profile-->
         <scene sceneID="ugs-0I-qKD">
@@ -1945,7 +1945,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5LK-z1-DqZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1213" y="1399"/>
+            <point key="canvasLocation" x="1301" y="1607"/>
         </scene>
         <!--User Messages View Controller-->
         <scene sceneID="obj-N2-ofK">
@@ -2164,7 +2164,6 @@
                         <outlet property="messagesView" destination="znx-55-aXc" id="BtU-Ni-qLu"/>
                         <outlet property="textField" destination="1cw-AD-1Ac" id="mg8-aj-hH3"/>
                         <segue destination="hsn-7u-aHf" kind="push" identifier="image" id="Q0d-cM-tNE"/>
-                        <segue destination="co9-NM-ihy" kind="modal" identifier="view_profile" id="QEb-tX-cBC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sps-eH-99S" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2815,16 +2814,16 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="56I-XJ-j5T"/>
-        <segue reference="U3T-S3-jZm"/>
         <segue reference="VlF-20-DHW"/>
         <segue reference="Qh3-Ge-Ehw"/>
-        <segue reference="tAX-qX-dGH"/>
+        <segue reference="U3T-S3-jZm"/>
         <segue reference="gPx-w2-9WG"/>
         <segue reference="MjG-Tl-7wb"/>
-        <segue reference="b2C-ec-aqj"/>
-        <segue reference="QOt-cj-Bjn"/>
+        <segue reference="tAX-qX-dGH"/>
+        <segue reference="vo7-ud-5cu"/>
         <segue reference="oXm-ri-1Lw"/>
+        <segue reference="y3F-dK-Mda"/>
         <segue reference="h7w-Ho-pqn"/>
+        <segue reference="b2C-ec-aqj"/>
     </inferredMetricsTieBreakers>
 </document>
