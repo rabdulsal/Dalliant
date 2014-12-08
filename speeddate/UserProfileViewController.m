@@ -41,9 +41,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    
-    
-    
    self.photoScroll.delegate = self;
     self.hud.delegate = self;
 
@@ -59,6 +56,12 @@
         nameUser.text = mainUser.nickname;
         ageUser.text = [NSString stringWithFormat:@"%@",mainUser.age];
         descriptionUser.text = mainUser.desc;
+
+        // Set profileImage - Fbook photo blurry
+        [mainUser.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+            UIImage *userImage = [[UIImage alloc] initWithData:data];
+            profileImage.image = userImage;
+        }];
         
         if ([self.status isEqualToString:@"yes"]) {
             self.statuses.text = @"online";
@@ -69,8 +72,6 @@
             self.statuses.textColor = [UIColor redColor];
         }
         
-        
-        
        self.assetsPhoto =[[NSMutableArray alloc]init];
         
         WhoSeeMeHelper *see = [WhoSeeMeHelper object];
@@ -80,7 +81,6 @@
         [see saveInBackground];
       
     }];
-    
     
     self.pageControl.numberOfPages = 1;
     
@@ -98,8 +98,6 @@
   
 }
 
-
-
 -(void)createGallery{
     
      self.pageControl.numberOfPages = (int)self.getPhotoArray.count;
@@ -107,15 +105,10 @@
     
      for(int i=10;i<(int)self.getPhotoArray.count;++i){
     
-       
-         
          self.photoScroll.contentSize = CGSizeMake(320 *(int)self.getPhotoArray.count, self.photoScroll.frame.size.height);
          self.photoScroll.pagingEnabled = YES;
          
          if (i==0) {
-             
-            
-             
              NSURL *mainUrl = [NSURL URLWithString:[self.getPhotoArray objectAtIndex:i]];
              
              [SDWebImageDownloader.sharedDownloader downloadImageWithURL:mainUrl
@@ -128,8 +121,6 @@
                   
                       _hud.progress = (float)  receivedSize/expectedSize;
                   
-                  
-                  
               }
                                                                completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished)
               {
@@ -137,7 +128,6 @@
                   {
                       [_hud hide:YES];
                      
-                      
                        UIImage *imagez = image;
                        UIImageView *addImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,0, 320, self.photoScroll.frame.size.height)];
                       addImage.contentMode = UIViewContentModeScaleAspectFill;
@@ -147,7 +137,6 @@
                       
                   }
               }];
-             
             
          }
          
@@ -175,9 +164,6 @@
                       [self.photoScroll addSubview:addImage1];
                   }
               }];
-
-             
-          
          }
          
          if (i==2) {
@@ -229,21 +215,9 @@
                   
                   }
               }];
-
-                 
                  
              }
-             
-            
-
          }
-
-
-         
-  
-    
-    
-    
     
 }
 

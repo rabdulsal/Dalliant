@@ -27,6 +27,7 @@
 @property UIImage *fromPhoto;
 @property (weak, nonatomic) IBOutlet UIButton *cameraButton;
 @property (strong, nonatomic) UIVisualEffectView *blurImageView;
+@property (strong, nonatomic) UIActionSheet *actionsheet;
 @end
 
 @implementation UserMessagesViewController
@@ -36,6 +37,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    mainUser = [User singleObj];
     
     if (!mainUser.isRevealed) {
         self.title = @"Chat";
@@ -52,9 +55,6 @@
     
     [self getPhotos];
     [self getMessages];
-
-    // Wrap in 'isRevealed' conditional
-    mainUser = [User singleObj];
     
     UIBarButtonItem *barButton = [[UIBarButtonItem alloc] init];
     barButton.title = @"";
@@ -330,7 +330,7 @@
     PFQuery *query = [MessageParse query];
     [query whereKey:@"fromUserParse" equalTo:self.toUserParse];
     [query whereKey:@"toUserParse" equalTo:[PFUser currentUser]];
-    [query whereKey:@"read" equalTo:[NSNumber numberWithBool:NO]];
+    [query whereKey:@"read" equalTo:[NSNumber numberWithBool:NO]]; // <-- Key to determine if Message is read - add to TDBadgeCell logic for
     
    
 
@@ -436,18 +436,24 @@
 - (IBAction)sendPhoto:(id)sender
 {
     if (!mainUser.isRevealed) { // <-- Change to check on Matched User attribute
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Send Reveal request?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Yes", nil];
-        [actionSheet showInView:self.view];
+        _actionsheet = [[UIActionSheet alloc] initWithTitle:@"Send Reveal request?" delegate:self cancelButtonTitle:@"Don't Request" destructiveButtonTitle:nil otherButtonTitles:@"Yes", nil];
+        _actionsheet.tag = 1;
+        [_actionsheet showInView:self.view];
         
     } else {
         
         [self hiddeKeyBoard];
-        UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
-        imagePickerController.delegate = self;
+        UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+        imagePicker.delegate = self;
         
         // if-conditional for using camera vs. photolibrary
-        imagePickerController.sourceType =  UIImagePickerControllerSourceTypePhotoLibrary;
-        [self presentViewController:imagePickerController animated:YES completion:nil];
+        if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+            imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        } else {
+            imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        }
+        imagePicker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:imagePicker.sourceType];
+        [self presentViewController:imagePicker animated:YES completion:nil];
 
     }
 }
@@ -575,15 +581,17 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (!mainUser.isRevealed) { // <-- Change to isRevealed attribute on Matched User
+    if (_actionsheet.tag == 1) { // <-- Change to isRevealed attribute on Matched User
         
-        mainUser.isRevealed = true;
-        
-        // Reload View
-        UIView *parent = self.view.superview;
-        [self.view removeFromSuperview];
-        self.view = nil; // unloads the view
-        [parent addSubview:self.view]; //reloads the view from the nib
+        if (!mainUser.isRevealed && buttonIndex == 0) {
+            mainUser.isRevealed = true;
+            
+            // Reload View
+            UIView *parent = self.view.superview;
+            [self.view removeFromSuperview];
+            self.view = nil; // unloads the view
+            [parent addSubview:self.view]; //reloads the view from the nib
+        }
         
     } else {
         
