@@ -147,7 +147,7 @@
         }];
         if (self.curUser.geoPoint != nil) {
             //[self getMatches];
-            [self performSegueWithIdentifier:@"test_match" sender:nil];
+            [self performSegueWithIdentifier:@"viewMatches" sender:nil];
         } else {
             [self currentLocationIdentifier];
         }
@@ -251,7 +251,7 @@
     self.curUser.geoPoint = [PFGeoPoint geoPointWithLatitude:self.currentLocation.coordinate.latitude longitude:self.currentLocation.coordinate.longitude];
     [[UserParseHelper currentUser] saveEventually];
     //[self getMatches];
-    [self performSegueWithIdentifier:@"test_match" sender:nil];
+    [self performSegueWithIdentifier:@"viewMatches" sender:nil];
 }
 
 #pragma mark - GET MATCHES
@@ -1322,8 +1322,8 @@
         vc.matchImage = self.matchPhoto;
         vc.matchUser = self.otherUser;
         vc.user = self.curUser;
-    }else if ([segue.identifier isEqualToString:@"test_match"]) {
-        
+    }else if ([segue.identifier isEqualToString:@"viewMatches"]) {
+        /*
         _matched = true;
         
         MatchViewController *vc = segue.destinationViewController;
@@ -1332,7 +1332,7 @@
         vc.userImage = self.userPhoto;
         vc.matchImage = self.userPhoto;
         vc.matchUser = self.otherUser;
-        vc.user = self.curUser;
+        vc.user = self.curUser;*/
     }
 }
 

@@ -14,6 +14,7 @@
 #import "GADRequest.h"
 #import "GADInterstitial.h"
 #import "User.h"
+#import "UserProfileViewController.h"
 
 @interface UserMessagesViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 {
@@ -28,6 +29,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *cameraButton;
 @property (strong, nonatomic) UIVisualEffectView *blurImageView;
 @property (strong, nonatomic) UIActionSheet *actionsheet;
+@property (strong, nonatomic) NSMutableArray *photoArray;
 @end
 
 @implementation UserMessagesViewController
@@ -365,6 +367,8 @@
              }
          }];
      }];
+    
+    // Query for Incoming Chatter
     PFQuery *queryTo = [UserParseHelper query];
 
     [queryTo getObjectInBackgroundWithId:self.toUserParse.objectId
@@ -545,6 +549,44 @@
         ImageViewController *vc = segue.destinationViewController;
         UIImageView *imageView = (UIImageView *)sender;
         vc.image = imageView.image;
+    } else if ([segue.identifier isEqualToString:@"view_profile"]){
+        //if ([[segue identifier] isEqualToString:@"userprofileSee"]) {
+            // Move to ViewDidLoad
+            self.photoArray =[[NSMutableArray alloc]init];
+            
+            
+            UserProfileViewController *prVC = [[UserProfileViewController alloc]initWithNibName:@"UserVC" bundle:nil];
+            prVC = segue.destinationViewController;
+            //_cellUser = [userFilesArray objectAtIndex:indexPath.row];
+            
+            if (_toUserParse.photo) {
+                
+                PFFile *mainphoto = _toUserParse.photo;
+                //prVC.profileImage.image = _toUserParse.photo;
+                [_photoArray addObject:mainphoto.url];
+            } else NSLog(@"No Main photo");
+            if (_toUserParse.photo1) {
+                
+                PFFile *mainphoto1 = _toUserParse.photo1;
+                [_photoArray addObject:mainphoto1.url];
+            } else NSLog(@"No Main1 photo");
+            if (_toUserParse.photo2) {
+                
+                PFFile *mainphoto2 = _toUserParse.photo2;
+                [_photoArray addObject:mainphoto2.url];
+            } else NSLog(@"No Main2 photo");
+            if (_toUserParse.photo3) {
+                
+                PFFile *mainphoto3 = _toUserParse.photo3;
+                [_photoArray addObject:mainphoto3.url];
+            } else NSLog(@"No Main3 photo");
+            
+            
+            [[segue destinationViewController]setGetPhotoArray:self.photoArray];
+            [[segue destinationViewController] setUserId:_toUserParse.objectId];
+            [[segue destinationViewController]setStatus:_toUserParse.online];
+            
+        //}
     }
 }
 
@@ -552,7 +594,7 @@
 
 - (IBAction)actionPressed:(id)sender
 {
-    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Report",@"Unmatch", nil];
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Match Options" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"View Profile",@"Report",@"Unmatch", nil];
     [sheet showInView:self.view];
 }
 
@@ -596,10 +638,13 @@
     } else {
         
         if (buttonIndex == 0) {
+            [self performSegueWithIdentifier:@"view_profile" sender:nil];
+        }
+        if (buttonIndex == 1) {
             UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Report" message:@"Are you sure you want to report this user? The conversation will be deleted." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Report", nil];
             [av show];
         }
-        if (buttonIndex == 1) {
+        if (buttonIndex == 2) {
             [self deleteConversation];
         }
         
