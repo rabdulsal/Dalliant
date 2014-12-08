@@ -56,6 +56,12 @@
         nameUser.text = mainUser.nickname;
         ageUser.text = [NSString stringWithFormat:@"%@",mainUser.age];
         descriptionUser.text = mainUser.desc;
+
+        // Set profileImage - Fbook photo blurry
+        [mainUser.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+            UIImage *userImage = [[UIImage alloc] initWithData:data];
+            profileImage.image = userImage;
+        }];
         
         if ([self.status isEqualToString:@"yes"]) {
             self.statuses.text = @"online";

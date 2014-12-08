@@ -330,7 +330,7 @@
     PFQuery *query = [MessageParse query];
     [query whereKey:@"fromUserParse" equalTo:self.toUserParse];
     [query whereKey:@"toUserParse" equalTo:[PFUser currentUser]];
-    [query whereKey:@"read" equalTo:[NSNumber numberWithBool:NO]];
+    [query whereKey:@"read" equalTo:[NSNumber numberWithBool:NO]]; // <-- Key to determine if Message is read - add to TDBadgeCell logic for
     
    
 
@@ -443,12 +443,17 @@
     } else {
         
         [self hiddeKeyBoard];
-        UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
-        imagePickerController.delegate = self;
+        UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+        imagePicker.delegate = self;
         
         // if-conditional for using camera vs. photolibrary
-        imagePickerController.sourceType =  UIImagePickerControllerSourceTypePhotoLibrary;
-        [self presentViewController:imagePickerController animated:YES completion:nil];
+        if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+            imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        } else {
+            imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        }
+        imagePicker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:imagePicker.sourceType];
+        [self presentViewController:imagePicker animated:YES completion:nil];
 
     }
 }
