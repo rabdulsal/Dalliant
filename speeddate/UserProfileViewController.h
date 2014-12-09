@@ -32,5 +32,6 @@
 @property (nonatomic,retain) IBOutlet UIActivityIndicatorView *loadImageView;
 
 -(IBAction)chat:(id)sender;
+- (IBAction)closeProfileView:(id)sender;
 
 @end

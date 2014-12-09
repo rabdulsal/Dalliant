@@ -848,12 +848,12 @@
                         <outlet property="likeButton" destination="1J8-9X-ye5" id="Rkv-fM-0e9"/>
                         <segue destination="rDU-7y-piv" kind="modal" identifier="test_match" id="BiY-fr-kOo"/>
                         <segue destination="IsN-PA-W7G" kind="push" identifier="config" id="oXm-ri-1Lw"/>
-                        <segue destination="km2-NM-f36" kind="push" identifier="viewMatches" id="y3F-dK-Mda"/>
+                        <segue destination="kXu-jt-bDQ" kind="push" identifier="viewMatches" id="uru-UJ-cE7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ki1-Uz-LU0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="976" y="298"/>
+            <point key="canvasLocation" x="799" y="988"/>
         </scene>
         <!--Applications-->
         <scene sceneID="9Xr-ZS-IUi">
@@ -1189,18 +1189,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="mmy-8Y-RYN">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="fvA-ix-QBy">
-                                <rect key="frame" x="0.0" y="63" width="320" height="505"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </scrollView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mask_profile.png" id="srd-P4-PFX">
-                                <rect key="frame" x="0.0" y="368" width="320" height="200"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="wGX-RX-GZF">
                                 <rect key="frame" x="234" y="479" width="70" height="59"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -1213,6 +1201,18 @@
                                     <segue destination="OLv-wp-Wkd" kind="push" identifier="chatProfile" id="QOt-cj-Bjn"/>
                                 </connections>
                             </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="mmy-8Y-RYN">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="fvA-ix-QBy">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </scrollView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mask_profile.png" id="srd-P4-PFX">
+                                <rect key="frame" x="0.0" y="368" width="320" height="200"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="11c-Vs-sEe">
                                 <rect key="frame" x="16" y="427" width="210" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -1228,7 +1228,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Descr" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="C4t-g9-AxB">
-                                <rect key="frame" x="16" y="479" width="210" height="59"/>
+                                <rect key="frame" x="16" y="479" width="288" height="59"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -1257,16 +1257,32 @@
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="i7S-yt-RYT">
+                                <rect key="frame" x="258" y="30" width="47" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Report">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="report:" destination="co9-NM-ihy" eventType="touchUpInside" id="ihq-nh-YR2"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="6Ik-4v-mXq">
+                                <rect key="frame" x="14" y="30" width="40" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Close">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="closeProfileView:" destination="co9-NM-ihy" eventType="touchUpInside" id="QnK-ZW-8ay"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.94509803920000002" green="0.35686274509999999" blue="0.30588235289999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
-                    <navigationItem key="navigationItem" id="j8P-vk-FBY">
-                        <barButtonItem key="rightBarButtonItem" title="report" id="ymQ-6G-Mok">
-                            <connections>
-                                <action selector="report:" destination="co9-NM-ihy" id="Ckk-9r-BEe"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="j8P-vk-FBY"/>
                     <connections>
                         <outlet property="ageUser" destination="D9o-Zg-mtV" id="FDx-9r-90B"/>
                         <outlet property="descriptionUser" destination="C4t-g9-AxB" id="oPS-xg-lJF"/>
@@ -1279,7 +1295,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FiK-9G-PdV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1970" y="840"/>
+            <point key="canvasLocation" x="1957" y="908"/>
         </scene>
         <!--Your Profile-->
         <scene sceneID="ugs-0I-qKD">
@@ -1945,7 +1961,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5LK-z1-DqZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1301" y="1607"/>
+            <point key="canvasLocation" x="1214" y="1376"/>
         </scene>
         <!--User Messages View Controller-->
         <scene sceneID="obj-N2-ofK">
@@ -2152,6 +2168,7 @@
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <navigationItem key="navigationItem" id="ZTu-k6-LqP">
                         <barButtonItem key="rightBarButtonItem" systemItem="action" id="jTl-gD-Z4f">
+                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="actionPressed:" destination="OLv-wp-Wkd" id="ATy-1m-a9A"/>
                             </connections>
@@ -2164,6 +2181,7 @@
                         <outlet property="messagesView" destination="znx-55-aXc" id="BtU-Ni-qLu"/>
                         <outlet property="textField" destination="1cw-AD-1Ac" id="mg8-aj-hH3"/>
                         <segue destination="hsn-7u-aHf" kind="push" identifier="image" id="Q0d-cM-tNE"/>
+                        <segue destination="co9-NM-ihy" kind="modal" identifier="view_profile" id="LH4-3d-anI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sps-eH-99S" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2814,16 +2832,16 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="oXm-ri-1Lw"/>
+        <segue reference="U3T-S3-jZm"/>
         <segue reference="VlF-20-DHW"/>
         <segue reference="Qh3-Ge-Ehw"/>
-        <segue reference="U3T-S3-jZm"/>
+        <segue reference="tAX-qX-dGH"/>
         <segue reference="gPx-w2-9WG"/>
         <segue reference="MjG-Tl-7wb"/>
-        <segue reference="tAX-qX-dGH"/>
-        <segue reference="vo7-ud-5cu"/>
-        <segue reference="oXm-ri-1Lw"/>
-        <segue reference="y3F-dK-Mda"/>
+        <segue reference="uru-UJ-cE7"/>
+        <segue reference="LH4-3d-anI"/>
+        <segue reference="QOt-cj-Bjn"/>
         <segue reference="h7w-Ho-pqn"/>
-        <segue reference="b2C-ec-aqj"/>
     </inferredMetricsTieBreakers>
 </document>
