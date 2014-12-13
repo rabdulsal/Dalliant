@@ -55,6 +55,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *maleImageView;
 
 @property (nonatomic,retain) IBOutlet UIView *bannerView;
+@property (weak, nonatomic) IBOutlet UIScrollView *scroller;
 
 @property (nonatomic,retain) SKProduct *vipMember;
 @property (nonatomic,retain) IBOutlet UILabel *distanceChange;
@@ -88,6 +89,9 @@
 {
     [super viewDidLoad];
     //[self checkPurchase];
+    [_scroller setScrollEnabled:YES];
+    //[_scroller setContentSize:CGSizeMake(320, 1555)];
+    [_scroller setContentSize:CGSizeMake(self.view.frame.size.width, 1550)];
     mainUser = [User singleObj];
     mainUser.isRevealed = false;
     _sidebarButton.target = self.revealViewController;
