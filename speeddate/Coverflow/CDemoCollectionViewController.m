@@ -16,7 +16,7 @@
 /* ----------------------------------------------------------------------------------------------
  -------------------------------------------------------------------------------------------------
  
- *** USER PROFILE COLLECTION VIEW
+ *** USER PROFILE IMAGES EDITING
  
  *** ADD FACEBOOK PROFILE IMAGES
  
@@ -129,20 +129,20 @@
         [sheet showInView:self.parentViewController.view];
         
     }else {
-
-        PFUser *chekUser = [PFUser currentUser];
+        // VIP Check
+        /*PFUser *chekUser = [PFUser currentUser];
         NSString *vip = chekUser[@"membervip"];
-        if ([vip isEqualToString:@"vip"]) {
+        if ([vip isEqualToString:@"vip"]) {*/
             
             UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Photo profile" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take photo",@"Choose from library",@"Delete Photo",nil];
             [sheet showInView:self.parentViewController.view];
             
-        }else{
+        /*}else{
             
             UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Upss...." message:@"Additional photos are available only VIP users" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
             [alert show];
             
-        }
+        }*/
     }
 }
 
@@ -150,24 +150,22 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+    imagePickerController.delegate = self;
+    imagePickerController.allowsEditing = YES;
+    
     if (buttonIndex == 0) {
-        UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
-        imagePickerController.delegate = self;
-        imagePickerController.allowsEditing = YES;
         imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
         [self presentViewController:imagePickerController animated:YES completion:nil];
     }
     if (buttonIndex ==  1) {
-        UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
-        imagePickerController.delegate = self;
-        imagePickerController.allowsEditing = YES;
         imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         [self presentViewController:imagePickerController animated:YES completion:nil];
 
     }
-    if (buttonIndex == 2) {
+    if (buttonIndex == 2) { // Deletes Image
        
-        UIImage *image = [UIImage imageNamed:@"nouserphoto.jpg"];
+        UIImage *image = [UIImage imageNamed:@"nouserphoto.jpg"]; // <-- "No" sign User-image
         [self.assets replaceObjectAtIndex:self.selectedImage withObject:image];
         
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:self.selectedImage inSection:0];
