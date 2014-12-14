@@ -106,6 +106,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *baedarLabel;
 - (IBAction)toggleBaedar:(id)sender;
 
+@property (weak, nonatomic) IBOutlet UIButton *matchButtonLabel;
+- (IBAction)pressedMatchButton:(id)sender;
 
 @property (nonatomic,retain) UIView *bannerView;
 
@@ -164,7 +166,8 @@
     self.firstTime = YES;
     self.isRotating = YES;
     self.view.backgroundColor = RED_LIGHT;
-  
+    
+    [_matchButtonLabel setHidden:YES];
     
     self.navigationController.navigationBar.barTintColor = RED_LIGHT;
     self.navigationItem.title = @"Speed Dating";
@@ -208,15 +211,20 @@
         [waveLayer setHidden:NO];
         [self startAnimation];
         [_baedarLabel setSelected:YES];
+        [self findMatches];
     }
 }
 
-- (void)createWaveLayer
+- (IBAction)pressedMatchButton:(id)sender {
+    [self performSegueWithIdentifier:@"viewMatches" sender:nil];
+}
+
+- (void)findMatches
 {
- 
+    [_matchButtonLabel setHidden:NO];
     
-    [self.view.layer addSublayer:waveLayer];
-    [waveLayer setHidden:NO];
+    NSString *buttonTitle = [[NSString alloc] initWithFormat:@"You have %@ Matches! \nClick to view", user.numberOfConvos];
+    [_matchButtonLabel setTitle:buttonTitle forState:UIControlStateNormal];
 }
 
 - (void)checkFirstTime
@@ -1465,7 +1473,8 @@
 
 
 - (IBAction)backToPreferences:(id)sender {
-    [self.navigationController popViewControllerAnimated:YES];
+    //[self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 @end

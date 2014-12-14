@@ -837,6 +837,17 @@
                                     <action selector="toggleBaedar:" destination="aqZ-SE-PFE" eventType="touchUpInside" id="wAT-BF-3MD"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" id="B96-wI-cmw">
+                                <rect key="frame" x="20" y="306" width="280" height="147"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <state key="normal">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="pressedMatchButton:" destination="aqZ-SE-PFE" eventType="touchUpInside" id="fZ8-Uv-TOf"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -863,6 +874,7 @@
                         <outlet property="baedarLabel" destination="fRd-VD-LWY" id="F47-ZR-qaG"/>
                         <outlet property="dislikeButton" destination="AeO-SB-QWK" id="Sqc-wg-DRG"/>
                         <outlet property="likeButton" destination="1J8-9X-ye5" id="Rkv-fM-0e9"/>
+                        <outlet property="matchButtonLabel" destination="B96-wI-cmw" id="2cW-Uf-Luf"/>
                         <segue destination="rDU-7y-piv" kind="modal" identifier="test_match" id="BiY-fr-kOo"/>
                         <segue destination="IsN-PA-W7G" kind="push" identifier="config" id="oXm-ri-1Lw"/>
                         <segue destination="kXu-jt-bDQ" kind="push" identifier="viewMatches" id="uru-UJ-cE7"/>
@@ -2478,7 +2490,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5LK-z1-DqZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1214" y="1376"/>
+            <point key="canvasLocation" x="1258" y="1548"/>
         </scene>
         <!--User Messages View Controller-->
         <scene sceneID="obj-N2-ofK">
@@ -3363,16 +3375,16 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="h7w-Ho-pqn"/>
         <segue reference="J9J-1N-Njp"/>
         <segue reference="MHJ-Yn-gep"/>
         <segue reference="Ihx-RM-f81"/>
-        <segue reference="MjG-Tl-7wb"/>
         <segue reference="tAX-qX-dGH"/>
+        <segue reference="MjG-Tl-7wb"/>
         <segue reference="WJE-pO-Iht"/>
         <segue reference="uru-UJ-cE7"/>
         <segue reference="oXm-ri-1Lw"/>
+        <segue reference="vo7-ud-5cu"/>
         <segue reference="LH4-3d-anI"/>
-        <segue reference="QOt-cj-Bjn"/>
+        <segue reference="h7w-Ho-pqn"/>
     </inferredMetricsTieBreakers>
 </document>
