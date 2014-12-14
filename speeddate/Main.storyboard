@@ -1717,10 +1717,10 @@
             </objects>
             <point key="canvasLocation" x="1787" y="-1368"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Profile TableVC-->
         <scene sceneID="L7d-kR-nAu">
             <objects>
-                <tableViewController id="jSB-JA-Qkl" sceneMemberID="viewController">
+                <tableViewController id="jSB-JA-Qkl" customClass="ProfileTableVC" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="PFI-fB-lg0">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="970"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1740,15 +1740,18 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="kG8-L4-MXC">
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="P7a-Ih-fKk">
                                                     <rect key="frame" x="15" y="37" width="291" height="29"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <segments>
                                                         <segment title="Skinny"/>
-                                                        <segment title="Regular"/>
+                                                        <segment title="Average"/>
                                                         <segment title="Athletic"/>
                                                         <segment title="XL"/>
                                                     </segments>
+                                                    <connections>
+                                                        <action selector="bodyType:" destination="jSB-JA-Qkl" eventType="valueChanged" id="KTo-wo-1kc"/>
+                                                    </connections>
                                                 </segmentedControl>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -1768,6 +1771,9 @@
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="wph-p5-DF8">
                                                     <rect key="frame" x="257" y="6" width="51" height="31"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <connections>
+                                                        <action selector="kidStatusToggle:" destination="jSB-JA-Qkl" eventType="valueChanged" id="Tw5-oa-LWT"/>
+                                                    </connections>
                                                 </switch>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -1787,6 +1793,9 @@
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="jBR-82-lf8">
                                                     <rect key="frame" x="257" y="6" width="51" height="31"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <connections>
+                                                        <action selector="tatooPreferenceToggle:" destination="jSB-JA-Qkl" eventType="valueChanged" id="NmM-nP-wwN"/>
+                                                    </connections>
                                                 </switch>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -1800,15 +1809,18 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ccz-ew-WJj" id="3Qe-H3-X8E">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="UOf-Ey-u8m">
-                                                    <rect key="frame" x="15" y="7" width="291" height="29"/>
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="4qD-lO-ILN">
+                                                    <rect key="frame" x="14" y="8" width="293" height="29"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <segments>
-                                                        <segment title="First"/>
-                                                        <segment title="Second"/>
-                                                        <segment title=""/>
-                                                        <segment title=""/>
+                                                        <segment title="Single"/>
+                                                        <segment title="Dating"/>
+                                                        <segment title="Married"/>
+                                                        <segment title="Divorced"/>
                                                     </segments>
+                                                    <connections>
+                                                        <action selector="relationshipStatus:" destination="jSB-JA-Qkl" eventType="valueChanged" id="vBx-d5-PAA"/>
+                                                    </connections>
                                                 </segmentedControl>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -1825,15 +1837,17 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="N2S-84-Xoe">
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="SCF-sf-YIm">
                                                     <rect key="frame" x="15" y="37" width="291" height="29"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <segments>
-                                                        <segment title="Skinny"/>
-                                                        <segment title="Regular"/>
-                                                        <segment title="Athletic"/>
-                                                        <segment title="XL"/>
+                                                        <segment title="Fun"/>
+                                                        <segment title="Friend"/>
+                                                        <segment title="Romantic"/>
                                                     </segments>
+                                                    <connections>
+                                                        <action selector="relationshipType:" destination="jSB-JA-Qkl" eventType="valueChanged" id="g1Q-bl-H7I"/>
+                                                    </connections>
                                                 </segmentedControl>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -1857,6 +1871,9 @@
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="lXQ-3v-grZ">
                                                     <rect key="frame" x="257" y="4" width="51" height="31"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <connections>
+                                                        <action selector="drinkPreferenceToggle:" destination="jSB-JA-Qkl" eventType="valueChanged" id="fJ4-gX-Re0"/>
+                                                    </connections>
                                                 </switch>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -1876,6 +1893,9 @@
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="aEO-ZB-11b">
                                                     <rect key="frame" x="257" y="6" width="51" height="31"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <connections>
+                                                        <action selector="smokesPreferenceToggle:" destination="jSB-JA-Qkl" eventType="valueChanged" id="jad-1F-qlP"/>
+                                                    </connections>
                                                 </switch>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -1895,6 +1915,9 @@
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="3eY-Oi-z5y">
                                                     <rect key="frame" x="257" y="6" width="51" height="31"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <connections>
+                                                        <action selector="drugPreferenceToggle:" destination="jSB-JA-Qkl" eventType="valueChanged" id="8YX-Jb-Xam"/>
+                                                    </connections>
                                                 </switch>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -1923,6 +1946,209 @@
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="wja-Eq-ad9" id="G9N-4N-Esw">
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Y6n-I5-cbP">
+                                                    <rect key="frame" x="146" y="311" width="166" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <inset key="contentEdgeInsets" minX="1" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    <state key="normal" title="Working-out / Exercise">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="workoutToggle:" destination="jSB-JA-Qkl" eventType="touchUpInside" id="xbl-6K-GGx"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="rRr-9F-MYu">
+                                                    <rect key="frame" x="182" y="159" width="119" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <inset key="contentEdgeInsets" minX="1" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    <state key="normal" title="Music Concerts">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="musicToggle:" destination="jSB-JA-Qkl" eventType="touchUpInside" id="Oct-an-ky1"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="8nE-kV-Tyo">
+                                                    <rect key="frame" x="17" y="197" width="121" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <inset key="contentEdgeInsets" minX="1" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    <state key="normal" title="Opera | Theatre">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <state key="disabled">
+                                                        <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="operaToggle:" destination="jSB-JA-Qkl" eventType="touchUpInside" id="5Ki-cX-yA0"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="gQU-yH-2d9">
+                                                    <rect key="frame" x="124" y="83" width="73" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <inset key="contentEdgeInsets" minX="1" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    <state key="normal" title="Dancing">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="dancingToggle:" destination="jSB-JA-Qkl" eventType="touchUpInside" id="F0F-fP-UNh"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="2FX-RH-S3T">
+                                                    <rect key="frame" x="155" y="197" width="141" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <inset key="contentEdgeInsets" minX="1" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    <state key="normal" title="Spirituality | Religion">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="religiousToggle:" destination="jSB-JA-Qkl" eventType="touchUpInside" id="QxU-NG-eiN"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="48o-G1-t9e">
+                                                    <rect key="frame" x="32" y="83" width="73" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <inset key="contentEdgeInsets" minX="1" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    <state key="normal" title="Cooking">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="cookingToggle:" destination="jSB-JA-Qkl" eventType="touchUpInside" id="KRp-cQ-vBH"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Yxc-zw-eap">
+                                                    <rect key="frame" x="8" y="311" width="130" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <inset key="contentEdgeInsets" minX="1" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    <state key="normal" title="Watching Movies">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="moviesToggle:" destination="jSB-JA-Qkl" eventType="touchUpInside" id="jdq-st-GKE"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="9ln-MZ-6Kc">
+                                                    <rect key="frame" x="8" y="236" width="55" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <inset key="contentEdgeInsets" minX="1" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    <state key="normal" title="Sports">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="sportsToggle:" destination="jSB-JA-Qkl" eventType="touchUpInside" id="f9r-Gb-vtD"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="h8V-W8-Cww">
+                                                    <rect key="frame" x="40" y="121" width="241" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <inset key="contentEdgeInsets" minX="1" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    <state key="normal" title="Hiking | Camping | Nature-walks">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="hikingToggle:" destination="jSB-JA-Qkl" eventType="touchUpInside" id="fTK-TT-XSN"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="8tZ-di-TrA">
+                                                    <rect key="frame" x="8" y="46" width="139" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <inset key="contentEdgeInsets" minX="1" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    <state key="normal" title="Beer | Wine-tasting">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="beerToggle:" destination="jSB-JA-Qkl" eventType="touchUpInside" id="1c7-jF-hc1"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="inL-XS-W8j">
+                                                    <rect key="frame" x="219" y="83" width="82" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <inset key="contentEdgeInsets" minX="1" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    <state key="normal" title="Dining-out">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="diningClubToggle:" destination="jSB-JA-Qkl" eventType="touchUpInside" id="TSJ-kp-0yO"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="fAd-md-uXP">
+                                                    <rect key="frame" x="8" y="8" width="109" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <inset key="contentEdgeInsets" minX="1" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    <state key="normal" title="Animals | Pets">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="animalsToggle:" destination="jSB-JA-Qkl" eventType="touchUpInside" id="TPW-Qp-ph4"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="0ZY-Ha-yTu">
+                                                    <rect key="frame" x="69" y="235" width="182" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <inset key="contentEdgeInsets" minX="1" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    <state key="normal" title="Tech | Gadgets | Science">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="techToggle:" destination="jSB-JA-Qkl" eventType="touchUpInside" id="kpR-63-iUz"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="8Vr-PT-Acn">
+                                                    <rect key="frame" x="155" y="45" width="157" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <inset key="contentEdgeInsets" minX="1" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    <state key="normal" title="Book Club | Reading">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="bookClubToggle:" destination="jSB-JA-Qkl" eventType="touchUpInside" id="CZk-yc-ZX7"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="7FO-5h-oJW">
+                                                    <rect key="frame" x="8" y="159" width="166" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <inset key="contentEdgeInsets" minX="1" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    <state key="normal" title="Lectures | Conferences">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="lecturesToggle:" destination="jSB-JA-Qkl" eventType="touchUpInside" id="hFq-lB-X7k"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="cg2-AX-ZlI">
+                                                    <rect key="frame" x="257" y="235" width="55" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <inset key="contentEdgeInsets" minX="1" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    <state key="normal" title="Travel">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="travelToggle:" destination="jSB-JA-Qkl" eventType="touchUpInside" id="4CP-7c-ncC"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="LS2-QB-NXR">
+                                                    <rect key="frame" x="28" y="273" width="265" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <inset key="contentEdgeInsets" minX="1" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    <state key="normal" title="Volunteering | Social-activism | Politics">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="volunteeringToggle:" destination="jSB-JA-Qkl" eventType="touchUpInside" id="r5v-c6-jux"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="FBU-OT-bOj">
+                                                    <rect key="frame" x="125" y="8" width="187" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <inset key="contentEdgeInsets" minX="1" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    <state key="normal" title="Art Galleries | Photography">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="artsToggle:" destination="jSB-JA-Qkl" eventType="touchUpInside" id="73e-Gf-i0C"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </cells>
@@ -1935,6 +2161,34 @@
                     </tableView>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="970"/>
+                    <connections>
+                        <outlet property="animalLabel" destination="fAd-md-uXP" id="lf5-kK-3Wy"/>
+                        <outlet property="artsLabel" destination="FBU-OT-bOj" id="ekM-XM-TnP"/>
+                        <outlet property="beerLabel" destination="8tZ-di-TrA" id="Sgx-ZY-6Mj"/>
+                        <outlet property="bodyTypeControl" destination="P7a-Ih-fKk" id="4bE-cV-GSg"/>
+                        <outlet property="bookClubLabel" destination="8Vr-PT-Acn" id="dqf-c5-oNB"/>
+                        <outlet property="cookingLabel" destination="48o-G1-t9e" id="4Ay-d9-enG"/>
+                        <outlet property="dancingLabel" destination="gQU-yH-2d9" id="uXq-c4-tHU"/>
+                        <outlet property="diningOutLabel" destination="inL-XS-W8j" id="Zis-5v-1Zi"/>
+                        <outlet property="drinksFilter" destination="lXQ-3v-grZ" id="4nb-ZX-brU"/>
+                        <outlet property="hasBodyArtFilter" destination="jBR-82-lf8" id="peB-aH-dcI"/>
+                        <outlet property="hasKidsFilter" destination="wph-p5-DF8" id="DMl-YD-3rW"/>
+                        <outlet property="hikingOutdoorsLabel" destination="h8V-W8-Cww" id="EDT-Hp-B2b"/>
+                        <outlet property="lecturesTalksLabel" destination="7FO-5h-oJW" id="E7X-rw-gLU"/>
+                        <outlet property="moviesLabel" destination="Yxc-zw-eap" id="OXN-jW-9uM"/>
+                        <outlet property="musicConcertLabel" destination="rRr-9F-MYu" id="god-GE-RRc"/>
+                        <outlet property="operaTheatreLabel" destination="8nE-kV-Tyo" id="C0R-ve-xOj"/>
+                        <outlet property="relationshipStatusControl" destination="4qD-lO-ILN" id="7An-dE-kpe"/>
+                        <outlet property="relationshipTypeControl" destination="SCF-sf-YIm" id="e2G-XG-Lqt"/>
+                        <outlet property="smokesCigsFilter" destination="aEO-ZB-11b" id="g1R-m4-wmk"/>
+                        <outlet property="spiritualLabel" destination="2FX-RH-S3T" id="y4w-Ox-u4L"/>
+                        <outlet property="sportsLabel" destination="9ln-MZ-6Kc" id="sxg-JI-KqE"/>
+                        <outlet property="takesDrugsFilter" destination="3eY-Oi-z5y" id="z1e-iE-4tB"/>
+                        <outlet property="techGadgetsLabel" destination="0ZY-Ha-yTu" id="NrM-M9-4nu"/>
+                        <outlet property="travelLabel" destination="cg2-AX-ZlI" id="PNP-rJ-AMU"/>
+                        <outlet property="volunteeringLabel" destination="LS2-QB-NXR" id="qdd-Z6-pt8"/>
+                        <outlet property="workoutLabel" destination="Y6n-I5-cbP" id="xtZ-dX-unv"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8B8-hv-oYO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -3098,7 +3352,7 @@
         <segue reference="Ihx-RM-f81"/>
         <segue reference="MjG-Tl-7wb"/>
         <segue reference="tAX-qX-dGH"/>
-        <segue reference="U3T-S3-jZm"/>
+        <segue reference="WJE-pO-Iht"/>
         <segue reference="uru-UJ-cE7"/>
         <segue reference="oXm-ri-1Lw"/>
         <segue reference="LH4-3d-anI"/>

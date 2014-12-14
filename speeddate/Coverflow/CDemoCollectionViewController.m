@@ -129,7 +129,7 @@
         [sheet showInView:self.parentViewController.view];
         
     }else {
-        // VIP Check
+        // VIP Check - Maybe re-enable later as VIP feature
         /*PFUser *chekUser = [PFUser currentUser];
         NSString *vip = chekUser[@"membervip"];
         if ([vip isEqualToString:@"vip"]) {*/

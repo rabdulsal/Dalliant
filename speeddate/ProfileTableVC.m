@@ -1,35 +1,27 @@
 //
-//  PreferencesTableViewController.m
+//  ProfileTableVC.m
 //  speeddate
 //
-//  Created by Rashad Abdul-Salaam on 11/24/14.
+//  Created by Rashad Abdul-Salaam on 12/13/14.
 //  Copyright (c) 2014 Studio76. All rights reserved.
 //
 
-#import "PreferencesTableViewController.h"
-#import "User.h"
+#import "ProfileTableVC.h"
 
-@interface PreferencesTableViewController ()
+@interface ProfileTableVC ()
 {
     BOOL *buttonsDisabled;
-    User *user;
+    NSMutableArray *preferenceStrings;
+    NSDictionary *userSnapshotInfo;
 }
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *sidebarButton;
-
 @end
 
-@implementation PreferencesTableViewController
+@implementation ProfileTableVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _sidebarButton.target = self.revealViewController;
-    _sidebarButton.action = @selector(revealToggle:);
-    //[self.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];
-
     user = [User singleObj];
-    
-    // Will have to do a check on the User to pre-load Preferences into appropriate Arrays
     
     _allPrefs = [[NSMutableArray alloc] initWithObjects:_animalLabel,
                  _artsLabel,
@@ -52,6 +44,29 @@
                  nil];
     _userPrefs = [[NSMutableArray alloc] init];
     
+    //[self assignTagNumbers:_allPrefs];
+    
+    _animalLabel.tag            = 1;
+    _artsLabel.tag              = 2;
+    _beerLabel.tag              = 3;
+    _bookClubLabel.tag          = 4;
+    _cookingLabel.tag           = 5;
+    _dancingLabel.tag           = 6;
+    _diningOutLabel.tag         = 7;
+    _lecturesTalksLabel.tag     = 8;
+    _hikingOutdoorsLabel.tag    = 9;
+    _musicConcertLabel.tag      = 10;
+    _operaTheatreLabel.tag      = 11;
+    _spiritualLabel.tag         = 12;
+    _sportsLabel.tag            = 13;
+    _techGadgetsLabel.tag       = 14;
+    _travelLabel.tag            = 15;
+    _volunteeringLabel.tag      = 16;
+    _moviesLabel.tag            = 17;
+    _workoutLabel.tag           = 18;
+    
+    preferenceStrings = [[NSMutableArray alloc] init];
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -64,6 +79,8 @@
     [super viewWillAppear:animated];
     
     [self checkAndSetPreferenceValues];
+    
+    NSLog(@"Body type: %@, Relationship Status: %@, Relationship Type: %@", user.bodyType, user.relationshipStatus, user.relationshipType);
 }
 
 - (void)didReceiveMemoryWarning {
@@ -71,109 +88,94 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
-
+// Add (NSDictionary *)userInfo
 - (void)checkAndSetPreferenceValues
 {
-    
     /* ----------------------------------------------
      
      REFACTOR TO USE INDEX NUMBERS FOR USER FILTER/PREFERENCE VALUES
      AND TAG NUMERICAL TAGS FOR BUTTONS & LABELS TO UTILIZE LOOPS
      
      ------------------------------------------------*/
-    if (user.genderPref) {
-        if ([user.genderPref isEqualToString:@"Male"]) {
-            [_genderControl setSelectedSegmentIndex:0];
-        } else if ([user.genderPref isEqualToString:@"Female"]) {
-            [_genderControl setSelectedSegmentIndex:1];
-        } else if ([user.genderPref isEqualToString:@"Both"]){
-            [_genderControl setSelectedSegmentIndex:2];
-        }
-    }
+    // Access with userInfo[@"personal_info"]
     
-    if (user.minAgePref) {
-        _minAgeField.text = user.minAgePref;
-    }
-    
-    if (user.maxAgePref) {
-        _maxAgeField.text = user.maxAgePref;
-    }
-    
-    if (user.bodyTypePref) {
-        if ([user.bodyTypePref isEqualToString:@"Skinny"]) {
+    // Check settings based on Toggle and Control State and change conditionals as such MUST REFACTOR
+    if (user.bodyType) {
+        if ([user.bodyType isEqualToString:@"Skinny"]) {
             [_bodyTypeControl setSelectedSegmentIndex:0];
-        } else if ([user.bodyTypePref isEqualToString:@"Average"]) {
+        } else if ([user.bodyType isEqualToString:@"Average"]) {
             [_bodyTypeControl setSelectedSegmentIndex:1];
-        } else if ([user.bodyTypePref isEqualToString:@"Fit"]) {
+        } else if ([user.bodyType isEqualToString:@"Fit"]) {
             [_bodyTypeControl setSelectedSegmentIndex:2];
-        } else if ([user.bodyTypePref isEqualToString:@"XL"]) {
+        } else if ([user.bodyType isEqualToString:@"XL"]) {
             [_bodyTypeControl setSelectedSegmentIndex:3];
         }
     }
     
-    if (user.relationshipStatusPref) {
-        if ([user.relationshipStatusPref isEqualToString:@"Single"]) {
+    if (user.relationshipStatus) {
+        if ([user.relationshipStatus isEqualToString:@"Single"]) {
             [_relationshipStatusControl setSelectedSegmentIndex:0];
-        } else if ([user.relationshipStatusPref isEqualToString:@"Dating"]) {
+        } else if ([user.relationshipStatus isEqualToString:@"Dating"]) {
             [_relationshipStatusControl setSelectedSegmentIndex:1];
-        } else if ([user.relationshipStatusPref isEqualToString:@"Married"]) {
+        } else if ([user.relationshipStatus isEqualToString:@"Married"]) {
             [_relationshipStatusControl setSelectedSegmentIndex:2];
-        } else if ([user.relationshipStatusPref isEqualToString:@"Divorced"]){
+        } else if ([user.relationshipStatus isEqualToString:@"Divorced"]){
             [_relationshipStatusControl setSelectedSegmentIndex:3];
         }
     }
     
-    if (user.romanticPreference) {
-        if ([user.romanticPreference isEqualToString:@"Fun"]) {
+    if (user.relationshipType) {
+        if ([user.relationshipType isEqualToString:@"Fun"]) {
             [_relationshipTypeControl setSelectedSegmentIndex:0];
-        } else if ([user.romanticPreference isEqualToString:@"Friend"]) {
+        } else if ([user.relationshipType isEqualToString:@"Friend"]) {
             [_relationshipTypeControl setSelectedSegmentIndex:1];
-        } else if ([user.romanticPreference isEqualToString:@"Relationship"]) {
+        } else if ([user.relationshipType isEqualToString:@"Relationship"]) {
             [_relationshipTypeControl setSelectedSegmentIndex:2];
         }
     }
     
-    if (user.kidsOkay) {
+    if (user.hasKids) {
         [_hasKidsFilter setOn:YES];
+        user.haveKids = @"Yes";
     } else {
         [_hasKidsFilter setOn:NO];
+        user.haveKids = @"No";
     }
     
-    if (user.drinkingOkay) {
+    if (user.drinks) {
         [_drinksFilter setOn:YES];
+        user.likeToDrink = @"Yes";
     } else {
         [_drinksFilter setOn:NO];
+        user.likeToDrink = @"No";
     }
     
-    if (user.smokingOkay) {
+    if (user.smokes) {
         [_smokesCigsFilter setOn:YES];
+        user.smokesCigs = @"Yes";
     } else {
         [_smokesCigsFilter setOn:NO];
+        user.smokesCigs = @"No";
     }
     
-    if (user.drugsOkay) {
+    if (user.drugs) {
         [_takesDrugsFilter setOn:YES];
+        user.usesDrugs = @"Yes";
     } else {
         [_takesDrugsFilter setOn:NO];
+        user.usesDrugs = @"No";
     }
     
-    if (user.bodyArtOkay) {
+    if (user.bodyArt) {
         [_hasBodyArtFilter setOn:YES];
+        user.hasTatoos = @"Yes";
     } else {
         [_hasBodyArtFilter setOn:NO];
+        user.hasTatoos = @"No";
     }
     
     // Pref Buttons
-    
+    //if (_userPrefs.count <= 5) {
     if (user.animalsPref) {
         [self buttonSelected:_animalLabel];
     }
@@ -245,51 +247,29 @@
     if (user.workoutPref) {
         [self buttonSelected:_workoutLabel];
     }
+     
+   // } // End buttonDisabled conditional*/
 }
 
 #pragma mark - Segmented Controls - Actions
 
-- (IBAction)genderOptions:(id)sender {
-    if (_genderControl.selectedSegmentIndex == 0) {
-        user.genderPref = @"Male";
-    } else if (_genderControl.selectedSegmentIndex == 1) {
-        user.genderPref = @"Female";
-    } else {
-        user.genderPref = @"Both";
-    }
-}
-
 - (IBAction)bodyType:(id)sender {
-    NSLog(@"Button index: %lu", _bodyTypeControl.selectedSegmentIndex);
-    switch (_bodyTypeControl.selectedSegmentIndex) {
-        case 0:
-            user.bodyTypePref = @"Skinny";
-            break;
-        case 1:
-            user.bodyTypePref = @"Average";
-            break;
-        case 2:
-            user.bodyTypePref = @"Fit";
-            break;
-        case 3:
-            user.bodyTypePref = @"XL";
-            break;
-    }
+    NSLog(@"Button index: %ld", (long)_bodyTypeControl.selectedSegmentIndex);
 }
 
 - (IBAction)relationshipStatus:(id)sender {
     switch (_relationshipStatusControl.selectedSegmentIndex) {
         case 0:
-            user.relationshipStatusPref = @"Single";
+            user.relationshipStatus = @"Single";
             break;
         case 1:
-            user.relationshipStatusPref= @"Dating";
+            user.relationshipStatus = @"Dating";
             break;
         case 2:
-            user.relationshipStatusPref = @"Married";
+            user.relationshipStatus = @"Married";
             break;
         case 3:
-            user.relationshipStatusPref = @"Divorced";
+            user.relationshipStatus = @"Divorced";
             break;
     }
 }
@@ -297,47 +277,79 @@
 - (IBAction)relationshipType:(id)sender {
     switch (_relationshipTypeControl.selectedSegmentIndex) {
         case 0:
-            user.romanticPreference = @"Fun";
+            user.relationshipType = @"Fun";
             break;
         case 1:
-            user.romanticPreference = @"Friend";
+            user.relationshipType = @"Friend";
             break;
         case 2:
-            user.romanticPreference = @"Relationship";
+            user.relationshipType = @"Relationship";
             break;
     }
 }
+
+- (void)setBodyTypeControl:(UISegmentedControl *)bodyTypeControl
+{
+    
+    /*
+    switch (bodyTypeControl.selectedSegmentIndex) {
+        case 0:
+            user.bodyType = @"Skinny";
+            break;
+        case 1:
+            user.bodyType = @"Average";
+            break;
+        case 2:
+            user.bodyType = @"Fit";
+            break;
+        case 3:
+            user.bodyType = @"XL";
+            NSLog(@"Body type: %@", user.bodyType);
+            break;
+    }*/
+}
+
+- (void)setRelationshipStatusControl:(UISegmentedControl *)relationshipStatusControl
+{
+    
+}
+
+- (void)setRelationshipTypeControl:(UISegmentedControl *)relationshipTypeControl
+{
+    
+}
+
 
 #pragma mark - UI Switches
 
 - (IBAction)kidStatusToggle:(id)sender {
     if (_hasKidsFilter.on) {
-        user.kidsOkay = true;
-    } else user.kidsOkay = false;
+        user.hasKids = true;
+    } else user.hasKids = false;
 }
 
 - (IBAction)drinkPreferenceToggle:(id)sender {
     if (_drinksFilter.on) {
-        user.drinkingOkay = true;
-    } else  user.drinkingOkay = false;
+        user.drinks = true;
+    } else  user.drinks = false;
 }
 
 - (IBAction)smokesPreferenceToggle:(id)sender {
     if (_smokesCigsFilter.on) {
-        user.smokingOkay = true;
-    } else  user.smokingOkay = false;
+        user.smokes = true;
+    } else  user.smokes = false;
 }
 
 - (IBAction)drugPreferenceToggle:(id)sender {
     if (_takesDrugsFilter.on) {
-        user.drugsOkay = true;
-    } else  user.drugsOkay = false;
+        user.drugs = true;
+    } else  user.drugs = false;
 }
 
 - (IBAction)tatooPreferenceToggle:(id)sender {
     if (_hasBodyArtFilter.on) {
-        user.bodyArtOkay = true;
-    } else  user.bodyArtOkay = false;
+        user.bodyArt = true;
+    } else  user.bodyArt = false;
 }
 
 #pragma mark - Interests & Hobbies
@@ -522,13 +534,6 @@
     }
 }
 
-#pragma mark - Check and Set Switches
-
-- (void)checkAndSetSwitchToggle:(UISwitch *)switchToggle andUserPreference:(BOOL *)preference
-{
-    
-}
-
 #pragma mark - Enable and Disable Preference Buttons
 
 - (void)buttonDeSelected:(UIButton *)userPreference
@@ -590,18 +595,190 @@
     buttonsDisabled = false;
 }
 
-#pragma mark - Save and Close
-
-- (IBAction)saveAndClose:(id)sender {
-    if (_minAgeField.text) {
-        user.minAgePref = _minAgeField.text;
-    }
+- (void)checkAndSetUserEnteredData
+{
+    // Set Label Values
+    _userDescription.text   = user.blurb;
+    _userAge.text           = user.age;
+    //_userHeight           = sobj.height
+    /*_userFavActivity.text   = sobj.favActivity;
+     _userLikesDrinks.text   = sobj.likeToDrink;
+     _userHasKids.text       = sobj.haveKids;
+     _userHasTatoos.text     = sobj.hasTatoos;*/
     
-    if (_maxAgeField.text) {
-        user.maxAgePref = _maxAgeField.text;
-    }
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
 }
+
+- (void)convertPreferenceButtons:(NSMutableArray *)preferences
+{
+    for (UIButton *preference in preferences) {
+        switch (preference.tag) {
+            case 1:
+                [preferenceStrings addObject:@"Animals & Pets"];
+                break;
+            case 2:
+                [preferenceStrings addObject:@"Art Galleries & Photography"];
+                break;
+            case 3:
+                [preferenceStrings addObject:@"Beer & Wine-tasting"];
+                break;
+            case 4:
+                [preferenceStrings addObject:@"Book Club & Reading"];
+                break;
+            case 5:
+                [preferenceStrings addObject:@"Cooking"];
+                break;
+            case 6:
+                [preferenceStrings addObject:@"Dancing"];
+                break;
+            case 7:
+                [preferenceStrings addObject:@"Dining-out"];
+                break;
+            case 8:
+                [preferenceStrings addObject:@"Lectures & Conferences"];
+                break;
+            case 9:
+                [preferenceStrings addObject:@"Hiking, Camping, Nature-walks"];
+                break;
+            case 10:
+                [preferenceStrings addObject:@"Music Concerts"];
+                break;
+            case 11:
+                [preferenceStrings addObject:@"Opera & Theatre"];
+                break;
+            case 12:
+                [preferenceStrings addObject:@"Religion & Spirituality"];
+                break;
+            case 13:
+                [preferenceStrings addObject:@"Sports"];
+                break;
+            case 14:
+                [preferenceStrings addObject:@"Tech, Gadgets, Science"];
+                break;
+            case 15:
+                [preferenceStrings addObject:@"Travel"];
+                break;
+            case 16:
+                [preferenceStrings addObject:@"Volunteering, Social-activism, Politics"];
+                break;
+            case 17:
+                [preferenceStrings addObject:@"TV & Movies"];
+                break;
+            case 18:
+                [preferenceStrings addObject:@"Working-out & Exercise"];
+                break;
+            default:
+                [preferenceStrings addObject:@"N/A"];
+                break;
+        }
+        
+        NSLog(@"Total PreferenceStrings: %lu", preferenceStrings.count);
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    
+    NSLog(@"Body type: %lu, Relationship Status: %lu, Relationship Type: %lu", _bodyTypeControl.selectedSegmentIndex, _relationshipStatusControl.selectedSegmentIndex, _relationshipTypeControl.selectedSegmentIndex);
+    
+    // Check for an existing Parse database then set values and upload to database
+    /*if (user.userRef) {
+        
+        //   [self checkAndSetPreferenceValues:user];
+        // Store all values to Firebase
+        Firebase *personalInfo = [userRef childByAppendingPath:@"personal_info"];
+        
+        // Convert Pref Buttons to Strings
+        [self convertPreferenceButtons:_userPrefs];
+        
+        NSDictionary *personal = @{
+                                   // About User
+                                   @"body_type" : user.bodyType,
+                                   @"have_kids" : user.haveKids,
+                                   @"relationship_status" : user.relationshipStatus,
+                                   @"desired_relationship" : user.relationshipType,
+                                   // Vices
+                                   @"drinks" : user.likeToDrink,
+                                   @"smokes" : user.smokesCigs,
+                                   @"drugs" : user.usesDrugs,
+                                   @"body_art" : user.hasTatoos,
+                                   // Interests & Hobbies
+                                   @"interests" : preferenceStrings
+                                   };
+        
+        [personalInfo setValue:personal];
+        
+        [self checkAndSetPreferenceValues];
+        
+    }*/
+}
+
+#pragma mark - Table view data source
+
+/*- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+#warning Potentially incomplete method implementation.
+    // Return the number of sections.
+    return 0;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+#warning Incomplete method implementation.
+    // Return the number of rows in the section.
+    return 0;
+}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
+    
+    // Configure the cell...
+    
+    return cell;
+}
+*/
+
+/*
+// Override to support conditional editing of the table view.
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return NO if you do not want the specified item to be editable.
+    return YES;
+}
+*/
+
+/*
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        // Delete the row from the data source
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
+        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+    }   
+}
+*/
+
+/*
+// Override to support rearranging the table view.
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+}
+*/
+
+/*
+// Override to support conditional rearranging of the table view.
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return NO if you do not want the item to be re-orderable.
+    return YES;
+}
+*/
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
 
 @end
