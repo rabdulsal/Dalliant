@@ -805,7 +805,7 @@
                                 </connections>
                             </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Finding Bae..." textAlignment="center" selectable="NO" id="aVY-JI-f2V">
-                                <rect key="frame" x="20" y="202" width="280" height="42"/>
+                                <rect key="frame" x="20" y="100" width="280" height="42"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="textColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="18"/>
@@ -819,6 +819,22 @@
                                 </state>
                                 <connections>
                                     <action selector="likeButtonHit:" destination="aqZ-SE-PFE" eventType="touchUpInside" id="OWl-VP-99n"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="fRd-VD-LWY">
+                                <rect key="frame" x="20" y="195" width="280" height="56"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <state key="normal" title="Where's Bae">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="selected" title="Finding Bae ...">
+                                    <color key="titleColor" red="1" green="0.93470561490000004" blue="0.093461133020000003" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="toggleBaedar:" destination="aqZ-SE-PFE" eventType="touchUpInside" id="wAT-BF-3MD"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -844,6 +860,7 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="activityLabel" destination="aVY-JI-f2V" id="COR-sD-u3h"/>
+                        <outlet property="baedarLabel" destination="fRd-VD-LWY" id="F47-ZR-qaG"/>
                         <outlet property="dislikeButton" destination="AeO-SB-QWK" id="Sqc-wg-DRG"/>
                         <outlet property="likeButton" destination="1J8-9X-ye5" id="Rkv-fM-0e9"/>
                         <segue destination="rDU-7y-piv" kind="modal" identifier="test_match" id="BiY-fr-kOo"/>

@@ -103,6 +103,8 @@
 @property UILabel* imageCountLabel;
 @property UserParseHelper *otherUser;
 
+@property (weak, nonatomic) IBOutlet UIButton *baedarLabel;
+- (IBAction)toggleBaedar:(id)sender;
 
 
 @property (nonatomic,retain) UIView *bannerView;
@@ -145,9 +147,9 @@
         [self.curUser.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
             self.userPhoto = [UIImage imageWithData:data];
         }];
-        if (self.curUser.geoPoint != nil) {
+        if (self.curUser.geoPoint != nil) { // <-- Change to '== nil', and only run 'else'
             //[self getMatches];
-            [self performSegueWithIdentifier:@"viewMatches" sender:nil];
+            //[self performSegueWithIdentifier:@"viewMatches" sender:nil];
         } else {
             [self currentLocationIdentifier];
         }
@@ -167,6 +169,8 @@
     self.navigationController.navigationBar.barTintColor = RED_LIGHT;
     self.navigationItem.title = @"Speed Dating";
     inAnimation = NO;
+    
+    // Circle Animation <-- wrap in Toggle Button
     waveLayer=[CALayer layer];
     if (IS_IPHONE_5) {
         waveLayer.frame = CGRectMake(155, 220, 10, 10);
@@ -177,7 +181,7 @@
     waveLayer.cornerRadius =5.0;
     [self.view.layer addSublayer:waveLayer];
    
-    [waveLayer setHidden:NO];
+    [waveLayer setHidden:YES];
     
     //[self performSegueWithIdentifier:@"test_match" sender:nil];
 
@@ -189,6 +193,30 @@
 
 - (void)interstitialDidReceiveAd:(GADInterstitial *)interstitial {
     NSLog(@"Interstitial adapter class name: %@", interstitial.adNetworkClassName);
+}
+
+#pragma mark - Baedar Toggle
+
+- (IBAction)toggleBaedar:(id)sender {
+    if (_baedarLabel.isSelected) {
+        [_baedarLabel setSelected:NO];
+        inAnimation = NO;
+        [waveLayer removeFromSuperlayer];
+        [waveLayer setHidden:YES];
+    } else {
+        [self.view.layer addSublayer:waveLayer];
+        [waveLayer setHidden:NO];
+        [self startAnimation];
+        [_baedarLabel setSelected:YES];
+    }
+}
+
+- (void)createWaveLayer
+{
+ 
+    
+    [self.view.layer addSublayer:waveLayer];
+    [waveLayer setHidden:NO];
 }
 
 - (void)checkFirstTime
@@ -250,6 +278,8 @@
     [UserParseHelper currentUser].geoPoint = [PFGeoPoint geoPointWithLatitude:self.currentLocation.coordinate.latitude longitude:self.currentLocation.coordinate.longitude];
     self.curUser.geoPoint = [PFGeoPoint geoPointWithLatitude:self.currentLocation.coordinate.latitude longitude:self.currentLocation.coordinate.longitude];
     [[UserParseHelper currentUser] saveEventually];
+    
+    // Are these needed?
     //[self getMatches];
     [self performSegueWithIdentifier:@"viewMatches" sender:nil];
 }
@@ -1374,6 +1404,8 @@
     }
 }
 
+#pragma mark - FIND BAEDAR WAVE ANIMATION
+
 -(void)startAnimation
 {
     if ([waveLayer isHidden] || ![self.view window] || inAnimation == YES)
@@ -1383,8 +1415,6 @@
     inAnimation = YES;
     [self waveAnimation:waveLayer];
 }
-
-#pragma mark - FIND BAEDAR WAVE ANIMATION
 
 -(void)waveAnimation:(CALayer*)aLayer
 {
@@ -1434,8 +1464,8 @@
 }
 
 
-
 - (IBAction)backToPreferences:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
 }
+
 @end

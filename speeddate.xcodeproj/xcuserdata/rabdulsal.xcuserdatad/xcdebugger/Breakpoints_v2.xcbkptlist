@@ -24,11 +24,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "speeddate/ViewControllers/MainViewController.m"
-            timestampString = "438822022.206465"
+            timestampString = "440269901.341598"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "219"
-            endingLineNumber = "219"
+            startingLineNumber = "247"
+            endingLineNumber = "247"
             landmarkName = "-checkIncomingViewController"
             landmarkType = "5">
          </BreakpointContent>
