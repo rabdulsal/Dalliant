@@ -640,10 +640,12 @@
         if (buttonIndex == 0) {
             [self performSegueWithIdentifier:@"view_profile" sender:nil];
         }
+            
         if (buttonIndex == 1) {
             UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Report" message:@"Are you sure you want to report this user? The conversation will be deleted." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Report", nil];
             [av show];
         }
+            
         if (buttonIndex == 2) {
             [self deleteConversation];
         }
