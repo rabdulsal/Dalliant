@@ -11,6 +11,7 @@
 @property (nonatomic, strong) PFFile *image;
 @property (nonatomic, strong) NSDate *createdAt;
 @property (nonatomic) BOOL read;
+@property (nonatomic) BOOL isRevealed;
 
 @property UIImage *sendImage;
 

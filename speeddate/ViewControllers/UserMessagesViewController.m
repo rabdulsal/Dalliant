@@ -63,8 +63,11 @@
     self.navigationController.navigationBar.topItem.backBarButtonItem = barButton;
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hiddeKeyBoard)];
     [self.collectionView addGestureRecognizer:tapGestureRecognizer];
-
+    
+    // Notification to fetch New Message
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getNewMessage:) name:receivedMessage object:nil];
+    
+    // Notification to fetch New Reveal Request?
 
     [self customizeApp];
 }

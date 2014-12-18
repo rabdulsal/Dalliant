@@ -10,6 +10,7 @@
 @dynamic image;
 @dynamic createdAt;
 @dynamic read;
+@dynamic isRevealed;
 @synthesize sendImage;
 
 + (void)load {
