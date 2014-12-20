@@ -7,13 +7,14 @@
 //
 
 #import <Parse/Parse.h>
+#import "UserParseHelper.h"
 
 @interface RevealRequest : PFObject <PFSubclassing>
 
 + (NSString *)parseClassName;
 
-@property (retain) NSString *requestFromUser;
-@property (retain) NSString *requestToUser;
-@property (retain) NSString *requestReply;
+@property (nonatomic) UserParseHelper *requestFromUser;
+@property (nonatomic) UserParseHelper *requestToUser;
+@property (nonatomic) NSString *requestReply;
 
 @end
