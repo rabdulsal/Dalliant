@@ -52,7 +52,7 @@
         UIImage *btnImage = [UIImage imageNamed:@"user"];
         [_cameraButton setImage:btnImage forState:UIControlStateNormal];
         
-        [self fetchRevealRequest];
+        //[self fetchRevealRequest];
     } else {
         self.title = self.toUserParse.nickname;
         
@@ -634,7 +634,7 @@
 
 #pragma mark - Incoming Reveal Request
 
-- (void)fetchRevealRequest
+- (void)fetchRevealRequest:(NSNotification *)note
 {
     NSLog(@"Fetch Reveal Request run");
     // Query for Incoming RevealRequest
@@ -729,7 +729,24 @@
             revealRequest.requestFromUser = [UserParseHelper currentUser];
             revealRequest.requestToUser = self.toUserParse;
             revealRequest.requestReply = @"";
-            [revealRequest saveInBackground];
+            
+            [revealRequest saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                PFQuery *query = [PFInstallation query];
+                PFUser *pushUser = [PFUser currentUser];
+                NSString *pushUserto = pushUser[@"nickname"];
+                [query whereKey:@"objectId" equalTo:self.toUserParse.installation.objectId];
+                
+                NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
+                                      [NSString stringWithFormat:@"%@ sent you a Reveal Request",pushUserto], @"alert",
+                                      @"Increment", @"badge",
+                                      @"Ache.caf", @"sound",
+                                      nil];
+                PFPush *push = [[PFPush alloc] init];
+                
+                [push setQuery:query];
+                [push setData:data];
+                [push sendPushInBackground];
+            }];
         }
         
     } else {

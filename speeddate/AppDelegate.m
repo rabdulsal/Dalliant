@@ -116,9 +116,17 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
 - (void)application:(UIApplication *)application
 didReceiveRemoteNotification:(NSNotification *)userInfo {
     [[NSNotificationCenter defaultCenter] postNotificationName:receivedMessage object:userInfo];
+    
     //[PFPush handlePush:userInfo];
 }
-
+/*
+- (void)application:(UIApplication *)application
+didReceiveRemoteNotification:(NSDictionary *)userInfo
+fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler
+{
+    
+}
+*/
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
