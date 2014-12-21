@@ -1208,7 +1208,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gAK-Qi-QxL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2316" y="-1555"/>
+            <point key="canvasLocation" x="2551" y="-1691"/>
         </scene>
         <!--User Profile View Controller-->
         <scene sceneID="By3-mq-bGB">
@@ -1697,6 +1697,19 @@
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="b3z-I9-EBO">
+                                        <rect key="frame" x="29" y="438" width="304" height="29"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <segments>
+                                            <segment title="First"/>
+                                            <segment title="Second"/>
+                                            <segment title="Third"/>
+                                            <segment title="Fourth"/>
+                                        </segments>
+                                        <connections>
+                                            <action selector="bodyType:" destination="mLc-67-Pcw" eventType="valueChanged" id="NyO-kE-5bn"/>
+                                        </connections>
+                                    </segmentedControl>
                                 </subviews>
                             </scrollView>
                         </subviews>
@@ -1720,6 +1733,7 @@
                         <outlet property="ageLabel" destination="ZXc-ch-9e5" id="vcL-c1-fND"/>
                         <outlet property="agePickerView" destination="x7Q-bj-fN5" id="gnq-Hr-6De"/>
                         <outlet property="bannerView" destination="s7T-xV-R58" id="bTf-SA-H28"/>
+                        <outlet property="bodyTypeControl" destination="b3z-I9-EBO" id="HgF-Bc-aPE"/>
                         <outlet property="charactersLabel" destination="BGo-5M-7jI" id="xRY-Ul-tE4"/>
                         <outlet property="cityLable" destination="wzd-zD-TMS" id="3Fg-Rh-Utg"/>
                         <outlet property="descriptionLabel" destination="Y7e-R2-z92" id="SBi-99-0l1"/>
@@ -1769,19 +1783,6 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="P7a-Ih-fKk">
-                                                    <rect key="frame" x="15" y="37" width="291" height="29"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <segments>
-                                                        <segment title="Skinny"/>
-                                                        <segment title="Average"/>
-                                                        <segment title="Athletic"/>
-                                                        <segment title="XL"/>
-                                                    </segments>
-                                                    <connections>
-                                                        <action selector="bodyType:" destination="jSB-JA-Qkl" eventType="valueChanged" id="KTo-wo-1kc"/>
-                                                    </connections>
-                                                </segmentedControl>
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -1837,21 +1838,6 @@
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ccz-ew-WJj" id="3Qe-H3-X8E">
                                             <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="4qD-lO-ILN">
-                                                    <rect key="frame" x="14" y="8" width="293" height="29"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <segments>
-                                                        <segment title="Single"/>
-                                                        <segment title="Dating"/>
-                                                        <segment title="Married"/>
-                                                        <segment title="Divorced"/>
-                                                    </segments>
-                                                    <connections>
-                                                        <action selector="relationshipStatus:" destination="jSB-JA-Qkl" eventType="valueChanged" id="vBx-d5-PAA"/>
-                                                    </connections>
-                                                </segmentedControl>
-                                            </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="78" id="U6c-4N-HmR">
@@ -1866,18 +1852,6 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="SCF-sf-YIm">
-                                                    <rect key="frame" x="15" y="37" width="291" height="29"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <segments>
-                                                        <segment title="Fun"/>
-                                                        <segment title="Friend"/>
-                                                        <segment title="Romantic"/>
-                                                    </segments>
-                                                    <connections>
-                                                        <action selector="relationshipType:" destination="jSB-JA-Qkl" eventType="valueChanged" id="g1Q-bl-H7I"/>
-                                                    </connections>
-                                                </segmentedControl>
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -2194,7 +2168,6 @@
                         <outlet property="animalLabel" destination="fAd-md-uXP" id="lf5-kK-3Wy"/>
                         <outlet property="artsLabel" destination="FBU-OT-bOj" id="ekM-XM-TnP"/>
                         <outlet property="beerLabel" destination="8tZ-di-TrA" id="Sgx-ZY-6Mj"/>
-                        <outlet property="bodyTypeControl" destination="P7a-Ih-fKk" id="4bE-cV-GSg"/>
                         <outlet property="bookClubLabel" destination="8Vr-PT-Acn" id="dqf-c5-oNB"/>
                         <outlet property="cookingLabel" destination="48o-G1-t9e" id="4Ay-d9-enG"/>
                         <outlet property="dancingLabel" destination="gQU-yH-2d9" id="uXq-c4-tHU"/>
@@ -2207,8 +2180,6 @@
                         <outlet property="moviesLabel" destination="Yxc-zw-eap" id="OXN-jW-9uM"/>
                         <outlet property="musicConcertLabel" destination="rRr-9F-MYu" id="god-GE-RRc"/>
                         <outlet property="operaTheatreLabel" destination="8nE-kV-Tyo" id="C0R-ve-xOj"/>
-                        <outlet property="relationshipStatusControl" destination="4qD-lO-ILN" id="7An-dE-kpe"/>
-                        <outlet property="relationshipTypeControl" destination="SCF-sf-YIm" id="e2G-XG-Lqt"/>
                         <outlet property="smokesCigsFilter" destination="aEO-ZB-11b" id="g1R-m4-wmk"/>
                         <outlet property="spiritualLabel" destination="2FX-RH-S3T" id="y4w-Ox-u4L"/>
                         <outlet property="sportsLabel" destination="9ln-MZ-6Kc" id="sxg-JI-KqE"/>
@@ -2221,7 +2192,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8B8-hv-oYO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2160" y="-963"/>
+            <point key="canvasLocation" x="2195" y="-1001"/>
         </scene>
         <!--Demo Collection View Controller-->
         <scene sceneID="Fgc-sO-ioH">
@@ -3384,7 +3355,7 @@
         <segue reference="uru-UJ-cE7"/>
         <segue reference="oXm-ri-1Lw"/>
         <segue reference="vo7-ud-5cu"/>
-        <segue reference="LH4-3d-anI"/>
+        <segue reference="b2C-ec-aqj"/>
         <segue reference="h7w-Ho-pqn"/>
     </inferredMetricsTieBreakers>
 </document>

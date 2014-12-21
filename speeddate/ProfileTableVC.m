@@ -14,6 +14,10 @@
     NSMutableArray *preferenceStrings;
     NSDictionary *userSnapshotInfo;
 }
+
+@property (nonatomic) UISegmentedControl *bodyTypeControl;
+@property (nonatomic) UISegmentedControl *relationshipStatusControl;
+@property (nonatomic) UISegmentedControl *relationshipTypeControl;
 @end
 
 @implementation ProfileTableVC
@@ -72,20 +76,106 @@
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+    if (user.bodyType) {
+        NSLog(@"Body Type: %@", user.bodyType);
+    } else {
+        NSLog(@"Body Type Control: %ld", _bodyTypeControl.selectedSegmentIndex);
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
-    [self checkAndSetPreferenceValues];
+    [self buildSegmentControls];
     
-    NSLog(@"Body type: %@, Relationship Status: %@, Relationship Type: %@", user.bodyType, user.relationshipStatus, user.relationshipType);
+    [self checkAndSetPreferenceValues];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)buildSegmentControls
+{
+    // Body Type
+    NSArray *bodyArray = [NSArray arrayWithObjects: @"Skinny", @"Average", @"Fit", @"XL", nil];
+    _bodyTypeControl = [[UISegmentedControl alloc] initWithItems:bodyArray];
+    _bodyTypeControl.frame = CGRectMake(15, 60, 291, 29);
+    //_bodyTypeControl.segmentedControlStyle = UISegmentedControlStylePlain;
+    [_bodyTypeControl addTarget:self action:@selector(BodyTypeButtonPressed:) forControlEvents: UIControlEventValueChanged];
+    
+    // Relationship Status
+    NSArray *statusArray = [NSArray arrayWithObjects: @"Single", @"Dating", @"Divorced", nil];
+    _relationshipStatusControl = [[UISegmentedControl alloc] initWithItems:statusArray];
+    _relationshipStatusControl.frame = CGRectMake(15, 218, 291, 29);
+    //_relationshipStatusControl.segmentedControlStyle = UISegmentedControlStylePlain;
+    [_relationshipStatusControl addTarget:self action:@selector(RelationshipStatusPressed:) forControlEvents: UIControlEventValueChanged];
+    
+    // Relationship Type
+    NSArray *typeArray = [NSArray arrayWithObjects: @"Company", @"Friend", @"Relationship", nil];
+    _relationshipTypeControl = [[UISegmentedControl alloc] initWithItems:typeArray];
+    _relationshipTypeControl.frame = CGRectMake(15, 290, 291, 29);
+    //_relationshipTypeControl.segmentedControlStyle = UISegmentedControlStylePlain;
+    [_relationshipTypeControl addTarget:self action:@selector(RelationshipTypePressed:) forControlEvents: UIControlEventValueChanged];
+    
+    [self.view addSubview:_bodyTypeControl];
+    [self.view addSubview:_relationshipStatusControl];
+    [self.view addSubview:_relationshipTypeControl];
+}
+
+- (void)BodyTypeButtonPressed:(UISegmentedControl *)segment
+{
+    switch (segment.selectedSegmentIndex) {
+        case 0:
+            user.bodyType = @"Skinny";
+            NSLog(@"Body type index: %ld", segment.selectedSegmentIndex);
+            break;
+        case 1:
+            user.bodyType = @"Average";
+            NSLog(@"Body type index: %ld", segment.selectedSegmentIndex);
+            break;
+        case 2:
+            user.bodyType = @"Fit";
+            NSLog(@"Body type index: %ld", segment.selectedSegmentIndex);
+            break;
+        case 3:
+            user.bodyType = @"XL";
+            NSLog(@"Body type index: %ld", segment.selectedSegmentIndex);
+            break;
+    }
+}
+
+- (void)RelationshipStatusPressed:(UISegmentedControl *)segment
+{
+    switch (segment.selectedSegmentIndex) {
+        case 0:
+            user.relationshipStatus = @"Single";
+            break;
+        case 1:
+            user.relationshipStatus = @"Dating";
+            break;
+        case 2:
+            user.relationshipStatus = @"Divorced";
+            break;
+    }
+}
+
+- (void)RelationshipTypePressed:(UISegmentedControl *)segment
+{
+    switch (segment.selectedSegmentIndex) {
+        case 0:
+            user.relationshipType = @"Company";
+            break;
+        case 1:
+            user.relationshipType = @"Friend";
+            break;
+        case 2:
+            user.relationshipType = @"Relationship";
+            break;
+    }
 }
 
 // Add (NSDictionary *)userInfo
@@ -110,6 +200,8 @@
         } else if ([user.bodyType isEqualToString:@"XL"]) {
             [_bodyTypeControl setSelectedSegmentIndex:3];
         }
+        
+        NSLog(@"Body Type Index: %ld", _bodyTypeControl.selectedSegmentIndex);
     }
     
     if (user.relationshipStatus) {
@@ -117,15 +209,13 @@
             [_relationshipStatusControl setSelectedSegmentIndex:0];
         } else if ([user.relationshipStatus isEqualToString:@"Dating"]) {
             [_relationshipStatusControl setSelectedSegmentIndex:1];
-        } else if ([user.relationshipStatus isEqualToString:@"Married"]) {
+        } else if ([user.relationshipStatus isEqualToString:@"Divorced"]) {
             [_relationshipStatusControl setSelectedSegmentIndex:2];
-        } else if ([user.relationshipStatus isEqualToString:@"Divorced"]){
-            [_relationshipStatusControl setSelectedSegmentIndex:3];
         }
     }
     
     if (user.relationshipType) {
-        if ([user.relationshipType isEqualToString:@"Fun"]) {
+        if ([user.relationshipType isEqualToString:@"Company"]) {
             [_relationshipTypeControl setSelectedSegmentIndex:0];
         } else if ([user.relationshipType isEqualToString:@"Friend"]) {
             [_relationshipTypeControl setSelectedSegmentIndex:1];
@@ -254,10 +344,31 @@
 #pragma mark - Segmented Controls - Actions
 
 - (IBAction)bodyType:(id)sender {
-    NSLog(@"Button index: %ld", (long)_bodyTypeControl.selectedSegmentIndex);
+    _bodyTypeControl = (UISegmentedControl*)sender;
+    
+    switch (_bodyTypeControl.selectedSegmentIndex) {
+        case 0:
+            user.bodyType = @"Skinny";
+            NSLog(@"Body type index: %ld", _bodyTypeControl.selectedSegmentIndex);
+            break;
+        case 1:
+            user.bodyType = @"Average";
+            NSLog(@"Body type index: %ld", _bodyTypeControl.selectedSegmentIndex);
+            break;
+        case 2:
+            user.bodyType = @"Fit";
+            NSLog(@"Body type index: %ld", _bodyTypeControl.selectedSegmentIndex);
+            break;
+        case 3:
+            user.bodyType = @"XL";
+            NSLog(@"Body type index: %ld", _bodyTypeControl.selectedSegmentIndex);
+            break;
+    }
 }
 
 - (IBAction)relationshipStatus:(id)sender {
+    _relationshipStatusControl = (UISegmentedControl*)sender;
+    
     switch (_relationshipStatusControl.selectedSegmentIndex) {
         case 0:
             user.relationshipStatus = @"Single";
@@ -275,6 +386,8 @@
 }
 
 - (IBAction)relationshipType:(id)sender {
+    _relationshipTypeControl = (UISegmentedControl*)sender;
+    
     switch (_relationshipTypeControl.selectedSegmentIndex) {
         case 0:
             user.relationshipType = @"Fun";
@@ -292,20 +405,7 @@
 {
     
     /*
-    switch (bodyTypeControl.selectedSegmentIndex) {
-        case 0:
-            user.bodyType = @"Skinny";
-            break;
-        case 1:
-            user.bodyType = @"Average";
-            break;
-        case 2:
-            user.bodyType = @"Fit";
-            break;
-        case 3:
-            user.bodyType = @"XL";
-            NSLog(@"Body type: %@", user.bodyType);
-            break;
+    
     }*/
 }
 

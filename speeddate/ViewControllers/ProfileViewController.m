@@ -71,7 +71,9 @@
 @property (nonatomic,retain) IBOutlet UIButton *whosee;
 @property (nonatomic,retain) IBOutlet UIButton *whoseeVip;
 
+@property (weak, nonatomic) IBOutlet UISegmentedControl *bodyTypeControl;
 
+- (IBAction)bodyType:(id)sender;
 
 @end
 
@@ -515,4 +517,7 @@
 }
 
 
+- (IBAction)bodyType:(id)sender {
+    NSLog(@"Button index: %ld", (long)_bodyTypeControl.selectedSegmentIndex);
+}
 @end
