@@ -40,6 +40,45 @@
 
 @dynamic online;
 
+@dynamic hasKids;
+@dynamic drinks;
+@dynamic smokes;
+@dynamic drugs;
+@dynamic bodyArt;
+@dynamic bodyType;
+@dynamic relationshipType;
+@dynamic relationshipStatus;
+
+// Filters
+@dynamic genderPref;
+@dynamic romanticPreference;
+@dynamic relationshipStatusPref;
+@dynamic kidsOkay;
+@dynamic bodyArtOkay;
+@dynamic drinkingOkay;
+@dynamic drugsOkay;
+@dynamic smokingOkay;
+
+// Preferences
+@dynamic animalsPref;
+@dynamic artsPref;
+@dynamic beerPref;
+@dynamic bookClubPref;
+@dynamic cookingPref;
+@dynamic dancingPref;
+@dynamic diningOutPref;
+@dynamic hikingPref;
+@dynamic lecturesPref;
+@dynamic musicConcertsPref;
+@dynamic operaPref;
+@dynamic religiousPref;
+@dynamic sportsPref;
+@dynamic techPref;
+@dynamic travelPref;
+@dynamic volunteerPref;
+@dynamic moviesPref;
+@dynamic workoutPref;
+
 + (void)load {
     [self registerSubclass];
     

@@ -125,15 +125,13 @@
             [_relationshipStatusControl setSelectedSegmentIndex:0];
         } else if ([user.relationshipStatusPref isEqualToString:@"Dating"]) {
             [_relationshipStatusControl setSelectedSegmentIndex:1];
-        } else if ([user.relationshipStatusPref isEqualToString:@"Married"]) {
+        } else if ([user.relationshipStatusPref isEqualToString:@"Divorced"]) {
             [_relationshipStatusControl setSelectedSegmentIndex:2];
-        } else if ([user.relationshipStatusPref isEqualToString:@"Divorced"]){
-            [_relationshipStatusControl setSelectedSegmentIndex:3];
         }
     }
     
     if (user.romanticPreference) {
-        if ([user.romanticPreference isEqualToString:@"Fun"]) {
+        if ([user.romanticPreference isEqualToString:@"Company"]) {
             [_relationshipTypeControl setSelectedSegmentIndex:0];
         } else if ([user.romanticPreference isEqualToString:@"Friend"]) {
             [_relationshipTypeControl setSelectedSegmentIndex:1];
@@ -286,9 +284,6 @@
             user.relationshipStatusPref= @"Dating";
             break;
         case 2:
-            user.relationshipStatusPref = @"Married";
-            break;
-        case 3:
             user.relationshipStatusPref = @"Divorced";
             break;
     }
@@ -297,7 +292,7 @@
 - (IBAction)relationshipType:(id)sender {
     switch (_relationshipTypeControl.selectedSegmentIndex) {
         case 0:
-            user.romanticPreference = @"Fun";
+            user.romanticPreference = @"Company";
             break;
         case 1:
             user.romanticPreference = @"Friend";
@@ -312,7 +307,7 @@
 
 - (IBAction)kidStatusToggle:(id)sender {
     if (_hasKidsFilter.on) {
-        user.kidsOkay = true;
+        user.kidsOkay = TRUE;
     } else user.kidsOkay = false;
 }
 
@@ -592,7 +587,9 @@
 
 #pragma mark - Save and Close
 
-- (IBAction)saveAndClose:(id)sender {
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+
     if (_minAgeField.text) {
         user.minAgePref = _minAgeField.text;
     }
@@ -600,8 +597,6 @@
     if (_maxAgeField.text) {
         user.maxAgePref = _maxAgeField.text;
     }
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

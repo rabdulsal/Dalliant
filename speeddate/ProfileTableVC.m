@@ -7,6 +7,7 @@
 //
 
 #import "ProfileTableVC.h"
+#import "UserParseHelper.h"
 
 @interface ProfileTableVC ()
 {
@@ -14,7 +15,7 @@
     NSMutableArray *preferenceStrings;
     NSDictionary *userSnapshotInfo;
 }
-
+@property UserParseHelper *mainUser;
 @property (nonatomic) UISegmentedControl *bodyTypeControl;
 @property (nonatomic) UISegmentedControl *relationshipStatusControl;
 @property (nonatomic) UISegmentedControl *relationshipTypeControl;
@@ -77,11 +78,7 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    if (user.bodyType) {
-        NSLog(@"Body Type: %@", user.bodyType);
-    } else {
-        NSLog(@"Body Type Control: %ld", _bodyTypeControl.selectedSegmentIndex);
-    }
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -90,7 +87,18 @@
     
     [self buildSegmentControls];
     
-    [self checkAndSetPreferenceValues];
+    PFQuery *query = [UserParseHelper query];
+    [query getObjectInBackgroundWithId:[UserParseHelper currentUser].objectId
+                                 block:^(PFObject *object, NSError *error)
+     {
+         self.mainUser = (UserParseHelper *)object;
+         
+         [self checkAndSetPreferenceValues];
+         NSLog(@"HasKids Class %@", [_mainUser.hasKids class]);
+     }];
+    
+    
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -126,24 +134,26 @@
     [self.view addSubview:_relationshipTypeControl];
 }
 
+#pragma mark - Segmented Controls - Actions
+
 - (void)BodyTypeButtonPressed:(UISegmentedControl *)segment
 {
     switch (segment.selectedSegmentIndex) {
         case 0:
-            user.bodyType = @"Skinny";
-            NSLog(@"Body type index: %ld", segment.selectedSegmentIndex);
+            self.mainUser.bodyType = @"Skinny";
+            [self.mainUser saveInBackground];
             break;
         case 1:
-            user.bodyType = @"Average";
-            NSLog(@"Body type index: %ld", segment.selectedSegmentIndex);
+            self.mainUser.bodyType = @"Average";
+            [self.mainUser saveInBackground];
             break;
         case 2:
-            user.bodyType = @"Fit";
-            NSLog(@"Body type index: %ld", segment.selectedSegmentIndex);
+            self.mainUser.bodyType = @"Fit";
+            [self.mainUser saveInBackground];
             break;
         case 3:
-            user.bodyType = @"XL";
-            NSLog(@"Body type index: %ld", segment.selectedSegmentIndex);
+            self.mainUser.bodyType = @"XL";
+            [self.mainUser saveInBackground];
             break;
     }
 }
@@ -152,13 +162,16 @@
 {
     switch (segment.selectedSegmentIndex) {
         case 0:
-            user.relationshipStatus = @"Single";
+            _mainUser.relationshipStatus = @"Single";
+            [_mainUser saveInBackground];
             break;
         case 1:
-            user.relationshipStatus = @"Dating";
+            _mainUser.relationshipStatus = @"Dating";
+            [_mainUser saveInBackground];
             break;
         case 2:
-            user.relationshipStatus = @"Divorced";
+            _mainUser.relationshipStatus = @"Divorced";
+            [_mainUser saveInBackground];
             break;
     }
 }
@@ -167,13 +180,16 @@
 {
     switch (segment.selectedSegmentIndex) {
         case 0:
-            user.relationshipType = @"Company";
+            _mainUser.relationshipType = @"Company";
+            [_mainUser saveInBackground];
             break;
         case 1:
-            user.relationshipType = @"Friend";
+            _mainUser.relationshipType = @"Friend";
+            [_mainUser saveInBackground];
             break;
         case 2:
-            user.relationshipType = @"Relationship";
+            _mainUser.relationshipType = @"Relationship";
+            [_mainUser saveInBackground];
             break;
     }
 }
@@ -188,278 +204,211 @@
      
      ------------------------------------------------*/
     // Access with userInfo[@"personal_info"]
-    
+    NSLog(@"Check and Set run");
     // Check settings based on Toggle and Control State and change conditionals as such MUST REFACTOR
-    if (user.bodyType) {
-        if ([user.bodyType isEqualToString:@"Skinny"]) {
+    if (self.mainUser.bodyType) {
+        NSLog(@"Body Type Set");
+        if ([_mainUser.bodyType isEqualToString:@"Skinny"]) {
             [_bodyTypeControl setSelectedSegmentIndex:0];
-        } else if ([user.bodyType isEqualToString:@"Average"]) {
+        } else if ([_mainUser.bodyType isEqualToString:@"Average"]) {
             [_bodyTypeControl setSelectedSegmentIndex:1];
-        } else if ([user.bodyType isEqualToString:@"Fit"]) {
+        } else if ([_mainUser.bodyType isEqualToString:@"Fit"]) {
             [_bodyTypeControl setSelectedSegmentIndex:2];
-        } else if ([user.bodyType isEqualToString:@"XL"]) {
+        } else if ([_mainUser.bodyType isEqualToString:@"XL"]) {
             [_bodyTypeControl setSelectedSegmentIndex:3];
         }
         
-        NSLog(@"Body Type Index: %ld", _bodyTypeControl.selectedSegmentIndex);
     }
     
-    if (user.relationshipStatus) {
-        if ([user.relationshipStatus isEqualToString:@"Single"]) {
+    if (self.mainUser.relationshipStatus) {
+        NSLog(@"Relationship Status Set");
+        if ([_mainUser.relationshipStatus isEqualToString:@"Single"]) {
             [_relationshipStatusControl setSelectedSegmentIndex:0];
-        } else if ([user.relationshipStatus isEqualToString:@"Dating"]) {
+        } else if ([_mainUser.relationshipStatus isEqualToString:@"Dating"]) {
             [_relationshipStatusControl setSelectedSegmentIndex:1];
-        } else if ([user.relationshipStatus isEqualToString:@"Divorced"]) {
+        } else if ([_mainUser.relationshipStatus isEqualToString:@"Divorced"]) {
             [_relationshipStatusControl setSelectedSegmentIndex:2];
         }
     }
     
-    if (user.relationshipType) {
-        if ([user.relationshipType isEqualToString:@"Company"]) {
+    if (self.mainUser.relationshipType) {
+        NSLog(@"Relationship Type Set");
+        if ([_mainUser.relationshipType isEqualToString:@"Company"]) {
             [_relationshipTypeControl setSelectedSegmentIndex:0];
-        } else if ([user.relationshipType isEqualToString:@"Friend"]) {
+        } else if ([_mainUser.relationshipType isEqualToString:@"Friend"]) {
             [_relationshipTypeControl setSelectedSegmentIndex:1];
-        } else if ([user.relationshipType isEqualToString:@"Relationship"]) {
+        } else if ([_mainUser.relationshipType isEqualToString:@"Relationship"]) {
             [_relationshipTypeControl setSelectedSegmentIndex:2];
         }
     }
     
-    if (user.hasKids) {
+    NSNumber *yep = [[NSNumber alloc] initWithBool:true];
+    
+    if ([self.mainUser.hasKids isEqualToNumber:yep]) {
+        NSLog(@"HasKids: Equal");
         [_hasKidsFilter setOn:YES];
-        user.haveKids = @"Yes";
     } else {
-        [_hasKidsFilter setOn:NO];
-        user.haveKids = @"No";
+        NSLog(@"HasKids NOT Equal");
+        [self.hasKidsFilter setOn:NO];
     }
     
-    if (user.drinks) {
+    if ([_mainUser.drinks isEqualToNumber:yep]) {
         [_drinksFilter setOn:YES];
-        user.likeToDrink = @"Yes";
+       // _mainUser.likeToDrink = @"Yes";
     } else {
         [_drinksFilter setOn:NO];
-        user.likeToDrink = @"No";
+        //_mainUser.likeToDrink = @"No";
     }
     
-    if (user.smokes) {
+    if ([_mainUser.smokes isEqualToNumber:yep]) {
         [_smokesCigsFilter setOn:YES];
-        user.smokesCigs = @"Yes";
+        //_mainUser.smokesCigs = @"Yes";
     } else {
         [_smokesCigsFilter setOn:NO];
-        user.smokesCigs = @"No";
+        //_mainUser.smokesCigs = @"No";
     }
     
-    if (user.drugs) {
+    if ([_mainUser.drugs isEqualToNumber:yep]) {
         [_takesDrugsFilter setOn:YES];
-        user.usesDrugs = @"Yes";
+        //_mainUser.usesDrugs = @"Yes";
     } else {
         [_takesDrugsFilter setOn:NO];
-        user.usesDrugs = @"No";
+        //_mainUser.usesDrugs = @"No";
     }
     
-    if (user.bodyArt) {
+    if ([_mainUser.bodyArt isEqualToNumber:yep]) {
         [_hasBodyArtFilter setOn:YES];
-        user.hasTatoos = @"Yes";
+        //_mainUser.hasTatoos = @"Yes";
     } else {
         [_hasBodyArtFilter setOn:NO];
-        user.hasTatoos = @"No";
+       // _mainUser.hasTatoos = @"No";
     }
     
     // Pref Buttons
     //if (_userPrefs.count <= 5) {
-    if (user.animalsPref) {
+    if (_mainUser.animalsPref) {
         [self buttonSelected:_animalLabel];
     }
     
-    if (user.artsPref) {
+    if (_mainUser.artsPref) {
         [self buttonSelected:_artsLabel];
     }
     
-    if (user.beerPref) {
+    if (_mainUser.beerPref) {
         [self buttonSelected:_beerLabel];
     }
     
-    if (user.bookClubPref) {
+    if (_mainUser.bookClubPref) {
         [self buttonSelected:_bookClubLabel];
     }
     
-    if (user.cookingPref) {
+    if (_mainUser.cookingPref) {
         [self buttonSelected:_cookingLabel];
     }
     
-    if (user.dancingPref) {
+    if (_mainUser.dancingPref) {
         [self buttonSelected:_dancingLabel];
     }
     
-    if (user.diningOutPref) {
+    if (_mainUser.diningOutPref) {
         [self buttonSelected:_diningOutLabel];
     }
     
-    if (user.hikingPref) {
+    if (_mainUser.hikingPref) {
         [self buttonSelected:_hikingOutdoorsLabel];
     }
     
-    if (user.lecturesPref) {
+    if (_mainUser.lecturesPref) {
         [self buttonSelected:_lecturesTalksLabel];
     }
     
-    if (user.moviesPref) {
+    if (_mainUser.moviesPref) {
         [self buttonSelected:_moviesLabel];
     }
     
-    if (user.musicConcertsPref) {
+    if (_mainUser.musicConcertsPref) {
         [self buttonSelected:_musicConcertLabel];
     }
     
-    if (user.operaPref) {
+    if (_mainUser.operaPref) {
         [self buttonSelected:_operaTheatreLabel];
     }
     
-    if (user.religiousPref) {
+    if (_mainUser.religiousPref) {
         [self buttonSelected:_spiritualLabel];
     }
     
-    if (user.sportsPref) {
+    if (_mainUser.sportsPref) {
         [self buttonSelected:_sportsLabel];
     }
     
-    if (user.techPref) {
+    if (_mainUser.techPref) {
         [self buttonSelected:_techGadgetsLabel];
     }
     
-    if (user.travelPref) {
+    if (_mainUser.travelPref) {
         [self buttonSelected:_travelLabel];
     }
     
-    if (user.volunteerPref) {
+    if (_mainUser.volunteerPref) {
         [self buttonSelected:_volunteeringLabel];
     }
     
-    if (user.workoutPref) {
+    if (_mainUser.workoutPref) {
         [self buttonSelected:_workoutLabel];
     }
-     
+    
+    [_mainUser saveInBackground];
    // } // End buttonDisabled conditional*/
 }
-
-#pragma mark - Segmented Controls - Actions
-
-- (IBAction)bodyType:(id)sender {
-    _bodyTypeControl = (UISegmentedControl*)sender;
-    
-    switch (_bodyTypeControl.selectedSegmentIndex) {
-        case 0:
-            user.bodyType = @"Skinny";
-            NSLog(@"Body type index: %ld", _bodyTypeControl.selectedSegmentIndex);
-            break;
-        case 1:
-            user.bodyType = @"Average";
-            NSLog(@"Body type index: %ld", _bodyTypeControl.selectedSegmentIndex);
-            break;
-        case 2:
-            user.bodyType = @"Fit";
-            NSLog(@"Body type index: %ld", _bodyTypeControl.selectedSegmentIndex);
-            break;
-        case 3:
-            user.bodyType = @"XL";
-            NSLog(@"Body type index: %ld", _bodyTypeControl.selectedSegmentIndex);
-            break;
-    }
-}
-
-- (IBAction)relationshipStatus:(id)sender {
-    _relationshipStatusControl = (UISegmentedControl*)sender;
-    
-    switch (_relationshipStatusControl.selectedSegmentIndex) {
-        case 0:
-            user.relationshipStatus = @"Single";
-            break;
-        case 1:
-            user.relationshipStatus = @"Dating";
-            break;
-        case 2:
-            user.relationshipStatus = @"Married";
-            break;
-        case 3:
-            user.relationshipStatus = @"Divorced";
-            break;
-    }
-}
-
-- (IBAction)relationshipType:(id)sender {
-    _relationshipTypeControl = (UISegmentedControl*)sender;
-    
-    switch (_relationshipTypeControl.selectedSegmentIndex) {
-        case 0:
-            user.relationshipType = @"Fun";
-            break;
-        case 1:
-            user.relationshipType = @"Friend";
-            break;
-        case 2:
-            user.relationshipType = @"Relationship";
-            break;
-    }
-}
-
-- (void)setBodyTypeControl:(UISegmentedControl *)bodyTypeControl
-{
-    
-    /*
-    
-    }*/
-}
-
-- (void)setRelationshipStatusControl:(UISegmentedControl *)relationshipStatusControl
-{
-    
-}
-
-- (void)setRelationshipTypeControl:(UISegmentedControl *)relationshipTypeControl
-{
-    
-}
-
 
 #pragma mark - UI Switches
 
 - (IBAction)kidStatusToggle:(id)sender {
     if (_hasKidsFilter.on) {
-        user.hasKids = true;
-    } else user.hasKids = false;
+        _mainUser.hasKids = [NSNumber numberWithBool:YES];
+    } else {
+        _mainUser.hasKids = [NSNumber numberWithBool:NO];
+    }
+    [_mainUser saveInBackground];
 }
 
 - (IBAction)drinkPreferenceToggle:(id)sender {
     if (_drinksFilter.on) {
-        user.drinks = true;
-    } else  user.drinks = false;
+        _mainUser.drinks = [NSNumber numberWithBool:YES];
+    } else  _mainUser.drinks = [NSNumber numberWithBool:NO];
+    [_mainUser saveInBackground];
 }
 
 - (IBAction)smokesPreferenceToggle:(id)sender {
     if (_smokesCigsFilter.on) {
-        user.smokes = true;
-    } else  user.smokes = false;
+        _mainUser.smokes = [NSNumber numberWithBool:YES];
+    } else  _mainUser.smokes = [NSNumber numberWithBool:NO];
+    [_mainUser saveInBackground];
 }
 
 - (IBAction)drugPreferenceToggle:(id)sender {
     if (_takesDrugsFilter.on) {
-        user.drugs = true;
-    } else  user.drugs = false;
+        _mainUser.drugs = [NSNumber numberWithBool:YES];
+    } else  _mainUser.drugs = [NSNumber numberWithBool:NO];
+    [_mainUser saveInBackground];
 }
 
 - (IBAction)tatooPreferenceToggle:(id)sender {
     if (_hasBodyArtFilter.on) {
-        user.bodyArt = true;
-    } else  user.bodyArt = false;
+        _mainUser.bodyArt = [NSNumber numberWithBool:YES];
+    } else  _mainUser.bodyArt = [NSNumber numberWithBool:NO];
+    [_mainUser saveInBackground];
 }
 
 #pragma mark - Interests & Hobbies
 
 - (IBAction)animalsToggle:(id)sender {
     if (_animalLabel.isSelected) {
-        user.animalsPref = false;
+        _mainUser.animalsPref = [NSNumber numberWithBool:NO];;
         [self buttonDeSelected:_animalLabel];
     } else {
-        user.animalsPref = true;
+        _mainUser.animalsPref = [NSNumber numberWithBool:YES];
         [self buttonSelected:_animalLabel];
     }
 }
@@ -467,169 +416,169 @@
 - (IBAction)artsToggle:(id)sender {
     if (_artsLabel.isSelected) {
         [self buttonDeSelected:_artsLabel];
-        user.artsPref = false;
+        _mainUser.artsPref = [NSNumber numberWithBool:NO];;
     } else {
         [self buttonSelected:_artsLabel];
-        user.artsPref = true;
+        _mainUser.artsPref = [NSNumber numberWithBool:YES];
     }
 }
 
 - (IBAction)beerToggle:(id)sender {
     if (_beerLabel.isSelected) {
-        user.beerPref = false;
+        _mainUser.beerPref = [NSNumber numberWithBool:NO];;
         [self buttonDeSelected:_beerLabel];
     } else {
-        user.beerPref = true;
+        _mainUser.beerPref = [NSNumber numberWithBool:YES];
         [self buttonSelected:_beerLabel];
     }
 }
 
 - (IBAction)bookClubToggle:(id)sender {
     if (_bookClubLabel.isSelected) {
-        user.bookClubPref = false;
+        _mainUser.bookClubPref = [NSNumber numberWithBool:NO];;
         [self buttonDeSelected:_bookClubLabel];
     } else {
-        user.bookClubPref = true;
+        _mainUser.bookClubPref = [NSNumber numberWithBool:YES];
         [self buttonSelected:_bookClubLabel];
     }
 }
 
 - (IBAction)cookingToggle:(id)sender {
     if (_cookingLabel.isSelected) {
-        user.cookingPref = false;
+        _mainUser.cookingPref = [NSNumber numberWithBool:NO];;
         [self buttonDeSelected:_cookingLabel];
     } else {
-        user.cookingPref = true;
+        _mainUser.cookingPref = [NSNumber numberWithBool:YES];
         [self buttonSelected:_cookingLabel];
     }
 }
 
 - (IBAction)dancingToggle:(id)sender {
     if (_dancingLabel.isSelected) {
-        user.dancingPref = false;
+        _mainUser.dancingPref = [NSNumber numberWithBool:NO];;
         [self buttonDeSelected:_dancingLabel];
     } else {
-        user.dancingPref = true;
+        _mainUser.dancingPref = [NSNumber numberWithBool:YES];
         [self buttonSelected:_dancingLabel];
     }
 }
 
 - (IBAction)diningClubToggle:(id)sender {
     if (_diningOutLabel.isSelected) {
-        user.diningOutPref = false;
+        _mainUser.diningOutPref = [NSNumber numberWithBool:NO];;
         [self buttonDeSelected:_diningOutLabel];
     } else {
-        user.diningOutPref = true;
+        _mainUser.diningOutPref = [NSNumber numberWithBool:YES];
         [self buttonSelected:_diningOutLabel];
     }
 }
 
 - (IBAction)hikingToggle:(id)sender {
     if (_hikingOutdoorsLabel.isSelected) {
-        user.hikingPref = false;
+        _mainUser.hikingPref = [NSNumber numberWithBool:NO];;
         [self buttonDeSelected:_hikingOutdoorsLabel];
     } else {
-        user.hikingPref = true;
+        _mainUser.hikingPref = [NSNumber numberWithBool:YES];
         [self buttonSelected:_hikingOutdoorsLabel];
     }
 }
 
 - (IBAction)lecturesToggle:(id)sender {
     if (_lecturesTalksLabel.isSelected) {
-        user.lecturesPref = false;
+        _mainUser.lecturesPref = [NSNumber numberWithBool:NO];;
         [self buttonDeSelected:_lecturesTalksLabel];
     } else {
-        user.lecturesPref = true;
+        _mainUser.lecturesPref = [NSNumber numberWithBool:YES];
         [self buttonSelected:_lecturesTalksLabel];
     }
 }
 
 - (IBAction)musicToggle:(id)sender {
     if (_musicConcertLabel.isSelected) {
-        user.musicConcertsPref = false;
+        _mainUser.musicConcertsPref = [NSNumber numberWithBool:NO];;
         [self buttonDeSelected:_musicConcertLabel];
     } else {
-        user.musicConcertsPref = true;
+        _mainUser.musicConcertsPref = [NSNumber numberWithBool:YES];
         [self buttonSelected:_musicConcertLabel];
     }
 }
 
 - (IBAction)operaToggle:(id)sender {
     if (_operaTheatreLabel.isSelected) {
-        user.operaPref = false;
+        _mainUser.operaPref = [NSNumber numberWithBool:NO];;
         [self buttonDeSelected:_operaTheatreLabel];
     } else {
-        user.operaPref = true;
+        _mainUser.operaPref = [NSNumber numberWithBool:YES];
         [self buttonSelected:_operaTheatreLabel];
     }
 }
 
 - (IBAction)religiousToggle:(id)sender {
     if (_spiritualLabel.isSelected) {
-        user.religiousPref = false;
+        _mainUser.religiousPref = [NSNumber numberWithBool:NO];;
         [self buttonDeSelected:_spiritualLabel];
     } else {
-        user.religiousPref = true;
+        _mainUser.religiousPref = [NSNumber numberWithBool:YES];
         [self buttonSelected:_spiritualLabel];
     }
 }
 
 - (IBAction)sportsToggle:(id)sender {
     if (_sportsLabel.isSelected) {
-        user.sportsPref = false;
+        _mainUser.sportsPref = [NSNumber numberWithBool:NO];;
         [self buttonDeSelected:_sportsLabel];
     } else {
-        user.sportsPref = true;
+        _mainUser.sportsPref = [NSNumber numberWithBool:YES];
         [self buttonSelected:_sportsLabel];
     }
 }
 
 - (IBAction)techToggle:(id)sender {
     if (_techGadgetsLabel.isSelected) {
-        user.techPref = false;
+        _mainUser.techPref = [NSNumber numberWithBool:NO];;
         [self buttonDeSelected:_techGadgetsLabel];
     } else {
-        user.techPref = true;
+        _mainUser.techPref = [NSNumber numberWithBool:YES];
         [self buttonSelected:_techGadgetsLabel];
     }
 }
 
 - (IBAction)travelToggle:(id)sender {
     if (_travelLabel.isSelected) {
-        user.travelPref = false;
+        _mainUser.travelPref = [NSNumber numberWithBool:NO];;
         [self buttonDeSelected:_travelLabel];
     } else {
-        user.travelPref = true;
+        _mainUser.travelPref = [NSNumber numberWithBool:YES];
         [self buttonSelected:_travelLabel];
     }
 }
 
 - (IBAction)volunteeringToggle:(id)sender {
     if (_volunteeringLabel.isSelected) {
-        user.volunteerPref = false;
+        _mainUser.volunteerPref = [NSNumber numberWithBool:NO];;
         [self buttonDeSelected:_volunteeringLabel];
     } else {
-        user.volunteerPref = true;
+        _mainUser.volunteerPref = [NSNumber numberWithBool:YES];
         [self buttonSelected:_volunteeringLabel];
     }
 }
 
 - (IBAction)moviesToggle:(id)sender {
     if (_moviesLabel.isSelected) {
-        user.moviesPref = false;
+        _mainUser.moviesPref = [NSNumber numberWithBool:NO];;
         [self buttonDeSelected:_moviesLabel];
     } else {
-        user.moviesPref = true;
+        _mainUser.moviesPref = [NSNumber numberWithBool:YES];
         [self buttonSelected:_moviesLabel];
     }
 }
 
 - (IBAction)workoutToggle:(id)sender {
     if (_workoutLabel.isSelected) {
-        user.workoutPref = false;
+        _mainUser.workoutPref = [NSNumber numberWithBool:NO];
         [self buttonDeSelected:_workoutLabel];
     } else {
-        user.workoutPref = true;
+        _mainUser.workoutPref = [NSNumber numberWithBool:YES];
         [self buttonSelected:_workoutLabel];
     }
 }
@@ -698,8 +647,8 @@
 - (void)checkAndSetUserEnteredData
 {
     // Set Label Values
-    _userDescription.text   = user.blurb;
-    _userAge.text           = user.age;
+    //_userDescription.text   = _mainUser.blurb;
+    //_userAge.text           = _mainUser.age;
     //_userHeight           = sobj.height
     /*_userFavActivity.text   = sobj.favActivity;
      _userLikesDrinks.text   = sobj.likeToDrink;
@@ -779,10 +728,14 @@
 {
     [super viewDidDisappear:animated];
     
-    NSLog(@"Body type: %lu, Relationship Status: %lu, Relationship Type: %lu", _bodyTypeControl.selectedSegmentIndex, _relationshipStatusControl.selectedSegmentIndex, _relationshipTypeControl.selectedSegmentIndex);
+    NSLog(@"Body Type: %@", _mainUser.bodyType);
+    NSLog(@"Relationship Status: %@", _mainUser.relationshipStatus);
+    NSLog(@"Relationship Type: %@", _mainUser.relationshipType);
+    
+    
     
     // Check for an existing Parse database then set values and upload to database
-    /*if (user.userRef) {
+    /*if (_mainUser.userRef) {
         
         //   [self checkAndSetPreferenceValues:user];
         // Store all values to Firebase
@@ -793,15 +746,15 @@
         
         NSDictionary *personal = @{
                                    // About User
-                                   @"body_type" : user.bodyType,
-                                   @"have_kids" : user.haveKids,
-                                   @"relationship_status" : user.relationshipStatus,
-                                   @"desired_relationship" : user.relationshipType,
+                                   @"body_type" : _mainUser.bodyType,
+                                   @"have_kids" : _mainUser.haveKids,
+                                   @"relationship_status" : _mainUser.relationshipStatus,
+                                   @"desired_relationship" : _mainUser.relationshipType,
                                    // Vices
-                                   @"drinks" : user.likeToDrink,
-                                   @"smokes" : user.smokesCigs,
-                                   @"drugs" : user.usesDrugs,
-                                   @"body_art" : user.hasTatoos,
+                                   @"drinks" : _mainUser.likeToDrink,
+                                   @"smokes" : _mainUser.smokesCigs,
+                                   @"drugs" : _mainUser.usesDrugs,
+                                   @"body_art" : _mainUser.hasTatoos,
                                    // Interests & Hobbies
                                    @"interests" : preferenceStrings
                                    };

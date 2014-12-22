@@ -38,4 +38,47 @@
 /// online
 @property NSString *online;
 
+// New Dalliant Attributes -----------------------------------
+
+// Profil
+@property NSNumber *hasKids;
+@property NSNumber *drinks;
+@property NSNumber *smokes;
+@property NSNumber *drugs;
+@property NSNumber *bodyArt;
+@property NSString *bodyType;
+@property NSString *relationshipType;
+@property NSString *relationshipStatus;
+
+// Filter
+@property NSString *genderPref;
+@property NSString *romanticPreference;
+@property NSString *relationshipStatusPref;
+@property NSNumber *kidsOkay;
+@property NSNumber *bodyArtOkay;
+@property NSNumber *drinkingOkay;
+@property NSNumber *drugsOkay;
+@property NSNumber *smokingOkay;
+
+// Prefer
+@property NSNumber *animalsPref;
+@property NSNumber *artsPref;
+@property NSNumber *beerPref;
+@property NSNumber *bookClubPref;
+@property NSNumber *cookingPref;
+@property NSNumber *dancingPref;
+@property NSNumber *diningOutPref;
+@property NSNumber *hikingPref;
+@property NSNumber *lecturesPref;
+@property NSNumber *musicConcertsPref;
+@property NSNumber *operaPref;
+@property NSNumber *religiousPref;
+@property NSNumber *sportsPref;
+@property NSNumber *techPref;
+@property NSNumber *travelPref;
+@property NSNumber *volunteerPref;
+@property NSNumber *moviesPref;
+@property NSNumber *workoutPref;
+
+
 @end

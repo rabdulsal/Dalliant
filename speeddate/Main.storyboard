@@ -1697,19 +1697,6 @@
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
-                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="b3z-I9-EBO">
-                                        <rect key="frame" x="29" y="438" width="304" height="29"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <segments>
-                                            <segment title="First"/>
-                                            <segment title="Second"/>
-                                            <segment title="Third"/>
-                                            <segment title="Fourth"/>
-                                        </segments>
-                                        <connections>
-                                            <action selector="bodyType:" destination="mLc-67-Pcw" eventType="valueChanged" id="NyO-kE-5bn"/>
-                                        </connections>
-                                    </segmentedControl>
                                 </subviews>
                             </scrollView>
                         </subviews>
@@ -1733,7 +1720,6 @@
                         <outlet property="ageLabel" destination="ZXc-ch-9e5" id="vcL-c1-fND"/>
                         <outlet property="agePickerView" destination="x7Q-bj-fN5" id="gnq-Hr-6De"/>
                         <outlet property="bannerView" destination="s7T-xV-R58" id="bTf-SA-H28"/>
-                        <outlet property="bodyTypeControl" destination="b3z-I9-EBO" id="HgF-Bc-aPE"/>
                         <outlet property="charactersLabel" destination="BGo-5M-7jI" id="xRY-Ul-tE4"/>
                         <outlet property="cityLable" destination="wzd-zD-TMS" id="3Fg-Rh-Utg"/>
                         <outlet property="descriptionLabel" destination="Y7e-R2-z92" id="SBi-99-0l1"/>
@@ -2820,7 +2806,7 @@
                                                     <segments>
                                                         <segment title="Skinny"/>
                                                         <segment title="Average"/>
-                                                        <segment title="Athletic"/>
+                                                        <segment title="Fit"/>
                                                         <segment title="XL"/>
                                                     </segments>
                                                     <connections>
@@ -2845,7 +2831,6 @@
                                                     <segments>
                                                         <segment title="Single"/>
                                                         <segment title="Dating"/>
-                                                        <segment title="Married"/>
                                                         <segment title="Divorced"/>
                                                     </segments>
                                                     <connections>
@@ -2871,9 +2856,9 @@
                                                     <rect key="frame" x="8" y="40" width="304" height="29"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <segments>
-                                                        <segment title="Fun"/>
+                                                        <segment title="Company"/>
                                                         <segment title="Friend"/>
-                                                        <segment title="Romantic"/>
+                                                        <segment title="Relationship"/>
                                                     </segments>
                                                     <connections>
                                                         <action selector="relationshipType:" destination="plW-Gs-lXa" eventType="valueChanged" id="2Li-ww-Bcl"/>
