@@ -63,9 +63,9 @@
 
 - (void)customizeApp
 {
-    self.tableView.backgroundColor = RED_LIGHT;
-    self.tableView.separatorColor = RED_DEEP;
-    self.searchTextField.backgroundColor = RED_DEEP;
+    self.tableView.backgroundColor = WHITE_COLOR;
+    self.tableView.separatorColor = [UIColor lightGrayColor];
+    //self.searchTextField.backgroundColor = RED_DEEP;
   
 }
 
@@ -159,7 +159,8 @@
     
     // ----------------------------------------------------------------------------
     
-    cell.nameTextLabel.textColor = WHITE_COLOR;
+    //cell.nameTextLabel.textColor = WHITE_COLOR;
+    cell.nameTextLabel.textColor = RED_LIGHT;
     cell.userImageView.layer.cornerRadius = cell.userImageView.frame.size.width / 2;
     cell.userImageView.clipsToBounds = YES;
     cell.userImageView.layer.borderWidth = 1.0,
@@ -176,11 +177,14 @@
         cell.lastMessageLabel.text = @"Image";
     }
     if (!message.read && [message.toUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
-        cell.lastMessageLabel.textColor = WHITE_COLOR;
+        //cell.lastMessageLabel.textColor = WHITE_COLOR;
+        cell.dateLabel.textColor = [UIColor lightGrayColor];
     } else {
-        cell.lastMessageLabel.textColor = WHITE_COLOR;
+        //cell.lastMessageLabel.textColor = WHITE_COLOR;
+        cell.dateLabel.textColor = [UIColor lightGrayColor];
     }
-    cell.dateLabel.textColor = WHITE_COLOR;
+    //cell.dateLabel.textColor = WHITE_COLOR;
+    cell.dateLabel.textColor = RED_LIGHT;
     NSDateFormatter *dateFormatter = [NSDateFormatter new];
     [dateFormatter setDoesRelativeDateFormatting:YES];
     if ([[message createdAt] timeIntervalSinceNow] * -1 < SECONDS_DAY) {
@@ -191,7 +195,8 @@
     
     cell.dateLabel.text = [dateFormatter stringFromDate:[message createdAt]];
     UIView *bgColorView = [[UIView alloc] init];
-    bgColorView.backgroundColor = RED_COLOR;
+    //bgColorView.backgroundColor = RED_COLOR;
+    bgColorView.backgroundColor = WHITE_COLOR;
     [cell setSelectedBackgroundView:bgColorView];
     [user.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
         

@@ -243,7 +243,7 @@
 
 -(IBAction)faceLogin:(id)sender{
     
-    NSArray *permissions = @[@"public_profile", @"email", @"user_friends", @"user_birthday", @"user_about_me", @"user_photos"];
+    NSArray *permissions = @[@"public_profile", @"email", @"user_friends", @"user_birthday", @"user_about_me", @"user_education_history", @"user_work_history", @"user_photos"];
     //NSArray *permissions = @[];
     
     // Login PFUser using Facebook
@@ -457,12 +457,22 @@
          user[@"sexuality"] = [NSNumber numberWithInt:2];
          // Age calculation
          user[@"age"] = [NSNumber numberWithInt:[self calculateUserAge:userData[@"birthday"]]];
+         // Gender
          if ([userData[@"gender"] isEqualToString:@"male"]) {
              user[@"isMale"] = @"true";
          } else user[@"isMale"] = @"false";
+         // About
          if (userData[@"bio"]) {
              user[@"desc"] = userData[@"bio"];
          } else user[@"desc"] = @"No Bio info";
+         // Employment
+         if (userData[@"work"]) {
+             NSLog(@"Data available");
+         } else NSLog(@"No Work Data");
+         // Education
+         if (userData[@"employment"]) {
+             NSLog(@"School available");
+         } else NSLog(@"No School Data");
          user[@"photo"] = filePicture;
          user[PF_USER_FACEBOOKID] = userData[@"id"];
        //  user[PF_USER_FULLNAME] = userData[@"name"];

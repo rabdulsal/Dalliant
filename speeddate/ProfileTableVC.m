@@ -20,6 +20,8 @@
 @property (nonatomic) UISegmentedControl *relationshipStatusControl;
 @property (nonatomic) UISegmentedControl *relationshipTypeControl;
 @property (nonatomic) UIButton *saveProfileButton;
+@property (weak, nonatomic) IBOutlet UILabel *userAbout;
+
 
 @end
 
@@ -112,26 +114,29 @@
     // Body Type
     NSArray *bodyArray = [NSArray arrayWithObjects: @"Skinny", @"Average", @"Fit", @"XL", nil];
     _bodyTypeControl = [[UISegmentedControl alloc] initWithItems:bodyArray];
-    _bodyTypeControl.frame = CGRectMake(15, 60, 291, 29);
+    _bodyTypeControl.frame = CGRectMake(15, 160, 291, 29);
+    _bodyTypeControl.tintColor = RED_LIGHT;
     //_bodyTypeControl.segmentedControlStyle = UISegmentedControlStylePlain;
     [_bodyTypeControl addTarget:self action:@selector(BodyTypeButtonPressed:) forControlEvents: UIControlEventValueChanged];
     
     // Relationship Status
     NSArray *statusArray = [NSArray arrayWithObjects: @"Single", @"Dating", @"Divorced", nil];
     _relationshipStatusControl = [[UISegmentedControl alloc] initWithItems:statusArray];
-    _relationshipStatusControl.frame = CGRectMake(15, 218, 291, 29);
+    _relationshipStatusControl.frame = CGRectMake(15, 318, 291, 29);
+    _relationshipStatusControl.tintColor = RED_LIGHT;
     //_relationshipStatusControl.segmentedControlStyle = UISegmentedControlStylePlain;
     [_relationshipStatusControl addTarget:self action:@selector(RelationshipStatusPressed:) forControlEvents: UIControlEventValueChanged];
     
     // Relationship Type
     NSArray *typeArray = [NSArray arrayWithObjects: @"Company", @"Friend", @"Relationship", nil];
     _relationshipTypeControl = [[UISegmentedControl alloc] initWithItems:typeArray];
-    _relationshipTypeControl.frame = CGRectMake(15, 290, 291, 29);
+    _relationshipTypeControl.frame = CGRectMake(15, 390, 291, 29);
+    _relationshipTypeControl.tintColor = RED_LIGHT;
     //_relationshipTypeControl.segmentedControlStyle = UISegmentedControlStylePlain;
     [_relationshipTypeControl addTarget:self action:@selector(RelationshipTypePressed:) forControlEvents: UIControlEventValueChanged];
     
     // Save Button
-    _saveProfileButton = [[UIButton alloc] initWithFrame:CGRectMake(15, 980, 291, 50)];
+    _saveProfileButton = [[UIButton alloc] initWithFrame:CGRectMake(15, 1080, 291, 50)];
     [_saveProfileButton setTitle:@"Save Profile" forState:UIControlStateNormal];
     [_saveProfileButton setTitle:@"Saved!" forState:UIControlStateSelected];
     _saveProfileButton.backgroundColor = [UIColor lightGrayColor];
@@ -228,7 +233,8 @@
      
      ------------------------------------------------*/
     // Access with userInfo[@"personal_info"]
-    NSLog(@"Check and Set run");
+    _userAbout.text = _mainUser.desc;
+    
     // Check settings based on Toggle and Control State and change conditionals as such MUST REFACTOR
     if (self.mainUser.bodyType) {
         NSLog(@"Body Type Set");
@@ -630,7 +636,7 @@
         NSLog(@"This button is Disabled");
     } else {
         [userPreference setSelected:YES];
-        userPreference.backgroundColor = RED_LIGHT;
+        //userPreference.backgroundColor = RED_LIGHT;
         [_allPrefs removeObject:userPreference];
         [_userPrefs addObject:userPreference];
         NSLog(@"User Prefs count: %lu", [_userPrefs count]);
