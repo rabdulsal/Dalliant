@@ -94,7 +94,7 @@
          self.mainUser = (UserParseHelper *)object;
          
          [self checkAndSetPreferenceValues];
-         NSLog(@"HasKids Class %@", [_mainUser.hasKids class]);
+         
      }];
     
     
@@ -141,19 +141,19 @@
     switch (segment.selectedSegmentIndex) {
         case 0:
             self.mainUser.bodyType = @"Skinny";
-            [self.mainUser saveInBackground];
+            
             break;
         case 1:
             self.mainUser.bodyType = @"Average";
-            [self.mainUser saveInBackground];
+            
             break;
         case 2:
             self.mainUser.bodyType = @"Fit";
-            [self.mainUser saveInBackground];
+            
             break;
         case 3:
             self.mainUser.bodyType = @"XL";
-            [self.mainUser saveInBackground];
+            
             break;
     }
 }
@@ -163,15 +163,15 @@
     switch (segment.selectedSegmentIndex) {
         case 0:
             _mainUser.relationshipStatus = @"Single";
-            [_mainUser saveInBackground];
+            
             break;
         case 1:
             _mainUser.relationshipStatus = @"Dating";
-            [_mainUser saveInBackground];
+            
             break;
         case 2:
             _mainUser.relationshipStatus = @"Divorced";
-            [_mainUser saveInBackground];
+            
             break;
     }
 }
@@ -181,15 +181,15 @@
     switch (segment.selectedSegmentIndex) {
         case 0:
             _mainUser.relationshipType = @"Company";
-            [_mainUser saveInBackground];
+            
             break;
         case 1:
             _mainUser.relationshipType = @"Friend";
-            [_mainUser saveInBackground];
+            
             break;
         case 2:
             _mainUser.relationshipType = @"Relationship";
-            [_mainUser saveInBackground];
+            
             break;
     }
 }
@@ -286,79 +286,79 @@
     
     // Pref Buttons
     //if (_userPrefs.count <= 5) {
-    if (_mainUser.animalsPref) {
+    if ([_mainUser.animalsPref isEqualToNumber:yep]) {
         [self buttonSelected:_animalLabel];
     }
     
-    if (_mainUser.artsPref) {
+    if ([_mainUser.artsPref isEqualToNumber:yep]) {
         [self buttonSelected:_artsLabel];
     }
     
-    if (_mainUser.beerPref) {
+    if ([_mainUser.beerPref isEqualToNumber:yep]) {
         [self buttonSelected:_beerLabel];
     }
     
-    if (_mainUser.bookClubPref) {
+    if ([_mainUser.bookClubPref isEqualToNumber:yep]) {
         [self buttonSelected:_bookClubLabel];
     }
     
-    if (_mainUser.cookingPref) {
+    if ([_mainUser.cookingPref isEqualToNumber:yep]) {
         [self buttonSelected:_cookingLabel];
     }
     
-    if (_mainUser.dancingPref) {
+    if ([_mainUser.dancingPref isEqualToNumber:yep]) {
         [self buttonSelected:_dancingLabel];
     }
     
-    if (_mainUser.diningOutPref) {
+    if ([_mainUser.diningOutPref isEqualToNumber:yep]) {
         [self buttonSelected:_diningOutLabel];
     }
     
-    if (_mainUser.hikingPref) {
+    if ([_mainUser.hikingPref isEqualToNumber:yep]) {
         [self buttonSelected:_hikingOutdoorsLabel];
     }
     
-    if (_mainUser.lecturesPref) {
+    if ([_mainUser.lecturesPref isEqualToNumber:yep]) {
         [self buttonSelected:_lecturesTalksLabel];
     }
     
-    if (_mainUser.moviesPref) {
+    if ([_mainUser.moviesPref isEqualToNumber:yep]) {
         [self buttonSelected:_moviesLabel];
     }
     
-    if (_mainUser.musicConcertsPref) {
+    if ([_mainUser.musicConcertsPref isEqualToNumber:yep]) {
         [self buttonSelected:_musicConcertLabel];
     }
     
-    if (_mainUser.operaPref) {
+    if ([_mainUser.operaPref isEqualToNumber:yep]) {
         [self buttonSelected:_operaTheatreLabel];
     }
     
-    if (_mainUser.religiousPref) {
+    if ([_mainUser.religiousPref isEqualToNumber:yep]) {
         [self buttonSelected:_spiritualLabel];
     }
     
-    if (_mainUser.sportsPref) {
+    if ([_mainUser.sportsPref isEqualToNumber:yep]) {
         [self buttonSelected:_sportsLabel];
     }
     
-    if (_mainUser.techPref) {
+    if ([_mainUser.techPref isEqualToNumber:yep]) {
         [self buttonSelected:_techGadgetsLabel];
     }
     
-    if (_mainUser.travelPref) {
+    if ([_mainUser.travelPref isEqualToNumber:yep]) {
         [self buttonSelected:_travelLabel];
     }
     
-    if (_mainUser.volunteerPref) {
+    if ([_mainUser.volunteerPref isEqualToNumber:yep]) {
         [self buttonSelected:_volunteeringLabel];
     }
     
-    if (_mainUser.workoutPref) {
+    if ([_mainUser.workoutPref isEqualToNumber:yep]) {
         [self buttonSelected:_workoutLabel];
     }
     
-    [_mainUser saveInBackground];
+    
    // } // End buttonDisabled conditional*/
 }
 
@@ -370,35 +370,35 @@
     } else {
         _mainUser.hasKids = [NSNumber numberWithBool:NO];
     }
-    [_mainUser saveInBackground];
+    
 }
 
 - (IBAction)drinkPreferenceToggle:(id)sender {
     if (_drinksFilter.on) {
         _mainUser.drinks = [NSNumber numberWithBool:YES];
     } else  _mainUser.drinks = [NSNumber numberWithBool:NO];
-    [_mainUser saveInBackground];
+    
 }
 
 - (IBAction)smokesPreferenceToggle:(id)sender {
     if (_smokesCigsFilter.on) {
         _mainUser.smokes = [NSNumber numberWithBool:YES];
     } else  _mainUser.smokes = [NSNumber numberWithBool:NO];
-    [_mainUser saveInBackground];
+    
 }
 
 - (IBAction)drugPreferenceToggle:(id)sender {
     if (_takesDrugsFilter.on) {
         _mainUser.drugs = [NSNumber numberWithBool:YES];
     } else  _mainUser.drugs = [NSNumber numberWithBool:NO];
-    [_mainUser saveInBackground];
+    
 }
 
 - (IBAction)tatooPreferenceToggle:(id)sender {
     if (_hasBodyArtFilter.on) {
         _mainUser.bodyArt = [NSNumber numberWithBool:YES];
     } else  _mainUser.bodyArt = [NSNumber numberWithBool:NO];
-    [_mainUser saveInBackground];
+    
 }
 
 #pragma mark - Interests & Hobbies
@@ -735,11 +735,12 @@
     // User Preferences
     
     // Convert Pref Buttons to Strings
-    /*
+    
     [self convertPreferenceButtons:_userPrefs];
     _mainUser.interests = preferenceStrings;
+    [_mainUser saveInBackground];
+    NSLog(@"User interests: %@", _mainUser.interests);
      
-     [self.mainUser saveInBackground];
     /*
     // Check for an existing Parse database then set values and upload to database
     if (_mainUser.userRef) {
