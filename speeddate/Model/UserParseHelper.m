@@ -48,6 +48,9 @@
 @dynamic bodyType;
 @dynamic relationshipType;
 @dynamic relationshipStatus;
+@dynamic interests;
+@dynamic employment;
+@dynamic education;
 
 // Filters
 @dynamic genderPref;

@@ -40,7 +40,7 @@
 
 // New Dalliant Attributes -----------------------------------
 
-// Profil
+// Profile
 @property NSNumber *hasKids;
 @property NSNumber *drinks;
 @property NSNumber *smokes;
@@ -49,9 +49,15 @@
 @property NSString *bodyType;
 @property NSString *relationshipType;
 @property NSString *relationshipStatus;
+@property NSArray *interests;
+@property NSString *employment;
+@property NSString *education;
 
 // Filter
 @property NSString *genderPref;
+@property NSNumber *minAgePref;
+@property NSNumber *maxAgePref;
+@property NSString *bodyTypePref;
 @property NSString *romanticPreference;
 @property NSString *relationshipStatusPref;
 @property NSNumber *kidsOkay;
@@ -60,7 +66,7 @@
 @property NSNumber *drugsOkay;
 @property NSNumber *smokingOkay;
 
-// Prefer
+// Preferences
 @property NSNumber *animalsPref;
 @property NSNumber *artsPref;
 @property NSNumber *beerPref;

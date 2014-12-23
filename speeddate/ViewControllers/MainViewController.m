@@ -67,8 +67,13 @@
 @property (strong, nonatomic) UIView* secondBox;
 @property UserParseHelper* currShowingProfile;
 @property UserParseHelper* backgroundUserProfile;
+
+// Matches Arrays -----------------------------------------
+
 @property NSMutableArray *posibleMatchesArray;
 @property NSMutableArray* willBeMatches;
+
+// --------------------------------------------------------
 @property (strong, nonatomic) UIImageView* profileImage;
 @property (strong, nonatomic) UIImageView* profileImageAge;
 @property (strong, nonatomic) UIImageView* profileImageLocation;

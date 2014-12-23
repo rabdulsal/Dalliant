@@ -732,17 +732,21 @@
     NSLog(@"Relationship Status: %@", _mainUser.relationshipStatus);
     NSLog(@"Relationship Type: %@", _mainUser.relationshipType);
     
+    // User Preferences
     
-    
+    // Convert Pref Buttons to Strings
+    /*
+    [self convertPreferenceButtons:_userPrefs];
+    _mainUser.interests = preferenceStrings;
+     
+     [self.mainUser saveInBackground];
+    /*
     // Check for an existing Parse database then set values and upload to database
-    /*if (_mainUser.userRef) {
+    if (_mainUser.userRef) {
         
         //   [self checkAndSetPreferenceValues:user];
         // Store all values to Firebase
         Firebase *personalInfo = [userRef childByAppendingPath:@"personal_info"];
-        
-        // Convert Pref Buttons to Strings
-        [self convertPreferenceButtons:_userPrefs];
         
         NSDictionary *personal = @{
                                    // About User
