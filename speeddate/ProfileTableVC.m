@@ -19,6 +19,8 @@
 @property (nonatomic) UISegmentedControl *bodyTypeControl;
 @property (nonatomic) UISegmentedControl *relationshipStatusControl;
 @property (nonatomic) UISegmentedControl *relationshipTypeControl;
+@property (nonatomic) UIButton *saveProfileButton;
+
 @end
 
 @implementation ProfileTableVC
@@ -71,7 +73,6 @@
     _workoutLabel.tag           = 18;
     
     preferenceStrings = [[NSMutableArray alloc] init];
-    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -129,9 +130,23 @@
     //_relationshipTypeControl.segmentedControlStyle = UISegmentedControlStylePlain;
     [_relationshipTypeControl addTarget:self action:@selector(RelationshipTypePressed:) forControlEvents: UIControlEventValueChanged];
     
+    // Save Button
+    _saveProfileButton = [[UIButton alloc] initWithFrame:CGRectMake(15, 980, 291, 50)];
+    [_saveProfileButton setTitle:@"Save Profile" forState:UIControlStateNormal];
+    [_saveProfileButton setTitle:@"Saved!" forState:UIControlStateSelected];
+    _saveProfileButton.backgroundColor = [UIColor lightGrayColor];
+    [_saveProfileButton addTarget:self action:@selector(SaveButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    
     [self.view addSubview:_bodyTypeControl];
     [self.view addSubview:_relationshipStatusControl];
     [self.view addSubview:_relationshipTypeControl];
+    [self.view addSubview:_saveProfileButton];
+}
+
+- (void)unSave
+{
+    [_saveProfileButton setSelected:NO];
+    _saveProfileButton.backgroundColor = [UIColor lightGrayColor];
 }
 
 #pragma mark - Segmented Controls - Actions
@@ -141,19 +156,19 @@
     switch (segment.selectedSegmentIndex) {
         case 0:
             self.mainUser.bodyType = @"Skinny";
-            
+            [self unSave];
             break;
         case 1:
             self.mainUser.bodyType = @"Average";
-            
+            [self unSave];
             break;
         case 2:
             self.mainUser.bodyType = @"Fit";
-            
+            [self unSave];
             break;
         case 3:
             self.mainUser.bodyType = @"XL";
-            
+            [self unSave];
             break;
     }
 }
@@ -163,15 +178,15 @@
     switch (segment.selectedSegmentIndex) {
         case 0:
             _mainUser.relationshipStatus = @"Single";
-            
+            [self unSave];
             break;
         case 1:
             _mainUser.relationshipStatus = @"Dating";
-            
+            [self unSave];
             break;
         case 2:
             _mainUser.relationshipStatus = @"Divorced";
-            
+            [self unSave];
             break;
     }
 }
@@ -181,17 +196,26 @@
     switch (segment.selectedSegmentIndex) {
         case 0:
             _mainUser.relationshipType = @"Company";
-            
+            [self unSave];
             break;
         case 1:
             _mainUser.relationshipType = @"Friend";
-            
+            [self unSave];
             break;
         case 2:
             _mainUser.relationshipType = @"Relationship";
-            
+            [self unSave];
             break;
     }
+}
+
+- (void)SaveButtonPressed:(UIButton *)button
+{
+    [_saveProfileButton setSelected:YES];
+    _saveProfileButton.backgroundColor = RED_LIGHT;
+    [self convertPreferenceButtons:_userPrefs];
+    _mainUser.interests = preferenceStrings;
+    [_mainUser saveInBackground];
 }
 
 // Add (NSDictionary *)userInfo
@@ -358,7 +382,7 @@
         [self buttonSelected:_workoutLabel];
     }
     
-    
+    [self unSave];
    // } // End buttonDisabled conditional*/
 }
 
@@ -370,35 +394,35 @@
     } else {
         _mainUser.hasKids = [NSNumber numberWithBool:NO];
     }
-    
+    [self unSave];
 }
 
 - (IBAction)drinkPreferenceToggle:(id)sender {
     if (_drinksFilter.on) {
         _mainUser.drinks = [NSNumber numberWithBool:YES];
     } else  _mainUser.drinks = [NSNumber numberWithBool:NO];
-    
+    [self unSave];
 }
 
 - (IBAction)smokesPreferenceToggle:(id)sender {
     if (_smokesCigsFilter.on) {
         _mainUser.smokes = [NSNumber numberWithBool:YES];
     } else  _mainUser.smokes = [NSNumber numberWithBool:NO];
-    
+    [self unSave];
 }
 
 - (IBAction)drugPreferenceToggle:(id)sender {
     if (_takesDrugsFilter.on) {
         _mainUser.drugs = [NSNumber numberWithBool:YES];
     } else  _mainUser.drugs = [NSNumber numberWithBool:NO];
-    
+    [self unSave];
 }
 
 - (IBAction)tatooPreferenceToggle:(id)sender {
     if (_hasBodyArtFilter.on) {
         _mainUser.bodyArt = [NSNumber numberWithBool:YES];
     } else  _mainUser.bodyArt = [NSNumber numberWithBool:NO];
-    
+    [self unSave];
 }
 
 #pragma mark - Interests & Hobbies
@@ -606,7 +630,7 @@
         NSLog(@"This button is Disabled");
     } else {
         [userPreference setSelected:YES];
-        userPreference.backgroundColor = [UIColor blueColor];
+        userPreference.backgroundColor = RED_LIGHT;
         [_allPrefs removeObject:userPreference];
         [_userPrefs addObject:userPreference];
         NSLog(@"User Prefs count: %lu", [_userPrefs count]);
@@ -625,6 +649,7 @@
         [self enableAllPreferences:_allPrefs];
         NSLog(@"All buttons re-enabled.");
     }
+    [self unSave];
     
 }
 
@@ -724,22 +749,11 @@
     }
 }
 
+
+
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    
-    NSLog(@"Body Type: %@", _mainUser.bodyType);
-    NSLog(@"Relationship Status: %@", _mainUser.relationshipStatus);
-    NSLog(@"Relationship Type: %@", _mainUser.relationshipType);
-    
-    // User Preferences
-    
-    // Convert Pref Buttons to Strings
-    
-    [self convertPreferenceButtons:_userPrefs];
-    _mainUser.interests = preferenceStrings;
-    [_mainUser saveInBackground];
-    NSLog(@"User interests: %@", _mainUser.interests);
      
     /*
     // Check for an existing Parse database then set values and upload to database

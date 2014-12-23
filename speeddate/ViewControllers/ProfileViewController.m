@@ -89,7 +89,7 @@
     //[self checkPurchase];
     [_scroller setScrollEnabled:YES];
     //[_scroller setContentSize:CGSizeMake(320, 1555)];
-    [_scroller setContentSize:CGSizeMake(self.view.frame.size.width, 1550)];
+    [_scroller setContentSize:CGSizeMake(self.view.frame.size.width, 1650)];
     mainUser = [User singleObj];
     mainUser.isRevealed = false;
     _sidebarButton.target = self.revealViewController;

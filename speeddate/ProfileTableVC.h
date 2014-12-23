@@ -92,5 +92,6 @@
 - (IBAction)userEducation:(id)sender;
 
 - (void)checkAndSetUserEnteredData;
+- (IBAction)saveProfilePressed:(id)sender;
 
 @end
