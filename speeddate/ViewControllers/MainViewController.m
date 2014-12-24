@@ -146,6 +146,9 @@
     
     _matched = false;
     
+    UIImageView *iv = [[UIImageView alloc] initWithFrame:self.view.frame];
+    iv.image = [UIImage imageNamed:@"match"];
+    
     [self.activityIndicator startAnimating];
     PFQuery* curQuery = [UserParseHelper query];
     [curQuery whereKey:@"username" equalTo:[UserParseHelper currentUser].username];
@@ -170,7 +173,8 @@
     self.photoArrayIndex = 1;
     self.firstTime = YES;
     self.isRotating = YES;
-    self.view.backgroundColor = RED_LIGHT;
+    //self.view.backgroundColor = RED_LIGHT;
+    self.view.backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"match"]];
     
     [_matchButtonLabel setHidden:YES];
     

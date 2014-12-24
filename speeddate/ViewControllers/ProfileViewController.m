@@ -89,7 +89,7 @@
     //[self checkPurchase];
     [_scroller setScrollEnabled:YES];
     //[_scroller setContentSize:CGSizeMake(320, 1555)];
-    [_scroller setContentSize:CGSizeMake(self.view.frame.size.width, 1742)];
+    [_scroller setContentSize:CGSizeMake(self.view.frame.size.width, 1441)];
     mainUser = [User singleObj];
     mainUser.isRevealed = false;
     _sidebarButton.target = self.revealViewController;
@@ -482,7 +482,9 @@
 
 -(IBAction)explorelocation:(id)sender{
     
+    [self performSegueWithIdentifier:@"locationMap" sender:nil];
     
+    /*
     PFUser *chekUser = [PFUser currentUser];
     NSString *vip = chekUser[@"membervip"];
     if ([vip isEqualToString:@"novip"]) {
@@ -493,7 +495,8 @@
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil];
         [alert show];
-    }
+    }*/
+    
 }
 
 -(IBAction)whooseevips:(id)sender{
