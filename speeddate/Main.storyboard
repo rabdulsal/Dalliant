@@ -2776,7 +2776,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sps-eH-99S" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1867" y="1242"/>
+            <point key="canvasLocation" x="2126" y="1492"/>
         </scene>
         <!--Image View Controller-->
         <scene sceneID="FYj-qu-kVq">
@@ -3524,11 +3524,12 @@
                         <outlet property="userFBPic" destination="XWp-d8-pAP" id="kb0-oO-4La"/>
                         <outlet property="userGender" destination="4le-YY-Dkp" id="uAV-wb-3ty"/>
                         <outlet property="userName" destination="1lq-XS-QvF" id="OLl-LI-M0s"/>
+                        <segue destination="rDU-7y-piv" kind="modal" identifier="view_image" id="mK8-fw-Wvm"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RON-cR-j91" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2381" y="1488"/>
+            <point key="canvasLocation" x="2737" y="1405"/>
         </scene>
     </scenes>
     <resources>
@@ -3564,16 +3565,17 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="QOt-cj-Bjn"/>
+        <segue reference="b2C-ec-aqj"/>
+        <segue reference="MjG-Tl-7wb"/>
         <segue reference="MHJ-Yn-gep"/>
         <segue reference="J9J-1N-Njp"/>
         <segue reference="Ihx-RM-f81"/>
         <segue reference="tAX-qX-dGH"/>
-        <segue reference="MjG-Tl-7wb"/>
         <segue reference="WJE-pO-Iht"/>
-        <segue reference="oXm-ri-1Lw"/>
         <segue reference="uru-UJ-cE7"/>
-        <segue reference="Qy0-fE-0Nr"/>
+        <segue reference="oXm-ri-1Lw"/>
+        <segue reference="mK8-fw-Wvm"/>
         <segue reference="h7w-Ho-pqn"/>
-        <segue reference="QOt-cj-Bjn"/>
     </inferredMetricsTieBreakers>
 </document>

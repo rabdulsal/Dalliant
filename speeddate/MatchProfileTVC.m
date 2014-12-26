@@ -33,6 +33,7 @@
     _matchDatingStatus.text      = _matchUser.relationshipStatus;
     _matchRelationshipType.text  = _matchUser.relationshipType;
     
+    [self tapUserImage];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -45,12 +46,26 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - set up and handle pan gesture
+- (void) tapUserImage
+{
+    [self.userFBPic setUserInteractionEnabled:YES];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    [_userFBPic addGestureRecognizer:tap];
+}
+
+- (void)handleTap:(UITapGestureRecognizer *)tap
+{
+    //_userFBPic.userInteractionEnabled = NO;
+    [self performSegueWithIdentifier:@"view_image" sender:nil];
+}
 
 - (IBAction)closeProfileView:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)reportUser:(id)sender {
+    
 }
 
 #pragma mark - Table view data source
