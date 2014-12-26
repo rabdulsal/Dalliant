@@ -16,6 +16,7 @@
 #import "GADInterstitial.h"
 #import "User.h"
 #import "UserProfileViewController.h"
+#import "MatchProfileTVC.h"
 
 @interface UserMessagesViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 {
@@ -565,6 +566,13 @@
     } else if ([segue.identifier isEqualToString:@"view_profile"]){
         //if ([[segue identifier] isEqualToString:@"userprofileSee"]) {
             // Move to ViewDidLoad
+        NSLog(@"View Profile Pressed");
+        MatchProfileTVC *matchVC = [[MatchProfileTVC alloc]initWithNibName:@"UserVC" bundle:nil];
+        matchVC = segue.destinationViewController;
+        //matchVC.userFBPic.image             = _toUserParse.photo;
+        matchVC.matchUser = _toUserParse;
+        
+        /*
             self.photoArray =[[NSMutableArray alloc]init];
             
             
@@ -599,7 +607,7 @@
             [[segue destinationViewController] setUserId:_toUserParse.objectId];
             [[segue destinationViewController]setStatus:_toUserParse.online];
             
-        //}
+        //}*/
     }
 }
 

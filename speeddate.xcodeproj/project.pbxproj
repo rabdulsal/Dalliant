@@ -60,6 +60,7 @@
 		42F5B28619B0C4CB0036938B /* Chat.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42F5B28519B0C4CB0036938B /* Chat.xcassets */; };
 		4CBDB1941A3CDD3C006A9F1F /* ProfileTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBDB1931A3CDD3C006A9F1F /* ProfileTableVC.m */; };
 		4CBDB1971A427A11006A9F1F /* RevealRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBDB1961A427A11006A9F1F /* RevealRequest.m */; };
+		4CC7B8991A4B3EBE000982EA /* MatchProfileTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC7B8981A4B3EBE000982EA /* MatchProfileTVC.m */; };
 		4CF56F751A2301CF008E861D /* PreferencesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF56F741A2301CF008E861D /* PreferencesTableViewController.m */; };
 		4CF56F781A23D0A8008E861D /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF56F771A23D0A8008E861D /* User.m */; };
 		92E8E32284B3758EB4DC35B8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BA0CC71950E48F220C437C5 /* libPods.a */; };
@@ -265,6 +266,8 @@
 		4CBDB1931A3CDD3C006A9F1F /* ProfileTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileTableVC.m; sourceTree = "<group>"; };
 		4CBDB1951A427A11006A9F1F /* RevealRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RevealRequest.h; sourceTree = "<group>"; };
 		4CBDB1961A427A11006A9F1F /* RevealRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RevealRequest.m; sourceTree = "<group>"; };
+		4CC7B8971A4B3EBE000982EA /* MatchProfileTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MatchProfileTVC.h; sourceTree = "<group>"; };
+		4CC7B8981A4B3EBE000982EA /* MatchProfileTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MatchProfileTVC.m; sourceTree = "<group>"; };
 		4CDD63D01A30A20E00AE9679 /* PodFile */ = {isa = PBXFileReference; lastKnownFileType = text; path = PodFile; sourceTree = "<group>"; };
 		4CF56F731A2301CE008E861D /* PreferencesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesTableViewController.h; sourceTree = "<group>"; };
 		4CF56F741A2301CF008E861D /* PreferencesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesTableViewController.m; sourceTree = "<group>"; };
@@ -668,6 +671,8 @@
 				0BA4ECB119AE1EE200302E92 /* SidebarTableViewController.m */,
 				42DBCCC619AC4E4B00CE6C93 /* MainViewController.h */,
 				42DBCCC719AC4E4B00CE6C93 /* MainViewController.m */,
+				4CC7B8971A4B3EBE000982EA /* MatchProfileTVC.h */,
+				4CC7B8981A4B3EBE000982EA /* MatchProfileTVC.m */,
 				42DBCCD019ACCD9A00CE6C93 /* ProfileViewController.h */,
 				42DBCCD119ACCD9A00CE6C93 /* ProfileViewController.m */,
 				4283BD8119B9584300AD1F63 /* MatchViewController.h */,
@@ -1254,6 +1259,7 @@
 				C237018C19D974390024F856 /* UIAlertView+AFNetworking.m in Sources */,
 				C237018719D974390024F856 /* AFURLRequestSerialization.m in Sources */,
 				C25E763919EF5C1200779C23 /* UIImage+WebP.m in Sources */,
+				4CC7B8991A4B3EBE000982EA /* MatchProfileTVC.m in Sources */,
 				C25E763619EF5C1200779C23 /* UIButton+WebCache.m in Sources */,
 				0BA4ECBB19AE232600302E92 /* CustomSignInViewController.m in Sources */,
 				C254F8A319F6C4B000473836 /* WhoSeeViewController.m in Sources */,
