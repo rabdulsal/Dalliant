@@ -19,12 +19,19 @@
 #import "UserNearMeViewController.h"
 #import "MainViewController.h"
 #import "SidebarTableViewController.h"
+#import <KIImagePager.h>
+#import "MatchProfileTVC.h"
 #define MARGIN 50
 
 @interface MatchViewController ()
 @property (weak, nonatomic) IBOutlet UIButton *matchingButton;
 @property (weak, nonatomic) IBOutlet UIImageView *matchImageView;
 @property (weak, nonatomic) IBOutlet UILabel *matchingLabel;
+@property (nonatomic) NSData *imageData;
+@property (weak, nonatomic) IBOutlet KIImagePager *imagePager;
+@property (weak, nonatomic) IBOutlet UIScrollView *scroller;
+@property (nonatomic) UIVisualEffectView *blurImageView;
+
 
 @end
 
@@ -34,6 +41,18 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    _getPhotoArray = [[NSMutableArray alloc] init];
+    
+    [_scroller setScrollEnabled:YES];
+    //[_scroller setContentSize:CGSizeMake(320, 1555)];
+    [_scroller setContentSize:CGSizeMake(self.view.frame.size.width, 2200)];
+    /*
+    [_matchUser.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+        _imageData = data;
+        _matchImage = [[UIImage alloc] initWithData:data];
+    }];*/
+    
     self.matchingButton.layer.cornerRadius = 3;
     self.matchingButton.layer.borderWidth = 1.0;
     self.matchingButton.layer.borderColor = WHITE_COLOR.CGColor;
@@ -43,6 +62,14 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
+    [self blurImages:_imagePager];
+    
+    _imagePager.pageControl.currentPageIndicatorTintColor = [UIColor lightGrayColor];
+    _imagePager.pageControl.pageIndicatorTintColor = [UIColor blackColor];
+    //_imagePager.pageControl.center = CGPointMake(CGRectGetWidth(_imagePager.frame) / 2, CGRectGetHeight(_imagePager.frame) - 42);
+    
+    /*
     UIImageView *iv = [[UIImageView alloc] initWithFrame:self.view.frame];
     iv.image = [UIImage imageNamed:@"match"];
     [self.view addSubview:iv];
@@ -86,8 +113,28 @@
     } completion:^(BOOL finished) {
 
     }];
+     */
 }
 
+- (NSArray *) arrayWithImages:(KIImagePager*)pager
+{
+    return _getPhotoArray;
+    //return @[_matchImage,_matchImage1];
+}
+
+- (UIViewContentMode) contentModeForImage:(NSUInteger)image inPager:(KIImagePager*)pager
+{
+    return UIViewContentModeScaleAspectFill;
+}
+
+- (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"matched_user"]) {
+        MatchProfileTVC *matchVC = [[MatchProfileTVC alloc] init];
+        matchVC = segue.destinationViewController;
+        matchVC.matchUser = _matchUser;
+    }
+}
 // START CHAT BUTTON
 
 - (IBAction)keepMatching:(id)sender
@@ -111,6 +158,19 @@
 - (void)handleTap:(UITapGestureRecognizer *)tap
 {
     NSLog(@"MatchingButton was tapped");
+}
+
+#pragma mark - Blur Images
+- (void)blurImages:(KIImagePager *)imageView
+{
+    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+    
+    // BlurImageCell conditional
+    
+    _blurImageView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+    _blurImageView.frame = imageView.bounds;
+    [imageView addSubview:_blurImageView];
+    NSLog(@"Blur effect run");
 }
 
 /* ----------------------------------------------------------------------------------------------

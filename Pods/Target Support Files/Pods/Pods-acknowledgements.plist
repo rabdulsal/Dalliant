@@ -14,6 +14,14 @@
 		</dict>
 		<dict>
 			<key>FooterText</key>
+			<string>LICENSE</string>
+			<key>Title</key>
+			<string>KIImagePager</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>FooterText</key>
 			<string>Copyright (c) 2014 Tim Davies (http://tmdvs.me)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

@@ -16,7 +16,7 @@
 #import "GADInterstitial.h"
 #import "User.h"
 #import "UserProfileViewController.h"
-#import "MatchProfileTVC.h"
+#import "MatchViewController.h"
 
 @interface UserMessagesViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 {
@@ -563,51 +563,84 @@
         ImageViewController *vc = segue.destinationViewController;
         UIImageView *imageView = (UIImageView *)sender;
         vc.image = imageView.image;
-    } else if ([segue.identifier isEqualToString:@"view_profile"]){
+    } else if ([segue.identifier isEqualToString:@"match_view"]){
         //if ([[segue identifier] isEqualToString:@"userprofileSee"]) {
             // Move to ViewDidLoad
         NSLog(@"View Profile Pressed");
-        MatchProfileTVC *matchVC = [[MatchProfileTVC alloc]initWithNibName:@"UserVC" bundle:nil];
+        MatchViewController *matchVC = [[MatchViewController alloc]init];
         matchVC = segue.destinationViewController;
         //matchVC.userFBPic.image             = _toUserParse.photo;
         matchVC.matchUser = _toUserParse;
         
+        if (matchVC.matchUser.photo) {
+            [matchVC.matchUser.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                matchVC.matchImage = [[UIImage alloc] initWithData:data];
+                NSLog(@"Image 0");
+                [matchVC.getPhotoArray addObject:matchVC.matchImage];
+            }];
+        } else NSLog(@"No Main photo");
+        if (matchVC.matchUser.photo1) {
+            [matchVC.matchUser.photo1 getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                matchVC.matchImage1 = [[UIImage alloc] initWithData:data];
+                NSLog(@"Image 1");
+                [matchVC.getPhotoArray addObject:matchVC.matchImage1];
+            }];
+        } else NSLog(@"No Main1 photo");
+        if (matchVC.matchUser.photo2) {
+            
+            [matchVC.matchUser.photo2 getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                matchVC.matchImage2 = [[UIImage alloc] initWithData:data];
+                NSLog(@"Image 2");
+                [matchVC.getPhotoArray addObject:matchVC.matchImage2];
+            }];
+        } else NSLog(@"No Main2 photo");
+        if (matchVC.matchUser.photo3) {
+            
+            [matchVC.matchUser.photo3 getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                matchVC.matchImage3 = [[UIImage alloc] initWithData:data];
+                NSLog(@"Image 3");
+                [matchVC.getPhotoArray addObject:matchVC.matchImage3];
+            }];
+        } else NSLog(@"No Main3 photo");
+        
         /*
-            self.photoArray =[[NSMutableArray alloc]init];
-            
-            
-            UserProfileViewController *prVC = [[UserProfileViewController alloc]initWithNibName:@"UserVC" bundle:nil];
-            prVC = segue.destinationViewController;
-            //_cellUser = [userFilesArray objectAtIndex:indexPath.row];
-            
-            if (_toUserParse.photo) {
+        for (int i = 0; i < (int)_photoArray.count; ++i) {
+            PFFile *photo = [_photoArray objectAtIndex:i];
+            NSLog(@"Photo set");
+            [photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
                 
-                PFFile *mainphoto = _toUserParse.photo;
-                //prVC.profileImage.image = _toUserParse.photo;
-                [_photoArray addObject:mainphoto.url];
-            } else NSLog(@"No Main photo");
-            if (_toUserParse.photo1) {
+                if (i == 0) {
+                    matchVC.matchImage = [[UIImage alloc] initWithData:data];
+                    NSLog(@"%d",i);
+                }
                 
-                PFFile *mainphoto1 = _toUserParse.photo1;
-                [_photoArray addObject:mainphoto1.url];
-            } else NSLog(@"No Main1 photo");
-            if (_toUserParse.photo2) {
+                if (i == 1) {
+                    matchVC.matchImage1 = [[UIImage alloc] initWithData:data];
+                    NSLog(@"%d",i);
+                }
                 
-                PFFile *mainphoto2 = _toUserParse.photo2;
-                [_photoArray addObject:mainphoto2.url];
-            } else NSLog(@"No Main2 photo");
-            if (_toUserParse.photo3) {
+                if (i == 2) {
+                    matchVC.matchImage2 = [[UIImage alloc] initWithData:data];
+                    NSLog(@"%d",i);
+                }
                 
-                PFFile *mainphoto3 = _toUserParse.photo3;
-                [_photoArray addObject:mainphoto3.url];
-            } else NSLog(@"No Main3 photo");
-            
-            
-            [[segue destinationViewController]setGetPhotoArray:self.photoArray];
-            [[segue destinationViewController] setUserId:_toUserParse.objectId];
-            [[segue destinationViewController]setStatus:_toUserParse.online];
-            
-        //}*/
+                if (i == 3) {
+                    matchVC.matchImage3 = [[UIImage alloc] initWithData:data];
+                    NSLog(@"%d",i);
+                }
+                
+                //UserProfileViewController *prVC = [[UserProfileViewController alloc]initWithNibName:@"UserVC" bundle:nil];
+                //prVC = segue.destinationViewController;
+                //_cellUser = [userFilesArray objectAtIndex:indexPath.row];
+                
+                
+                //[[segue destinationViewController]setGetPhotoArray:self.photoArray];
+                //[[segue destinationViewController] setUserId:_toUserParse.objectId];
+                //[[segue destinationViewController]setStatus:_toUserParse.online];
+                
+            }];
+        }
+        */
     }
 }
 
@@ -760,7 +793,8 @@
     } else {
         
         if (buttonIndex == 0) {
-            [self performSegueWithIdentifier:@"view_profile" sender:nil];
+            //[self performSegueWithIdentifier:@"view_profile" sender:nil];
+            [self performSegueWithIdentifier:@"match_view" sender:nil];
         }
             
         if (buttonIndex == 1) {

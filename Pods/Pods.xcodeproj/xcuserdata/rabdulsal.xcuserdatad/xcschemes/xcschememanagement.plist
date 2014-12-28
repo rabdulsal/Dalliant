@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Pods-KIImagePager.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-TDBadgedCell.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -17,12 +22,17 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>66E502BB124AF12CB9791594</key>
+		<key>BBB46B43A500E1BD8844605D</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A138A66036F275AFEA1CB830</key>
+		<key>C2E2C24618F5B470471F582F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FFCB89A920F9B7C1BB04D23D</key>
 		<dict>
 			<key>primary</key>
 			<true/>

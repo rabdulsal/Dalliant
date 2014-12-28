@@ -12,6 +12,10 @@
 @interface MatchViewController : UIViewController
 @property UIImage *userImage;
 @property UIImage *matchImage;
+@property UIImage *matchImage1;
+@property UIImage *matchImage2;
+@property UIImage *matchImage3;
 @property UserParseHelper *user;
 @property UserParseHelper *matchUser;
+@property (nonatomic) NSMutableArray *getPhotoArray;
 @end

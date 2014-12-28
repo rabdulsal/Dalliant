@@ -1,6 +1,10 @@
 # Acknowledgements
 This application makes use of the following third party libraries:
 
+## KIImagePager
+
+LICENSE
+
 ## TDBadgedCell
 
 Copyright (c) 2014 Tim Davies (http://tmdvs.me)

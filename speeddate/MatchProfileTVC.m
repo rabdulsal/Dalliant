@@ -7,8 +7,11 @@
 //
 
 #import "MatchProfileTVC.h"
+#import <KIImagePager.h>
 
 @interface MatchProfileTVC ()
+
+@property (nonatomic) NSData *imageData;
 
 @end
 
@@ -20,6 +23,7 @@
     // Set profileImage - Fbook photo blurry
     [_matchUser.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
         UIImage *userImage = [[UIImage alloc] initWithData:data];
+        _imageData = data;
         _userFBPic.image = userImage;
     }];
     
@@ -34,11 +38,51 @@
     _matchRelationshipType.text  = _matchUser.relationshipType;
     
     [self tapUserImage];
+    
+
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    _imagePager.pageControl.currentPageIndicatorTintColor = [UIColor lightGrayColor];
+    _imagePager.pageControl.pageIndicatorTintColor = [UIColor blackColor];
+    _imagePager.pageControl.center = CGPointMake(CGRectGetWidth(_imagePager.frame)/2, CGRectGetHeight(_imagePager.frame)/2);
+}
+
+- (NSArray *) arrayWithImages:(KIImagePager*)pager
+{
+    
+    return @[
+             [[UIImage alloc] initWithData:_imageData],
+             [[UIImage alloc] initWithData:_imageData],
+             [[UIImage alloc] initWithData:_imageData],
+             [[UIImage alloc] initWithData:_imageData]
+             /*@"https://raw.github.com/kimar/tapebooth/master/Screenshots/Screen1.png",
+             @"https://raw.github.com/kimar/tapebooth/master/Screenshots/Screen2.png",
+             @"https://raw.github.com/kimar/tapebooth/master/Screenshots/Screen3.png"*/
+             ];
+}
+
+- (UIViewContentMode) contentModeForImage:(NSUInteger)image inPager:(KIImagePager*)pager
+{
+    return UIViewContentModeScaleAspectFill;
+}
+
+- (NSString *) captionForImageAtIndex:(NSUInteger)index inPager:(KIImagePager*)pager
+{
+    return @[
+             @"First screenshot",
+             @"Another screenshot",
+             @"Yet another one",
+             @"Last one! ;-)"
+             ][index];
 }
 
 - (void)didReceiveMemoryWarning {

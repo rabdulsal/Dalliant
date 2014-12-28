@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "UserParseHelper.h"
+#import <KIImagePager.h>
 
 @interface MatchProfileTVC : UITableViewController
 
@@ -20,6 +21,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *matchBodyType;
 @property (weak, nonatomic) IBOutlet UILabel *matchDatingStatus;
 @property (weak, nonatomic) IBOutlet UILabel *matchRelationshipType;
+
+@property (weak, nonatomic) IBOutlet KIImagePager *imagePager;
 
 
 - (IBAction)closeProfileView:(id)sender;
