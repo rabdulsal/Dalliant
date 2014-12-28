@@ -649,6 +649,7 @@
 - (IBAction)actionPressed:(id)sender
 {
     UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Match Options" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"View Profile",@"Report",@"Unmatch", nil];
+    sheet.tag = 2;
     [sheet showInView:self.view];
 }
 
@@ -760,11 +761,14 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (_actionsheet.tag == 1) { // <-- Change to isRevealed attribute on Matched User
+    if (actionSheet.tag == 1) {
         
-        if (!mainUser.isRevealed && buttonIndex == 0) {
-            // mainUser.isRevealed = true;
+        if (!mainUser.isRevealed && buttonIndex == 0) { // <-- Change to requestReply = YES
+            // Test purposes
+            mainUser.isRevealed = true;
+            [self reloadView];
             
+            /* <-- Apparently this works, a text notification was sent to me when executed
             // RevealRequest setup
             RevealRequest *revealRequest = [RevealRequest object];
             revealRequest.requestFromUser = [UserParseHelper currentUser];
@@ -787,10 +791,10 @@
                 [push setQuery:query];
                 [push setData:data];
                 [push sendPushInBackground];
-            }];
-        }
+            }];*/
+         }
         
-    } else {
+    } else if (actionSheet.tag == 2) {
         
         if (buttonIndex == 0) {
             //[self performSegueWithIdentifier:@"view_profile" sender:nil];
@@ -808,7 +812,8 @@
         }
             
         if (buttonIndex == 2) {
-            [self deleteConversation];
+            NSLog(@"Delete button pressed");
+            //[self deleteConversation];
         }
         
     }
@@ -830,6 +835,7 @@
     // RevealRequest AlertView for Incoming Request
     
     if (alertView.tag == 1) {
+        
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{ // 1
             dispatch_group_t downloadGroup = dispatch_group_create(); // 2
             dispatch_group_enter(downloadGroup); // 3
@@ -859,6 +865,7 @@
                 [request saveInBackground];
             }); // 6
         });
+        
         
     } else if (alertView.tag == 2) {
         

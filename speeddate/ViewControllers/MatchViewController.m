@@ -22,9 +22,13 @@
 #import <KIImagePager.h>
 #import "MatchProfileTVC.h"
 #import <ILTranslucentView.h>
+#import "User.h"
 #define MARGIN 50
 
 @interface MatchViewController ()
+{
+    User *mainUser;
+}
 @property (weak, nonatomic) IBOutlet UIButton *matchingButton;
 @property (weak, nonatomic) IBOutlet UIImageView *matchImageView;
 @property (weak, nonatomic) IBOutlet UILabel *matchingLabel;
@@ -44,13 +48,19 @@
 {
     [super viewDidLoad];
     
+    mainUser = [User singleObj];
+    
     _getPhotoArray = [[NSMutableArray alloc] init];
     
-    [self blurImages:_imageView];
+    _userName.text = _matchUser.nickname;
+    
+    if (!mainUser.isRevealed) { //<-- Change to check if revealReply = YES
+        [self blurImages:_imageView];
+    }
     
     [_scroller setScrollEnabled:YES];
     //[_scroller setContentSize:CGSizeMake(320, 1555)];
-    [_scroller setContentSize:CGSizeMake(self.view.frame.size.width, 2200)];
+    [_scroller setContentSize:CGSizeMake(self.view.frame.size.width, 2350)];
     /*
     [_matchUser.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
         _imageData = data;

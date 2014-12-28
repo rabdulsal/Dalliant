@@ -73,6 +73,7 @@
 {
     [super viewWillAppear:YES];
     [self loadingChat];
+    [self reloadView];
 }
 
 - (void)receivedNotification:(NSNotification *)notification
@@ -144,6 +145,19 @@
         user = [self.usersArray objectAtIndex:indexPath.row];
     }
     
+    [user.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+        
+        cell.userImageView.image = [UIImage imageWithData:data];
+        
+        // Configure Blur ---------------------------------------------------------------
+        
+        if (!mainUser.isRevealed) { // <-- Test purposes - change to check isRevealed on Matched User - NOT WORKING
+            [self blurImages:cell.userImageView];
+            NSLog(@"Blur code run b/c User not revealed");
+        }
+        
+    }];
+    
     // Revealed conditional -----------------------------------------------------
     
     if (!mainUser.isRevealed) { // <-- Test purposes, change to test isRevealed on Matched User
@@ -198,18 +212,6 @@
     //bgColorView.backgroundColor = RED_COLOR;
     bgColorView.backgroundColor = WHITE_COLOR;
     [cell setSelectedBackgroundView:bgColorView];
-    [user.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        
-        cell.userImageView.image = [UIImage imageWithData:data];
-        
-        // Configure Blur ---------------------------------------------------------------
-        
-        if (!mainUser.isRevealed) { // <-- Test purposes - change to check isRevealed on Matched User - NOT WORKING
-            [self blurImages:cell.userImageView];
-            NSLog(@"Blur code run b/c User not revealed");
-        }
-        
-    }];
     
     return cell;
 }
@@ -344,6 +346,14 @@
         }
     }];
     
+}
+
+- (void)reloadView
+{
+    UIView *parent = self.view.superview;
+    [self.view removeFromSuperview];
+    self.view = nil; // unloads the view
+    [parent addSubview:self.view]; //reloads the view from the nib
 }
 
 #pragma mark GADRequest generation

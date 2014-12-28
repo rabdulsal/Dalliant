@@ -18,4 +18,5 @@
 @property UserParseHelper *user;
 @property UserParseHelper *matchUser;
 @property (nonatomic) NSMutableArray *getPhotoArray;
+@property (nonatomic) IBOutlet UILabel *userName;
 @end

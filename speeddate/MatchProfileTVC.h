@@ -16,6 +16,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *userFBPic;
 @property (weak, nonatomic) IBOutlet UILabel *userName;
 @property (weak, nonatomic) IBOutlet UILabel *userGender;
+@property (weak, nonatomic) IBOutlet UILabel *userDistance;
 @property (weak, nonatomic) IBOutlet UILabel *userDescription;
 @property (weak, nonatomic) IBOutlet UILabel *userAge;
 @property (weak, nonatomic) IBOutlet UILabel *matchBodyType;
