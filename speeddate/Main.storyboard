@@ -933,7 +933,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="i0K-e0-E2i">
-                                        <rect key="frame" x="23" y="12" width="66" height="30"/>
+                                        <rect key="frame" x="35" y="12" width="66" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="Close">
                                             <color key="titleColor" red="0.87843137250000003" green="0.37647058820000001" blue="0.37647058820000001" alpha="1" colorSpace="calibratedRGB"/>
@@ -944,7 +944,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Fxu-so-bYh">
-                                        <rect key="frame" x="271" y="12" width="66" height="30"/>
+                                        <rect key="frame" x="260" y="12" width="66" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="Report">
                                             <color key="titleColor" red="0.87843137250000003" green="0.37647058820000001" blue="0.37647058820000001" alpha="1" colorSpace="calibratedRGB"/>
@@ -952,6 +952,7 @@
                                         </state>
                                         <connections>
                                             <action selector="keepMatching:" destination="rDU-7y-piv" eventType="touchUpInside" id="4w6-3F-wcs"/>
+                                            <action selector="reportUser:" destination="rDU-7y-piv" eventType="touchUpInside" id="4dm-cY-XZf"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Start chat" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="E20-Tt-bme">
@@ -1015,6 +1016,7 @@
                         <outlet property="matchImageView" destination="Vb3-ld-uh8" id="iJU-Sf-US7"/>
                         <outlet property="matchingButton" destination="i0K-e0-E2i" id="mKY-hY-YV5"/>
                         <outlet property="matchingLabel" destination="E20-Tt-bme" id="vK5-rp-xnV"/>
+                        <outlet property="reportUser" destination="Fxu-so-bYh" id="DlH-La-0Ic"/>
                         <outlet property="scroller" destination="One-Zj-tKF" id="O1K-np-efs"/>
                         <outlet property="userName" destination="U0c-mh-PTM" id="gOv-b1-LiW"/>
                     </connections>

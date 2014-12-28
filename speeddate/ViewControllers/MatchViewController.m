@@ -23,6 +23,8 @@
 #import "MatchProfileTVC.h"
 #import <ILTranslucentView.h>
 #import "User.h"
+#import "Report.h"
+#import "MessageParse.h"
 #define MARGIN 50
 
 @interface MatchViewController ()
@@ -37,7 +39,9 @@
 @property (weak, nonatomic) IBOutlet UIView *imageView;
 @property (weak, nonatomic) IBOutlet UIScrollView *scroller;
 @property (nonatomic) UIVisualEffectView *blurImageView;
+@property (weak, nonatomic) IBOutlet UIButton *reportUser;
 
+- (IBAction)reportUser:(id)sender;
 
 @end
 
@@ -67,9 +71,8 @@
         _matchImage = [[UIImage alloc] initWithData:data];
     }];*/
     
-    self.matchingButton.layer.cornerRadius = 3;
-    self.matchingButton.layer.borderWidth = 1.0;
-    self.matchingButton.layer.borderColor = WHITE_COLOR.CGColor;
+    [self configureButton:_matchingButton];
+    [self configureButton:_reportUser];
 
 }
 
@@ -126,6 +129,13 @@
 
     }];
      */
+}
+
+- (void)configureButton:(UIButton *)button
+{
+    button.layer.cornerRadius = 3;
+    button.layer.borderWidth = 1.0;
+    button.layer.borderColor = RED_LIGHT.CGColor;
 }
 
 - (NSArray *) arrayWithImages:(KIImagePager*)pager
@@ -193,6 +203,43 @@
  
  -------------------------------------------------------------------------------------------------
  ---------------------------------------------------------------------------------------------- */
+- (void)deleteConversation
+{
+    PFQuery *query1 = [MessageParse query];
+    [query1 whereKey:@"fromUserParse" equalTo:[PFUser currentUser]];
+    [query1 whereKey:@"toUserParse" equalTo:_matchUser];
+    
+    PFQuery *query2 = [MessageParse query];
+    [query2 whereKey:@"fromUserParse" equalTo:_matchUser];
+    [query2 whereKey:@"toUserParse" equalTo:[PFUser currentUser]];
+    
+    
+    PFQuery *orQUery = [PFQuery orQueryWithSubqueries:@[query1, query2]];
+    
+    [orQUery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        [MessageParse deleteAllInBackground:objects block:^(BOOL succeeded, NSError *error) {
+            //  [self popVC];
+            [self.navigationController popViewControllerAnimated:YES];
+        }];
+    }];
+}
 
-
+- (IBAction)reportUser:(id)sender {
+    [self deleteConversation];
+    PFQuery *query = [Report query];
+    [query whereKey:@"user" equalTo:_matchUser];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        Report *report = objects.firstObject;
+        if (!report) {
+            Report *repo = [Report object];
+            report = repo;
+            report.user = _matchUser;
+        }
+        report.report = [NSNumber numberWithInt:report.report.intValue + 1];
+        [report saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }];
+        
+    }];
+}
 @end
