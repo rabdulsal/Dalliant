@@ -21,6 +21,7 @@
 #import "SidebarTableViewController.h"
 #import <KIImagePager.h>
 #import "MatchProfileTVC.h"
+#import <ILTranslucentView.h>
 #define MARGIN 50
 
 @interface MatchViewController ()
@@ -29,6 +30,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *matchingLabel;
 @property (nonatomic) NSData *imageData;
 @property (weak, nonatomic) IBOutlet KIImagePager *imagePager;
+@property (weak, nonatomic) IBOutlet UIView *imageView;
 @property (weak, nonatomic) IBOutlet UIScrollView *scroller;
 @property (nonatomic) UIVisualEffectView *blurImageView;
 
@@ -43,6 +45,8 @@
     [super viewDidLoad];
     
     _getPhotoArray = [[NSMutableArray alloc] init];
+    
+    [self blurImages:_imageView];
     
     [_scroller setScrollEnabled:YES];
     //[_scroller setContentSize:CGSizeMake(320, 1555)];
@@ -63,11 +67,9 @@
 {
     [super viewDidAppear:animated];
     
-    [self blurImages:_imagePager];
-    
     _imagePager.pageControl.currentPageIndicatorTintColor = [UIColor lightGrayColor];
     _imagePager.pageControl.pageIndicatorTintColor = [UIColor blackColor];
-    //_imagePager.pageControl.center = CGPointMake(CGRectGetWidth(_imagePager.frame) / 2, CGRectGetHeight(_imagePager.frame) - 42);
+    _imagePager.pageControl.center = CGPointMake(CGRectGetWidth(_imagePager.frame) / 2, CGRectGetHeight(_imagePager.frame) - 42);
     
     /*
     UIImageView *iv = [[UIImageView alloc] initWithFrame:self.view.frame];
@@ -161,16 +163,15 @@
 }
 
 #pragma mark - Blur Images
-- (void)blurImages:(KIImagePager *)imageView
+- (void)blurImages:(UIView *)imageView
 {
-    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+    ILTranslucentView *translucentView = [[ILTranslucentView alloc] initWithFrame:CGRectMake(_imagePager.frame.origin.x, _imagePager.frame.origin.y, _imagePager.frame.size.width, _imagePager.frame.size.height)];
     
-    // BlurImageCell conditional
-    
-    _blurImageView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-    _blurImageView.frame = imageView.bounds;
-    [imageView addSubview:_blurImageView];
-    NSLog(@"Blur effect run");
+    translucentView.translucentAlpha = 1;
+    translucentView.translucentStyle = UIBarStyleDefault;
+    translucentView.translucentTintColor = [UIColor clearColor];
+    translucentView.backgroundColor = [UIColor clearColor];
+    [_imageView addSubview:translucentView];
 }
 
 /* ----------------------------------------------------------------------------------------------

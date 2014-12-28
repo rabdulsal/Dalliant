@@ -6,6 +6,12 @@
 // project.
 
 
+// ILTranslucentView
+#define COCOAPODS_POD_AVAILABLE_ILTranslucentView
+#define COCOAPODS_VERSION_MAJOR_ILTranslucentView 0
+#define COCOAPODS_VERSION_MINOR_ILTranslucentView 0
+#define COCOAPODS_VERSION_PATCH_ILTranslucentView 1
+
 // KIImagePager
 #define COCOAPODS_POD_AVAILABLE_KIImagePager
 #define COCOAPODS_VERSION_MAJOR_KIImagePager 2

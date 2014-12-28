@@ -1,12 +1,15 @@
 PODS:
+  - ILTranslucentView (0.0.1)
   - KIImagePager (2.1.0)
   - TDBadgedCell (2.6)
 
 DEPENDENCIES:
+  - ILTranslucentView (~> 0.0.1)
   - KIImagePager (~> 2.1)
   - TDBadgedCell
 
 SPEC CHECKSUMS:
+  ILTranslucentView: fa20cc89ceb451b54ae3d993c7dfb789873ef153
   KIImagePager: 1e9393fba26947b10854a23d5d052a503c832b26
   TDBadgedCell: e683b5557d12ea4e28a8d6ac20b6e394abc2c1fe
 

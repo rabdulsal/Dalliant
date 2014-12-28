@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Pods-ILTranslucentView.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-KIImagePager.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -22,17 +27,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>00B0872ABE9451613840A558</key>
+		<key>0C4308D41B9344C96C13BD58</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9B4DB31E3CE5F9DAEE59A6F9</key>
+		<key>C927B8094E8047AA07241FD0</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9D7C2387306A155A0131448A</key>
+		<key>E04F83F1FCD8017C39738FCB</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F3D4B5F5B965B4BF8CCE098B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
