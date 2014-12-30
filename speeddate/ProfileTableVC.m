@@ -214,15 +214,6 @@
     }
 }
 
-- (void)SaveButtonPressed:(UIButton *)button
-{
-    [_saveProfileButton setSelected:YES];
-    _saveProfileButton.backgroundColor = RED_LIGHT;
-    [self convertPreferenceButtons:_userPrefs];
-    _mainUser.interests = preferenceStrings;
-    [_mainUser saveInBackground];
-}
-
 // Add (NSDictionary *)userInfo
 - (void)checkAndSetPreferenceValues
 {
@@ -753,6 +744,15 @@
         
         NSLog(@"Total PreferenceStrings: %lu", preferenceStrings.count);
     }
+}
+
+- (void)SaveButtonPressed:(UIButton *)button
+{
+    [_saveProfileButton setSelected:YES];
+    _saveProfileButton.backgroundColor = RED_LIGHT;
+    [self convertPreferenceButtons:_userPrefs];
+    _mainUser.interests = preferenceStrings;
+    [_mainUser saveInBackground];
 }
 
 

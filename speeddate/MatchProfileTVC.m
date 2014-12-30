@@ -37,9 +37,28 @@
     _matchDatingStatus.text      = _matchUser.relationshipStatus;
     _matchRelationshipType.text  = _matchUser.relationshipType;
     
+    if ([_matchUser.drinks isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+        _matchDrinksPref.text = @"Y";
+        _matchDrinksPref.textColor = RED_LIGHT;
+    } else _matchDrinksPref.text = @"N";
+    if ([_matchUser.smokes isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+        _matchSmokesPref.text = @"Y";
+        _matchSmokesPref.textColor = RED_LIGHT;
+    } else _matchSmokesPref.text = @"N";
+    if ([_matchUser.drugs isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+        _matchDrugsPref.text = @"Y";
+        _matchDrugsPref.textColor = RED_LIGHT;
+    }else _matchDrugsPref.text = @"N";
+    if ([_matchUser.bodyArt isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+        _matchBodyArPref.text = @"Y";
+        _matchBodyArPref.textColor = RED_LIGHT;
+    }else _matchBodyArPref.text = @"N";
+    
+    
+    [self listInterests:_matchUser.interests];
+    
     [self tapUserImage];
     
-
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -54,6 +73,19 @@
     _imagePager.pageControl.currentPageIndicatorTintColor = [UIColor lightGrayColor];
     _imagePager.pageControl.pageIndicatorTintColor = [UIColor blackColor];
     _imagePager.pageControl.center = CGPointMake(CGRectGetWidth(_imagePager.frame)/2, CGRectGetHeight(_imagePager.frame)/2);
+}
+
+- (void)listInterests:(NSArray *)interests
+{
+    NSString *string = @"";
+    for (int i = 0; i < interests.count; i++) {
+        //_matchInterest1.numberOfLines = 1;
+        string = [string stringByAppendingFormat:@"%@ \n", interests[i]];
+        
+        NSLog(@"%@", _matchUser.interests[i]);
+    }
+    
+    _matchInterest1.text = string;
 }
 
 - (NSArray *) arrayWithImages:(KIImagePager*)pager

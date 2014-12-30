@@ -27,11 +27,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    user = [User singleObj];
+    
     _sidebarButton.target = self.revealViewController;
     _sidebarButton.action = @selector(revealToggle:);
     //[self.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];
 
-    user = [User singleObj];
+    _maxAgeField.delegate = self;
+    _minAgeField.delegate = self;
     
     // Will have to do a check on the User to pre-load Preferences into appropriate Arrays
     
@@ -634,6 +637,13 @@
     }
     
     [_mainUser saveInBackground];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    [_minAgeField resignFirstResponder];
+    [_maxAgeField resignFirstResponder];
+    return YES;
 }
 
 @end

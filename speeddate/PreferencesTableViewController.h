@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PreferencesTableViewController : UITableViewController
+@interface PreferencesTableViewController : UITableViewController <UITextFieldDelegate>
 
 
 // Preferences Arrays

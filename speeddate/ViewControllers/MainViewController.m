@@ -329,7 +329,7 @@
     [userQuery whereKey:@"geoPoint" nearGeoPoint:self.curUser.geoPoint withinKilometers:self.curUser.distance.doubleValue];
     [userQuery whereKey:@"email" matchesKey:@"fromUserEmail" inQuery:query];
     
-    // If User is Female, look for Male
+    /* If User is Female, look for Male
     if (self.curUser.sexuality.integerValue == 0) {
         [userQuery whereKey:@"isMale" equalTo:@"true"];
     }
@@ -337,7 +337,7 @@
     // If User is Male, look for Female
     if (self.curUser.sexuality.integerValue == 1) {
         [userQuery whereKey:@"isMale" equalTo:@"false"];
-    }
+    }*/
     NSUserDefaults *mainUser = [NSUserDefaults standardUserDefaults];
     [mainUser setInteger:self.curUser.sexuality.integerValue forKey:@"sex"];
     [mainUser synchronize];
