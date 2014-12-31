@@ -751,7 +751,8 @@
     [_saveProfileButton setSelected:YES];
     _saveProfileButton.backgroundColor = RED_LIGHT;
     [self convertPreferenceButtons:_userPrefs];
-    _mainUser.interests = preferenceStrings;
+    //_mainUser.interests = preferenceStrings;
+    _mainUser.interests = [[[NSSet alloc] initWithArray:preferenceStrings] allObjects];
     [_mainUser saveInBackground];
 }
 

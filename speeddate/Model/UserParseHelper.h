@@ -86,5 +86,7 @@
 @property NSNumber *moviesPref;
 @property NSNumber *workoutPref;
 
+@property int *totalPreferences;
+
 
 @end

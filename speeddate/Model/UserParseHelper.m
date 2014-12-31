@@ -82,6 +82,8 @@
 @dynamic moviesPref;
 @dynamic workoutPref;
 
+@dynamic totalPreferences;
+
 + (void)load {
     [self registerSubclass];
     

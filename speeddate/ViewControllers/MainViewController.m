@@ -107,6 +107,8 @@
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property UILabel* imageCountLabel;
 @property UserParseHelper *otherUser;
+@property double *prefMatchCounter;
+@property double *totalPrefs; //<-- should be attribute on UserParseHelper
 
 @property (weak, nonatomic) IBOutlet UIButton *baedarLabel;
 - (IBAction)toggleBaedar:(id)sender;
@@ -117,7 +119,7 @@
 @property (nonatomic,retain) UIView *bannerView;
 
 @property (strong) NSDictionary *match;
-@property (strong) NSMutableArray *noMatch;
+@property (strong) NSMutableArray *sharedPrefs;
 
 @end
 
@@ -145,6 +147,9 @@
     user = [User singleObj];
     
     _matched = false;
+    
+    _prefMatchCounter = 0;
+    _totalPrefs = 0;
     
     UIImageView *iv = [[UIImageView alloc] initWithFrame:self.view.frame];
     iv.image = [UIImage imageNamed:@"match"];
@@ -321,6 +326,7 @@
    
     // --------------------------------------------------------------------------------------
     
+    // Setting a query distance?
     if (self.curUser.distance.doubleValue == 0.0) {
         self.curUser.distance = [NSNumber numberWithInt:100];
     }
@@ -355,6 +361,8 @@
         [userQuery whereKey:@"objectId" notEqualTo:[UserParseHelper currentUser].objectId];
         [userQuery whereKey:@"email" doesNotMatchKey:@"toUserEmail" inQuery:query];
         [checkQuery whereKey:@"email" matchesKey:@"fromUserEmail" inQuery:queryTwo];
+        
+        // Querying on sexuality
         if (self.curUser.sexuality.integerValue == 0) {
             [userQuery whereKey:@"isMale" equalTo:@"true"];
         }
@@ -362,7 +370,8 @@
         if (self.curUser.sexuality.integerValue == 1) {
             [userQuery whereKey:@"isMale" equalTo:@"false"];
         }
-      
+        
+        // Increasing query distance?
         if (self.curUser.distance.doubleValue == 0.0) {
             self.curUser.distance = [NSNumber numberWithInt:10000];
         }
@@ -395,98 +404,168 @@
 /*
 - (void)matchGender
 {
-    if ([user.genderPref isEqualToString:_match.gender]) {
+    NSString *matchGender = [[NSString alloc] init];
+    
+    if ([_otherUser.isMale isEqualToString:@"true"]) {
+        matchGender = @"Male";
+    } else matchGender = @"Female";
+    
+    if ([_curUser.genderPref isEqualToString:matchGender]) {
+        _prefMatchCounter++;
+        [_willBeMatches addObject:_otherUser];
         [self matchBodyType];
+        
     } else {
-        [_noMatch addObject:_match];
+        
     }
+    
+    _totalPrefs++;
 }
 
 - (void)matchBodyType
 {
-    if([user.bodyTypePref isEqualToString:snapshot.value[@"body_type"]]) {
-        
+    if([_curUser.bodyTypePref isEqualToString:_otherUser.bodyType]) {
+        _prefMatchCounter++;
     } else {
-        [_noMatch addObject:_match];
+        //
     }
-    
+    _totalPrefs++;
 }
 
 - (void)matchRelationshipStatus
 {
-    if ([user.relationshipStatusPref isEqualToString:snapshot.value[@"relationship_status"]]) {
+    if ([_curUser.relationshipStatusPref isEqualToString:_otherUser.relationshipStatus]) {
         
+        _prefMatchCounter++;
     } else {
-        [_noMatch addObject:_match];
+        
     }
+    _totalPrefs++;
 }
 
 - (void)matchRomanticPreference
 {
-    if ([user.romanticPreference isEqualToString:snapshot.value[@"romantic_preference"]]) {
+    if ([_curUser.romanticPreference isEqualToString:_otherUser.relationshipType]) {
         
+        _prefMatchCounter++;
     } else {
-        [_noMatch addObject:_match];
+        
     }
-    
+    _totalPrefs++;
 }
 
 - (void)matchKids
 {
-    if ([user.kidsOkay == snapshot.value[@"kids_okay"]]) {
-        
+    if ([_curUser.kidsOkay isEqualToNumber:_otherUser.hasKids]) {
+        _prefMatchCounter++;
     } else {
-        [_noMatch addObject:_match];
+        
     }
+    _totalPrefs++;
 }
 
 - (void)matchDrinking
 {
-    if([user.drinkingOkay == snapshot.value[@"drinking_okay"]]) {
-        
+    if([_curUser.drinkingOkay isEqualToNumber:_otherUser.drinks]) {
+        _prefMatchCounter++;
     } else {
-        [_noMatch addObject:_match];
+        
     }
+    _totalPrefs++;
 }
 
 - (void)matchSmoking
 {
-    if ([user.smokingOkay == snapshot.value[@"smoking_okay"]]) {
-        
+    if ([_curUser.smokingOkay isEqualToNumber:_otherUser.smokes]) {
+        _prefMatchCounter++;
     } else {
-        [_noMatch addObject:_match];
+        
     }
+    _totalPrefs++;
 }
 
 - (void)matchDrugUse
 {
-    if ([user.drugsOkay == snapshot.value[@"drugs_okay"]]) {
-        
+    if ([_curUser.drugsOkay isEqualToNumber:_otherUser.drugs]) {
+        _prefMatchCounter++;
     } else {
-        [_noMatch addObject:_match];
+        
     }
+    _totalPrefs++;
 }
 
 - (void)matchBodyArt
 {
-    if ([user.bodyArtOkay == snapshot.value[@"bodyart_okay"]]) {
-        
+    if ([_curUser.bodyArtOkay isEqualToNumber:_otherUser.bodyArt]) {
+        _prefMatchCounter++;
     } else {
-        [_noMatch addObject:_match];
+        
+    }
+    _totalPrefs++;
+    
+    NSLog(@"PrefMatchCounter before compare: %ld", (long)_prefMatchCounter);
+    
+}
+
+- (void)compare:(NSArray *)userPreferences with:(NSArray *)matchPreferences
+{
+    _totalPrefs += [userPreferences count];
+    
+    NSLog(@"Total Preferences: %ld", (long)_totalPrefs);
+    
+    for (NSString *preference in userPreferences) {
+        if ([matchPreferences containsObject:preference]) {
+            _prefMatchCounter++;
+            NSLog(@"PrefMatchCounter after compare: %ld", (long)_prefMatchCounter);
+            [_sharedPrefs addObject:preference];
+            NSLog(@"Shared Prefs: %ld", [_sharedPrefs count]);
+        }
+    }
+    
+    [self performSegueWithIdentifier:@"viewMatches" sender:nil];
+}
+*/
+- (double)calculateCompatibility:(double)prefCounter with:(double)totalPreferences
+{
+    //NSNumber *indexCalculation = @20.1;
+    double indexCalculation = (prefCounter / totalPreferences)*100;
+    return indexCalculation;
+}
+
+#pragma mark - MATCH SEGUE
+
+// ----------------------- MATCHING SEGUE PUSHES TO MATCH_VIEW_CONTROLLER --------------------------
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"match"]) {
+        
+        MatchViewController *vc = segue.destinationViewController;
+        vc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+        
+        vc.userImage    = self.userPhoto;
+        vc.matchImage   = self.matchPhoto;
+        vc.matchUser    = self.otherUser;
+        vc.user         = self.curUser;
+    }else if ([segue.identifier isEqualToString:@"viewMatches"]) {
+        
+        //_matched = true;
+        
+        MatchViewController *vc = segue.destinationViewController;
+        vc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+        
+        vc.userImage            = self.userPhoto;
+        vc.matchImage           = self.userPhoto;
+        vc.matchUser            = self.otherUser;
+        vc.user                 = self.curUser;
+        
+        double indexCalculation = [self calculateCompatibility:*(_prefMatchCounter) with:*(_totalPrefs)];
+        vc.compatibilityIndex   = &(indexCalculation);
+        
+        NSLog(@"Compatibility Index: %@", [NSNumber numberWithDouble:*(vc.compatibilityIndex)]);
     }
 }
 
-- (void)compareActivities
-{
-    for (UIButton *userPreference in userPreferences) {
-        for (int i = 0; i < [matchPreferences count]; i++) {
-            if (userPreference == matchPreferences[i]) {
-                [mutualPrefs addObject:matchPreferences[i]];
-            }
-        }
-    }
-}
-*/
 - (void) firstPlacement
 {
     UserParseHelper* aUser = self.posibleMatchesArray.firstObject;
@@ -1353,50 +1432,19 @@
     }
 }
 
-#pragma mark - MATCH SEGUE
 
-// ----------------------- MATCHING SEGUE PUSHES TO MATCH_VIEW_CONTROLLER --------------------------
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([segue.identifier isEqualToString:@"match"]) {
-
-
-        MatchViewController *vc = segue.destinationViewController;
-        vc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-
-        vc.userImage = self.userPhoto;
-        vc.matchImage = self.matchPhoto;
-        vc.matchUser = self.otherUser;
-        vc.user = self.curUser;
-    }else if ([segue.identifier isEqualToString:@"viewMatches"]) {
-        /*
-        _matched = true;
-        
-        MatchViewController *vc = segue.destinationViewController;
-        vc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-        
-        vc.userImage = self.userPhoto;
-        vc.matchImage = self.userPhoto;
-        vc.matchUser = self.otherUser;
-        vc.user = self.curUser;*/
-    }
-}
 
 #pragma mark - AV delegate
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-       if(buttonIndex == 1) {
+    if(buttonIndex == 1) {
         [self performSegueWithIdentifier:@"config" sender:nil];
-
     }
-
 }
 
 - (void)checkPurchase {
     
-      
     PFUser *chekUser = [PFUser currentUser];
     NSString *vip = chekUser[@"membervip"];
     if ([vip isEqualToString:@"vip"]) {
@@ -1414,7 +1462,6 @@
         [self.bannerView addSubview:bannerView_];
         
         self.bannerView.backgroundColor = [UIColor clearColor];
-        
         
         [self.view addSubview:self.bannerView];
         
