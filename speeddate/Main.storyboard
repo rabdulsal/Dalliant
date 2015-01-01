@@ -1420,7 +1420,7 @@
                                         </connections>
                                     </button>
                                     <view contentMode="scaleToFill" id="pI3-Os-CDP">
-                                        <rect key="frame" x="21" y="0.0" width="320" height="711"/>
+                                        <rect key="frame" x="21" y="0.0" width="320" height="72"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <containerView contentMode="scaleToFill" id="oYs-gc-FIb">
@@ -1772,7 +1772,11 @@
                         <barButtonItem key="leftBarButtonItem" image="bubble" id="iif-kW-GK8">
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Edit" id="sLl-SP-2Uc"/>
+                        <barButtonItem key="rightBarButtonItem" title="Delete" id="sLl-SP-2Uc">
+                            <connections>
+                                <action selector="deleteButtonPressed:" destination="mLc-67-Pcw" id="AMZ-nR-gSg"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

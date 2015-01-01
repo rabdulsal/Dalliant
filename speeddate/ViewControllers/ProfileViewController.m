@@ -406,29 +406,25 @@
     [self presentViewController:imagePickerController animated:YES completion:nil];
 }
 
-#pragma mark - EDIT ACTIONSHEET
+#pragma mark - DELETE ACTION
 
-- (IBAction)editProfile:(id)sender
+- (IBAction)deleteButtonPressed:(id)sender // Delete Profile via Parse
 {
-    if (!self.editing) {
-        [self.editButton setTitle:@"Done"];
-    } else {
-        [self.editButton setTitle:@"Edit"];
-    }
-    self.editing = !self.editing;
-    if (self.editing) {
-        [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0.2 options:UIViewAnimationOptionCurveEaseIn animations:^{
-            self.editView.frame = CGRectMake(0, self.view.frame.size.height-self.editView.frame.size.height, self.editView.frame.size.width, self.editView.frame.size.height);
-        } completion:^(BOOL finished) {
+    UIAlertView *deleteAlert = [[UIAlertView alloc] initWithTitle:@"Delete Profile"
+                                                          message:@"Are you sure you want to permanently Delete your Dalliant Profile? This cannot be un-done."
+                                                         delegate:self
+                                                cancelButtonTitle:@"Cancel"
+                                                otherButtonTitles:@"Delete",nil];
+    deleteAlert.tag = 1;
+    [deleteAlert show];
 
-        }];
-    } else {
-        [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0.2 options:UIViewAnimationOptionCurveEaseIn animations:^{
-            self.editView.frame = CGRectMake(0, self.view.frame.size.height, self.editView.frame.size.width, self.editView.frame.size.height);
-        } completion:^(BOOL finished) {
-            
-        }];
-        
+}
+
+// Alertview handler
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == 1 && buttonIndex == 1) {
+        NSLog(@"Delete pressed");
     }
 }
 
@@ -479,6 +475,30 @@
         
     }
     
+}
+
+- (void)editProfile // Will eventually delete
+{
+    if (!self.editing) {
+        [self.editButton setTitle:@"Done"];
+    } else {
+        [self.editButton setTitle:@"Edit"];
+    }
+    self.editing = !self.editing;
+    if (self.editing) {
+        [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0.2 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            self.editView.frame = CGRectMake(0, self.view.frame.size.height-self.editView.frame.size.height, self.editView.frame.size.width, self.editView.frame.size.height);
+        } completion:^(BOOL finished) {
+            
+        }];
+    } else {
+        [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0.2 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            self.editView.frame = CGRectMake(0, self.view.frame.size.height, self.editView.frame.size.width, self.editView.frame.size.height);
+        } completion:^(BOOL finished) {
+            
+        }];
+        
+    }
 }
 
 -(IBAction)explorelocation:(id)sender{
