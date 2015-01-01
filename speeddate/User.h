@@ -89,6 +89,9 @@
 @property (assign, nonatomic) BOOL *moviesPref;
 @property (assign, nonatomic) BOOL *workoutPref;
 
+// Baedar ------------------------------------------------------
+@property (nonatomic) BOOL baedarIsRunning;
+
 +(User *)singleObj;
 
 -(id)initWithName:(NSString *)aName lastName:(NSString *)aLastName gender:(NSString *)aGender;

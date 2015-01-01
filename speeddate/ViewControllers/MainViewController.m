@@ -216,17 +216,29 @@
 
 - (IBAction)toggleBaedar:(id)sender {
     if (_baedarLabel.isSelected) {
-        [_baedarLabel setSelected:NO];
-        inAnimation = NO;
-        [waveLayer removeFromSuperlayer];
-        [waveLayer setHidden:YES];
+        [self baedarOff];
     } else {
-        [self.view.layer addSublayer:waveLayer];
-        [waveLayer setHidden:NO];
-        [self startAnimation];
-        [_baedarLabel setSelected:YES];
-        [self findMatches];
+        [self baedarOn];
     }
+}
+
+- (void)baedarOn
+{
+    [self.view.layer addSublayer:waveLayer];
+    [waveLayer setHidden:NO];
+    [self startAnimation];
+    [_baedarLabel setSelected:YES];
+    user.baedarIsRunning = true;
+    [self findMatches];
+}
+
+- (void)baedarOff
+{
+    [_baedarLabel setSelected:NO];
+    inAnimation = NO;
+    [waveLayer removeFromSuperlayer];
+    [waveLayer setHidden:YES];
+    user.baedarIsRunning = false;
 }
 
 - (IBAction)pressedMatchButton:(id)sender {
@@ -254,6 +266,11 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [self checkIncomingViewController];
+    
+    if (user.baedarIsRunning) {
+        [self baedarOn];
+        NSLog(@"Baedar running");
+    } else NSLog(@"Baedar NOT running");
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -550,7 +567,7 @@
     }else if ([segue.identifier isEqualToString:@"viewMatches"]) {
         
         //_matched = true;
-        
+        /*
         MatchViewController *vc = segue.destinationViewController;
         vc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
         
@@ -562,7 +579,7 @@
         double indexCalculation = [self calculateCompatibility:*(_prefMatchCounter) with:*(_totalPrefs)];
         vc.compatibilityIndex   = &(indexCalculation);
         
-        NSLog(@"Compatibility Index: %@", [NSNumber numberWithDouble:*(vc.compatibilityIndex)]);
+        NSLog(@"Compatibility Index: %@", [NSNumber numberWithDouble:*(vc.compatibilityIndex)]);*/
     }
 }
 
