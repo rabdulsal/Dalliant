@@ -470,7 +470,7 @@
         } else {
             imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         }
-        imagePicker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:imagePicker.sourceType];
+        //imagePicker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:imagePicker.sourceType]; <-- Comment-out Video option
         [self presentViewController:imagePicker animated:YES completion:nil];
 
     }

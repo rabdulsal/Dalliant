@@ -1399,6 +1399,26 @@
                                 <rect key="frame" x="-21" y="0.0" width="362" height="1422"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
+                                    <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Q1P-zi-uG8">
+                                        <rect key="frame" x="185" y="31" width="70" height="70"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Button" image="searchPlus">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="changePicture:" destination="mLc-67-Pcw" eventType="touchUpInside" id="xIU-0c-KSp"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="5ND-Uh-MpU">
+                                        <rect key="frame" x="263" y="31" width="70" height="70"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Button" image="searchPlus">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="changePicture:" destination="mLc-67-Pcw" eventType="touchUpInside" id="iu7-1d-bcn"/>
+                                        </connections>
+                                    </button>
                                     <view contentMode="scaleToFill" id="pI3-Os-CDP">
                                         <rect key="frame" x="21" y="0.0" width="320" height="711"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1430,16 +1450,6 @@
                                             <action selector="changePicture:" destination="mLc-67-Pcw" eventType="touchUpInside" id="6CJ-Y3-dRN"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Q1P-zi-uG8">
-                                        <rect key="frame" x="185" y="31" width="70" height="70"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="Button" image="searchPlus">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="changePicture:" destination="mLc-67-Pcw" eventType="touchUpInside" id="xIU-0c-KSp"/>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Ra7-9U-Q3z">
                                         <rect key="frame" x="185" y="109" width="70" height="70"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1458,16 +1468,6 @@
                                         </state>
                                         <connections>
                                             <action selector="changePicture:" destination="mLc-67-Pcw" eventType="touchUpInside" id="ZTZ-cK-zkM"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="5ND-Uh-MpU">
-                                        <rect key="frame" x="263" y="31" width="70" height="70"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="Button" image="searchPlus">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="changePicture:" destination="mLc-67-Pcw" eventType="touchUpInside" id="iu7-1d-bcn"/>
                                         </connections>
                                     </button>
                                     <view contentMode="scaleToFill" id="sMT-GS-Whu">
@@ -2940,12 +2940,18 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="plW-Gs-lXa" id="aew-0Y-EX2"/>
+                                                    </connections>
                                                 </textField>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="d4D-Z9-GLm">
                                                     <rect key="frame" x="245" y="7" width="62" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="plW-Gs-lXa" id="Vkj-65-kfO"/>
+                                                    </connections>
                                                 </textField>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="to" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="2p6-h3-bux">
                                                     <rect key="frame" x="193" y="12" width="43" height="21"/>
