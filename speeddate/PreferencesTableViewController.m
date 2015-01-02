@@ -191,7 +191,7 @@
     }
     
     // Pref Buttons <-- May Not Need
-    
+    /*
     if (_mainUser.animalsPref) {
         [self buttonSelected:_animalLabel];
     }
@@ -262,7 +262,7 @@
     
     if (_mainUser.workoutPref) {
         [self buttonSelected:_workoutLabel];
-    }
+    }*/
 }
 
 #pragma mark - Segmented Controls - Actions
@@ -562,8 +562,10 @@
     
 }
 
-#pragma mark - Enable and Disable Preference Buttons
+/* Not really needed anymore
 
+#pragma mark - Enable and Disable Preference Buttons
+ 
 - (void)buttonDeSelected:(UIButton *)userPreference
 {
     if (!userPreference.isEnabled) {
@@ -622,6 +624,7 @@
     }
     buttonsDisabled = false;
 }
+*/
 
 #pragma mark - Save and Close
 

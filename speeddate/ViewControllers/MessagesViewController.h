@@ -24,6 +24,8 @@
     
 }
 
+@property NSMutableArray *usersArray;
+
 @property(nonatomic, strong)  GADBannerView *adBanner;
 
 @end

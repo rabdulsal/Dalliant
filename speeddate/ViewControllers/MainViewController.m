@@ -23,7 +23,7 @@
 #import "MessageParse.h"
 #import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKit.h>
-#import "MatchViewController.h"
+#import "MessagesViewController.h"
 #import "GADBannerView.h"
 #import "GADRequest.h"
 #import "GADInterstitial.h"
@@ -229,7 +229,8 @@
     [self startAnimation];
     [_baedarLabel setSelected:YES];
     user.baedarIsRunning = true;
-    [self findMatches];
+    [self getMatches];
+    //[self findMatches]; // This must eventually be called later after Matches are made
 }
 
 - (void)baedarOff
@@ -245,11 +246,16 @@
     [self performSegueWithIdentifier:@"viewMatches" sender:nil];
 }
 
-- (void)findMatches
+- (void)findMatches:(NSMutableArray *)matches
 {
     [_matchButtonLabel setHidden:NO];
     
-    NSString *buttonTitle = [[NSString alloc] initWithFormat:@"You have %@ Matches! \nClick to view", user.numberOfConvos];
+    NSString *matchNum = [[NSString alloc] init];
+    if ([matches count] == 1) {
+        matchNum = @"Match";
+    } else matchNum = @"Matches";
+    
+    NSString *buttonTitle = [[NSString alloc] initWithFormat:@"You have %lu %@! \nClick to view", (unsigned long)[matches count], matchNum]; // Must change numberOfConvos to # of willBeMatches
     [_matchButtonLabel setTitle:buttonTitle forState:UIControlStateNormal];
 }
 
@@ -318,24 +324,29 @@
     self.curUser.geoPoint = [PFGeoPoint geoPointWithLatitude:self.currentLocation.coordinate.latitude longitude:self.currentLocation.coordinate.longitude];
     [[UserParseHelper currentUser] saveEventually];
     
-    // Are these needed?
-    //[self getMatches];
-    [self performSegueWithIdentifier:@"viewMatches" sender:nil];
+    [self getMatches];
+    //[self performSegueWithIdentifier:@"viewMatches" sender:nil];
 }
 
 #pragma mark - GET MATCHES
 
 - (void)getMatches
 {
+    /* ---------------- START BLOCK COMMENT
+     
     // Fetch PossibleMatch ------------------------------------------------------------------
     
     PFQuery *query = [PossibleMatchHelper query];
     [query whereKey:@"toUser" equalTo:self.curUser];
     [query whereKey:@"match" equalTo:@"YES"];
-    [query whereKey:@"toUserApproved" equalTo:@"notDone"];
+    [query whereKey:@"toUserApproved" equalTo:@"notDone"]; // May not need this, based on swipe
+    
+    //
     PFQuery *queryInside = [PossibleMatchHelper query];
     [queryInside whereKey:@"toUser" equalTo:[UserParseHelper currentUser]];
-    [queryInside whereKey:@"toUserApproved" equalTo:@"YES"];
+    [queryInside whereKey:@"toUserApproved" equalTo:@"YES"]; // May not need this, based on swipe
+    
+    // Make sure users returned in queries are not the Current User
     PFQuery* checkQuery = [UserParseHelper query];
     [checkQuery whereKey:@"email" matchesKey:@"fromUserEmail" inQuery:queryInside];
     PFQuery* userQuery = [UserParseHelper query];
@@ -352,41 +363,47 @@
     [userQuery whereKey:@"geoPoint" nearGeoPoint:self.curUser.geoPoint withinKilometers:self.curUser.distance.doubleValue];
     [userQuery whereKey:@"email" matchesKey:@"fromUserEmail" inQuery:query];
     
-    /* If User is Female, look for Male
+    // If User is Female, look for Female
     if (self.curUser.sexuality.integerValue == 0) {
         [userQuery whereKey:@"isMale" equalTo:@"true"];
     }
     
-    // If User is Male, look for Female
+    /* If User is Male, look for Female
     if (self.curUser.sexuality.integerValue == 1) {
         [userQuery whereKey:@"isMale" equalTo:@"false"];
-    }*/
+    }// end comment here
     NSUserDefaults *mainUser = [NSUserDefaults standardUserDefaults];
     [mainUser setInteger:self.curUser.sexuality.integerValue forKey:@"sex"];
     [mainUser synchronize];
     [userQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [self.posibleMatchesArray addObjectsFromArray:objects];
         [self.willBeMatches addObjectsFromArray:objects];
-      
+        
+        // Query for current User
         PFQuery *query = [PossibleMatchHelper query];
         [query whereKey:@"fromUser" equalTo:[UserParseHelper currentUser]];
+        
+        // Query for current User was liked (may not need)
         PFQuery *queryTwo = [PossibleMatchHelper query];
         [queryTwo whereKey:@"toUser" equalTo:[UserParseHelper currentUser]];
         [queryTwo whereKey:@"toUserApproved" equalTo:@"YES"];
+        
+        // Make sure users returned in queries are not the Current User
         PFQuery* userQuery = [UserParseHelper query];
         PFQuery* checkQuery = [UserParseHelper query];
         [userQuery whereKey:@"objectId" notEqualTo:[UserParseHelper currentUser].objectId];
         [userQuery whereKey:@"email" doesNotMatchKey:@"toUserEmail" inQuery:query];
         [checkQuery whereKey:@"email" matchesKey:@"fromUserEmail" inQuery:queryTwo];
         
-        // Querying on sexuality
+        // Querying on sexuality - If Female show Female
         if (self.curUser.sexuality.integerValue == 0) {
             [userQuery whereKey:@"isMale" equalTo:@"true"];
         }
-    
-        if (self.curUser.sexuality.integerValue == 1) {
+        
+        // If Male show Female
+        /*if (self.curUser.sexuality.integerValue == 1) {
             [userQuery whereKey:@"isMale" equalTo:@"false"];
-        }
+        }// end comment here
         
         // Increasing query distance?
         if (self.curUser.distance.doubleValue == 0.0) {
@@ -395,6 +412,10 @@
         [userQuery whereKey:@"objectId" doesNotMatchKey:@"objectId" inQuery:checkQuery];
         [userQuery whereKey:@"geoPoint" nearGeoPoint:self.curUser.geoPoint withinKilometers:self.curUser.distance.doubleValue];
         [userQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!objects) {
+                NSLog(@"No Matches found");
+            } else NSLog(@"Matches found: %@ Total: %ld", objects, objects.count);
+            /*
             [self.posibleMatchesArray addObjectsFromArray:objects];
        
             self.activityLabel.text = @"No results found";
@@ -412,36 +433,67 @@
             if (self.firstTime) {
                 [self firstPlacement];
             }
-
+             // end comment here
         }];
+    }]; */
+    
+    // My Queries
+    // Setting a query distance?
+    if (self.curUser.distance.doubleValue == 0.0) {
+        self.curUser.distance = [NSNumber numberWithInt:100];
+    }
+    
+    // Query Nearby Users based on distance; while require a time-based While-loop
+    PFQuery *userQuery = [UserParseHelper query];
+    [userQuery whereKey:@"geoPoint" nearGeoPoint:self.curUser.geoPoint withinKilometers:self.curUser.distance.doubleValue];
+    [userQuery whereKey:@"objectId" notEqualTo:_curUser.objectId];
+    [userQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        [_posibleMatchesArray addObjectsFromArray:objects];
+        
+        for (UserParseHelper *possMatch in _posibleMatchesArray) {
+            [self matchGender:possMatch];
+        }
+        if (!objects) {
+            NSLog(@"No Matches found");
+        } else NSLog(@"Matches found, total: %ld", objects.count);
     }];
 }
 
 #pragma mark - MATCH FILTER
-/*
-- (void)matchGender
+
+- (void)matchGender:(UserParseHelper *)match
 {
     NSString *matchGender = [[NSString alloc] init];
     
-    if ([_otherUser.isMale isEqualToString:@"true"]) {
+    if ([match.isMale isEqualToString:@"true"]) {
         matchGender = @"Male";
     } else matchGender = @"Female";
     
     if ([_curUser.genderPref isEqualToString:matchGender]) {
-        _prefMatchCounter++;
-        [_willBeMatches addObject:_otherUser];
-        [self matchBodyType];
-        
-    } else {
-        
-    }
+        //_prefMatchCounter++;
+        [_willBeMatches addObject:match];
+        _otherUser = match;
+        NSLog(@"Matched with %@", match.nickname);
+        //[self matchBodyType:match];
+        //[self findMatches:_willBeMatches]; <-- Test before matchBodyType
+        [self performSegueWithIdentifier:@"viewMatch" sender:nil];
+        NSLog(@"Will be matches: %ld", _willBeMatches.count);
+    } else if ([_curUser.genderPref isEqualToString:@"Both"]) {
+        [_willBeMatches addObject:match];
+        _otherUser = match;
+        NSLog(@"Gender Pref = Both, Matched with %@", match.nickname);
+        //[self findMatches:_willBeMatches];
+        [self performSegueWithIdentifier:@"viewMatch" sender:nil];
+    } else NSLog(@"No match with %@", match.nickname);
     
-    _totalPrefs++;
+    //_totalPrefs++;
+    
+    //NSLog(@"Pref Counter: %ld Total Prefs: %ld", (long)_prefMatchCounter, (long)_totalPrefs);
 }
-
-- (void)matchBodyType
+/*
+- (void)matchBodyType:(UserParseHelper *)match
 {
-    if([_curUser.bodyTypePref isEqualToString:_otherUser.bodyType]) {
+    if([_curUser.bodyTypePref isEqualToString:match.bodyType]) {
         _prefMatchCounter++;
     } else {
         //
@@ -555,28 +607,16 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([segue.identifier isEqualToString:@"match"]) {
-        
-        MatchViewController *vc = segue.destinationViewController;
-        vc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-        
-        vc.userImage    = self.userPhoto;
-        vc.matchImage   = self.matchPhoto;
-        vc.matchUser    = self.otherUser;
-        vc.user         = self.curUser;
-    }else if ([segue.identifier isEqualToString:@"viewMatches"]) {
+    if ([segue.identifier isEqualToString:@"viewMatches"]) {
         
         //_matched = true;
-        /*
-        MatchViewController *vc = segue.destinationViewController;
+        
+        MessagesViewController *vc = segue.destinationViewController;
         vc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
         
-        vc.userImage            = self.userPhoto;
-        vc.matchImage           = self.userPhoto;
-        vc.matchUser            = self.otherUser;
-        vc.user                 = self.curUser;
+        vc.usersArray = _willBeMatches;
         
-        double indexCalculation = [self calculateCompatibility:*(_prefMatchCounter) with:*(_totalPrefs)];
+        /*double indexCalculation = [self calculateCompatibility:*(_prefMatchCounter) with:*(_totalPrefs)];
         vc.compatibilityIndex   = &(indexCalculation);
         
         NSLog(@"Compatibility Index: %@", [NSNumber numberWithDouble:*(vc.compatibilityIndex)]);*/
