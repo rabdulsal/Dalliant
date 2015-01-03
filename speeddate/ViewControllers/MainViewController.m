@@ -491,13 +491,13 @@
          
         --------------------------------------------------- */
         //[self matchBodyType:match];
-        _compatibility = [self calculateCompatibility:25 with:100];
-        NSLog(@"Compatibility: %@%%", [NSNumber numberWithDouble:_compatibility]);
+        //_compatibility = [self calculateCompatibility:25 with:100];
+        //NSLog(@"Compatibility: %@%%", [NSNumber numberWithDouble:_compatibility]);
        /* NSLog(@"Just before Save run");
         [_otherUser saveInBackground];
             
         NSLog(@"Save run");*/
-        //[self generateMatchMessageWith:match];
+        [self generateMatchMessageWith:match];
             
 
         
@@ -670,8 +670,8 @@
     if ([query findObjects].firstObject) {
         NSLog(@"Message with Match exists");
     } else {
-        NSLog(@"Compatibility with %@ is: %@%%", match.nickname, [NSNumber numberWithDouble:*(_otherUser.compatibilityIndex)]);
-        /*
+        //NSLog(@"Compatibility with %@ is: %@%%", match.nickname, [NSNumber numberWithDouble:*(_otherUser.compatibilityIndex)]);
+        
         MessageParse* message = [MessageParse object];
         message.fromUserParse = match;
         message.fromUserParseEmail = match.email;
@@ -691,10 +691,10 @@
                     self.activityLabel.hidden = NO;
                     [self.activityIndicator startAnimating];
                     [self.view bringSubviewToFront:self.profileView];
-                }
+                }*/
          
             }
-        }];*/
+        }];
     }
 
 }

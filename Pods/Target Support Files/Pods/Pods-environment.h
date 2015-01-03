@@ -18,6 +18,12 @@
 #define COCOAPODS_VERSION_MINOR_KIImagePager 1
 #define COCOAPODS_VERSION_PATCH_KIImagePager 0
 
+// MDRadialProgress
+#define COCOAPODS_POD_AVAILABLE_MDRadialProgress
+#define COCOAPODS_VERSION_MAJOR_MDRadialProgress 1
+#define COCOAPODS_VERSION_MINOR_MDRadialProgress 3
+#define COCOAPODS_VERSION_PATCH_MDRadialProgress 1
+
 // TDBadgedCell
 #define COCOAPODS_POD_AVAILABLE_TDBadgedCell
 #define COCOAPODS_VERSION_MAJOR_TDBadgedCell 2

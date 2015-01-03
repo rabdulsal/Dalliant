@@ -18,6 +18,9 @@
 #import <StoreKit/StoreKit.h>
 #import "IAPHelper.h"
 #import <TDBadgedCell.h>
+#import <MDRadialProgressLabel.h>
+#import <MDRadialProgressTheme.h>
+#import <MDRadialProgressView.h>
 
 #define SECONDS_DAY 24*60*60
 
@@ -67,6 +70,31 @@
     self.tableView.separatorColor = [UIColor lightGrayColor];
     //self.searchTextField.backgroundColor = RED_DEEP;
   
+}
+
+- (void)configureRadialView:(UserTableViewCell *)matchCell for:(UserParseHelper *)match
+{
+    MDRadialProgressTheme *newTheme = [[MDRadialProgressTheme alloc] init];
+    newTheme.completedColor = [UIColor colorWithRed:90/255.0 green:212/255.0 blue:39/255.0 alpha:1.0];
+    newTheme.incompletedColor = [UIColor colorWithRed:164/255.0 green:231/255.0 blue:134/255.0 alpha:1.0];
+    newTheme.centerColor = [UIColor clearColor];
+    newTheme.centerColor = [UIColor colorWithRed:224/255.0 green:248/255.0 blue:216/255.0 alpha:1.0];
+    newTheme.sliceDividerHidden = YES;
+    newTheme.labelColor = [UIColor blackColor];
+    newTheme.labelShadowColor = [UIColor whiteColor];
+    
+    CGRect frame = CGRectMake(190, 8, 45, 45);
+    MDRadialProgressView *radialView7 = [[MDRadialProgressView alloc] initWithFrame:frame andTheme:newTheme];
+    
+    if ([match.isMale isEqualToString:@"true"]) {
+        radialView7.progressTotal = 5;
+        radialView7.progressCounter = 1;
+    } else {
+        radialView7.progressTotal = 5;
+        radialView7.progressCounter = 3;
+    }
+    //[self.view addSubview:radialView7];
+    [matchCell.contentView addSubview:radialView7];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -213,6 +241,9 @@
     bgColorView.backgroundColor = WHITE_COLOR;
     [cell setSelectedBackgroundView:bgColorView];
     
+    //
+    [self configureRadialView:cell for:user];
+    //[cell.contentView addSubview:cell.compatibilityScore];
     return cell;
 }
 
