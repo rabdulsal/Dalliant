@@ -255,7 +255,7 @@
         matchNum = @"Match";
     } else matchNum = @"Matches";
     
-    NSString *buttonTitle = [[NSString alloc] initWithFormat:@"You have %lu %@! \nClick to view", (unsigned long)[matches count], matchNum]; // Must change numberOfConvos to # of willBeMatches
+    NSString *buttonTitle = [[NSString alloc] initWithFormat:@"You have %lu %@! \nClick to view", (unsigned long)[matches count], matchNum];
     [_matchButtonLabel setTitle:buttonTitle forState:UIControlStateNormal];
 }
 
@@ -271,7 +271,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [self checkIncomingViewController];
+    //[self checkIncomingViewController];
     
     if (user.baedarIsRunning) {
         [self baedarOn];
@@ -450,12 +450,15 @@
     [userQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [_posibleMatchesArray addObjectsFromArray:objects];
         
-        for (UserParseHelper *possMatch in _posibleMatchesArray) {
-            [self matchGender:possMatch];
-        }
         if (!objects) {
             NSLog(@"No Matches found");
-        } else NSLog(@"Matches found, total: %ld", objects.count);
+        } else {
+            
+            NSLog(@"Potential matches found, total: %ld", objects.count);
+            for (UserParseHelper *possMatch in _posibleMatchesArray) {
+                [self matchGender:possMatch];
+            }
+        }
     }];
 }
 
@@ -474,16 +477,17 @@
         [_willBeMatches addObject:match];
         _otherUser = match;
         NSLog(@"Matched with %@", match.nickname);
-        //[self matchBodyType:match];
-        //[self findMatches:_willBeMatches]; <-- Test before matchBodyType
-        [self performSegueWithIdentifier:@"viewMatch" sender:nil];
         NSLog(@"Will be matches: %ld", _willBeMatches.count);
+        //[self matchBodyType:match];
+        [self generateMatchMessageWith:match];
+        //[self performSegueWithIdentifier:@"viewMatch" sender:nil];
+        
     } else if ([_curUser.genderPref isEqualToString:@"Both"]) {
         [_willBeMatches addObject:match];
         _otherUser = match;
         NSLog(@"Gender Pref = Both, Matched with %@", match.nickname);
-        //[self findMatches:_willBeMatches];
-        [self performSegueWithIdentifier:@"viewMatch" sender:nil];
+        [self generateMatchMessageWith:match];
+        //[self performSegueWithIdentifier:@"viewMatch" sender:nil];
     } else NSLog(@"No match with %@", match.nickname);
     
     //_totalPrefs++;
@@ -611,16 +615,55 @@
         
         //_matched = true;
         
-        MessagesViewController *vc = segue.destinationViewController;
+        /*MessagesViewController *vc = segue.destinationViewController;
         vc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
         
-        vc.usersArray = _willBeMatches;
+        vc.usersArray = [[NSMutableArray alloc] initWithArray:_willBeMatches];
         
-        /*double indexCalculation = [self calculateCompatibility:*(_prefMatchCounter) with:*(_totalPrefs)];
+        double indexCalculation = [self calculateCompatibility:*(_prefMatchCounter) with:*(_totalPrefs)];
         vc.compatibilityIndex   = &(indexCalculation);
         
         NSLog(@"Compatibility Index: %@", [NSNumber numberWithDouble:*(vc.compatibilityIndex)]);*/
     }
+}
+
+- (void)generateMatchMessageWith:(UserParseHelper *)match
+{
+    // Check if a Message already exists
+    PFQuery* query = [MessageParse query];
+    [query whereKey:@"fromUserParse" equalTo:match];
+    [query whereKey:@"toUserParse" equalTo:[UserParseHelper currentUser]];
+    
+    if ([query findObjects].firstObject) {
+        NSLog(@"Message with Match exists");
+    } else {
+        NSLog(@"No prior Message exists");
+        
+        MessageParse* message = [MessageParse object];
+        message.fromUserParse = match;
+        message.fromUserParseEmail = match.email;
+        message.toUserParse = [UserParseHelper currentUser];
+        message.toUserParseEmail = [UserParseHelper currentUser].email;
+        message.text = @"";
+        [message saveEventually:^(BOOL succeeded, NSError *error) {
+            if (succeeded) {
+                [self findMatches:_willBeMatches]; //<-- Test before matchBodyType
+                /*
+                self.currShowingProfile = self.backgroundUserProfile;
+                [self setPanGestureRecognizer];
+                if (self.posibleMatchesArray.firstObject != nil) {
+                    [self placeBackgroundProfile];
+                } else {
+                    [self removeBackgroundMatchCards];
+                    self.activityLabel.hidden = NO;
+                    [self.activityIndicator startAnimating];
+                    [self.view bringSubviewToFront:self.profileView];
+                }*/
+         
+            }
+        }];
+    }
+
 }
 
 - (void) firstPlacement
