@@ -106,9 +106,10 @@
 @property (weak, nonatomic) IBOutlet UITextView *activityLabel;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property UILabel* imageCountLabel;
-@property UserParseHelper *otherUser;
-@property double *prefMatchCounter;
-@property double *totalPrefs; //<-- should be attribute on UserParseHelper
+@property PossibleMatchHelper *otherUser;
+//@property double *prefMatchCounter;
+//@property double *totalPrefs; //<-- should be attribute on UserParseHelper
+@property double compatibility;
 
 @property (weak, nonatomic) IBOutlet UIButton *baedarLabel;
 - (IBAction)toggleBaedar:(id)sender;
@@ -147,9 +148,6 @@
     user = [User singleObj];
     
     _matched = false;
-    
-    _prefMatchCounter = 0;
-    _totalPrefs = 0;
     
     UIImageView *iv = [[UIImageView alloc] initWithFrame:self.view.frame];
     iv.image = [UIImage imageNamed:@"match"];
@@ -472,21 +470,55 @@
         matchGender = @"Male";
     } else matchGender = @"Female";
     
+   
     if ([_curUser.genderPref isEqualToString:matchGender]) {
         //_prefMatchCounter++;
         [_willBeMatches addObject:match];
-        _otherUser = match;
         NSLog(@"Matched with %@", match.nickname);
         NSLog(@"Will be matches: %ld", _willBeMatches.count);
+        
+        /* NOT BEING RUN --------------------------------------
+         
+        _otherUser.fromUser = [UserParseHelper currentUser];
+        _otherUser.toUser = match;
+        _otherUser.toUserEmail = match.email;
+        _otherUser.fromUserEmail = [UserParseHelper currentUser].email;
+        _otherUser.prefMatchCounter = 0;
+        _otherUser.totalPrefs = 0;
+        [_otherUser saveInBackground];
+        _otherUser.prefMatchCounter++;
+        _otherUser.totalPrefs++;
+         
+        --------------------------------------------------- */
         //[self matchBodyType:match];
-        [self generateMatchMessageWith:match];
+        _compatibility = [self calculateCompatibility:25 with:100];
+        NSLog(@"Compatibility: %@%%", [NSNumber numberWithDouble:_compatibility]);
+       /* NSLog(@"Just before Save run");
+        [_otherUser saveInBackground];
+            
+        NSLog(@"Save run");*/
+        //[self generateMatchMessageWith:match];
+            
+
+        
+        
         //[self performSegueWithIdentifier:@"viewMatch" sender:nil];
         
     } else if ([_curUser.genderPref isEqualToString:@"Both"]) {
         [_willBeMatches addObject:match];
-        _otherUser = match;
+        
         NSLog(@"Gender Pref = Both, Matched with %@", match.nickname);
-        [self generateMatchMessageWith:match];
+        _otherUser.prefMatchCounter++;
+        _otherUser.totalPrefs++;
+        [_otherUser calculateCompatibility:*(_otherUser.prefMatchCounter) with:*(_otherUser.totalPrefs)];
+        NSLog(@"Just before Save run");
+        [_otherUser saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (succeeded) {
+                NSLog(@"Save run");
+                [self generateMatchMessageWith:match];
+            }
+        }];
+        
         //[self performSegueWithIdentifier:@"viewMatch" sender:nil];
     } else NSLog(@"No match with %@", match.nickname);
     
@@ -507,7 +539,7 @@
 
 - (void)matchRelationshipStatus
 {
-    if ([_curUser.relationshipStatusPref isEqualToString:_otherUser.relationshipStatus]) {
+    if ([_curUser.relationshipStatusPref isEqualToString:match.relationshipStatus]) {
         
         _prefMatchCounter++;
     } else {
@@ -518,7 +550,7 @@
 
 - (void)matchRomanticPreference
 {
-    if ([_curUser.romanticPreference isEqualToString:_otherUser.relationshipType]) {
+    if ([_curUser.romanticPreference isEqualToString:match.relationshipType]) {
         
         _prefMatchCounter++;
     } else {
@@ -529,7 +561,7 @@
 
 - (void)matchKids
 {
-    if ([_curUser.kidsOkay isEqualToNumber:_otherUser.hasKids]) {
+    if ([_curUser.kidsOkay isEqualToNumber:match.hasKids]) {
         _prefMatchCounter++;
     } else {
         
@@ -539,7 +571,7 @@
 
 - (void)matchDrinking
 {
-    if([_curUser.drinkingOkay isEqualToNumber:_otherUser.drinks]) {
+    if([_curUser.drinkingOkay isEqualToNumber:match.drinks]) {
         _prefMatchCounter++;
     } else {
         
@@ -549,7 +581,7 @@
 
 - (void)matchSmoking
 {
-    if ([_curUser.smokingOkay isEqualToNumber:_otherUser.smokes]) {
+    if ([_curUser.smokingOkay isEqualToNumber:match.smokes]) {
         _prefMatchCounter++;
     } else {
         
@@ -559,7 +591,7 @@
 
 - (void)matchDrugUse
 {
-    if ([_curUser.drugsOkay isEqualToNumber:_otherUser.drugs]) {
+    if ([_curUser.drugsOkay isEqualToNumber:match.drugs]) {
         _prefMatchCounter++;
     } else {
         
@@ -569,7 +601,7 @@
 
 - (void)matchBodyArt
 {
-    if ([_curUser.bodyArtOkay isEqualToNumber:_otherUser.bodyArt]) {
+    if ([_curUser.bodyArtOkay isEqualToNumber:match.bodyArt]) {
         _prefMatchCounter++;
     } else {
         
@@ -596,12 +628,13 @@
     }
     
     [self performSegueWithIdentifier:@"viewMatches" sender:nil];
-}
-*/
+}*/
+ 
 - (double)calculateCompatibility:(double)prefCounter with:(double)totalPreferences
 {
     //NSNumber *indexCalculation = @20.1;
     double indexCalculation = (prefCounter / totalPreferences)*100;
+    //self.otherUser.compatibilityIndex = &(indexCalculation);
     return indexCalculation;
 }
 
@@ -637,8 +670,8 @@
     if ([query findObjects].firstObject) {
         NSLog(@"Message with Match exists");
     } else {
-        NSLog(@"No prior Message exists");
-        
+        NSLog(@"Compatibility with %@ is: %@%%", match.nickname, [NSNumber numberWithDouble:*(_otherUser.compatibilityIndex)]);
+        /*
         MessageParse* message = [MessageParse object];
         message.fromUserParse = match;
         message.fromUserParseEmail = match.email;
@@ -658,10 +691,10 @@
                     self.activityLabel.hidden = NO;
                     [self.activityIndicator startAnimating];
                     [self.view bringSubviewToFront:self.profileView];
-                }*/
+                }
          
             }
-        }];
+        }];*/
     }
 
 }
