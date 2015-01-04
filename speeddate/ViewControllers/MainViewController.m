@@ -101,6 +101,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *cyclePhotosButton;
 @property (weak, nonatomic) IBOutlet UIButton *likeButton;
 @property UserParseHelper* curUser;
+@property UserParseHelper *matchUser;
 @property UIImage *userPhoto;
 @property UIImage *matchPhoto;
 @property (weak, nonatomic) IBOutlet UITextView *activityLabel;
@@ -240,7 +241,14 @@
 }
 
 - (IBAction)pressedMatchButton:(id)sender {
-    [self performSegueWithIdentifier:@"viewMatches" sender:nil];
+    _otherUser.prefCounter = [NSNumber numberWithDouble:_prefCounter];
+    _otherUser.totalPrefs = [NSNumber numberWithDouble:_totalPrefs];
+    [_otherUser saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            [self performSegueWithIdentifier:@"viewMatches" sender:nil];
+        }
+    }];
+    
 }
 
 - (void)findMatches:(NSMutableArray *)matches
@@ -453,41 +461,43 @@
             
             NSLog(@"Potential matches found, total: %ld", objects.count);
             for (UserParseHelper *possMatch in _posibleMatchesArray) {
-                [self matchGender:possMatch];
+                _matchUser = possMatch;
+                [self matchGender];
             }
         }
     }];
 }
 
+- (void) setPossMatchHelper
+{
+    _otherUser = [PossibleMatchHelper object];
+    _otherUser.fromUser = [UserParseHelper currentUser];
+    _otherUser.toUser = _matchUser;
+    _otherUser.toUserEmail = _matchUser.email;
+    _otherUser.fromUserEmail = [UserParseHelper currentUser].email;
+    _otherUser.matches = [[NSArray alloc] initWithObjects:[UserParseHelper currentUser], _matchUser, nil];
+}
+
 #pragma mark - MATCH FILTER
 
-- (void)matchGender:(UserParseHelper *)match
+- (void)matchGender
 {
     _prefCounter = 0;
     _totalPrefs = 0;
     NSString *matchGender = [[NSString alloc] init];
     
-    if ([match.isMale isEqualToString:@"true"]) {
+    if ([_matchUser.isMale isEqualToString:@"true"]) {
         matchGender = @"Male";
     } else matchGender = @"Female";
     
    
     if ([_curUser.genderPref isEqualToString:matchGender]) {
         
-        [_willBeMatches addObject:match];
-        NSLog(@"Matched with %@", match.nickname);
+        [_willBeMatches addObject:_matchUser];
+        NSLog(@"Matched with %@", _matchUser.nickname);
         NSLog(@"Will be matches: %ld", _willBeMatches.count);
         _prefCounter++;
         _totalPrefs++;
-        
-        _otherUser = [PossibleMatchHelper object];
-        _otherUser.fromUser = [UserParseHelper currentUser];
-        _otherUser.toUser = match;
-        _otherUser.toUserEmail = match.email;
-        _otherUser.fromUserEmail = [UserParseHelper currentUser].email;
-        _otherUser.prefCounter = [NSNumber numberWithDouble:_prefCounter];
-        _otherUser.totalPrefs = [NSNumber numberWithDouble:_totalPrefs];
-        _otherUser.matches = [[NSArray alloc] initWithObjects:[UserParseHelper currentUser], match, nil];
         /*[possMatch saveInBackground];
         possMatch.prefMatchCounter++;
         possMatch.totalPrefs++;*/
@@ -496,123 +506,140 @@
         //[self matchBodyType:match];
         //[_otherUser calculateCompatibility:_prefCounter with:_totalPrefs];
         //NSLog(@"Compatibility: %@%%", _otherUser.compatibilityIndex);
-        NSLog(@"PossMatch count: %lu", (unsigned long)[_otherUser.matches count]);
-        [_otherUser saveInBackground];
-            
-        NSLog(@"Save run");
-        [self generateMatchMessageWith:match];
-            
-
-        
-        
+        [self setPossMatchHelper];
+        [self matchBodyType];
         //[self performSegueWithIdentifier:@"viewMatch" sender:nil];
         
     } else if ([_curUser.genderPref isEqualToString:@"Both"]) {
-        [_willBeMatches addObject:match];
+        [_willBeMatches addObject:_matchUser];
+        _prefCounter++;
+        _totalPrefs++;
         
-        NSLog(@"Gender Pref = Both, Matched with %@", match.nickname);
-        [_otherUser calculateCompatibility:_prefCounter with:_totalPrefs];
         NSLog(@"Just before Save run");
-        [_otherUser saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (succeeded) {
-                NSLog(@"Save run");
-                [self generateMatchMessageWith:match];
-            }
-        }];
+        [self setPossMatchHelper];
+        [self matchBodyType];
         
         //[self performSegueWithIdentifier:@"viewMatch" sender:nil];
-    } else NSLog(@"No match with %@", match.nickname);
+    } else NSLog(@"No match with %@", _matchUser.nickname);
     
     //_totalPrefs++;
     
     //NSLog(@"Pref Counter: %ld Total Prefs: %ld", (long)_prefMatchCounter, (long)_totalPrefs);
 }
-/*
-- (void)matchBodyType:(UserParseHelper *)match
+
+- (void)matchBodyType
 {
-    if([_curUser.bodyTypePref isEqualToString:match.bodyType]) {
-        _prefMatchCounter++;
-    } else {
-        //
-    }
     _totalPrefs++;
+    
+    if([_curUser.bodyTypePref isEqualToString:_matchUser.bodyType]) {
+        _prefCounter++;
+        NSLog(@"Body Type");
+        [self matchRelationshipStatus];
+    } else {
+        NSLog(@"Body Type");
+        [self matchRelationshipStatus];
+    }
+    
 }
 
 - (void)matchRelationshipStatus
 {
-    if ([_curUser.relationshipStatusPref isEqualToString:match.relationshipStatus]) {
-        
-        _prefMatchCounter++;
-    } else {
-        
-    }
     _totalPrefs++;
+    
+    if ([_curUser.relationshipStatusPref isEqualToString:_matchUser.relationshipStatus]) {
+        _prefCounter++;
+        NSLog(@"Relat's status");
+        
+        [self matchRomanticPreference];
+    } else {
+        NSLog(@"Relat's status");
+        [self matchRomanticPreference];
+    }
 }
 
 - (void)matchRomanticPreference
 {
-    if ([_curUser.romanticPreference isEqualToString:match.relationshipType]) {
-        
-        _prefMatchCounter++;
-    } else {
-        
-    }
     _totalPrefs++;
+    
+    if ([_curUser.romanticPreference isEqualToString:_matchUser.relationshipType]) {
+        _prefCounter++;
+        NSLog(@"Romant Pref");
+        [self matchKids];
+    } else {
+        NSLog(@"Romant Pref");
+        [self matchKids];
+    }
 }
 
 - (void)matchKids
 {
-    if ([_curUser.kidsOkay isEqualToNumber:match.hasKids]) {
-        _prefMatchCounter++;
-    } else {
-        
-    }
     _totalPrefs++;
+    
+    if ([_curUser.kidsOkay isEqualToNumber:_matchUser.hasKids]) {
+        _prefCounter++;
+        NSLog(@"Has kids");
+        [self matchDrinking];
+    } else {
+        NSLog(@"Has kids");
+        [self matchDrinking];
+    }
 }
 
 - (void)matchDrinking
 {
-    if([_curUser.drinkingOkay isEqualToNumber:match.drinks]) {
-        _prefMatchCounter++;
-    } else {
-        
-    }
     _totalPrefs++;
+    
+    if([_curUser.drinkingOkay isEqualToNumber:_matchUser.drinks]) {
+        _prefCounter++;
+        NSLog(@"Drinking");
+        [self matchSmoking];
+    } else {
+        NSLog(@"Drinking");
+        [self matchSmoking];
+    }
 }
 
 - (void)matchSmoking
 {
-    if ([_curUser.smokingOkay isEqualToNumber:match.smokes]) {
-        _prefMatchCounter++;
-    } else {
-        
-    }
     _totalPrefs++;
+    
+    if ([_curUser.smokingOkay isEqualToNumber:_matchUser.smokes]) {
+        _prefCounter++;
+        [self matchDrugUse];
+    } else {
+        [self matchDrugUse];
+    }
+    NSLog(@"Smoking");
 }
 
 - (void)matchDrugUse
 {
-    if ([_curUser.drugsOkay isEqualToNumber:match.drugs]) {
-        _prefMatchCounter++;
-    } else {
-        
-    }
     _totalPrefs++;
+    
+    if ([_curUser.drugsOkay isEqualToNumber:_matchUser.drugs]) {
+        _prefCounter++;
+        [self matchBodyArt];
+    } else {
+        [self matchBodyArt];
+    }
+    NSLog(@"Drugs");
 }
 
 - (void)matchBodyArt
 {
-    if ([_curUser.bodyArtOkay isEqualToNumber:match.bodyArt]) {
-        _prefMatchCounter++;
-    } else {
-        
-    }
     _totalPrefs++;
     
-    NSLog(@"PrefMatchCounter before compare: %ld", (long)_prefMatchCounter);
+    if ([_curUser.bodyArtOkay isEqualToNumber:_matchUser.bodyArt]) {
+        _prefCounter++;
+        [self generateMatchMessage];
+    } else {
+        [self generateMatchMessage];
+    }
     
+    NSLog(@"PrefMatchCounter before compare: %ld", (long)_prefCounter);
+   
 }
-
+/*
 - (void)compare:(NSArray *)userPreferences with:(NSArray *)matchPreferences
 {
     _totalPrefs += [userPreferences count];
@@ -621,7 +648,7 @@
     
     for (NSString *preference in userPreferences) {
         if ([matchPreferences containsObject:preference]) {
-            _prefMatchCounter++;
+            _prefCounter++;
             NSLog(@"PrefMatchCounter after compare: %ld", (long)_prefMatchCounter);
             [_sharedPrefs addObject:preference];
             NSLog(@"Shared Prefs: %ld", [_sharedPrefs count]);
@@ -649,11 +676,11 @@
     }
 }
 
-- (void)generateMatchMessageWith:(UserParseHelper *)match
+- (void)generateMatchMessage
 {
     // Check if a Message already exists
     PFQuery* query = [MessageParse query];
-    [query whereKey:@"fromUserParse" equalTo:match];
+    [query whereKey:@"fromUserParse" equalTo:_matchUser];
     [query whereKey:@"toUserParse" equalTo:[UserParseHelper currentUser]];
     
     if ([query findObjects].firstObject) {
@@ -662,8 +689,8 @@
         //NSLog(@"Compatibility with %@ is: %@%%", match.nickname, [NSNumber numberWithDouble:*(_otherUser.compatibilityIndex)]);
         
         MessageParse* message = [MessageParse object];
-        message.fromUserParse = match;
-        message.fromUserParseEmail = match.email;
+        message.fromUserParse = _matchUser;
+        message.fromUserParseEmail = _matchUser.email;
         message.toUserParse = [UserParseHelper currentUser];
         message.toUserParseEmail = [UserParseHelper currentUser].email;
         message.text = @"";

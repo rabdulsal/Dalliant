@@ -50,11 +50,6 @@
     
     mainUser = [User singleObj];
     
-    if (_totalPrefs && _prefCounter) {
-        _progressTotal = (int)_totalPrefs;
-        _progressCounter = (int)_prefCounter;
-    } else NSLog(@"No Prefs or Counter");
-    
     [self.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];
     UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 48, 20)];
     self.searchTextField.leftView = paddingView;
@@ -84,8 +79,6 @@
     [possMatch1 whereKey:@"matches" containsAllObjectsInArray:matches];
     [possMatch1 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         _matchUser = [objects objectAtIndex:0];
-        NSLog(@"Poss Matches query returned: %lu", (unsigned long)[objects count]);
-        NSLog(@"Possible Match: %@", _matchUser);
         [self configureRadialView:cell];
     }];
     //PFQuery *both = [PFQuery orQueryWithSubqueries:@[messageQueryFrom, messageQueryTo]];
@@ -194,7 +187,6 @@
         
         if (!mainUser.isRevealed) { // <-- Test purposes - change to check isRevealed on Matched User - NOT WORKING
             [self blurImages:cell.userImageView];
-            NSLog(@"Blur code run b/c User not revealed");
         }
         
     }];
@@ -255,9 +247,7 @@
     [cell setSelectedBackgroundView:bgColorView];
     
     _matchedUsers = [[NSArray alloc] initWithObjects:[UserParseHelper currentUser], user, nil];
-    NSLog(@"Cell Matched users: %lu", (unsigned long)[_matchedUsers count]);
     [self setPossibleMatchesFromMessages:_matchedUsers for:cell];
-    //[cell.contentView addSubview:cell.compatibilityScore];
     return cell;
 }
 
