@@ -470,12 +470,12 @@
 
 - (void) setPossMatchHelper
 {
-    _otherUser = [PossibleMatchHelper object];
-    _otherUser.fromUser = [UserParseHelper currentUser];
-    _otherUser.toUser = _matchUser;
-    _otherUser.toUserEmail = _matchUser.email;
-    _otherUser.fromUserEmail = [UserParseHelper currentUser].email;
-    _otherUser.matches = [[NSArray alloc] initWithObjects:[UserParseHelper currentUser], _matchUser, nil];
+    _otherUser                  = [PossibleMatchHelper object];
+    _otherUser.fromUser         = [UserParseHelper currentUser];
+    _otherUser.toUser           = _matchUser;
+    _otherUser.toUserEmail      = _matchUser.email;
+    _otherUser.fromUserEmail    = [UserParseHelper currentUser].email;
+    _otherUser.matches          = [[NSArray alloc] initWithObjects:[UserParseHelper currentUser], _matchUser, nil];
 }
 
 #pragma mark - MATCH FILTER
@@ -526,6 +526,12 @@
     
     //NSLog(@"Pref Counter: %ld Total Prefs: %ld", (long)_prefMatchCounter, (long)_totalPrefs);
 }
+
+/* ---------------------------------------------------------------------------
+ 
+            MUST SET UP CHECK TO ENSURE BOOLEAN VALUES AREN'T NIL
+ 
+ -------------------------------------------------------------------------- */
 
 - (void)matchBodyType
 {
@@ -631,15 +637,13 @@
     
     if ([_curUser.bodyArtOkay isEqualToNumber:_matchUser.bodyArt]) {
         _prefCounter++;
-        [self generateMatchMessage];
-    } else {
-        [self generateMatchMessage];
-    }
+        [self compare:_curUser.interests with:_matchUser.interests];
+    } else [self compare:_curUser.interests with:_matchUser.interests];
     
     NSLog(@"PrefMatchCounter before compare: %ld", (long)_prefCounter);
    
 }
-/*
+
 - (void)compare:(NSArray *)userPreferences with:(NSArray *)matchPreferences
 {
     _totalPrefs += [userPreferences count];
@@ -647,16 +651,18 @@
     NSLog(@"Total Preferences: %ld", (long)_totalPrefs);
     
     for (NSString *preference in userPreferences) {
-        if ([matchPreferences containsObject:preference]) {
-            _prefCounter++;
-            NSLog(@"PrefMatchCounter after compare: %ld", (long)_prefMatchCounter);
-            [_sharedPrefs addObject:preference];
-            NSLog(@"Shared Prefs: %ld", [_sharedPrefs count]);
+        if (userPreferences.count && matchPreferences.count) {
+            if ([matchPreferences containsObject:preference]) {
+                _prefCounter++;
+                NSLog(@"PrefMatchCounter after compare: %ld", (long)_prefCounter);
+                [_sharedPrefs addObject:preference];
+                NSLog(@"Shared Prefs: %ld", [_sharedPrefs count]);
+            }
         }
     }
     
-    [self performSegueWithIdentifier:@"viewMatches" sender:nil];
-}*/
+    [self generateMatchMessage];
+}
 
 #pragma mark - MATCH SEGUE
 
@@ -688,12 +694,12 @@
     } else {
         //NSLog(@"Compatibility with %@ is: %@%%", match.nickname, [NSNumber numberWithDouble:*(_otherUser.compatibilityIndex)]);
         
-        MessageParse* message = [MessageParse object];
-        message.fromUserParse = _matchUser;
-        message.fromUserParseEmail = _matchUser.email;
-        message.toUserParse = [UserParseHelper currentUser];
-        message.toUserParseEmail = [UserParseHelper currentUser].email;
-        message.text = @"";
+        MessageParse* message       = [MessageParse object];
+        message.fromUserParse       = _matchUser;
+        message.fromUserParseEmail  = _matchUser.email;
+        message.toUserParse         = [UserParseHelper currentUser];
+        message.toUserParseEmail    = [UserParseHelper currentUser].email;
+        message.text                = @"";
         [message saveEventually:^(BOOL succeeded, NSError *error) {
             if (succeeded) {
                 [self findMatches:_willBeMatches]; //<-- Test before matchBodyType
