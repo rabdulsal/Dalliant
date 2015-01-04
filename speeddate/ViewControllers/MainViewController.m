@@ -539,10 +539,8 @@
     
     if([_curUser.bodyTypePref isEqualToString:_matchUser.bodyType]) {
         _prefCounter++;
-        NSLog(@"Body Type");
         [self matchRelationshipStatus];
     } else {
-        NSLog(@"Body Type");
         [self matchRelationshipStatus];
     }
     
@@ -554,11 +552,9 @@
     
     if ([_curUser.relationshipStatusPref isEqualToString:_matchUser.relationshipStatus]) {
         _prefCounter++;
-        NSLog(@"Relat's status");
         
         [self matchRomanticPreference];
     } else {
-        NSLog(@"Relat's status");
         [self matchRomanticPreference];
     }
 }
@@ -569,10 +565,8 @@
     
     if ([_curUser.romanticPreference isEqualToString:_matchUser.relationshipType]) {
         _prefCounter++;
-        NSLog(@"Romant Pref");
         [self matchKids];
     } else {
-        NSLog(@"Romant Pref");
         [self matchKids];
     }
 }
@@ -583,10 +577,8 @@
     
     if ([_curUser.kidsOkay isEqualToNumber:_matchUser.hasKids]) {
         _prefCounter++;
-        NSLog(@"Has kids");
         [self matchDrinking];
     } else {
-        NSLog(@"Has kids");
         [self matchDrinking];
     }
 }
@@ -597,10 +589,8 @@
     
     if([_curUser.drinkingOkay isEqualToNumber:_matchUser.drinks]) {
         _prefCounter++;
-        NSLog(@"Drinking");
         [self matchSmoking];
     } else {
-        NSLog(@"Drinking");
         [self matchSmoking];
     }
 }
@@ -615,7 +605,6 @@
     } else {
         [self matchDrugUse];
     }
-    NSLog(@"Smoking");
 }
 
 - (void)matchDrugUse
@@ -628,7 +617,6 @@
     } else {
         [self matchBodyArt];
     }
-    NSLog(@"Drugs");
 }
 
 - (void)matchBodyArt

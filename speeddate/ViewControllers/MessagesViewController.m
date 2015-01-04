@@ -84,13 +84,30 @@
     //PFQuery *both = [PFQuery orQueryWithSubqueries:@[messageQueryFrom, messageQueryTo]];
 }
 
+- (void)setHighCompatibilityColor:(MDRadialProgressTheme *)newTheme
+{
+    newTheme.completedColor = RED_DEEP;
+    newTheme.incompletedColor = RED_LIGHT;
+    newTheme.centerColor = RED_OMNY;
+}
+
+- (void)setLowCompatibilityColor:(MDRadialProgressTheme *)newTheme
+{
+    newTheme.completedColor = [UIColor darkGrayColor];
+    newTheme.incompletedColor = [UIColor lightGrayColor];
+    newTheme.centerColor = GRAY_COLOR;
+}
+
 - (void)configureRadialView:(UserTableViewCell *)matchCell
 {
     MDRadialProgressTheme *newTheme = [[MDRadialProgressTheme alloc] init];
-    newTheme.completedColor = [UIColor colorWithRed:90/255.0 green:212/255.0 blue:39/255.0 alpha:1.0];
-    newTheme.incompletedColor = [UIColor colorWithRed:164/255.0 green:231/255.0 blue:134/255.0 alpha:1.0];
+    //newTheme.completedColor = [UIColor colorWithRed:90/255.0 green:212/255.0 blue:39/255.0 alpha:1.0];
+    
+    //newTheme.incompletedColor = [UIColor colorWithRed:164/255.0 green:231/255.0 blue:134/255.0 alpha:1.0];
     newTheme.centerColor = [UIColor clearColor];
-    newTheme.centerColor = [UIColor colorWithRed:224/255.0 green:248/255.0 blue:216/255.0 alpha:1.0];
+    //[self setHighCompatibilityColor:newTheme];
+    [self setLowCompatibilityColor:newTheme];
+    //newTheme.centerColor = [UIColor colorWithRed:224/255.0 green:248/255.0 blue:216/255.0 alpha:1.0];
     newTheme.sliceDividerHidden = YES;
     newTheme.labelColor = [UIColor blackColor];
     newTheme.labelShadowColor = [UIColor whiteColor];
