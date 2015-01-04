@@ -107,9 +107,8 @@
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property UILabel* imageCountLabel;
 @property PossibleMatchHelper *otherUser;
-//@property double *prefMatchCounter;
-//@property double *totalPrefs; //<-- should be attribute on UserParseHelper
-@property double compatibility;
+@property double prefCounter;
+@property double totalPrefs; //<-- should be attribute on UserParseHelper
 
 @property (weak, nonatomic) IBOutlet UIButton *baedarLabel;
 - (IBAction)toggleBaedar:(id)sender;
@@ -464,6 +463,8 @@
 
 - (void)matchGender:(UserParseHelper *)match
 {
+    _prefCounter = 0;
+    _totalPrefs = 0;
     NSString *matchGender = [[NSString alloc] init];
     
     if ([match.isMale isEqualToString:@"true"]) {
@@ -472,31 +473,33 @@
     
    
     if ([_curUser.genderPref isEqualToString:matchGender]) {
-        //_prefMatchCounter++;
+        
         [_willBeMatches addObject:match];
         NSLog(@"Matched with %@", match.nickname);
         NSLog(@"Will be matches: %ld", _willBeMatches.count);
+        _prefCounter++;
+        _totalPrefs++;
         
-        /* NOT BEING RUN --------------------------------------
-         
+        _otherUser = [PossibleMatchHelper object];
         _otherUser.fromUser = [UserParseHelper currentUser];
         _otherUser.toUser = match;
         _otherUser.toUserEmail = match.email;
         _otherUser.fromUserEmail = [UserParseHelper currentUser].email;
-        _otherUser.prefMatchCounter = 0;
-        _otherUser.totalPrefs = 0;
-        [_otherUser saveInBackground];
-        _otherUser.prefMatchCounter++;
-        _otherUser.totalPrefs++;
-         
-        --------------------------------------------------- */
+        _otherUser.prefCounter = [NSNumber numberWithDouble:_prefCounter];
+        _otherUser.totalPrefs = [NSNumber numberWithDouble:_totalPrefs];
+        _otherUser.matches = [[NSArray alloc] initWithObjects:[UserParseHelper currentUser], match, nil];
+        /*[possMatch saveInBackground];
+        possMatch.prefMatchCounter++;
+        possMatch.totalPrefs++;*/
+        
+        //NSLog(@"Poss Match: %@", _otherUser);
         //[self matchBodyType:match];
-        //_compatibility = [self calculateCompatibility:25 with:100];
-        //NSLog(@"Compatibility: %@%%", [NSNumber numberWithDouble:_compatibility]);
-       /* NSLog(@"Just before Save run");
+        //[_otherUser calculateCompatibility:_prefCounter with:_totalPrefs];
+        //NSLog(@"Compatibility: %@%%", _otherUser.compatibilityIndex);
+        NSLog(@"PossMatch count: %lu", (unsigned long)[_otherUser.matches count]);
         [_otherUser saveInBackground];
             
-        NSLog(@"Save run");*/
+        NSLog(@"Save run");
         [self generateMatchMessageWith:match];
             
 
@@ -508,9 +511,7 @@
         [_willBeMatches addObject:match];
         
         NSLog(@"Gender Pref = Both, Matched with %@", match.nickname);
-        _otherUser.prefMatchCounter++;
-        _otherUser.totalPrefs++;
-        [_otherUser calculateCompatibility:*(_otherUser.prefMatchCounter) with:*(_otherUser.totalPrefs)];
+        [_otherUser calculateCompatibility:_prefCounter with:_totalPrefs];
         NSLog(@"Just before Save run");
         [_otherUser saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             if (succeeded) {
@@ -629,14 +630,6 @@
     
     [self performSegueWithIdentifier:@"viewMatches" sender:nil];
 }*/
- 
-- (double)calculateCompatibility:(double)prefCounter with:(double)totalPreferences
-{
-    //NSNumber *indexCalculation = @20.1;
-    double indexCalculation = (prefCounter / totalPreferences)*100;
-    //self.otherUser.compatibilityIndex = &(indexCalculation);
-    return indexCalculation;
-}
 
 #pragma mark - MATCH SEGUE
 
@@ -647,16 +640,12 @@
     if ([segue.identifier isEqualToString:@"viewMatches"]) {
         
         //_matched = true;
-        
-        /*MessagesViewController *vc = segue.destinationViewController;
-        vc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-        
-        vc.usersArray = [[NSMutableArray alloc] initWithArray:_willBeMatches];
-        
-        double indexCalculation = [self calculateCompatibility:*(_prefMatchCounter) with:*(_totalPrefs)];
-        vc.compatibilityIndex   = &(indexCalculation);
-        
-        NSLog(@"Compatibility Index: %@", [NSNumber numberWithDouble:*(vc.compatibilityIndex)]);*/
+        /*
+        MessagesViewController *vc  = segue.destinationViewController;
+            vc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+                    vc.totalPrefs   = _otherUser.totalPrefs;
+                    vc.prefCounter  = _otherUser.prefCounter;
+         */
     }
 }
 

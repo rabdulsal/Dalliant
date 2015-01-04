@@ -27,5 +27,7 @@
 @property NSMutableArray *usersArray;
 
 @property(nonatomic, strong)  GADBannerView *adBanner;
+@property NSNumber *prefCounter;
+@property NSNumber *totalPrefs;
 
 @end

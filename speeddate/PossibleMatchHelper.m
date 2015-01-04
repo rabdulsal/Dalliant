@@ -15,7 +15,7 @@
 @dynamic toUserEmail;
 @dynamic toUserApproved;
 @dynamic match;
-@dynamic prefMatchCounter;
+@dynamic prefCounter;
 @dynamic totalPrefs;
 @dynamic compatibilityIndex;
 
@@ -32,10 +32,10 @@
 - (void)calculateCompatibility:(double)prefCounter with:(double)totalPreferences
 {
     //NSNumber *indexCalculation = @20.1;
-    /*
+    
     double indexCalculation = (prefCounter / totalPreferences)*100;
-    self.compatibilityIndex = &(indexCalculation);*/
-    NSLog(@"Calculate compatibility run");
+    self.compatibilityIndex = [NSNumber numberWithDouble:(indexCalculation)];
+    //return *(self.compatibilityIndex);
 }
 
 @end

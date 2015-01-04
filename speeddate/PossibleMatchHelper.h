@@ -16,9 +16,10 @@
 @property NSString* toUserEmail;
 @property NSString* toUserApproved;
 @property NSString* match;
-@property double *prefMatchCounter;
-@property double *totalPrefs; //<-- should be attribute on UserParseHelper
-@property double *compatibilityIndex;
+@property NSArray *matches;
+@property NSNumber *prefCounter;
+@property NSNumber *totalPrefs;
+@property NSString *compatibilityIndex;
 
 - (void)calculateCompatibility:(double)prefCounter with:(double)totalPreferences;
 

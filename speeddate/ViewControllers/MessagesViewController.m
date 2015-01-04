@@ -8,6 +8,7 @@
 
 #import "MessagesViewController.h"
 #import "UserParseHelper.h"
+#import "PossibleMatchHelper.h"
 #import "MessageParse.h"
 #import "UserTableViewCell.h"
 #import "UserMessagesViewController.h"
@@ -28,13 +29,13 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UITextField *searchTextField;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *sidebarButton;
-
-
-@property NSArray *filteredAllUsersArray;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *sidebarButton;@property NSArray *filteredAllUsersArray;
 @property (weak, nonatomic) IBOutlet UIButton *cameraButton;
 @property NSMutableArray *messages;
-
+@property PossibleMatchHelper *matchUser;
+@property int progressTotal;
+@property int progressCounter;
+@property NSArray *matchedUsers;
 
 @end
 
@@ -48,6 +49,11 @@
     _sidebarButton.action = @selector(revealToggle:);
     
     mainUser = [User singleObj];
+    
+    if (_totalPrefs && _prefCounter) {
+        _progressTotal = (int)_totalPrefs;
+        _progressCounter = (int)_prefCounter;
+    } else NSLog(@"No Prefs or Counter");
     
     [self.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];
     UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 48, 20)];
@@ -72,7 +78,20 @@
   
 }
 
-- (void)configureRadialView:(UserTableViewCell *)matchCell for:(UserParseHelper *)match
+- (void)setPossibleMatchesFromMessages:(NSArray *)matches for:(UserTableViewCell *)cell
+{
+    PFQuery *possMatch1 = [PossibleMatchHelper query];
+    [possMatch1 whereKey:@"matches" containsAllObjectsInArray:matches];
+    [possMatch1 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        _matchUser = [objects objectAtIndex:0];
+        NSLog(@"Poss Matches query returned: %lu", (unsigned long)[objects count]);
+        NSLog(@"Possible Match: %@", _matchUser);
+        [self configureRadialView:cell];
+    }];
+    //PFQuery *both = [PFQuery orQueryWithSubqueries:@[messageQueryFrom, messageQueryTo]];
+}
+
+- (void)configureRadialView:(UserTableViewCell *)matchCell
 {
     MDRadialProgressTheme *newTheme = [[MDRadialProgressTheme alloc] init];
     newTheme.completedColor = [UIColor colorWithRed:90/255.0 green:212/255.0 blue:39/255.0 alpha:1.0];
@@ -85,14 +104,8 @@
     
     CGRect frame = CGRectMake(190, 8, 45, 45);
     MDRadialProgressView *radialView7 = [[MDRadialProgressView alloc] initWithFrame:frame andTheme:newTheme];
-    
-    if ([match.isMale isEqualToString:@"true"]) {
-        radialView7.progressTotal = 5;
-        radialView7.progressCounter = 1;
-    } else {
-        radialView7.progressTotal = 5;
-        radialView7.progressCounter = 3;
-    }
+    radialView7.progressTotal = (int)_matchUser.totalPrefs;;
+    radialView7.progressCounter = (int)_matchUser.prefCounter;
     //[self.view addSubview:radialView7];
     [matchCell.contentView addSubview:radialView7];
 }
@@ -241,8 +254,9 @@
     bgColorView.backgroundColor = WHITE_COLOR;
     [cell setSelectedBackgroundView:bgColorView];
     
-    //
-    [self configureRadialView:cell for:user];
+    _matchedUsers = [[NSArray alloc] initWithObjects:[UserParseHelper currentUser], user, nil];
+    NSLog(@"Cell Matched users: %lu", (unsigned long)[_matchedUsers count]);
+    [self setPossibleMatchesFromMessages:_matchedUsers for:cell];
     //[cell.contentView addSubview:cell.compatibilityScore];
     return cell;
 }
