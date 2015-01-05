@@ -405,7 +405,8 @@
          if (error == nil)
          {
              NSDictionary *userData = (NSDictionary *)result;
-             [self processFacebook:user UserData:userData];
+             FBAccessTokenData *token = request.session.accessTokenData;
+             [self processFacebook:user UserData:userData accessToken:token];
          }
          else
          {
@@ -415,9 +416,53 @@
      }];
 }
 
+#pragma mark - FETCH FACEBOOK PROFILE PHOTOS
+
+- (void)fetchProfileAlbum:(NSString *)uid accessToken:(FBAccessTokenData *)token
+{
+    NSString *photosLink =[NSString stringWithFormat:@"https://graph.facebook.com/%@/albums?access_token=%@",uid,token];
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:photosLink]];
+    
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    operation.responseSerializer = [AFJSONResponseSerializer serializer];
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSString *album = [[[(NSDictionary *)responseObject objectForKey:@"data"] objectAtIndex:0] objectForKey:@"name"];
+        
+        if ([album isEqualToString:@"Profile Pictures"])
+        {
+            [self fetchProfilePhotos:responseObject accessToken:token];
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error.description);
+    }];
+    [[NSOperationQueue mainQueue] addOperation:operation];
+}
+
+- (void)fetchProfilePhotos:(NSDictionary *)responseObject accessToken:(FBAccessTokenData *)token
+{
+    NSString *albumid       = [[[responseObject objectForKey:@"data"]objectAtIndex:0]objectForKey:@"id"];
+    NSString *albumUrl      = [NSString stringWithFormat:@"https://graph.facebook.com/%@/photos?type=album&access_token=%@",albumid,token];
+    NSURLRequest *request2  = [NSURLRequest requestWithURL:[NSURL URLWithString:albumUrl]];
+    NSLog(@"Photo URL: %@", albumUrl);
+    
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request2];
+    operation.responseSerializer = [AFJSONResponseSerializer serializer];
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        // Check the below URL in the browser
+        NSString *profilePicURL=[[[[[(NSDictionary *)responseObject objectForKey:@"data"]objectAtIndex:0]objectForKey:@"images"]objectAtIndex:0]objectForKey:@"source"];
+        NSLog(@"Pic URL: %@", profilePicURL);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error.description);
+    }];
+    [[NSOperationQueue mainQueue] addOperation:operation];
+}
+
 #pragma mark - PROCESS FACEBOOK CALLBACK
 //-------------------------------------------------------------------------------------------------------------------------------------------------
-- (void)processFacebook:(PFUser *)user UserData:(NSDictionary *)userData
+- (void)processFacebook:(PFUser *)user UserData:(NSDictionary *)userData accessToken:(FBAccessTokenData *)token
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 {
     
@@ -447,7 +492,9 @@
               if (error != nil) [ProgressHUD showError:@"Network error."];
           }];
          //-----------------------------------------------------------------------------------------------------------------------------------------
-         NSLog(@"UDATE - %@",userData);
+         [self fetchProfileAlbum:userData[@"id"] accessToken:token];
+         
+         NSLog(@"Access Token %@",token);
          
          user[@"email"] = userData[@"email"];
          user[@"username"] = userData[@"id"];
@@ -524,7 +571,7 @@
     return [ageComponents year];
 }
 
-#pragma mark - FETCH FACEBOOK PROFILE PHOTOS
+
 
 - (void)fetchProfilePhotosForUser:(NSDictionary *)userData
 {
