@@ -28,6 +28,8 @@
 @dynamic installation;
 @dynamic nickname;
 @dynamic membervip;
+@dynamic maxAgePref;
+@dynamic minAgePref;
 
 ////thumb photo
 @dynamic photo_thumb;
@@ -49,8 +51,8 @@
 @dynamic relationshipType;
 @dynamic relationshipStatus;
 @dynamic interests;
-@dynamic employment;
-@dynamic education;
+@dynamic work;
+@dynamic school;
 
 // Filters
 @dynamic genderPref;
@@ -65,6 +67,7 @@
 // Preferences
 @dynamic animalsPref;
 @dynamic artsPref;
+@dynamic bodyTypePref;
 @dynamic beerPref;
 @dynamic bookClubPref;
 @dynamic cookingPref;
@@ -97,6 +100,17 @@
 - (BOOL)isEqual:(UserParseHelper *)user
 {
     return [self.objectId isEqualToString:user.objectId];
+}
+
+- (NSString *)userWork
+{
+    return [self.work objectAtIndex:0][@"employer"][@"name"];
+    
+}
+
+- (NSString *)userSchool
+{
+    return [self.school objectAtIndex:0][@"school"][@"name"];
 }
 
 @end

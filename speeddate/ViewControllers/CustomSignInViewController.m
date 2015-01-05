@@ -467,11 +467,13 @@
          } else user[@"desc"] = @"No Bio info";
          // Employment
          if (userData[@"work"]) {
-             NSLog(@"Data available");
+             user[@"work"] = userData[@"work"];
+             NSLog(@"Work: %@", [userData[@"work"] class]);
          } else NSLog(@"No Work Data");
          // Education
-         if (userData[@"employment"]) {
-             NSLog(@"School available");
+         if (userData[@"education"]) {
+             user[@"school"] = userData[@"education"];
+             NSLog(@"School: %@", [userData[@"education"] class]);
          } else NSLog(@"No School Data");
          user[@"photo"] = filePicture;
          user[PF_USER_FACEBOOKID] = userData[@"id"];

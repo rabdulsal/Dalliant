@@ -27,6 +27,8 @@
 @property PFInstallation *installation;
 @property NSString *nickname;
 @property NSString *membervip;
+@property NSMutableArray *work;
+@property NSMutableArray *school;
 
 ////thumb_photo
 @property PFFile* photo_thumb;
@@ -50,8 +52,6 @@
 @property NSString *relationshipType;
 @property NSString *relationshipStatus;
 @property NSArray *interests;
-@property NSString *employment;
-@property NSString *education;
 
 // Filter
 @property NSString *genderPref;
@@ -87,6 +87,9 @@
 @property NSNumber *workoutPref;
 
 @property int *totalPreferences;
+
+- (NSString *)userWork;
+- (NSString *)userSchool;
 
 
 @end

@@ -21,6 +21,8 @@
 @property (nonatomic) UISegmentedControl *relationshipTypeControl;
 @property (nonatomic) UIButton *saveProfileButton;
 @property (weak, nonatomic) IBOutlet UILabel *userAbout;
+@property (weak, nonatomic) IBOutlet UILabel *userEmployment;
+@property (weak, nonatomic) IBOutlet UILabel *userEducation;
 
 
 @end
@@ -224,7 +226,11 @@
      
      ------------------------------------------------*/
     // Access with userInfo[@"personal_info"]
-    _userAbout.text = _mainUser.desc;
+    _userAbout.text         = _mainUser.desc;
+    _userEmployment.text    = [_mainUser userWork];
+    _userEducation.text     = [_mainUser userSchool];
+    //_userEmployment.text    = _mainUser.school;
+    //_userEducation.text     = _mainUser.work;
     
     // Check settings based on Toggle and Control State and change conditionals as such MUST REFACTOR
     if (self.mainUser.bodyType) {

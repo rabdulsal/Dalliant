@@ -36,6 +36,8 @@
     _matchBodyType.text          = _matchUser.bodyType;
     _matchDatingStatus.text      = _matchUser.relationshipStatus;
     _matchRelationshipType.text  = _matchUser.relationshipType;
+    _matchWork.text              = [_matchUser userWork];
+    _matchSchool.text            = [_matchUser userSchool];
     
     if ([_matchUser.drinks isEqualToNumber:[NSNumber numberWithBool:YES]]) {
         _matchDrinksPref.text = @"Y";

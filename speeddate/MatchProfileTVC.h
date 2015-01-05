@@ -27,6 +27,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *matchSmokesPref;
 @property (weak, nonatomic) IBOutlet UILabel *matchDrugsPref;
 @property (weak, nonatomic) IBOutlet UILabel *matchBodyArPref;
+@property (weak, nonatomic) IBOutlet UILabel *matchWork;
+@property (weak, nonatomic) IBOutlet UILabel *matchSchool;
 
 @property (weak, nonatomic) IBOutlet KIImagePager *imagePager;
 

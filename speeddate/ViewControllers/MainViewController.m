@@ -313,6 +313,14 @@
     [self.locationManager requestWhenInUseAuthorization];
     [self.locationManager startMonitoringSignificantLocationChanges];
     [self.locationManager startUpdatingLocation];
+    
+    /* 
+     Simulated locations:
+     
+     San Fran: 
+     
+     Chicago on Armitage: Lat 41.9179682946223, Long -87.6730694343221
+     */
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations

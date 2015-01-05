@@ -25,6 +25,10 @@
 @property (weak, nonatomic) IBOutlet UITextField *minAgeField;
 @property (weak, nonatomic) IBOutlet UITextField *maxAgeField;
 
+// UILabels
+@property (weak, nonatomic) IBOutlet UILabel *employment;
+@property (weak, nonatomic) IBOutlet UILabel *education;
+
 // Actions - Segmented Controls
 - (IBAction)genderOptions:(id)sender;
 - (IBAction)bodyType:(id)sender;
