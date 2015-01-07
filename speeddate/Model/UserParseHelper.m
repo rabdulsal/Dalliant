@@ -7,6 +7,7 @@
 //
 
 #import "UserParseHelper.h"
+#import "ProgressHUD.h"
 
 @implementation UserParseHelper
 
@@ -112,5 +113,35 @@
 {
     return [self.school objectAtIndex:0][@"school"][@"name"];
 }
+
+- (void)configureImage:(UIImage *)image picNumber:(int)photoNum
+{
+    //[self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+    PFFile *file = [PFFile fileWithData:UIImageJPEGRepresentation(image,0.9)];
+    [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error) {
+            [ProgressHUD showError:@"Network error."];
+            return ;
+        }
+        switch (photoNum) {
+            case 1:
+                self.photo1 = file;
+                break;
+            case 2:
+                self.photo2 = file;
+                break;
+            case 3:
+                self.photo3 = file;
+                break;
+            case 4:
+                self.photo4 = file;
+                break;
+            default:
+                self.photo = file;
+                break;
+        }
+    }];
+}
+
 
 @end

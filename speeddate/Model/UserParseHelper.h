@@ -90,6 +90,9 @@
 
 - (NSString *)userWork;
 - (NSString *)userSchool;
+- (void)configureImage:(UIImage *)image picNumber:(int)photoNum;
+
+
 
 
 @end

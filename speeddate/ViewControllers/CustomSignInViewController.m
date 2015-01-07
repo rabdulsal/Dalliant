@@ -418,7 +418,7 @@
 
 #pragma mark - FETCH FACEBOOK PROFILE PHOTOS
 
-- (void)fetchProfileAlbum:(NSString *)uid accessToken:(FBAccessTokenData *)token
+- (void)fetchProfileAlbum:(NSString *)uid forUser:(PFUser *)user withAccessToken:(FBAccessTokenData *)token userData:(NSDictionary *)userData
 {
     NSString *photosLink =[NSString stringWithFormat:@"https://graph.facebook.com/%@/albums?access_token=%@",uid,token];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:photosLink]];
@@ -430,7 +430,7 @@
         
         if ([album isEqualToString:@"Profile Pictures"])
         {
-            [self fetchProfilePhotos:responseObject accessToken:token];
+            [self fetchProfilePhotos:responseObject forUser:user withAccessToken:token userData:userData];
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -439,7 +439,7 @@
     [[NSOperationQueue mainQueue] addOperation:operation];
 }
 
-- (void)fetchProfilePhotos:(NSDictionary *)responseObject accessToken:(FBAccessTokenData *)token
+- (void)fetchProfilePhotos:(NSDictionary *)responseObject forUser:(PFUser *)user withAccessToken:(FBAccessTokenData *)token userData:(NSDictionary *)userData
 {
     NSString *albumid       = [[[responseObject objectForKey:@"data"]objectAtIndex:0]objectForKey:@"id"];
     NSString *albumUrl      = [NSString stringWithFormat:@"https://graph.facebook.com/%@/photos?type=album&access_token=%@",albumid,token];
@@ -450,14 +450,148 @@
     operation.responseSerializer = [AFJSONResponseSerializer serializer];
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         
-        // Check the below URL in the browser
-        NSString *profilePicURL=[[[[[(NSDictionary *)responseObject objectForKey:@"data"]objectAtIndex:0]objectForKey:@"images"]objectAtIndex:0]objectForKey:@"source"];
-        NSLog(@"Pic URL: %@", profilePicURL);
+        // Check the below URL in the browser - initialize Loop thru indices here
+        //NSString *profilePicURL=[[[[[(NSDictionary *)responseObject objectForKey:@"data"]objectAtIndex:0]objectForKey:@"images"]objectAtIndex:0]objectForKey:@"source"];
+        //NSLog(@"Pic URL: %@", profilePicURL);
+        [self configureUserImage:user forResponse:(NSDictionary *)responseObject userData:userData];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error.description);
     }];
     [[NSOperationQueue mainQueue] addOperation:operation];
+}
+
+- (void)configureUserImage:(PFUser *)user forResponse:(NSDictionary *)response userData:(NSDictionary *)userData
+{
+    for (int i = 0; i < 2; i++) {
+        // Get Pic URL
+        NSString *picURL = [[[[[response objectForKey:@"data"]objectAtIndex:i]objectForKey:@"images"]objectAtIndex:0]objectForKey:@"source"];
+        // Set Image (May need to make network request to retrieve Image)
+        //NSLog(@"PicString: %@", picURL);
+        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:picURL]];
+        AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+        operation.responseSerializer = [AFImageResponseSerializer serializer];
+        [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+            UIImage *image = (UIImage *)responseObject;
+            // Declare Pic name
+            NSString *picName;
+            // Set Pic name based on image # iteration
+            if (i == 0) {
+                NSLog(@"Run i = 0");
+                //-----------------------------------------------------------------------------------------------------------------------------------------
+                if (image.size.width > 140) image = ResizeImage(image, 140, 140);
+                //-----------------------------------------------------------------------------------------------------------------------------------------
+                PFFile *filePicture = [PFFile fileWithName:@"picture.jpg" data:UIImageJPEGRepresentation(image, 0.9)];
+                [filePicture saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+                 {
+                     if (error != nil) [ProgressHUD showError:@"Network error."];
+                 }];
+                
+                user[@"photo"] = filePicture;
+                
+                //-----------------------------------------------------------------------------------------------------------------------------------------
+                if (image.size.width > 34) image = ResizeImage(image, 34, 34);
+                //-----------------------------------------------------------------------------------------------------------------------------------------
+                PFFile *fileThumbnail = [PFFile fileWithName:@"thumbnail.jpg" data:UIImageJPEGRepresentation(image, 0.9)];
+                [fileThumbnail saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+                 {
+                     if (error != nil) [ProgressHUD showError:@"Network error."];
+                 }];
+                
+                user[@"photo_thumb"] = fileThumbnail;
+                
+            } /*else {
+                picName = [[NSString alloc] initWithFormat:@"photo%@", [NSNumber numberWithInt:i]];
+                NSLog(@"picName: %@", picName);
+                // Store image as file then set user[picName]
+                //[self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+                PFFile *file = [PFFile fileWithData:UIImageJPEGRepresentation(image,0.9)];
+                [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    if (succeeded) {
+                        user[picName] = file;
+                        NSLog(@"Saved User pic: %@", user[picName]);
+                    } else [ProgressHUD showError:@"Network error."];
+                    
+                }];
+            }*/
+            
+            if (i == 1) {
+                NSLog(@"Run i = 1");
+                if (image.size.width > 140) image = ResizeImage(image, 140, 140);
+                PFFile *file = [PFFile fileWithName:@"photo.jpg" data:UIImageJPEGRepresentation(image, 0.9)];
+                [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    if (succeeded) {
+                        user[@"photo1"] = file;
+                        
+                    } else [ProgressHUD showError:@"Network error."];
+                    
+                }];
+                
+                user[@"email"] = userData[@"email"];
+                user[@"username"] = userData[@"id"];
+                //user[@"password"] = userData[@"id"];
+                user[@"nickname"] = userData[@"first_name"];
+                user[@"distance"] = [NSNumber numberWithInt:100];
+                user[@"sexuality"] = [NSNumber numberWithInt:2];
+                // Age calculation
+                user[@"age"] = [NSNumber numberWithInt:[self calculateUserAge:userData[@"birthday"]]];
+                // Gender
+                if ([userData[@"gender"] isEqualToString:@"male"]) {
+                    user[@"isMale"] = @"true";
+                } else user[@"isMale"] = @"false";
+                // About
+                if (userData[@"bio"]) {
+                    user[@"desc"] = userData[@"bio"];
+                } else user[@"desc"] = @"No Bio info";
+                // Employment
+                if (userData[@"work"]) {
+                    user[@"work"] = userData[@"work"];
+                } else NSLog(@"No Work Data");
+                // Education
+                if (userData[@"education"]) {
+                    user[@"school"] = userData[@"education"];
+                } else NSLog(@"No School Data");
+                //user[@"photo"] = filePicture;
+                user[PF_USER_FACEBOOKID] = userData[@"id"];
+                //  user[PF_USER_FULLNAME] = userData[@"name"]; // <-- Be sure to uncomment
+                // user[PF_USER_FULLNAME_LOWER] = [userData[@"name"] lowercaseString];
+                // user[PF_USER_FACEBOOKID] = userData[@"id"];
+                // user[PF_USER_PICTURE] = filePicture;
+                //user[@"photo_thumb"] = fileThumbnail; // <-- Be sure to uncomment
+                if (user[@"photo"]) {
+                    NSLog(@"Photo exists");
+                }else NSLog(@"Photo DOESN'T exist");
+                if (user[@"photo_thumb"]) {
+                    NSLog(@"Photo Thumb exists");
+                }else NSLog(@"Photo Thumb DOESN'T exist");
+                if ([user[@"photo1"] isEqualToString:user[picName]]) {
+                    NSLog(@"Photo 1 and picName ARE equal");
+                }else NSLog(@"Photo 1 and picName ARE NOT equal");
+                
+                [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+                 {
+                     if (error == nil)
+                     {
+                         [ProgressHUD dismiss];
+                         //  [self dismissViewControllerAnimated:YES completion:nil];
+                         [self performSegueWithIdentifier:@"login" sender:self];
+                         //  _startScreen =[[MainViewController alloc]initWithNibName:@"Main" bundle:nil];
+                         // [self presentViewController:_startScreen animated:YES completion:nil];
+                     }
+                     else
+                     {
+                         [PFUser logOut];
+                         [ProgressHUD showError:error.userInfo[@"error"]];
+                     }
+                 }];
+            }
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"Error: %@", error.description);
+        }];
+        [[NSOperationQueue mainQueue] addOperation:operation];
+    }
+    
 }
 
 #pragma mark - PROCESS FACEBOOK CALLBACK
@@ -473,7 +607,7 @@
     operation.responseSerializer = [AFImageResponseSerializer serializer];
     //---------------------------------------------------------------------------------------------------------------------------------------------
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject)
-     {
+     {/*
          UIImage *image = (UIImage *)responseObject;
          //-----------------------------------------------------------------------------------------------------------------------------------------
          if (image.size.width > 140) image = ResizeImage(image, 140, 140);
@@ -490,61 +624,11 @@
          [fileThumbnail saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
           {
               if (error != nil) [ProgressHUD showError:@"Network error."];
-          }];
+          }];*/
          //-----------------------------------------------------------------------------------------------------------------------------------------
-         [self fetchProfileAlbum:userData[@"id"] accessToken:token];
+         [self fetchProfileAlbum:userData[@"id"] forUser:user withAccessToken:token userData:userData];
          
-         NSLog(@"Access Token %@",token);
          
-         user[@"email"] = userData[@"email"];
-         user[@"username"] = userData[@"id"];
-         //user[@"password"] = userData[@"id"];
-         user[@"nickname"] = userData[@"first_name"];
-         user[@"distance"] = [NSNumber numberWithInt:100];
-         user[@"sexuality"] = [NSNumber numberWithInt:2];
-         // Age calculation
-         user[@"age"] = [NSNumber numberWithInt:[self calculateUserAge:userData[@"birthday"]]];
-         // Gender
-         if ([userData[@"gender"] isEqualToString:@"male"]) {
-             user[@"isMale"] = @"true";
-         } else user[@"isMale"] = @"false";
-         // About
-         if (userData[@"bio"]) {
-             user[@"desc"] = userData[@"bio"];
-         } else user[@"desc"] = @"No Bio info";
-         // Employment
-         if (userData[@"work"]) {
-             user[@"work"] = userData[@"work"];
-             NSLog(@"Work: %@", [userData[@"work"] class]);
-         } else NSLog(@"No Work Data");
-         // Education
-         if (userData[@"education"]) {
-             user[@"school"] = userData[@"education"];
-             NSLog(@"School: %@", [userData[@"education"] class]);
-         } else NSLog(@"No School Data");
-         user[@"photo"] = filePicture;
-         user[PF_USER_FACEBOOKID] = userData[@"id"];
-       //  user[PF_USER_FULLNAME] = userData[@"name"];
-        // user[PF_USER_FULLNAME_LOWER] = [userData[@"name"] lowercaseString];
-        // user[PF_USER_FACEBOOKID] = userData[@"id"];
-        // user[PF_USER_PICTURE] = filePicture;
-         user[@"photo_thumb"] = fileThumbnail;
-         [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
-          {
-              if (error == nil)
-              {
-                  [ProgressHUD dismiss];
-                //  [self dismissViewControllerAnimated:YES completion:nil];
-                   [self performSegueWithIdentifier:@"login" sender:self];
-                //  _startScreen =[[MainViewController alloc]initWithNibName:@"Main" bundle:nil];
-                 // [self presentViewController:_startScreen animated:YES completion:nil];
-              }
-              else
-              {
-                  [PFUser logOut];
-                  [ProgressHUD showError:error.userInfo[@"error"]];
-              }
-          }];
      }
                                      failure:^(AFHTTPRequestOperation *operation, NSError *error)
      {
