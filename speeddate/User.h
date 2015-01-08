@@ -19,6 +19,7 @@
 @property (strong, nonatomic) CLLocation *location;
 @property (strong, nonatomic) NSString *numberOfConvos;
 @property (assign, nonatomic) BOOL *isRevealed;
+@property (nonatomic) NSMutableArray *imageAssets;
 
 // Profile -------------------------------------------------
 

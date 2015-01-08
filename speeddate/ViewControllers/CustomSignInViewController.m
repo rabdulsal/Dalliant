@@ -17,6 +17,7 @@
 #import "utilities.h"
 #import "AppConstant.h"
 #import "MainViewController.h"
+#import "User.h"
 
 #ifdef __IPHONE_8_0
 #import <LocalAuthentication/LocalAuthentication.h>
@@ -26,6 +27,7 @@
 @interface CustomSignInViewController ()
 {
     NSString *userImage;
+    User *mainUser;
 }
 @property (weak, nonatomic) IBOutlet UITextField *emailTextField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
@@ -38,6 +40,7 @@
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (weak, nonatomic) IBOutlet UIView *containerViewPassword;
 @property (nonatomic,retain) MainViewController *startScreen;
+@property (nonatomic) NSMutableArray *imageAssets;
 @end
 #ifdef __APPLE__
 #include "TargetConditionals.h"
@@ -57,7 +60,9 @@
     [self customizeView];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHide:) name:UIKeyboardWillHideNotification object:nil];
-
+    
+    mainUser = [User singleObj];
+    mainUser.imageAssets = [NSMutableArray new];
 }
 
 #pragma mark - Resign the textField's keyboard
@@ -465,9 +470,9 @@
 {
     for (int i = 0; i < 2; i++) {
         // Get Pic URL
-        NSString *picURL = [[[[[response objectForKey:@"data"]objectAtIndex:i]objectForKey:@"images"]objectAtIndex:0]objectForKey:@"source"];
+        NSString *picURL = [[[[[response objectForKey:@"data"]objectAtIndex:i]objectForKey:@"images"]objectAtIndex:1]objectForKey:@"source"];
         // Set Image (May need to make network request to retrieve Image)
-        //NSLog(@"PicString: %@", picURL);
+        NSLog(@"PicString: %@", picURL);
         NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:picURL]];
         AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
         operation.responseSerializer = [AFImageResponseSerializer serializer];
@@ -475,7 +480,9 @@
             UIImage *image = (UIImage *)responseObject;
             // Declare Pic name
             NSString *picName;
+            [mainUser.imageAssets addObject:image];
             // Set Pic name based on image # iteration
+            /*
             if (i == 0) {
                 NSLog(@"Run i = 0");
                 //-----------------------------------------------------------------------------------------------------------------------------------------
@@ -500,7 +507,7 @@
                 
                 user[@"photo_thumb"] = fileThumbnail;
                 
-            } /*else {
+            }*/ /*else { <-- PROBABLY DELETE
                 picName = [[NSString alloc] initWithFormat:@"photo%@", [NSNumber numberWithInt:i]];
                 NSLog(@"picName: %@", picName);
                 // Store image as file then set user[picName]
@@ -564,10 +571,7 @@
                 if (user[@"photo_thumb"]) {
                     NSLog(@"Photo Thumb exists");
                 }else NSLog(@"Photo Thumb DOESN'T exist");
-                if ([user[@"photo1"] isEqualToString:user[picName]]) {
-                    NSLog(@"Photo 1 and picName ARE equal");
-                }else NSLog(@"Photo 1 and picName ARE NOT equal");
-                
+                NSLog(@"Image assets count: %ld", (unsigned long)[mainUser.imageAssets count]);
                 [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
                  {
                      if (error == nil)
