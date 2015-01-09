@@ -791,11 +791,11 @@
             <objects>
                 <viewController storyboardIdentifier="Main" useStoryboardIdentifierAsRestorationIdentifier="YES" id="aqZ-SE-PFE" customClass="MainViewController" sceneMemberID="viewController">
                     <view key="view" clipsSubviews="YES" contentMode="scaleAspectFill" id="YIb-cp-v2d">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="893"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="AeO-SB-QWK">
-                                <rect key="frame" x="11" y="798" width="113" height="102"/>
+                                <rect key="frame" x="11" y="473" width="113" height="102"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <state key="normal" image="dislike">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -812,7 +812,7 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="1J8-9X-ye5">
-                                <rect key="frame" x="200" y="798" width="113" height="102"/>
+                                <rect key="frame" x="200" y="473" width="113" height="102"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <state key="normal" image="like">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -883,7 +883,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ki1-Uz-LU0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="799" y="988"/>
+            <point key="canvasLocation" x="973" y="854"/>
         </scene>
         <!--Applications-->
         <scene sceneID="9Xr-ZS-IUi">
@@ -2574,11 +2574,11 @@
             <objects>
                 <viewController id="kXu-jt-bDQ" customClass="MessagesViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="eiv-6h-jso">
-                        <rect key="frame" x="0.0" y="64" width="320" height="829"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="67" sectionHeaderHeight="22" sectionFooterHeight="22" id="hlF-YJ-jnu">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="829"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="0.21568629149999999" green="0.231372565" blue="0.26274511220000002" alpha="1" colorSpace="deviceRGB"/>
                                 <color key="separatorColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -2658,11 +2658,11 @@
             <objects>
                 <viewController id="OLv-wp-Wkd" customClass="UserMessagesViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="7nY-6y-Yhf">
-                        <rect key="frame" x="0.0" y="64" width="320" height="829"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="znx-55-aXc">
-                                <rect key="frame" x="0.0" y="760" width="320" height="69"/>
+                                <rect key="frame" x="0.0" y="462" width="320" height="42"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="1cw-AD-1Ac">
@@ -2699,7 +2699,7 @@
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="cLf-s6-1pg">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="787"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="462"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="fZ6-XE-pZA">
                                     <size key="itemSize" width="310" height="80"/>
@@ -2884,7 +2884,7 @@
             <objects>
                 <viewController id="hsn-7u-aHf" customClass="ImageViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4Kl-I2-sAF">
-                        <rect key="frame" x="0.0" y="64" width="320" height="785"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -3327,6 +3327,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vcB-dR-Wq5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="682" y="-851"/>
         </scene>
         <!--Your Profile-->
         <scene sceneID="Zdz-5v-V3J">
@@ -3649,6 +3650,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="L1Q-kf-9Hg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="1719" y="848"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="dUh-91-c1U">
@@ -3699,17 +3701,17 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="VlF-20-DHW"/>
-        <segue reference="43A-2r-DhM"/>
-        <segue reference="MjG-Tl-7wb"/>
+        <segue reference="Qh3-Ge-Ehw"/>
+        <segue reference="U3T-S3-jZm"/>
         <segue reference="tAX-qX-dGH"/>
         <segue reference="gPx-w2-9WG"/>
-        <segue reference="WJE-pO-Iht"/>
+        <segue reference="MjG-Tl-7wb"/>
+        <segue reference="ip1-f7-NN2"/>
         <segue reference="BiY-fr-kOo"/>
-        <segue reference="uru-UJ-cE7"/>
+        <segue reference="oXm-ri-1Lw"/>
         <segue reference="yk5-qV-Iag"/>
-        <segue reference="vo7-ud-5cu"/>
         <segue reference="b2C-ec-aqj"/>
-        <segue reference="CXx-dC-o5U"/>
+        <segue reference="vo7-ud-5cu"/>
         <segue reference="h7w-Ho-pqn"/>
     </inferredMetricsTieBreakers>
 </document>

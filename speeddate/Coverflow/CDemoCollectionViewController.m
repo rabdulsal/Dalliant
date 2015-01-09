@@ -376,11 +376,15 @@
             case 0:
                 self.user.photo = file;
                 self.user.photo_thumb = file;
-                NSLog(@"User photo0: %@", self.user.photo);
                 break;
             case 1:
                 self.user.photo1 = file;
-                NSLog(@"User photo1: %@", self.user.photo1);
+                break;
+            case 2:
+                self.user.photo2 = file;
+                break;
+            case 3:
+                self.user.photo3 = file;
                 break;
             
         }

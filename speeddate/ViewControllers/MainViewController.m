@@ -160,10 +160,8 @@
         [self.curUser.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
             self.userPhoto = [UIImage imageWithData:data];
         }];
-        if (self.curUser.geoPoint != nil) { // <-- Change to '== nil', and only run 'else'
-            //[self getMatches];
-            //[self performSegueWithIdentifier:@"viewMatches" sender:nil];
-        } else {
+        if (!self.curUser.geoPoint) {
+            NSLog(@"No User Geolocation");
             [self currentLocationIdentifier];
         }
     }];
@@ -198,6 +196,7 @@
    
     [waveLayer setHidden:YES];
     
+    [self currentLocationIdentifier];
     //[self performSegueWithIdentifier:@"test_match" sender:nil];
 
 }
@@ -222,17 +221,21 @@
 
 - (void)baedarOn
 {
+    [self.locationManager startUpdatingLocation];
     [self.view.layer addSublayer:waveLayer];
     [waveLayer setHidden:NO];
     [self startAnimation];
+    //_baedarLabel.transform = CGAffineTransformMakeScale(1.1,1.1); // <-- Increase button size on press
     [_baedarLabel setSelected:YES];
     user.baedarIsRunning = true;
     [self getMatches];
-    //[self findMatches]; // This must eventually be called later after Matches are made
 }
 
 - (void)baedarOff
 {
+    //_baedarLabel.transform = CGAffineTransformMakeScale(1.1,1.1); // <-- Increase button size on press
+    
+    [self.locationManager stopUpdatingLocation];
     [_baedarLabel setSelected:NO];
     inAnimation = NO;
     [waveLayer removeFromSuperlayer];
@@ -312,7 +315,7 @@
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     [self.locationManager requestWhenInUseAuthorization];
     [self.locationManager startMonitoringSignificantLocationChanges];
-    [self.locationManager startUpdatingLocation];
+    //[self.locationManager startUpdatingLocation];
     
     /* 
      Simulated locations:
@@ -326,7 +329,6 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
     self.currentLocation = [locations objectAtIndex:0];
-    [self.locationManager stopUpdatingLocation];
     CLGeocoder* geocoder = [CLGeocoder new];
     [geocoder reverseGeocodeLocation:locations.firstObject completionHandler:^(NSArray *placemarks, NSError *error) {
         CLPlacemark* placemark = placemarks.firstObject;
@@ -336,9 +338,15 @@
     [UserParseHelper currentUser].geoPoint = [PFGeoPoint geoPointWithLatitude:self.currentLocation.coordinate.latitude longitude:self.currentLocation.coordinate.longitude];
     self.curUser.geoPoint = [PFGeoPoint geoPointWithLatitude:self.currentLocation.coordinate.latitude longitude:self.currentLocation.coordinate.longitude];
     [[UserParseHelper currentUser] saveEventually];
-    
-    [self getMatches];
+    NSLog(@"%@ location: %@", _curUser.nickname, _curUser.geoPoint);
+    //[self getMatches];
     //[self performSegueWithIdentifier:@"viewMatches" sender:nil];
+}
+
+-(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+{
+    // Handle error
+    NSLog(@"Location error - %@\n Description: %@", [error userInfo], error.description);
 }
 
 #pragma mark - GET MATCHES
@@ -547,11 +555,28 @@
     
     if([_curUser.bodyTypePref isEqualToString:_matchUser.bodyType]) {
         _prefCounter++;
-        [self matchRelationshipStatus];
+        //[self matchRelationshipStatus];
+        [self matchAgePreference];
     } else {
-        [self matchRelationshipStatus];
+        //[self matchRelationshipStatus];
+        [self matchAgePreference];
     }
     
+}
+
+- (void)matchAgePreference
+{
+    _totalPrefs++;
+    
+    int minAgeDiff = (int)_matchUser.age - (int)_curUser.minAgePref;
+    int maxAgeDiff = (int)_curUser.maxAgePref - (int)_matchUser.age;
+    
+    if (minAgeDiff < 0 || maxAgeDiff < 0) {
+        _prefCounter++;
+        [self matchRelationshipStatus];
+    } else [self matchRelationshipStatus];
+    
+    NSLog(@"MinAgeDiff: %@, MaxAgeDiff: %@", [NSNumber numberWithInt:minAgeDiff], [NSNumber numberWithInt:maxAgeDiff]);
 }
 
 - (void)matchRelationshipStatus
