@@ -468,8 +468,8 @@
                                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lock3.png" id="FFa-ZN-qhx">
-                                                    <rect key="frame" x="15" y="17" width="25" height="25"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dalliant_logo.png" id="FFa-ZN-qhx">
+                                                    <rect key="frame" x="15" y="17" width="30" height="25"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
                                             </subviews>
@@ -821,8 +821,20 @@
                                     <action selector="likeButtonHit:" destination="aqZ-SE-PFE" eventType="touchUpInside" id="OWl-VP-99n"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" id="B96-wI-cmw">
+                                <rect key="frame" x="20" y="306" width="280" height="147"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <state key="normal">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="pressedMatchButton:" destination="aqZ-SE-PFE" eventType="touchUpInside" id="fZ8-Uv-TOf"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="fRd-VD-LWY">
-                                <rect key="frame" x="43" y="171" width="235" height="176"/>
+                                <rect key="frame" x="43" y="150" width="235" height="128"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <state key="normal" image="dalliant_logo_med.png">
@@ -834,18 +846,6 @@
                                 </state>
                                 <connections>
                                     <action selector="toggleBaedar:" destination="aqZ-SE-PFE" eventType="touchUpInside" id="wAT-BF-3MD"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" id="B96-wI-cmw">
-                                <rect key="frame" x="20" y="306" width="280" height="147"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <state key="normal">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="pressedMatchButton:" destination="aqZ-SE-PFE" eventType="touchUpInside" id="fZ8-Uv-TOf"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -3703,10 +3703,10 @@
     <inferredMetricsTieBreakers>
         <segue reference="VlF-20-DHW"/>
         <segue reference="Qh3-Ge-Ehw"/>
+        <segue reference="U3T-S3-jZm"/>
         <segue reference="tAX-qX-dGH"/>
         <segue reference="gPx-w2-9WG"/>
         <segue reference="MjG-Tl-7wb"/>
-        <segue reference="WJE-pO-Iht"/>
         <segue reference="BiY-fr-kOo"/>
         <segue reference="uru-UJ-cE7"/>
         <segue reference="oXm-ri-1Lw"/>

@@ -221,7 +221,7 @@
 
 - (void)baedarOn
 {
-    [self.locationManager startUpdatingLocation];
+    [self.locationManager startUpdatingLocation]; //<-- Set .online attrib on UserParseHelper to true
     [self.view.layer addSublayer:waveLayer];
     [waveLayer setHidden:NO];
     [self startAnimation];
@@ -280,11 +280,11 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     //[self checkIncomingViewController];
+    //[self currentLocationIdentifier];
     
     if (user.baedarIsRunning) {
         [self baedarOn];
-        NSLog(@"Baedar running");
-    } else NSLog(@"Baedar NOT running");
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -339,7 +339,7 @@
     self.curUser.geoPoint = [PFGeoPoint geoPointWithLatitude:self.currentLocation.coordinate.latitude longitude:self.currentLocation.coordinate.longitude];
     [[UserParseHelper currentUser] saveEventually];
     NSLog(@"%@ location: %@", _curUser.nickname, _curUser.geoPoint);
-    //[self getMatches];
+    
     //[self performSegueWithIdentifier:@"viewMatches" sender:nil];
 }
 
@@ -578,6 +578,7 @@
         [self matchRelationshipStatus];
     } else [self matchRelationshipStatus];
     
+    NSLog(@" %@ minAgePref: %@ | maxAgePref: %@ ; %@'s age: %@", _curUser.nickname, _curUser.minAgePref, _curUser.maxAgePref, _matchUser.nickname, _matchUser.age);
     NSLog(@"MinAgeDiff: %@, MaxAgeDiff: %@", [NSNumber numberWithInt:minAgeDiff], [NSNumber numberWithInt:maxAgeDiff]);
 }
 
@@ -718,10 +719,10 @@
         //NSLog(@"Compatibility with %@ is: %@%%", match.nickname, [NSNumber numberWithDouble:*(_otherUser.compatibilityIndex)]);
         
         MessageParse* message       = [MessageParse object];
-        message.fromUserParse       = _matchUser;
-        message.fromUserParseEmail  = _matchUser.email;
-        message.toUserParse         = [UserParseHelper currentUser];
-        message.toUserParseEmail    = [UserParseHelper currentUser].email;
+        message.fromUserParse       = [UserParseHelper currentUser];
+        message.fromUserParseEmail  = [UserParseHelper currentUser].email;
+        message.toUserParse         = _matchUser;
+        message.toUserParseEmail    = _matchUser.email;
         message.text                = @"";
         [message saveEventually:^(BOOL succeeded, NSError *error) {
             if (succeeded) {
