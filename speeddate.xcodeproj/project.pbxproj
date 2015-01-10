@@ -61,6 +61,8 @@
 		4CBDB1941A3CDD3C006A9F1F /* ProfileTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBDB1931A3CDD3C006A9F1F /* ProfileTableVC.m */; };
 		4CBDB1971A427A11006A9F1F /* RevealRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBDB1961A427A11006A9F1F /* RevealRequest.m */; };
 		4CC7B8991A4B3EBE000982EA /* MatchProfileTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC7B8981A4B3EBE000982EA /* MatchProfileTVC.m */; };
+		4CC7B8BE1A60FFBD000982EA /* dalliant_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CC7B8BD1A60FFBD000982EA /* dalliant_logo.png */; };
+		4CC7B8C01A61083E000982EA /* dalliant_logo_med.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CC7B8BF1A61083E000982EA /* dalliant_logo_med.png */; };
 		4CF56F751A2301CF008E861D /* PreferencesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF56F741A2301CF008E861D /* PreferencesTableViewController.m */; };
 		4CF56F781A23D0A8008E861D /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF56F771A23D0A8008E861D /* User.m */; };
 		92E8E32284B3758EB4DC35B8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BA0CC71950E48F220C437C5 /* libPods.a */; };
@@ -268,6 +270,8 @@
 		4CBDB1961A427A11006A9F1F /* RevealRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RevealRequest.m; sourceTree = "<group>"; };
 		4CC7B8971A4B3EBE000982EA /* MatchProfileTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MatchProfileTVC.h; sourceTree = "<group>"; };
 		4CC7B8981A4B3EBE000982EA /* MatchProfileTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MatchProfileTVC.m; sourceTree = "<group>"; };
+		4CC7B8BD1A60FFBD000982EA /* dalliant_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dalliant_logo.png; sourceTree = "<group>"; };
+		4CC7B8BF1A61083E000982EA /* dalliant_logo_med.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dalliant_logo_med.png; sourceTree = "<group>"; };
 		4CDD63D01A30A20E00AE9679 /* PodFile */ = {isa = PBXFileReference; lastKnownFileType = text; path = PodFile; sourceTree = "<group>"; };
 		4CF56F731A2301CE008E861D /* PreferencesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesTableViewController.h; sourceTree = "<group>"; };
 		4CF56F741A2301CF008E861D /* PreferencesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesTableViewController.m; sourceTree = "<group>"; };
@@ -800,6 +804,8 @@
 		C20F0B1719D7CE72005958C0 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				4CC7B8BF1A61083E000982EA /* dalliant_logo_med.png */,
+				4CC7B8BD1A60FFBD000982EA /* dalliant_logo.png */,
 				C28D423119E738F500C00ACA /* Ache.caf */,
 				C25E747419EAD3F000779C23 /* birthday2@2x.png */,
 				C25E765B19EF767B00779C23 /* fastd.jpg */,
@@ -1115,12 +1121,14 @@
 				C25E765719EF754600779C23 /* washare.png in Resources */,
 				C25E766B19EF9C0C00779C23 /* Localizable.strings in Resources */,
 				C25E764C19EF6E9300779C23 /* app_menu@2x.png in Resources */,
+				4CC7B8C01A61083E000982EA /* dalliant_logo_med.png in Resources */,
 				C25E765819EF754600779C23 /* share_i.png in Resources */,
 				4281F25319B11CF7007724C6 /* Menu.xcassets in Resources */,
 				C25E765419EF754600779C23 /* twshare.png in Resources */,
 				C25E747E19EC013A00779C23 /* message_menu@2x.png in Resources */,
 				C25E765519EF754600779C23 /* instagram-share.png in Resources */,
 				C2A90EB819F4186B00FC0D04 /* sativa.png in Resources */,
+				4CC7B8BE1A60FFBD000982EA /* dalliant_logo.png in Resources */,
 				C25E746F19E8816D00779C23 /* back-m.png in Resources */,
 				C25E748619EC0ADD00779C23 /* vip_menu@2x.png in Resources */,
 				C206B02619E28D91001A4D0C /* mvip.png in Resources */,

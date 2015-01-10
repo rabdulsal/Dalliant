@@ -567,9 +567,11 @@
 - (void)matchAgePreference
 {
     _totalPrefs++;
+    int minAgeDiff = 0;
+    int maxAgeDiff = 0;
     
-    int minAgeDiff = (int)_matchUser.age - (int)_curUser.minAgePref;
-    int maxAgeDiff = (int)_curUser.maxAgePref - (int)_matchUser.age;
+    minAgeDiff += (int)_matchUser.age - (int)_curUser.minAgePref;
+    maxAgeDiff += (int)_curUser.maxAgePref - (int)_matchUser.age;
     
     if (minAgeDiff < 0 || maxAgeDiff < 0) {
         _prefCounter++;

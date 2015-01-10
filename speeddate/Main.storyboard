@@ -821,16 +821,15 @@
                                     <action selector="likeButtonHit:" destination="aqZ-SE-PFE" eventType="touchUpInside" id="OWl-VP-99n"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="fRd-VD-LWY">
-                                <rect key="frame" x="20" y="195" width="280" height="56"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="fRd-VD-LWY">
+                                <rect key="frame" x="43" y="171" width="235" height="176"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <state key="normal" title="Where's Bae">
+                                <state key="normal" image="dalliant_logo_med.png">
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <state key="selected" title="Finding Bae ...">
+                                <state key="selected">
                                     <color key="titleColor" red="1" green="0.93470561490000004" blue="0.093461133020000003" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
@@ -861,9 +860,9 @@
                             </connections>
                         </barButtonItem>
                         <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="T8I-K2-bjb">
-                            <rect key="frame" x="61" y="-18" width="251" height="80"/>
+                            <rect key="frame" x="129" y="-18" width="63" height="80"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <state key="normal" image="sdlogo.png">
+                            <state key="normal" image="dalliant_logo.png">
                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                             </state>
                         </button>
@@ -3264,7 +3263,7 @@
                         <barButtonItem key="leftBarButtonItem" image="bubble" id="Xq4-wa-qj1">
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" image="heart_menu.png" id="ffE-DJ-QqG">
+                        <barButtonItem key="rightBarButtonItem" image="dalliant_logo.png" id="ffE-DJ-QqG">
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <segue destination="aqZ-SE-PFE" kind="push" identifier="startBaeDar" id="WJE-pO-Iht"/>
@@ -3674,6 +3673,8 @@
         <image name="arrow" width="307" height="230"/>
         <image name="birthday" width="30" height="30"/>
         <image name="bubble" width="22" height="19"/>
+        <image name="dalliant_logo.png" width="46" height="35"/>
+        <image name="dalliant_logo_med.png" width="132" height="103"/>
         <image name="dislike" width="80" height="80"/>
         <image name="email" width="128" height="128"/>
         <image name="genderz.png" width="30" height="29"/>
@@ -3702,16 +3703,16 @@
     <inferredMetricsTieBreakers>
         <segue reference="VlF-20-DHW"/>
         <segue reference="Qh3-Ge-Ehw"/>
-        <segue reference="U3T-S3-jZm"/>
         <segue reference="tAX-qX-dGH"/>
         <segue reference="gPx-w2-9WG"/>
         <segue reference="MjG-Tl-7wb"/>
-        <segue reference="ip1-f7-NN2"/>
+        <segue reference="WJE-pO-Iht"/>
         <segue reference="BiY-fr-kOo"/>
+        <segue reference="uru-UJ-cE7"/>
         <segue reference="oXm-ri-1Lw"/>
         <segue reference="yk5-qV-Iag"/>
-        <segue reference="b2C-ec-aqj"/>
         <segue reference="vo7-ud-5cu"/>
+        <segue reference="b2C-ec-aqj"/>
         <segue reference="h7w-Ho-pqn"/>
     </inferredMetricsTieBreakers>
 </document>

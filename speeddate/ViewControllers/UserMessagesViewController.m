@@ -648,7 +648,7 @@
 
 - (IBAction)actionPressed:(id)sender
 {
-    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Match Options" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"View Profile",@"Report",@"Unmatch", nil];
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Match Options" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"View Profile",@"Report",@"Un-Match", nil];
     sheet.tag = 2;
     [sheet showInView:self.view];
 }
