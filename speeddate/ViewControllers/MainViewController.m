@@ -244,13 +244,8 @@
 }
 
 - (IBAction)pressedMatchButton:(id)sender {
-    _otherUser.prefCounter = [NSNumber numberWithDouble:_prefCounter];
-    _otherUser.totalPrefs = [NSNumber numberWithDouble:_totalPrefs];
-    [_otherUser saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (succeeded) {
-            [self performSegueWithIdentifier:@"viewMatches" sender:nil];
-        }
-    }];
+    
+    [self performSegueWithIdentifier:@"viewMatches" sender:nil];
     
 }
 
@@ -476,12 +471,32 @@
         } else {
             
             NSLog(@"Potential matches found, total: %ld", objects.count);
+            /*
             for (UserParseHelper *possMatch in _posibleMatchesArray) {
                 _matchUser = possMatch;
                 [self matchGender];
             }
+             */
+            
+            [self loopThroughMatches];
+            
         }
     }];
+}
+
+- (void)loopThroughMatches
+{
+    int possMatchArrSize = (int)_posibleMatchesArray.count;
+    
+    for (int i = 0; i < possMatchArrSize; i++) {
+        _matchUser = [_posibleMatchesArray objectAtIndex:i];
+        [self matchGender];
+        if (i == possMatchArrSize - 1) {
+            NSLog(@"Last match reached");
+            //[self generateMatchMessage];
+            [self findMatches:_willBeMatches];
+        }
+    }
 }
 
 - (void) setPossMatchHelper
@@ -492,6 +507,17 @@
     _otherUser.toUserEmail      = _matchUser.email;
     _otherUser.fromUserEmail    = [UserParseHelper currentUser].email;
     _otherUser.matches          = [[NSArray alloc] initWithObjects:[UserParseHelper currentUser], _matchUser, nil];
+    NSLog(@"Possible Matches count: %lu", (unsigned long)[_otherUser.matches count]);
+    NSLog(@"Other User: %@", _otherUser.toUserEmail);
+    _otherUser.prefCounter = [NSNumber numberWithDouble:_prefCounter];
+    _otherUser.totalPrefs = [NSNumber numberWithDouble:_totalPrefs];
+    [_otherUser saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        NSLog(@"Before Succeeded Other User: %@", _otherUser.toUserEmail);
+        if (succeeded) {
+            NSLog(@"Before GenMess for %@", _otherUser.toUserEmail);
+            [self generateMatchMessage];
+        }
+    }];
 }
 
 #pragma mark - MATCH FILTER
@@ -522,7 +548,7 @@
         //[self matchBodyType:match];
         //[_otherUser calculateCompatibility:_prefCounter with:_totalPrefs];
         //NSLog(@"Compatibility: %@%%", _otherUser.compatibilityIndex);
-        [self setPossMatchHelper];
+        //[self setPossMatchHelper];
         [self matchBodyType];
         //[self performSegueWithIdentifier:@"viewMatch" sender:nil];
         
@@ -532,7 +558,7 @@
         _totalPrefs++;
         
         NSLog(@"Just before Save run");
-        [self setPossMatchHelper];
+        //[self setPossMatchHelper];
         [self matchBodyType];
         
         //[self performSegueWithIdentifier:@"viewMatch" sender:nil];
@@ -685,7 +711,7 @@
         }
     }
     
-    [self generateMatchMessage];
+    [self setPossMatchHelper];
 }
 
 #pragma mark - MATCH SEGUE
@@ -713,8 +739,12 @@
     [query whereKey:@"fromUserParse" equalTo:_matchUser];
     [query whereKey:@"toUserParse" equalTo:[UserParseHelper currentUser]];
     
-    if ([query findObjects].firstObject) {
-        NSLog(@"Message with Match exists");
+    PFQuery* query2 = [MessageParse query];
+    [query2 whereKey:@"toUserParse" equalTo:_matchUser];
+    [query2 whereKey:@"fromUserParse" equalTo:[UserParseHelper currentUser]];
+    
+    if ([query findObjects].firstObject || [query2 findObjects].firstObject) {
+        NSLog(@"Message with %@ exists", _matchUser.nickname);
     } else {
         //NSLog(@"Compatibility with %@ is: %@%%", match.nickname, [NSNumber numberWithDouble:*(_otherUser.compatibilityIndex)]);
         
@@ -724,10 +754,14 @@
         message.toUserParse         = _matchUser;
         message.toUserParseEmail    = _matchUser.email;
         message.text                = @"";
+        [message saveInBackground];
+        NSLog(@"Created message for %@", _matchUser.nickname);
+        /*
         [message saveEventually:^(BOOL succeeded, NSError *error) {
             if (succeeded) {
                 [self findMatches:_willBeMatches]; //<-- Test before matchBodyType
-                /*
+                
+                /* // All old Speeddate code below
                 self.currShowingProfile = self.backgroundUserProfile;
                 [self setPanGestureRecognizer];
                 if (self.posibleMatchesArray.firstObject != nil) {
@@ -737,10 +771,10 @@
                     self.activityLabel.hidden = NO;
                     [self.activityIndicator startAnimating];
                     [self.view bringSubviewToFront:self.profileView];
-                }*/
+                } // <-- End Comment bracket here
          
             }
-        }];
+        }];*/
     }
 
 }

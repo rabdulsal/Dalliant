@@ -78,8 +78,11 @@
     PFQuery *possMatch1 = [PossibleMatchHelper query];
     [possMatch1 whereKey:@"matches" containsAllObjectsInArray:matches];
     [possMatch1 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        _matchUser = [objects objectAtIndex:0];
-        [self configureRadialView:cell];
+        for (PossibleMatchHelper *match in objects) {
+            _matchUser = match;
+            [self configureRadialView:cell];
+        }
+    
     }];
     //PFQuery *both = [PFQuery orQueryWithSubqueries:@[messageQueryFrom, messageQueryTo]];
 }
