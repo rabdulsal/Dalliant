@@ -169,6 +169,8 @@
     if ((message.sendImage || message.image) && [message.fromUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"fromCellImage" forIndexPath:indexPath];
         cell.userImageView.image = self.fromPhoto;
+        cell.userImageView.hidden = YES; // <-- Hide Current UserImage
+
         __block UIImage *image;
         if (message.sendImage) {
             image = message.sendImage;
@@ -201,6 +203,7 @@
         // *************************************
         
         cell.dateLabel.text = [dateFormatter stringFromDate:[message createdAt]];
+        cell.dateLabel.hidden = YES; // <-- Hide DateLabel
         __block UIImage *image;
         [message.image getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
             image = [UIImage imageWithData:data];
@@ -220,6 +223,7 @@
     if (!message.image && !message.sendImage && [message.fromUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"fromCell" forIndexPath:indexPath];
         cell.userImageView.image = self.fromPhoto;
+        cell.userImageView.hidden = YES; // <-- Hide Userimage
         cell.messageLabel.textColor = WHITE_COLOR;
     }
 
@@ -248,6 +252,7 @@
 
 
     cell.dateLabel.text = [dateFormatter stringFromDate:[message createdAt]];
+    cell.dateLabel.hidden = YES; // <-- Hide datelabel
     cell.dateLabel.textColor = RED_DEEP;
     cell.messageLabel.text = message.text;
 
@@ -258,20 +263,28 @@
                                                  options:NSStringDrawingUsesLineFragmentOrigin
                                               attributes:attributes
                                                  context:nil];
+        
+        // Message Label Coordinates ******************
+        
         rect.origin = cell.messageLabel.frame.origin;
-        CGRect outlineRect = CGRectInset(rect, -15, -10);
+        CGRect outlineRect = CGRectInset(rect, -15, -10); // <-- Sets text position in BubbleView
         if (!message.image && !message.sendImage && [message.fromUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
-            rect.origin.x = cell.userImageView.frame.origin.x - outlineRect.size.width;
+            //rect.origin.x = cell.userImageView.frame.origin.x - outlineRect.size.width;
+            rect.origin.x = cell.userImageView.frame.origin.x - outlineRect.size.width + 64; // <-- Pushes current User text bubble toward righ margin
         }
+        
+        // ***********************************************
+        
         outlineRect.origin = rect.origin;
-        outlineRect.origin.x -= MARGIN*1.5;
-        outlineRect.origin.y -= MARGIN/1.5;
+        outlineRect.origin.x -= MARGIN*1.5; //<-- Adds left/right padding to Bubbleview
+        outlineRect.origin.y -= MARGIN/1.5; //<-- Adds top/bottom padding to Bubbleview
 
         UIView *bubbleView = [[UIView alloc] initWithFrame:outlineRect];
         if ( [message.fromUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
-            bubbleView.backgroundColor = RED_DEEP;
+            bubbleView.backgroundColor = RED_LIGHT;
         } else {
-            bubbleView.backgroundColor = MENU_GRAY_LIGHT;
+            //bubbleView.backgroundColor = MENU_GRAY_LIGHT;
+            bubbleView.backgroundColor = [UIColor lightGrayColor];
         }
         bubbleView.alpha = 1.0;
         bubbleView.layer.cornerRadius = 5.0f;
