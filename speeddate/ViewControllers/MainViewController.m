@@ -110,6 +110,7 @@
 @property PossibleMatchHelper *otherUser;
 @property double prefCounter;
 @property double totalPrefs; //<-- should be attribute on UserParseHelper
+@property (weak, nonatomic) IBOutlet UILabel *matchedLabel;
 
 @property (weak, nonatomic) IBOutlet UIButton *baedarLabel;
 - (IBAction)toggleBaedar:(id)sender;
@@ -177,7 +178,12 @@
     //self.view.backgroundColor = RED_LIGHT;
     self.view.backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"match"]];
     
+    [self configureButton:_matchButtonLabel];
     [_matchButtonLabel setHidden:YES];
+    [_activityLabel setHidden:YES];
+    [_likeButton setHidden:YES];
+    [_dislikeButton setHidden:YES];
+    [_matchedLabel setHidden:YES];
     
     self.navigationController.navigationBar.barTintColor = RED_LIGHT;
     self.navigationItem.title = @"Speed Dating";
@@ -252,14 +258,26 @@
 - (void)findMatches:(NSMutableArray *)matches
 {
     [_matchButtonLabel setHidden:NO];
+    [_matchedLabel setHidden:NO];
     
     NSString *matchNum = [[NSString alloc] init];
     if ([matches count] == 1) {
         matchNum = @"Match";
     } else matchNum = @"Matches";
     
-    NSString *buttonTitle = [[NSString alloc] initWithFormat:@"You have %lu %@! \nClick to view", (unsigned long)[matches count], matchNum];
+    NSString *matchTitle = [[NSString alloc] initWithFormat:@"You have %lu %@!", (unsigned long)[matches count], matchNum];
+    _matchedLabel.text = @"You have 5 Matches!";
+    _matchedLabel.textColor = [UIColor whiteColor];
+    
+    NSString *buttonTitle = @"Click to View";
     [_matchButtonLabel setTitle:buttonTitle forState:UIControlStateNormal];
+}
+
+- (void)configureButton:(UIButton *)button
+{
+    button.layer.cornerRadius = 3;
+    button.layer.borderWidth = 1.0;
+    button.layer.borderColor = [UIColor whiteColor].CGColor;
 }
 
 - (void)checkFirstTime
@@ -327,8 +345,9 @@
     CLGeocoder* geocoder = [CLGeocoder new];
     [geocoder reverseGeocodeLocation:locations.firstObject completionHandler:^(NSArray *placemarks, NSError *error) {
         CLPlacemark* placemark = placemarks.firstObject;
+        /* Shows City and State once radar is activitated
         self.activityLabel.text = [NSString stringWithFormat:@"Locating :\n %@, %@", placemark.locality, placemark.administrativeArea];
-        self.activityLabel.textColor = [UIColor whiteColor];
+         */
     }];
     [UserParseHelper currentUser].geoPoint = [PFGeoPoint geoPointWithLatitude:self.currentLocation.coordinate.latitude longitude:self.currentLocation.coordinate.longitude];
     self.curUser.geoPoint = [PFGeoPoint geoPointWithLatitude:self.currentLocation.coordinate.latitude longitude:self.currentLocation.coordinate.longitude];

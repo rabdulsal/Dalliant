@@ -202,7 +202,7 @@
         
         // *************************************
         
-        cell.dateLabel.text = [dateFormatter stringFromDate:[message createdAt]];
+        //cell.dateLabel.text = [dateFormatter stringFromDate:[message createdAt]];
         cell.dateLabel.hidden = YES; // <-- Hide DateLabel
         __block UIImage *image;
         [message.image getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
@@ -251,8 +251,8 @@
 
 
 
-    cell.dateLabel.text = [dateFormatter stringFromDate:[message createdAt]];
-    cell.dateLabel.hidden = YES; // <-- Hide datelabel
+    //cell.dateLabel.text = [dateFormatter stringFromDate:[message createdAt]];
+    cell.dateLabel.hidden = YES;
     cell.dateLabel.textColor = RED_DEEP;
     cell.messageLabel.text = message.text;
 
@@ -270,7 +270,7 @@
         CGRect outlineRect = CGRectInset(rect, -15, -10); // <-- Sets text position in BubbleView
         if (!message.image && !message.sendImage && [message.fromUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
             //rect.origin.x = cell.userImageView.frame.origin.x - outlineRect.size.width;
-            rect.origin.x = cell.userImageView.frame.origin.x - outlineRect.size.width + 64; // <-- Pushes current User text bubble toward righ margin
+            rect.origin.x = cell.userImageView.frame.origin.x - outlineRect.size.width + 25; // <-- Pushes current User text bubble toward righ margin
         }
         
         // ***********************************************
