@@ -169,7 +169,6 @@
     if ((message.sendImage || message.image) && [message.fromUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"fromCellImage" forIndexPath:indexPath];
         cell.userImageView.image = self.fromPhoto;
-        cell.userImageView.hidden = YES; // <-- Hide Current UserImage
 
         __block UIImage *image;
         if (message.sendImage) {
@@ -202,8 +201,7 @@
         
         // *************************************
         
-        //cell.dateLabel.text = [dateFormatter stringFromDate:[message createdAt]];
-        cell.dateLabel.hidden = YES; // <-- Hide DateLabel
+        cell.dateLabel.text = [dateFormatter stringFromDate:[message createdAt]];
         __block UIImage *image;
         [message.image getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
             image = [UIImage imageWithData:data];
@@ -223,7 +221,6 @@
     if (!message.image && !message.sendImage && [message.fromUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"fromCell" forIndexPath:indexPath];
         cell.userImageView.image = self.fromPhoto;
-        cell.userImageView.hidden = YES; // <-- Hide Userimage
         cell.messageLabel.textColor = WHITE_COLOR;
     }
 
@@ -251,8 +248,7 @@
 
 
 
-    //cell.dateLabel.text = [dateFormatter stringFromDate:[message createdAt]];
-    cell.dateLabel.hidden = YES;
+    cell.dateLabel.text = [dateFormatter stringFromDate:[message createdAt]];
     cell.dateLabel.textColor = RED_DEEP;
     cell.messageLabel.text = message.text;
 
@@ -269,8 +265,8 @@
         rect.origin = cell.messageLabel.frame.origin;
         CGRect outlineRect = CGRectInset(rect, -15, -10); // <-- Sets text position in BubbleView
         if (!message.image && !message.sendImage && [message.fromUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
-            //rect.origin.x = cell.userImageView.frame.origin.x - outlineRect.size.width;
-            rect.origin.x = cell.userImageView.frame.origin.x - outlineRect.size.width + 25; // <-- Pushes current User text bubble toward righ margin
+            rect.origin.x = cell.userImageView.frame.origin.x - outlineRect.size.width;
+            //rect.origin.x = cell.userImageView.frame.origin.x - outlineRect.size.width + 25; // <-- Pushes current User text bubble toward righ margin
         }
         
         // ***********************************************
@@ -781,7 +777,7 @@
             mainUser.isRevealed = true;
             [self reloadView];
             
-            /* <-- Apparently this works, a text notification was sent to me when executed
+            /* <-- Apparently this works when app is in background, a notification is sent and appears as alert
             // RevealRequest setup
             RevealRequest *revealRequest = [RevealRequest object];
             revealRequest.requestFromUser = [UserParseHelper currentUser];

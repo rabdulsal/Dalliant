@@ -29,7 +29,8 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UITextField *searchTextField;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *sidebarButton;@property NSArray *filteredAllUsersArray;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *sidebarButton;
+@property NSArray *filteredAllUsersArray;
 @property (weak, nonatomic) IBOutlet UIButton *cameraButton;
 @property NSMutableArray *messages;
 @property PossibleMatchHelper *matchUser;

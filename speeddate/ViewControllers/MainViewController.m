@@ -266,7 +266,7 @@
     } else matchNum = @"Matches";
     
     NSString *matchTitle = [[NSString alloc] initWithFormat:@"You have %lu %@!", (unsigned long)[matches count], matchNum];
-    _matchedLabel.text = @"You have 5 Matches!";
+    _matchedLabel.text = matchTitle;
     _matchedLabel.textColor = [UIColor whiteColor];
     
     NSString *buttonTitle = @"Click to View";
