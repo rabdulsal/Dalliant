@@ -161,13 +161,14 @@
         [self.curUser.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
             self.userPhoto = [UIImage imageWithData:data];
         }];
+        /*
         if (!self.curUser.geoPoint) {
             NSLog(@"No User Geolocation");
             [self currentLocationIdentifier];
         }
+         */
     }];
-
-
+    
     _sidebarButton.target = self.revealViewController;
     _sidebarButton.action = @selector(revealToggle:);
     self.posibleMatchesArray = [NSMutableArray new];
@@ -202,7 +203,7 @@
    
     [waveLayer setHidden:YES];
     
-    [self currentLocationIdentifier];
+    //[self currentLocationIdentifier];
     //[self performSegueWithIdentifier:@"test_match" sender:nil];
 
 }
@@ -241,7 +242,6 @@
 {
     //_baedarLabel.transform = CGAffineTransformMakeScale(1.1,1.1); // <-- Increase button size on press
     
-    [self.locationManager stopUpdatingLocation];
     [_baedarLabel setSelected:NO];
     inAnimation = NO;
     [waveLayer removeFromSuperlayer];
@@ -293,7 +293,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     //[self checkIncomingViewController];
-    //[self currentLocationIdentifier];
+    [self currentLocationIdentifier];
     
     if (user.baedarIsRunning) {
         [self baedarOn];
@@ -328,7 +328,7 @@
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     [self.locationManager requestWhenInUseAuthorization];
     [self.locationManager startMonitoringSignificantLocationChanges];
-    //[self.locationManager startUpdatingLocation];
+    [self.locationManager startUpdatingLocation];
     
     /* 
      Simulated locations:
@@ -342,6 +342,7 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
     self.currentLocation = [locations objectAtIndex:0];
+    [self.locationManager stopUpdatingLocation];
     CLGeocoder* geocoder = [CLGeocoder new];
     [geocoder reverseGeocodeLocation:locations.firstObject completionHandler:^(NSArray *placemarks, NSError *error) {
         CLPlacemark* placemark = placemarks.firstObject;
@@ -488,7 +489,7 @@
         if (!objects) {
             NSLog(@"No Matches found");
         } else {
-            
+            //[waveLayer setHidden:YES];
             NSLog(@"Potential matches found, total: %ld", objects.count);
             /*
             for (UserParseHelper *possMatch in _posibleMatchesArray) {
@@ -530,13 +531,16 @@
     NSLog(@"Other User: %@", _otherUser.toUserEmail);
     _otherUser.prefCounter = [NSNumber numberWithDouble:_prefCounter];
     _otherUser.totalPrefs = [NSNumber numberWithDouble:_totalPrefs];
-    [_otherUser saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+    /*[_otherUser saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         NSLog(@"Before Succeeded Other User: %@", _otherUser.toUserEmail);
         if (succeeded) {
             NSLog(@"Before GenMess for %@", _otherUser.toUserEmail);
             [self generateMatchMessage];
         }
-    }];
+    }];*/
+    [_otherUser save];
+    NSLog(@"Before GenMess for %@", _otherUser.toUserEmail);
+    [self generateMatchMessage];
 }
 
 #pragma mark - MATCH FILTER
@@ -596,14 +600,17 @@
 
 - (void)matchBodyType
 {
+    NSLog(@"Start MatchBodyType");
     _totalPrefs++;
     
     if([_curUser.bodyTypePref isEqualToString:_matchUser.bodyType]) {
         _prefCounter++;
         //[self matchRelationshipStatus];
+        NSLog(@"Equal BodyType Run");
         [self matchAgePreference];
     } else {
         //[self matchRelationshipStatus];
+        NSLog(@"NOT Equal BodyType Run");
         [self matchAgePreference];
     }
     
@@ -611,6 +618,7 @@
 
 - (void)matchAgePreference
 {
+    NSLog(@"MatchAge Run");
     _totalPrefs++;
     int minAgeDiff = 0;
     int maxAgeDiff = 0;
@@ -619,9 +627,13 @@
     maxAgeDiff += (int)_curUser.maxAgePref - (int)_matchUser.age;
     
     if (minAgeDiff < 0 || maxAgeDiff < 0) {
+        NSLog(@"MatchAge equal");
         _prefCounter++;
         [self matchRelationshipStatus];
-    } else [self matchRelationshipStatus];
+    } else {
+        NSLog(@"MatchAge NOT equal");
+        [self matchRelationshipStatus];
+    }
     
     NSLog(@" %@ minAgePref: %@ | maxAgePref: %@ ; %@'s age: %@", _curUser.nickname, _curUser.minAgePref, _curUser.maxAgePref, _matchUser.nickname, _matchUser.age);
     NSLog(@"MinAgeDiff: %@, MaxAgeDiff: %@", [NSNumber numberWithInt:minAgeDiff], [NSNumber numberWithInt:maxAgeDiff]);
@@ -633,9 +645,10 @@
     
     if ([_curUser.relationshipStatusPref isEqualToString:_matchUser.relationshipStatus]) {
         _prefCounter++;
-        
+        NSLog(@"MatchRelatStat equal");
         [self matchRomanticPreference];
     } else {
+        NSLog(@"MatchRelatStat NOT equal");
         [self matchRomanticPreference];
     }
 }
@@ -646,8 +659,10 @@
     
     if ([_curUser.romanticPreference isEqualToString:_matchUser.relationshipType]) {
         _prefCounter++;
+        NSLog(@"MatchRomPref equal");
         [self matchKids];
     } else {
+        NSLog(@"MatchRomPref NOT equal");
         [self matchKids];
     }
 }
@@ -658,8 +673,10 @@
     
     if ([_curUser.kidsOkay isEqualToNumber:_matchUser.hasKids]) {
         _prefCounter++;
+        NSLog(@"MatchRomPref equal");
         [self matchDrinking];
     } else {
+        NSLog(@"MatchRomPref NOT equal");
         [self matchDrinking];
     }
 }
@@ -670,8 +687,10 @@
     
     if([_curUser.drinkingOkay isEqualToNumber:_matchUser.drinks]) {
         _prefCounter++;
+        NSLog(@"Drink Okay equal");
         [self matchSmoking];
     } else {
+        NSLog(@"Drink Okay NOT equal");
         [self matchSmoking];
     }
 }
@@ -682,8 +701,10 @@
     
     if ([_curUser.smokingOkay isEqualToNumber:_matchUser.smokes]) {
         _prefCounter++;
+        NSLog(@"SMoke Okay equal");
         [self matchDrugUse];
     } else {
+        NSLog(@"Smoke Okay NOT equal");
         [self matchDrugUse];
     }
 }
@@ -694,8 +715,10 @@
     
     if ([_curUser.drugsOkay isEqualToNumber:_matchUser.drugs]) {
         _prefCounter++;
+        NSLog(@"Drugs Okay equal");
         [self matchBodyArt];
     } else {
+        NSLog(@"Drugs Okay NOT equal");
         [self matchBodyArt];
     }
 }
@@ -706,8 +729,12 @@
     
     if ([_curUser.bodyArtOkay isEqualToNumber:_matchUser.bodyArt]) {
         _prefCounter++;
+        NSLog(@"BodyArt equal");
         [self compare:_curUser.interests with:_matchUser.interests];
-    } else [self compare:_curUser.interests with:_matchUser.interests];
+    } else {
+        NSLog(@"BodyArt NOT equal");
+        [self compare:_curUser.interests with:_matchUser.interests];
+    }
     
     NSLog(@"PrefMatchCounter before compare: %ld", (long)_prefCounter);
    
@@ -796,6 +823,12 @@
         }];*/
     }
 
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self baedarOff];
 }
 
 - (void) firstPlacement
