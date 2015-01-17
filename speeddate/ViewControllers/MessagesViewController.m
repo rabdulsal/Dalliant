@@ -150,6 +150,7 @@
     [messageQueryTo whereKey:@"toUserParse" equalTo:[UserParseHelper currentUser]];
     PFQuery *both = [PFQuery orQueryWithSubqueries:@[messageQueryFrom, messageQueryTo]];
     [both orderByDescending:@"createdAt"];
+    //[both orderByDescending:@"compatibilityIndex"]; // <-- Won't work for now, need a compatibility attribute on messages somehow
     
     [both findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         NSMutableSet *users = [NSMutableSet new];

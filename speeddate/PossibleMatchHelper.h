@@ -19,7 +19,7 @@
 @property NSArray *matches;
 @property NSNumber *prefCounter;
 @property NSNumber *totalPrefs;
-@property NSString *compatibilityIndex;
+@property NSNumber *compatibilityIndex;
 
 - (void)calculateCompatibility:(double)prefCounter with:(double)totalPreferences;
 

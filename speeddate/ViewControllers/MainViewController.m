@@ -228,7 +228,10 @@
 
 - (void)baedarOn
 {
-    [self.locationManager startUpdatingLocation]; //<-- Set .online attrib on UserParseHelper to true
+    //[self.locationManager startUpdatingLocation];
+    [self currentLocationIdentifier];
+    _curUser.online = @"yes";
+    [_curUser saveInBackground];
     [self.view.layer addSublayer:waveLayer];
     [waveLayer setHidden:NO];
     [self startAnimation];
@@ -241,7 +244,8 @@
 - (void)baedarOff
 {
     //_baedarLabel.transform = CGAffineTransformMakeScale(1.1,1.1); // <-- Increase button size on press
-    
+    _curUser.online = @"no";
+    [_curUser saveInBackground];
     [_baedarLabel setSelected:NO];
     inAnimation = NO;
     [waveLayer removeFromSuperlayer];
@@ -253,24 +257,6 @@
     
     [self performSegueWithIdentifier:@"viewMatches" sender:nil];
     
-}
-
-- (void)findMatches:(NSMutableArray *)matches
-{
-    [_matchButtonLabel setHidden:NO];
-    [_matchedLabel setHidden:NO];
-    
-    NSString *matchNum = [[NSString alloc] init];
-    if ([matches count] == 1) {
-        matchNum = @"Match";
-    } else matchNum = @"Matches";
-    
-    NSString *matchTitle = [[NSString alloc] initWithFormat:@"You have %lu %@!", (unsigned long)[matches count], matchNum];
-    _matchedLabel.text = matchTitle;
-    _matchedLabel.textColor = [UIColor whiteColor];
-    
-    NSString *buttonTitle = @"Click to View";
-    [_matchButtonLabel setTitle:buttonTitle forState:UIControlStateNormal];
 }
 
 - (void)configureButton:(UIButton *)button
@@ -293,7 +279,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     //[self checkIncomingViewController];
-    [self currentLocationIdentifier];
+    //[self currentLocationIdentifier];
     
     if (user.baedarIsRunning) {
         [self baedarOn];
@@ -352,7 +338,7 @@
     }];
     [UserParseHelper currentUser].geoPoint = [PFGeoPoint geoPointWithLatitude:self.currentLocation.coordinate.latitude longitude:self.currentLocation.coordinate.longitude];
     self.curUser.geoPoint = [PFGeoPoint geoPointWithLatitude:self.currentLocation.coordinate.latitude longitude:self.currentLocation.coordinate.longitude];
-    [[UserParseHelper currentUser] saveEventually];
+    [[UserParseHelper currentUser] save];
     NSLog(@"%@ location: %@", _curUser.nickname, _curUser.geoPoint);
     
     //[self performSegueWithIdentifier:@"viewMatches" sender:nil];
@@ -483,6 +469,7 @@
     PFQuery *userQuery = [UserParseHelper query];
     [userQuery whereKey:@"geoPoint" nearGeoPoint:self.curUser.geoPoint withinKilometers:self.curUser.distance.doubleValue];
     [userQuery whereKey:@"objectId" notEqualTo:_curUser.objectId];
+    [userQuery whereKey:@"online" equalTo:@"yes"];
     [userQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [_posibleMatchesArray addObjectsFromArray:objects];
         
@@ -519,6 +506,25 @@
     }
 }
 
+- (void)findMatches:(NSMutableArray *)matches
+{
+    [_matchButtonLabel setHidden:NO];
+    [_matchedLabel setHidden:NO];
+    
+    NSString *matchNum = [[NSString alloc] init];
+    if ([matches count] == 1) {
+        matchNum = @"Match";
+    } else matchNum = @"Matches";
+    
+    NSString *matchTitle = [[NSString alloc] initWithFormat:@"You have %lu %@!", (unsigned long)[matches count], matchNum];
+    _matchedLabel.text = matchTitle;
+    _matchedLabel.textColor = [UIColor whiteColor];
+    
+    NSString *buttonTitle = @"Click to View";
+    [_matchButtonLabel setTitle:buttonTitle forState:UIControlStateNormal];
+}
+
+
 - (void) setPossMatchHelper
 {
     _otherUser                  = [PossibleMatchHelper object];
@@ -531,6 +537,9 @@
     NSLog(@"Other User: %@", _otherUser.toUserEmail);
     _otherUser.prefCounter = [NSNumber numberWithDouble:_prefCounter];
     _otherUser.totalPrefs = [NSNumber numberWithDouble:_totalPrefs];
+    double compatibility = (_prefCounter / _totalPrefs) * 100;
+    _otherUser.compatibilityIndex = [NSNumber numberWithDouble:compatibility];
+    NSLog(@"%@ compatibility: %@", _otherUser.toUserEmail, _otherUser.compatibilityIndex);
     /*[_otherUser saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         NSLog(@"Before Succeeded Other User: %@", _otherUser.toUserEmail);
         if (succeeded) {
