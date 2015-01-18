@@ -92,6 +92,12 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     [FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
+    
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    if (currentInstallation.badge != 0) {
+        currentInstallation.badge = 0;
+        [currentInstallation saveEventually];
+    }
 }
 
 - (void)application:(UIApplication *)application
@@ -113,20 +119,49 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
 
 }
 
-- (void)application:(UIApplication *)application
-didReceiveRemoteNotification:(NSNotification *)userInfo {
-    [[NSNotificationCenter defaultCenter] postNotificationName:receivedMessage object:userInfo];
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     
-    //[PFPush handlePush:userInfo];
+    NSDictionary *userInfoAlert = [userInfo objectForKey:@"aps"];
+    NSString *alertMessage = [userInfoAlert objectForKey:@"alert"];
+    
+    if ([alertMessage isEqualToString:@"Request to Share Identities"]) {
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"Fetch Reveal Request" object:self];
+            /*
+             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"In-app Reveal Request" message:@"Request received in app" delegate:self cancelButtonTitle:@"Done" otherButtonTitles: @"Anzeigen", nil];
+             [alert setTag: 2];
+             [alert show];
+        */
+    } else {
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:receivedMessage object:userInfo];
+        
+    }
 }
 /*
-- (void)application:(UIApplication *)application
-didReceiveRemoteNotification:(NSDictionary *)userInfo
-fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler
 {
+    [[NSNotificationCenter defaultCenter] postNotificationName:receivedMessage object:userInfo];
+    //[PFPush handlePush:userInfo];
+
+ 
+ 
+    }
+     else {
+     // Push Notification received in the background
+     
+     }
+    
+} else {
+    
     
 }
-*/
+
+
+     
+    handler(UIBackgroundFetchResultNewData);
+}*/
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

@@ -32,7 +32,8 @@
 @property (strong, nonatomic) UIVisualEffectView *blurImageView;
 @property (strong, nonatomic) UIActionSheet *actionsheet;
 @property (strong, nonatomic) NSMutableArray *photoArray;
-@property (strong, nonatomic) NSArray *sentRequest;
+@property (strong, nonatomic) RevealRequest *receivedRequest;
+@property UserParseHelper *curUser;
 @end
 
 @implementation UserMessagesViewController
@@ -44,11 +45,12 @@
     [super viewDidLoad];
     
     mainUser = [User singleObj];
+    _curUser = [UserParseHelper currentUser];
     
     [self getPhotos];
     [self getMessages];
     
-    if (!mainUser.isRevealed) {
+    if (!_toUserParse.isRevealed) {
         self.title = @"Chat";
         UIImage *btnImage = [UIImage imageNamed:@"user"];
         [_cameraButton setImage:btnImage forState:UIControlStateNormal];
@@ -73,8 +75,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getNewMessage:) name:receivedMessage object:nil];
     
     // Notification to fetch New Incoming Reveal Request?
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchRevealRequest:) name:@"Fetch Reveal Request" object:nil];
-    //[[NSNotificationCenter defaultCenter] postNotificationName:@"Fetch Reveal Request" object:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchRevealRequest:) name:@"Fetch Reveal Request" object:nil];
+    //
     
     // Notification to fetch New Incoming Reveal Reply
     //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchRevealReply:) name:@"Fetch Reveal Reply" object:nil];
@@ -132,12 +134,12 @@
         PFUser *pushUser = [PFUser currentUser];
         NSString *pushUserto = pushUser[@"nickname"];
        
-        
         NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
                               [NSString stringWithFormat:@"%@ say: %@",pushUserto,message.text], @"alert",
                               @"Increment", @"badge",
                               @"Ache.caf", @"sound",
                               nil];
+        
         PFPush *push = [[PFPush alloc] init];
       
         [push setQuery:query];
@@ -195,7 +197,7 @@
         cell.userImageView.image = self.toPhoto;
         
         // Blur conditional ********************
-        if (!mainUser.isRevealed) {
+        if (!_toUserParse.isRevealed) {
             [self blurImages:cell.userImageView];
         }
         
@@ -231,7 +233,7 @@
         
         // Blur conditional ********************
         
-        if (!mainUser.isRevealed) {
+        if (!_toUserParse.isRevealed) {
             [self blurImages:cell.userImageView];
         }
         
@@ -462,7 +464,7 @@
 
 - (IBAction)sendPhoto:(id)sender
 {
-    if (!mainUser.isRevealed) { // <-- Change to check on Matched User attribute
+    if (!_toUserParse.isRevealed) { // <-- Change to check on Matched User attribute
         _actionsheet = [[UIActionSheet alloc] initWithTitle:@"Send Reveal request?" delegate:self cancelButtonTitle:@"Don't Request" destructiveButtonTitle:nil otherButtonTitles:@"Yes", nil];
         _actionsheet.tag = 1;
         [_actionsheet showInView:self.view];
@@ -687,18 +689,30 @@
 
 - (void)fetchRevealRequest:(NSNotification *)note
 {
+    // Reveal AlertView
+   /* NSString *alertTitle = [[NSString alloc] initWithFormat:@"Your Match Has Sent You a Reveal Request!"];
+    NSString *alertMessage = [[NSString alloc] initWithFormat:@"Do you want to Reveal yourself? If so, click 'Yes' to Reveal your name and picture."];
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:alertTitle
+                                                    message:alertMessage
+                                                   delegate:self
+                                          cancelButtonTitle:@"No"
+                                          otherButtonTitles:@"Yes", nil];
+    alert.tag = 1;
+    [alert show];*/
+
     NSLog(@"Fetch Reveal Request run");
     // Query for Incoming RevealRequest
     PFQuery *requestQuery = [RevealRequest query];
     [requestQuery whereKey:@"requestFromUser" equalTo:self.toUserParse];
-    [requestQuery whereKey:@"requestToUser" equalTo:[PFUser currentUser]];
+    [requestQuery whereKey:@"requestToUser" equalTo:_curUser];
     [requestQuery whereKey:@"requestReply" equalTo:@""];
     
     [requestQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         
         if (!error && [objects count] != 0) {
             
-            _sentRequest = objects;
+            _receivedRequest = (RevealRequest *)[objects objectAtIndex:0];
             
             /*for (RevealRequest *request in objects) {
                 NSLog(@"For Loop");
@@ -711,8 +725,8 @@
             
             NSLog(@"Query run");
             // Reveal AlertView
-            NSString *alertTitle = [[NSString alloc] initWithFormat:@"Your Match Has Sent You a Reveal Request!"];
-            NSString *alertMessage = [[NSString alloc] initWithFormat:@"Do you want to Reveal yourself? If so, click 'Yes' to Reveal your name and picture."];
+            NSString *alertTitle = [[NSString alloc] initWithFormat:@"%@ Has Sent You a Share Request: %@", _toUserParse.nickname, _receivedRequest.objectId];
+            NSString *alertMessage = [[NSString alloc] initWithFormat:@"Do you want to share your Profile? If so, click 'Yes' to share your name and pictures."];
         
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:alertTitle
                                                         message:alertMessage
@@ -724,7 +738,7 @@
             
         } else NSLog(@"Reply sent");
     }];
-    
+   
 }
 
 #pragma mark - Incoming Reveal Reply
@@ -745,8 +759,8 @@
             if ([request.requestReply isEqualToString:@"Yes"]) {
                 // Request Accepted
                 // Reveal AlertView
-                NSString *alertTitle = [[NSString alloc] initWithFormat:@"Your Match Has Accepted Your Request!"];
-                NSString *alertMessage = [[NSString alloc] initWithFormat:@"You and your Match have revealed yourselves...have fun!"];
+                NSString *alertTitle = [[NSString alloc] initWithFormat:@"%@ Shared Their Profile!", _toUserParse.nickname];
+                NSString *alertMessage = [[NSString alloc] initWithFormat:@"You and %@ have shared profiles...have fun!", _toUserParse.nickname];
                 
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:alertTitle
                                                                 message:alertMessage
@@ -756,9 +770,28 @@
                 NSLog(@"Reply AlertView run");
                 alert.tag = 3;
                 [alert show];
+                
+                // Reveal Current User and update view
+                _curUser.isRevealed = [NSNumber numberWithBool:YES];
+                [_curUser saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    if (succeeded) {
+                        [self reloadView];
+                    }
+                }];
+            
             } else {
                 // Request Rejected
-                NSLog(@"Request rejected");
+                NSString *alertTitle = [[NSString alloc] initWithFormat:@"%@ Declined Sharing Profiles", _toUserParse.nickname];
+                NSString *alertMessage = [[NSString alloc] initWithFormat:@"Right now %@ doesn't want to share. Maybe they'll request to share with you.", _toUserParse.nickname];
+                
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:alertTitle
+                                                                message:alertMessage
+                                                               delegate:self
+                                                      cancelButtonTitle:@"Okay"
+                                                      otherButtonTitles:nil];
+                NSLog(@"Reply AlertView run");
+                alert.tag = 4;
+                [alert show];
             }
         }
         
@@ -770,14 +803,14 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (actionSheet.tag == 1) {
+    if (actionSheet.tag == 1) { // <-- Clicked Reveal Request Button
         
-        if (!mainUser.isRevealed && buttonIndex == 0) { // <-- Change to requestReply = YES
+        if (!_toUserParse.isRevealed && buttonIndex == 0) { // <-- Change to isRevealed check on PossibleMatchHelper
             // Test purposes
-            mainUser.isRevealed = true;
-            [self reloadView];
+            /*mainUser.isRevealed = true;
+            [self reloadView];*/
             
-            /* <-- Apparently this works when app is in background, a notification is sent and appears as alert
+            // <-- Apparently this works when app is in background, a notification is sent and appears as alert
             // RevealRequest setup
             RevealRequest *revealRequest = [RevealRequest object];
             revealRequest.requestFromUser = [UserParseHelper currentUser];
@@ -786,12 +819,10 @@
             
             [revealRequest saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 PFQuery *query = [PFInstallation query];
-                PFUser *pushUser = [PFUser currentUser];
-                NSString *pushUserto = pushUser[@"nickname"];
                 [query whereKey:@"objectId" equalTo:self.toUserParse.installation.objectId];
                 
                 NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
-                                      [NSString stringWithFormat:@"%@ sent you a Reveal Request",pushUserto], @"alert",
+                                      [NSString stringWithFormat:@"Request to Share Identities"], @"alert",
                                       @"Increment", @"badge",
                                       @"Ache.caf", @"sound",
                                       nil];
@@ -800,10 +831,10 @@
                 [push setQuery:query];
                 [push setData:data];
                 [push sendPushInBackground];
-            }];*/
+            }];
          }
         
-    } else if (actionSheet.tag == 2) {
+    } else if (actionSheet.tag == 2) { // <-- Clicked Match Options Button
         
         if (buttonIndex == 0) {
             //[self performSegueWithIdentifier:@"view_profile" sender:nil];
@@ -841,10 +872,10 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    // RevealRequest AlertView for Incoming Request
+    // Handle the Alert after Current User has Replied to Received Request
     
     if (alertView.tag == 1) {
-        
+        /*
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{ // 1
             dispatch_group_t downloadGroup = dispatch_group_create(); // 2
             dispatch_group_enter(downloadGroup); // 3
@@ -854,26 +885,70 @@
                 if([title isEqualToString:@"Yes"]){
                     NSLog(@"Clicked Yes");
                     reply = @"Yes";
-                    mainUser.isRevealed = true;
-                    [self reloadView];
+                    //_curUser.isRevealed = [NSNumber numberWithBool:YES]; <-- Update isRevealed in PossibleMatchHelper
+                    //[self reloadView];
                     // Show "You've Revealed' animation
+                    
                 } else if ([title isEqualToString:@"No"]) {
                     NSLog(@"Clicked No");
                     reply = @"No";
-            
+                    //_curUser.isRevealed = [NSNumber numberWithBool:NO]; //<-- No reason to update the database
                     // Show "No Reveal" animation
                 }
                 dispatch_group_leave(downloadGroup); // 4
                 dispatch_group_wait(downloadGroup, DISPATCH_TIME_FOREVER); // 5
             dispatch_async(dispatch_get_main_queue(), ^{
+             */
+                NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+                NSString *reply = [[NSString alloc] init];
                 
+                if([title isEqualToString:@"Yes"]){
+                    NSLog(@"Clicked Yes");
+                    reply = @"Yes";
+                    //_curUser.isRevealed = [NSNumber numberWithBool:YES]; <-- Update isRevealed in PossibleMatchHelper
+                    //[self reloadView];
+                    // Show "You've Revealed' animation
+                    
+                } else if ([title isEqualToString:@"No"]) {
+                    NSLog(@"Clicked No");
+                    reply = @"No";
+                    //_curUser.isRevealed = [NSNumber numberWithBool:NO]; //<-- No reason to update the database
+                    // Show "No Reveal" animation
+                }
+
                 RevealRequest *request = [[RevealRequest alloc] init];
-                request = _sentRequest[0];
+                request = _receivedRequest;
                 request.requestReply = reply;
-                NSLog(@"Reply: %@", request.requestReply);
-                [request saveInBackground];
-            }); // 6
-        });
+                //NSLog(@"Reply: %@", request.requestReply);
+                [request saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    /*
+                    if (succeeded) {
+                    
+                        [_curUser saveInBackground];
+                    
+                        // Push Reveal Reply Updates Notification
+                        PFQuery *query = [PFInstallation query];
+                        PFUser *pushUser = [PFUser currentUser];
+                        NSString *pushUserto = pushUser[@"nickname"];
+                        [query whereKey:@"objectId" equalTo:self.toUserParse.installation.objectId];
+                    
+                        NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
+                                          [NSString stringWithFormat:@"Identity Share Reply"], @"alert",
+                                          @"Increment", @"badge",
+                                          @"Ache.caf", @"sound",
+                                          nil];
+                    
+                        PFPush *push = [[PFPush alloc] init];
+                        [push setQuery:query];
+                        [push setData:data];
+                        [push sendPushInBackground];
+                        
+                    }*/
+                }];
+                
+                
+            //}); // 6
+        //});
         
         
     } else if (alertView.tag == 2) {
@@ -897,15 +972,6 @@
             }];
         }
         
-    } else if (alertView.tag == 3) {
-        NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
-        if ([title isEqualToString:@"Okay"]) {
-            mainUser.isRevealed = true;
-            [self reloadView];
-
-        }
-        
-        // Show "You've Revealed' animation
     }
 }
 

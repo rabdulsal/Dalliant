@@ -31,6 +31,7 @@
 @dynamic membervip;
 @dynamic maxAgePref;
 @dynamic minAgePref;
+@dynamic isRevealed;
 
 ////thumb photo
 @dynamic photo_thumb;

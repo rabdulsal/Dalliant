@@ -29,6 +29,7 @@
 @property NSString *membervip;
 @property NSMutableArray *work;
 @property NSMutableArray *school;
+@property NSNumber *isRevealed;
 
 ////thumb_photo
 @property PFFile* photo_thumb;
