@@ -34,6 +34,7 @@
 @property (strong, nonatomic) NSMutableArray *photoArray;
 @property (strong, nonatomic) RevealRequest *receivedRequest;
 @property UserParseHelper *curUser;
+@property NSNumber *yep;
 @end
 
 @implementation UserMessagesViewController
@@ -50,7 +51,9 @@
     [self getPhotos];
     [self getMessages];
     
-    if (!_toUserParse.isRevealed) {
+    _yep = [NSNumber numberWithBool:YES];
+    
+    if (![_matchedUsers.usersRevealed isEqualToNumber:_yep]) {
         self.title = @"Chat";
         UIImage *btnImage = [UIImage imageNamed:@"user"];
         [_cameraButton setImage:btnImage forState:UIControlStateNormal];
@@ -83,6 +86,7 @@
     //[[NSNotificationCenter defaultCenter] postNotificationName:@"Fetch Reveal Reply" object:self];
 
     [self customizeApp];
+    
 }
 
 - (void)customizeApp
@@ -133,9 +137,15 @@
         [query whereKey:@"objectId" equalTo:self.toUserParse.installation.objectId];
         PFUser *pushUser = [PFUser currentUser];
         NSString *pushUserto = pushUser[@"nickname"];
+        
+        NSString *pushMessage = nil;
+        
+        if (![_matchedUsers.usersRevealed isEqualToNumber:_yep]) {
+            pushMessage = [NSString stringWithFormat:@"Your Match says: %@", message.text];
+        } else pushMessage = [NSString stringWithFormat:@"%@ says: %@",pushUserto,message.text];
        
         NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
-                              [NSString stringWithFormat:@"%@ say: %@",pushUserto,message.text], @"alert",
+                              pushMessage, @"alert",
                               @"Increment", @"badge",
                               @"Ache.caf", @"sound",
                               nil];
@@ -149,6 +159,7 @@
     }
 
     self.textField.text = @"";
+    
 }
 
 
@@ -197,7 +208,7 @@
         cell.userImageView.image = self.toPhoto;
         
         // Blur conditional ********************
-        if (!_toUserParse.isRevealed) {
+        if (![_matchedUsers.usersRevealed isEqualToNumber:_yep]) {
             [self blurImages:cell.userImageView];
         }
         
@@ -233,7 +244,7 @@
         
         // Blur conditional ********************
         
-        if (!_toUserParse.isRevealed) {
+        if (![_matchedUsers.usersRevealed isEqualToNumber:_yep]) {
             [self blurImages:cell.userImageView];
         }
         
@@ -464,7 +475,7 @@
 
 - (IBAction)sendPhoto:(id)sender
 {
-    if (!_toUserParse.isRevealed) { // <-- Change to check on Matched User attribute
+    if (![_matchedUsers.usersRevealed isEqualToNumber:_yep]) { // <-- Change to check on Matched User attribute
         _actionsheet = [[UIActionSheet alloc] initWithTitle:@"Send Reveal request?" delegate:self cancelButtonTitle:@"Don't Request" destructiveButtonTitle:nil otherButtonTitles:@"Yes", nil];
         _actionsheet.tag = 1;
         [_actionsheet showInView:self.view];
@@ -725,7 +736,7 @@
             
             NSLog(@"Query run");
             // Reveal AlertView
-            NSString *alertTitle = [[NSString alloc] initWithFormat:@"%@ Has Sent You a Share Request: %@", _toUserParse.nickname, _receivedRequest.objectId];
+            NSString *alertTitle = [[NSString alloc] initWithFormat:@"A Match Has Sent You a Share Request!"];
             NSString *alertMessage = [[NSString alloc] initWithFormat:@"Do you want to share your Profile? If so, click 'Yes' to share your name and pictures."];
         
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:alertTitle
@@ -759,8 +770,8 @@
             if ([request.requestReply isEqualToString:@"Yes"]) {
                 // Request Accepted
                 // Reveal AlertView
-                NSString *alertTitle = [[NSString alloc] initWithFormat:@"%@ Shared Their Profile!", _toUserParse.nickname];
-                NSString *alertMessage = [[NSString alloc] initWithFormat:@"You and %@ have shared profiles...have fun!", _toUserParse.nickname];
+                NSString *alertTitle = [[NSString alloc] initWithFormat:@"Your Match Agreed to Share Profiles!"];
+                NSString *alertMessage = [[NSString alloc] initWithFormat:@"You two have shared profiles. Have fun getting to know each other!"];
                 
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:alertTitle
                                                                 message:alertMessage
@@ -771,13 +782,6 @@
                 alert.tag = 3;
                 [alert show];
                 
-                // Reveal Current User and update view
-                _curUser.isRevealed = [NSNumber numberWithBool:YES];
-                [_curUser saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                    if (succeeded) {
-                        [self reloadView];
-                    }
-                }];
             
             } else {
                 // Request Rejected
@@ -805,7 +809,7 @@
 {
     if (actionSheet.tag == 1) { // <-- Clicked Reveal Request Button
         
-        if (!_toUserParse.isRevealed && buttonIndex == 0) { // <-- Change to isRevealed check on PossibleMatchHelper
+        if (![_matchedUsers.usersRevealed isEqualToNumber:_yep] && buttonIndex == 0) { // <-- Change to isRevealed check on PossibleMatchHelper
             // Test purposes
             /*mainUser.isRevealed = true;
             [self reloadView];*/
@@ -921,11 +925,20 @@
                 request.requestReply = reply;
                 //NSLog(@"Reply: %@", request.requestReply);
                 [request saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                    /*
+                    
                     if (succeeded) {
-                    
-                        [_curUser saveInBackground];
-                    
+                        if ([reply isEqualToString:@"Yes"]) {
+                            _matchedUsers.usersRevealed = [NSNumber numberWithBool:YES];
+                        } else if ([reply isEqualToString:@"No"]){
+                            [_matchedUsers.usersRevealed isEqualToNumber:[NSNumber numberWithBool:NO]];
+                        }
+                        
+                        [_matchedUsers saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                            if (succeeded) {
+                                [self reloadView];
+                            }
+                        }];
+                        /*
                         // Push Reveal Reply Updates Notification
                         PFQuery *query = [PFInstallation query];
                         PFUser *pushUser = [PFUser currentUser];
@@ -942,8 +955,8 @@
                         [push setQuery:query];
                         [push setData:data];
                         [push sendPushInBackground];
-                        
-                    }*/
+                        */
+                    }
                 }];
                 
                 
@@ -970,6 +983,14 @@
                 }];
 
             }];
+        }
+        
+    } else if (alertView.tag == 3) {
+        
+        // Reload View after Current User Clicks 'Okay' in Revealed AlertView
+        
+        if (_matchedUsers.usersRevealed) {
+            [self reloadView];
         }
         
     }

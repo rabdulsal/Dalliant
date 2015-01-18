@@ -33,7 +33,7 @@
 @property NSArray *filteredAllUsersArray;
 @property (weak, nonatomic) IBOutlet UIButton *cameraButton;
 @property NSMutableArray *messages;
-@property PossibleMatchHelper *matchUser;
+@property (strong, nonatomic) PossibleMatchHelper *matchUser;
 @property int progressTotal;
 @property int progressCounter;
 @property NSArray *matchedUsers;
@@ -76,15 +76,7 @@
 
 - (void)setPossibleMatchesFromMessages:(NSArray *)matches for:(UserTableViewCell *)cell
 {
-    PFQuery *possMatch1 = [PossibleMatchHelper query];
-    [possMatch1 whereKey:@"matches" containsAllObjectsInArray:matches];
-    [possMatch1 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        for (PossibleMatchHelper *match in objects) {
-            _matchUser = match;
-            [self configureRadialView:cell];
-        }
     
-    }];
     //PFQuery *both = [PFQuery orQueryWithSubqueries:@[messageQueryFrom, messageQueryTo]];
 }
 
@@ -201,30 +193,48 @@
         user = [self.usersArray objectAtIndex:indexPath.row];
     }
     
-    [user.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        
-        cell.userImageView.image = [UIImage imageWithData:data];
-        
-        // Configure Blur ---------------------------------------------------------------
-        
-        if (!mainUser.isRevealed) { // <-- Test purposes - change to check isRevealed on Matched User - NOT WORKING
+    // Get Possible Matches
+    _matchedUsers = [[NSArray alloc] initWithObjects:[UserParseHelper currentUser], user, nil];
+    PFQuery *possMatch1 = [PossibleMatchHelper query];
+    [possMatch1 whereKey:@"matches" containsAllObjectsInArray:_matchedUsers];
+    //[possMatch1 findObjects];
+    [possMatch1 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        //for (PossibleMatchHelper *match in objects) {
+        _matchUser = [objects objectAtIndex:0];
+        [self configureRadialView:cell];
+        //}
+        NSNumber *yep = [NSNumber numberWithBool:YES];
+        if (![_matchUser.usersRevealed isEqualToNumber:yep]) { // <-- Test purposes - change to check isRevealed on Matched User - NOT WORKING
+            NSLog(@"User anonymous");
             [self blurImages:cell.userImageView];
+        
+            if ([user.isMale isEqualToString:@"true"]) {
+                NSString *matchGender = @"Male";
+                cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
+            } else {
+                NSString *matchGender = @"Female";
+                cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
+            }
+            
+        } else{
+            NSLog(@"User revealed");
+            cell.nameTextLabel.text = user.nickname;
         }
         
+        
+        [user.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+            
+            cell.userImageView.image = [UIImage imageWithData:data];
+            
+        }];
     }];
+    
+    //[self setPossibleMatchesFromMessages:_matchedUsers for:cell];
+    
     
     // Revealed conditional -----------------------------------------------------
     
-    if (!mainUser.isRevealed) { // <-- Test purposes, change to test isRevealed on Matched User
-        if ([user.isMale isEqualToString:@"true"]) {
-            NSString *matchGender = @"Male";
-            cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
-        } else {
-            NSString *matchGender = @"Female";
-            cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
-        }
-        
-    } else cell.nameTextLabel.text = user.nickname;
+    
     
     // ----------------------------------------------------------------------------
     
@@ -268,8 +278,7 @@
     bgColorView.backgroundColor = WHITE_COLOR;
     [cell setSelectedBackgroundView:bgColorView];
     
-    _matchedUsers = [[NSArray alloc] initWithObjects:[UserParseHelper currentUser], user, nil];
-    [self setPossibleMatchesFromMessages:_matchedUsers for:cell];
+    
     return cell;
 }
 
@@ -336,6 +345,8 @@
 {
     if ([segue.identifier isEqualToString:@"chat"]) {
         UserMessagesViewController *vc = segue.destinationViewController;
+        vc.matchedUsers = _matchUser;
+        
         if (self.filteredAllUsersArray.count) {
             vc.toUserParse = [self.filteredAllUsersArray objectAtIndex:self.tableView.indexPathForSelectedRow.row];
         } else {

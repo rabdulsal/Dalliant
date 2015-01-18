@@ -20,6 +20,7 @@
 @property NSNumber *prefCounter;
 @property NSNumber *totalPrefs;
 @property NSNumber *compatibilityIndex;
+@property NSNumber *usersRevealed;
 
 - (void)calculateCompatibility:(double)prefCounter with:(double)totalPreferences;
 

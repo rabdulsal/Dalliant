@@ -13,6 +13,7 @@
 #import "GADInterstitial.h"
 #import "GADAdNetworkExtras.h"
 #import "config.h"
+#import "PossibleMatchHelper.h"
 
 @class GADBannerView;
 @class GADRequest;
@@ -24,5 +25,6 @@
 }
 
 @property UserParseHelper *toUserParse;
+@property PossibleMatchHelper *matchedUsers;
 @property(nonatomic, strong)  GADBannerView *adBanner;
 @end

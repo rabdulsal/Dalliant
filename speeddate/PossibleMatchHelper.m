@@ -18,6 +18,7 @@
 @dynamic prefCounter;
 @dynamic totalPrefs;
 @dynamic compatibilityIndex;
+@dynamic usersRevealed;
 
 + (void)load {
     [self registerSubclass];
