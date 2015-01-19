@@ -9,10 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "UserParseHelper.h"
 #import <KIImagePager.h>
+#import "PossibleMatchHelper.h"
 
 @interface MatchProfileTVC : UITableViewController
 
 @property (weak, nonatomic) UserParseHelper *matchUser;
+@property (weak, nonatomic) PossibleMatchHelper *matchCompatibility;
 @property (weak, nonatomic) IBOutlet UIImageView *userFBPic;
 @property (weak, nonatomic) IBOutlet UILabel *userName;
 @property (weak, nonatomic) IBOutlet UILabel *userGender;

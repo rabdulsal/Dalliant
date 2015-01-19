@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "UserParseHelper.h"
+#import "PossibleMatchHelper.h"
 
 @interface MatchViewController : UIViewController
 @property UIImage *userImage;
@@ -20,4 +21,5 @@
 @property (nonatomic) NSMutableArray *getPhotoArray;
 @property (nonatomic) IBOutlet UILabel *userName;
 @property (nonatomic) double *compatibilityIndex;
+@property PossibleMatchHelper *possibleMatch;
 @end

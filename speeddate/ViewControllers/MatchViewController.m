@@ -58,13 +58,13 @@
     
     _userName.text = _matchUser.nickname;
     
-    if (!mainUser.isRevealed) { //<-- Change to check if revealReply = YES
+    if (![_possibleMatch.usersRevealed isEqualToNumber:[NSNumber numberWithBool:YES]]) { //<-- Change to check if revealReply = YES
         [self blurImages:_imageView];
     }
     
     [_scroller setScrollEnabled:YES];
     //[_scroller setContentSize:CGSizeMake(320, 1555)];
-    [_scroller setContentSize:CGSizeMake(self.view.frame.size.width, 2350)];
+    [_scroller setContentSize:CGSizeMake(self.view.frame.size.width, 2495)];
     /*
     [_matchUser.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
         _imageData = data;
@@ -152,9 +152,10 @@
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"matched_user"]) {
-        MatchProfileTVC *matchVC = [[MatchProfileTVC alloc] init];
-        matchVC = segue.destinationViewController;
-        matchVC.matchUser = _matchUser;
+        MatchProfileTVC *matchVC   = [[MatchProfileTVC alloc] init];
+        matchVC                    = segue.destinationViewController;
+        matchVC.matchUser          = _matchUser;
+        matchVC.matchCompatibility = _possibleMatch;
     }
 }
 // START CHAT BUTTON

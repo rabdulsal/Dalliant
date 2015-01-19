@@ -593,6 +593,7 @@
         matchVC = segue.destinationViewController;
         //matchVC.userFBPic.image             = _toUserParse.photo;
         matchVC.matchUser = _toUserParse;
+        matchVC.possibleMatch = _matchedUsers;
         
         if (matchVC.matchUser.photo) {
             [matchVC.matchUser.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {

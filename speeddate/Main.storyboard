@@ -932,11 +932,11 @@
             <objects>
                 <viewController id="rDU-7y-piv" customClass="MatchViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vz1-6L-pQP">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="1579"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="1658"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="One-Zj-tKF">
-                                <rect key="frame" x="-20" y="30" width="360" height="1549"/>
+                                <rect key="frame" x="-20" y="30" width="360" height="1628"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="i0K-e0-E2i">
@@ -997,11 +997,11 @@
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
                                     <view contentMode="scaleToFill" id="ahG-Eh-LNr">
-                                        <rect key="frame" x="20" y="372" width="320" height="1177"/>
+                                        <rect key="frame" x="20" y="372" width="320" height="1256"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <containerView opaque="NO" contentMode="scaleToFill" id="z4f-B6-l3b">
-                                                <rect key="frame" x="0.0" y="0.0" width="320" height="1177"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="320" height="1256"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                 <connections>
                                                     <segue destination="v51-0K-POn" kind="embed" identifier="matched_user" id="yk5-qV-Iag"/>
@@ -1016,7 +1016,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="320" height="1579"/>
+                    <size key="freeformSize" width="320" height="1658"/>
                     <connections>
                         <outlet property="imagePager" destination="byP-b4-ONb" id="vfU-zo-Y0U"/>
                         <outlet property="imageView" destination="LkW-b4-rEj" id="Hc8-ql-gFO"/>
@@ -1030,7 +1030,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5nJ-ws-5nA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2283" y="1602.5"/>
+            <point key="canvasLocation" x="2283" y="1602"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="2AV-06-Mvh">
@@ -2842,11 +2842,19 @@
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <navigationItem key="navigationItem" id="ZTu-k6-LqP">
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="jTl-gD-Z4f">
-                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                            <connections>
-                                <action selector="actionPressed:" destination="OLv-wp-Wkd" id="ATy-1m-a9A"/>
-                            </connections>
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="5y2-iA-jec">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="v0i-7h-dgD">
+                                <rect key="frame" x="209" y="29" width="22" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="actionPressed:" destination="OLv-wp-Wkd" eventType="touchUpInside" id="6zU-4y-Tzy"/>
+                                </connections>
+                            </button>
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
@@ -3319,12 +3327,18 @@
             <objects>
                 <tableViewController id="v51-0K-POn" customClass="MatchProfileTVC" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="nE4-W1-uRU">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="949"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="1028"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
                             <tableViewSection headerTitle="About" id="z28-fU-uMF">
                                 <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="79" id="O54-xH-Fan">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="O54-xH-Fan" id="4h5-Ug-Cbf">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="44" id="zFJ-6p-WT4">
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zFJ-6p-WT4" id="5mu-Xh-BNC">
@@ -3344,10 +3358,10 @@
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3 mins away" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="mZv-Rx-jPY">
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3 mins away" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="mZv-Rx-jPY">
                                                     <rect key="frame" x="208" y="11" width="96" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="italicSystem" pointSize="17"/>
+                                                    <fontDescription key="fontDescription" type="italicSystem" pointSize="15"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -3602,7 +3616,7 @@
                     <navigationItem key="navigationItem" title="Your Profile" id="xJa-d7-Zhi"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="320" height="949"/>
+                    <size key="freeformSize" width="320" height="1028"/>
                     <connections>
                         <outlet property="matchBodyArPref" destination="ztM-1a-dZe" id="kzw-Wj-0dm"/>
                         <outlet property="matchBodyType" destination="2M2-mr-jFR" id="ACb-qj-89r"/>
@@ -3912,15 +3926,15 @@
     <inferredMetricsTieBreakers>
         <segue reference="Qh3-Ge-Ehw"/>
         <segue reference="VlF-20-DHW"/>
-        <segue reference="gPx-w2-9WG"/>
         <segue reference="tAX-qX-dGH"/>
         <segue reference="MjG-Tl-7wb"/>
+        <segue reference="gPx-w2-9WG"/>
         <segue reference="WJE-pO-Iht"/>
         <segue reference="oXm-ri-1Lw"/>
         <segue reference="uru-UJ-cE7"/>
         <segue reference="vo7-ud-5cu"/>
-        <segue reference="NMB-y1-hOv"/>
         <segue reference="fzt-VO-B8K"/>
+        <segue reference="yk5-qV-Iag"/>
         <segue reference="b2C-ec-aqj"/>
         <segue reference="h7w-Ho-pqn"/>
     </inferredMetricsTieBreakers>

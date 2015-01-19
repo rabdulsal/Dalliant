@@ -8,6 +8,9 @@
 
 #import "MatchProfileTVC.h"
 #import <KIImagePager.h>
+#import <MDRadialProgressLabel.h>
+#import <MDRadialProgressTheme.h>
+#import <MDRadialProgressView.h>
 
 @interface MatchProfileTVC ()
 
@@ -61,11 +64,49 @@
     
     [self tapUserImage];
     
+    [self configureRadialView];
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+}
+
+- (void)setHighCompatibilityColor:(MDRadialProgressTheme *)newTheme
+{
+    newTheme.completedColor = RED_DEEP;
+    newTheme.incompletedColor = RED_LIGHT;
+    newTheme.centerColor = RED_OMNY;
+}
+
+- (void)setLowCompatibilityColor:(MDRadialProgressTheme *)newTheme
+{
+    newTheme.completedColor = [UIColor darkGrayColor];
+    newTheme.incompletedColor = [UIColor lightGrayColor];
+    newTheme.centerColor = GRAY_COLOR;
+}
+
+- (void)configureRadialView
+{
+    MDRadialProgressTheme *newTheme = [[MDRadialProgressTheme alloc] init];
+    //newTheme.completedColor = [UIColor colorWithRed:90/255.0 green:212/255.0 blue:39/255.0 alpha:1.0];
+    
+    //newTheme.incompletedColor = [UIColor colorWithRed:164/255.0 green:231/255.0 blue:134/255.0 alpha:1.0];
+    newTheme.centerColor = [UIColor clearColor];
+    //[self setHighCompatibilityColor:newTheme];
+    [self setLowCompatibilityColor:newTheme];
+    //newTheme.centerColor = [UIColor colorWithRed:224/255.0 green:248/255.0 blue:216/255.0 alpha:1.0];
+    newTheme.sliceDividerHidden = YES;
+    newTheme.labelColor = [UIColor blackColor];
+    newTheme.labelShadowColor = [UIColor whiteColor];
+    
+    CGRect frame = CGRectMake(self.view.center.x - 30, 65, 60, 60);
+    MDRadialProgressView *radialView7 = [[MDRadialProgressView alloc] initWithFrame:frame andTheme:newTheme];
+    radialView7.progressTotal = (int)_matchCompatibility.totalPrefs;;
+    radialView7.progressCounter = (int)_matchCompatibility.prefCounter;
+    //[self.view addSubview:radialView7];
+    [self.view addSubview:radialView7];
 }
 
 - (void)viewWillAppear:(BOOL)animated
