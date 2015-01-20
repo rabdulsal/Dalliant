@@ -100,8 +100,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *dislikeButton;
 @property (weak, nonatomic) IBOutlet UIButton *cyclePhotosButton;
 @property (weak, nonatomic) IBOutlet UIButton *likeButton;
-@property UserParseHelper* curUser;
-@property UserParseHelper *matchUser;
+@property (nonatomic) UserParseHelper* curUser;
+@property (nonatomic) UserParseHelper *matchUser;
 @property UIImage *userPhoto;
 @property UIImage *matchPhoto;
 @property (weak, nonatomic) IBOutlet UITextView *activityLabel;
@@ -202,6 +202,7 @@
     [self.view.layer addSublayer:waveLayer];
    
     [waveLayer setHidden:YES];
+    
     
     //[self currentLocationIdentifier];
     //[self performSegueWithIdentifier:@"test_match" sender:nil];
@@ -565,11 +566,11 @@
     } else matchGender = @"Female";
     
    
-    if ([_curUser.genderPref isEqualToString:matchGender]) {
+    if ([_curUser.genderPref isEqualToString:@"Both"]) {
         
         [_willBeMatches addObject:_matchUser];
-        NSLog(@"Matched with %@", _matchUser.nickname);
-        NSLog(@"Will be matches: %ld", _willBeMatches.count);
+        NSLog(@"User gender: %@", _curUser.genderPref);
+        NSLog(@"Match gender: %@", matchGender);
         _prefCounter++;
         _totalPrefs++;
         /*[possMatch saveInBackground];
@@ -581,18 +582,21 @@
         //[_otherUser calculateCompatibility:_prefCounter with:_totalPrefs];
         //NSLog(@"Compatibility: %@%%", _otherUser.compatibilityIndex);
         //[self setPossMatchHelper];
-        [self matchBodyType];
         //[self performSegueWithIdentifier:@"viewMatch" sender:nil];
         
-    } else if ([_curUser.genderPref isEqualToString:@"Both"]) {
+        [self matchBodyType];
+        //[self matchKids];
+        
+    } else if ([_curUser.genderPref isEqualToString:matchGender]) {
         [_willBeMatches addObject:_matchUser];
         _prefCounter++;
         _totalPrefs++;
         
         NSLog(@"Just before Save run");
         //[self setPossMatchHelper];
-        [self matchBodyType];
         
+        [self matchBodyType];
+        //[self matchKids];
         //[self performSegueWithIdentifier:@"viewMatch" sender:nil];
     } else NSLog(@"No match with %@", _matchUser.nickname);
     
@@ -679,6 +683,9 @@
 - (void)matchKids
 {
     _totalPrefs++;
+    
+    NSLog(@"User KidsPref: %@", _curUser.kidsOkay);
+    NSLog(@"Match HasKids: %@", _matchUser.hasKids);
     
     if ([_curUser.kidsOkay isEqualToNumber:_matchUser.hasKids]) {
         _prefCounter++;
