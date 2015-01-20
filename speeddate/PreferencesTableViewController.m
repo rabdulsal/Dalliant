@@ -733,12 +733,12 @@
     
     [_mainUser saveInBackground];
 }
-
+/* If using a TextField
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     [_minAgeField resignFirstResponder];
     [_maxAgeField resignFirstResponder];
     return YES;
 }
-
+*/
 @end
