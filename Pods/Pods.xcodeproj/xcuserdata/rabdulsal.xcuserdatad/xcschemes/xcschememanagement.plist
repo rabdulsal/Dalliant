@@ -19,6 +19,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Pods-NMRangeSlider.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-TDBadgedCell.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -32,27 +37,32 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>180AF8EEE95CE39ACCF0CCD1</key>
+		<key>3576C0D3B147B34D1B039FAC</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>3D3401A9A87151BE670DF058</key>
+		<key>3E13F700855C8DE011089E81</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>8532BA0D46E5ED58CAC1001A</key>
+		<key>4902DBD6AA4EB476CD1A38BC</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9061924343A9EB7CA74E8703</key>
+		<key>A5A76BB0F4057707F73AED49</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>BDB41F90283B302EF4EB4461</key>
+		<key>ABA76597FA6D774D4D9327E4</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F9AF31FA0CC4B0E3CC64EF4E</key>
 		<dict>
 			<key>primary</key>
 			<true/>

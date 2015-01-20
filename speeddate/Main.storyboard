@@ -2995,7 +2995,44 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="85" id="tXZ-ih-D4U">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="102" id="7ZY-Ut-IfV">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7ZY-Ut-IfV" id="Llg-aP-xMO">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Age Range:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="n1S-4g-Mil">
+                                                    <rect key="frame" x="13" y="8" width="91" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <view contentMode="scaleToFill" id="uQH-Bz-Ta3" customClass="NMRangeSlider">
+                                                    <rect key="frame" x="13" y="64" width="293" height="29"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <connections>
+                                                        <action selector="labelSliderChanged:" destination="plW-Gs-lXa" eventType="valueChanged" id="hVq-Xb-pyv"/>
+                                                    </connections>
+                                                </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Min" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="xjz-fT-taj">
+                                                    <rect key="frame" x="13" y="35" width="29" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Max" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="aTs-hf-iMh">
+                                                    <rect key="frame" x="279" y="35" width="33" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="86" id="tXZ-ih-D4U">
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="tXZ-ih-D4U" id="06W-0b-6cy">
                                             <autoresizingMask key="autoresizingMask"/>
@@ -3276,6 +3313,8 @@
                         <outlet property="genderControl" destination="XTn-br-NLt" id="zNN-BA-Gin"/>
                         <outlet property="hasBodyArtFilter" destination="N1i-Dy-lfR" id="uGw-0L-2MY"/>
                         <outlet property="hasKidsFilter" destination="cgE-3f-LcM" id="aYg-9G-Dti"/>
+                        <outlet property="labelSlider" destination="uQH-Bz-Ta3" id="IVQ-H4-KIk"/>
+                        <outlet property="lowerLabel" destination="xjz-fT-taj" id="fya-3R-tz9"/>
                         <outlet property="maxAgeField" destination="d4D-Z9-GLm" id="Xnq-w2-wF2"/>
                         <outlet property="minAgeField" destination="yhk-uU-4dc" id="es8-o1-ODi"/>
                         <outlet property="relationshipStatusControl" destination="NmE-IO-FCK" id="qH8-p7-bdv"/>
@@ -3283,6 +3322,7 @@
                         <outlet property="sidebarButton" destination="Xq4-wa-qj1" id="3ai-Z2-h1H"/>
                         <outlet property="smokesCigsFilter" destination="d9Q-Si-QJ6" id="f9e-rQ-m6P"/>
                         <outlet property="takesDrugsFilter" destination="X9w-Pm-JNP" id="Caf-Xm-v4D"/>
+                        <outlet property="upperLabel" destination="aTs-hf-iMh" id="bYl-cb-IIR"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bDQ-gD-tYB" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -24,6 +24,12 @@
 #define COCOAPODS_VERSION_MINOR_MDRadialProgress 3
 #define COCOAPODS_VERSION_PATCH_MDRadialProgress 1
 
+// NMRangeSlider
+#define COCOAPODS_POD_AVAILABLE_NMRangeSlider
+#define COCOAPODS_VERSION_MAJOR_NMRangeSlider 1
+#define COCOAPODS_VERSION_MINOR_NMRangeSlider 2
+#define COCOAPODS_VERSION_PATCH_NMRangeSlider 1
+
 // TDBadgedCell
 #define COCOAPODS_POD_AVAILABLE_TDBadgedCell
 #define COCOAPODS_VERSION_MAJOR_TDBadgedCell 2

@@ -9,6 +9,7 @@
 #import "PreferencesTableViewController.h"
 #import "User.h"
 #import "UserParseHelper.h"
+#import "NMRangeSlider.h"
 
 @interface PreferencesTableViewController ()
 {
@@ -19,6 +20,9 @@
 }
 @property UserParseHelper *mainUser;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *sidebarButton;
+@property (weak, nonatomic) IBOutlet NMRangeSlider *labelSlider;
+@property (weak, nonatomic) IBOutlet UILabel *lowerLabel;
+@property (weak, nonatomic) IBOutlet UILabel *upperLabel;
 
 @end
 
@@ -62,6 +66,8 @@
                  nil];
     _userPrefs = [[NSMutableArray alloc] init];
     
+    [self configureLabelSlider];
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -87,6 +93,48 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void) configureLabelSlider
+{
+    self.labelSlider.maximumValue = 100;
+    self.labelSlider.minimumValue = 18;
+    
+    // Store these values to database, then CheckAndSet based on database values
+    if (_mainUser.maxAgePref) {
+        self.labelSlider.upperValue = [_mainUser.maxAgePref floatValue];
+    } else self.labelSlider.upperValue = 100;
+    
+    if (_mainUser.minAgePref) {
+        self.labelSlider.lowerValue = [_mainUser.minAgePref floatValue];
+    } self.labelSlider.lowerValue = 18;
+    
+    self.labelSlider.minimumRange = 10;
+}
+
+- (void) updateSliderLabels
+{
+    // You get get the center point of the slider handles and use this to arrange other subviews
+    
+    /*CGPoint lowerCenter;
+    lowerCenter.x = (self.labelSlider.lowerCenter.x + self.labelSlider.frame.origin.x);
+    lowerCenter.y = (self.labelSlider.center.y - 30.0f);
+    self.lowerLabel.center = lowerCenter;*/
+    self.lowerLabel.text = [NSString stringWithFormat:@"%d", (int)self.labelSlider.lowerValue];
+    _mainUser.minAgePref = [NSNumber numberWithFloat:_labelSlider.lowerValue ];
+    
+    /*CGPoint upperCenter;
+    upperCenter.x = (self.labelSlider.upperCenter.x + self.labelSlider.frame.origin.x);
+    upperCenter.y = (self.labelSlider.center.y - 30.0f);
+    self.upperLabel.center = upperCenter;*/
+    self.upperLabel.text = [NSString stringWithFormat:@"%d", (int)self.labelSlider.upperValue];
+    _mainUser.maxAgePref = [NSNumber numberWithFloat:_labelSlider.upperValue ];
+}
+
+// Handle control value changed events just like a normal slider
+- (IBAction)labelSliderChanged:(NMRangeSlider*)sender
+{
+    [self updateSliderLabels];
 }
 
 /*
@@ -117,13 +165,22 @@
             [_genderControl setSelectedSegmentIndex:2];
         }
     }
-    
+    /*
     if (_mainUser.minAgePref) {
         _minAgeField.text = [[NSString alloc] initWithFormat:@"%@", _mainUser.minAgePref];
     }
     
     if (_mainUser.maxAgePref) {
         _maxAgeField.text = [[NSString alloc] initWithFormat:@"%@", _mainUser.maxAgePref];
+    }
+    */
+    self.labelSlider.upperValue = [_mainUser.maxAgePref floatValue];
+    self.labelSlider.lowerValue = [_mainUser.minAgePref floatValue];
+    [self updateSliderLabels];
+    
+    if([self.view respondsToSelector:@selector(setTintColor:)])
+    {
+        self.view.tintColor = RED_DEEP;
     }
     
     if (_mainUser.bodyTypePref) {
@@ -630,7 +687,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-
+/*
     if (_minAgeField.text) {
         _mainUser.minAgePref = [[NSNumberFormatter new] numberFromString:_minAgeField.text];
     }
@@ -638,7 +695,7 @@
     if (_maxAgeField.text) {
         _mainUser.maxAgePref = [[NSNumberFormatter new] numberFromString:_maxAgeField.text];
     }
-    
+   */ 
     // Set Segment Controls when left un-pressed
     
     if (_genderControl.selectedSegmentIndex == UISegmentedControlNoSegment) {
