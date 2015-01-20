@@ -287,7 +287,7 @@
         outlineRect.origin = rect.origin;
         outlineRect.origin.x -= MARGIN*1.5; //<-- Adds left/right padding to Bubbleview
         outlineRect.origin.y -= MARGIN/1.5; //<-- Adds top/bottom padding to Bubbleview
-
+        
         UIView *bubbleView = [[UIView alloc] initWithFrame:outlineRect];
         if ( [message.fromUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
             bubbleView.backgroundColor = RED_LIGHT;
@@ -303,7 +303,7 @@
         cell.messageLabel.frame = rect;
         [cell.contentView addSubview:bubbleView];
         [cell.contentView sendSubviewToBack:bubbleView];
-
+         
     }
     
     return cell;

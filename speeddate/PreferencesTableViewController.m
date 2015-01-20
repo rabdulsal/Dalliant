@@ -639,6 +639,41 @@
         _mainUser.maxAgePref = [[NSNumberFormatter new] numberFromString:_maxAgeField.text];
     }
     
+    // Set Segment Controls when left un-pressed
+    
+    if (_genderControl.selectedSegmentIndex == UISegmentedControlNoSegment) {
+        _mainUser.genderPref = @"Male";
+    }
+    if (_bodyTypeControl.selectedSegmentIndex == UISegmentedControlNoSegment) {
+        _mainUser.bodyTypePref = @"Skinny";
+    }
+    
+    if (_relationshipStatusControl.selectedSegmentIndex == UISegmentedControlNoSegment) {
+        _mainUser.relationshipStatusPref = @"Single";
+    }
+    
+    if (_relationshipTypeControl.selectedSegmentIndex == UISegmentedControlNoSegment) {
+        _mainUser.romanticPreference = @"Company";
+    }
+    
+    // Set Switches when left un-pressed
+    
+    if (!_hasKidsFilter.on && _mainUser.kidsOkay == nil) {
+        _mainUser.kidsOkay = nope;
+    }
+    if (!_drinksFilter.on && _mainUser.drinkingOkay == nil) {
+        _mainUser.drinkingOkay = nope;
+    } 
+    if (!_smokesCigsFilter.on && _mainUser.smokingOkay == nil) {
+        _mainUser.smokingOkay = nope;
+    } 
+    if (!_takesDrugsFilter.on && _mainUser.drugsOkay == nil) {
+        _mainUser.drugsOkay = nope;
+    } 
+    if (!_hasBodyArtFilter.on && _mainUser.bodyArtOkay == nil) {
+        _mainUser.bodyArtOkay = nope;
+    }
+    
     [_mainUser saveInBackground];
 }
 

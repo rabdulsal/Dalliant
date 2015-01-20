@@ -759,6 +759,39 @@
     [self convertPreferenceButtons:_userPrefs];
     //_mainUser.interests = preferenceStrings;
     _mainUser.interests = [[[NSSet alloc] initWithArray:preferenceStrings] allObjects];
+    
+    // Set Segment Controls when left un-pressed
+    
+    if (_bodyTypeControl.selectedSegmentIndex == UISegmentedControlNoSegment) {
+        _mainUser.bodyTypePref = @"Skinny";
+    }
+    
+    if (_relationshipStatusControl.selectedSegmentIndex == UISegmentedControlNoSegment) {
+        _mainUser.relationshipStatusPref = @"Single";
+    }
+    
+    if (_relationshipTypeControl.selectedSegmentIndex == UISegmentedControlNoSegment) {
+        _mainUser.romanticPreference = @"Company";
+    }
+    
+    // Set Switches when left un-pressed
+    
+    if (!_hasKidsFilter.on && _mainUser.hasKids == nil) {
+        _mainUser.hasKids = [NSNumber numberWithBool:NO];
+    }
+    if (!_drinksFilter.on && _mainUser.drinks == nil) {
+        _mainUser.drinks = [NSNumber numberWithBool:NO];
+    } 
+    if (!_smokesCigsFilter.on && _mainUser.smokes == nil) {
+        _mainUser.smokes = [NSNumber numberWithBool:NO];
+    } 
+    if (!_takesDrugsFilter.on && _mainUser.drugs == nil) {
+        _mainUser.drugs = [NSNumber numberWithBool:NO];
+    } 
+    if (!_hasBodyArtFilter.on && _mainUser.bodyArt == nil) {
+        _mainUser.bodyArt = [NSNumber numberWithBool:NO];
+    }
+    
     [_mainUser saveInBackground];
 }
 
