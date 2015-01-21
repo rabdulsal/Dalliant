@@ -33,6 +33,7 @@
 @property (strong, nonatomic) UIActionSheet *actionsheet;
 @property (strong, nonatomic) NSMutableArray *photoArray;
 @property (strong, nonatomic) RevealRequest *receivedRequest;
+@property (strong, nonatomic) RevealRequest *sentRequest;
 @property UserParseHelper *curUser;
 @property NSNumber *yep;
 @end
@@ -53,20 +54,47 @@
     
     _yep = [NSNumber numberWithBool:YES];
     
-    if (![_matchedUsers.usersRevealed isEqualToNumber:_yep]) {
+    // Fetch existing RevealRequest based on requestFromUser == _curUser and check if revealReply == NO, then show No_icon
+    PFQuery *requestQuery = [RevealRequest query];
+    [requestQuery whereKey:@"requestFromUser" equalTo:_curUser];
+    [requestQuery whereKey:@"requestToUser" equalTo:_toUserParse];
+    [requestQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        
+        UIImage *btnImage = nil;
         self.title = @"Chat";
-        UIImage *btnImage = [UIImage imageNamed:@"user"];
+        btnImage = [UIImage imageNamed:@"user"];
         [_cameraButton setImage:btnImage forState:UIControlStateNormal];
         
-        //[self fetchRevealRequest];
-    } else {
-        self.title = self.toUserParse.nickname;
+        if ([objects objectAtIndex:0]) {
+            NSLog(@"Objects: %@", objects);
+            // There's a RevealRequest the User sent to the Match
+            _sentRequest = [objects objectAtIndex:0];
+            // The RevealRequest was replied 'No'
+            if ([_sentRequest.requestReply isEqualToString:@"No"]) {
+                btnImage = [UIImage imageNamed:@"No_icon"];
+                [_cameraButton setImage:btnImage forState:UIControlStateNormal];
+                _cameraButton.enabled = NO;
+            }
         
-        [_blurImageView removeFromSuperview];
         
-        UIImage *btnImage = [UIImage imageNamed:@"camera2"];
-        [_cameraButton setImage:btnImage forState:UIControlStateNormal];
-    }
+        }  else { // There's no RevealRequest from User to Match
+            NSLog(@"No objects found");
+            // The Matches haven't revealed
+            if ([_matchedUsers.usersRevealed isEqualToNumber:_yep]) {
+                self.title = self.toUserParse.nickname;
+                
+                [_blurImageView removeFromSuperview];
+                
+                btnImage = [UIImage imageNamed:@"camera2"];
+                [_cameraButton setImage:btnImage forState:UIControlStateNormal];
+                
+                
+                //[self fetchRevealRequest];
+            }
+        }
+    
+    }];
+    
     
     UIBarButtonItem *barButton = [[UIBarButtonItem alloc] init];
     barButton.title = @"";

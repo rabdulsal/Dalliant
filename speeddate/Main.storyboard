@@ -2671,7 +2671,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="RQ4-La-IbU">
-                                        <rect key="frame" x="12" y="8" width="25" height="25"/>
+                                        <rect key="frame" x="14" y="7" width="24" height="27"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -3876,11 +3876,11 @@
         <segue reference="MjG-Tl-7wb"/>
         <segue reference="gPx-w2-9WG"/>
         <segue reference="WJE-pO-Iht"/>
-        <segue reference="BiY-fr-kOo"/>
         <segue reference="oXm-ri-1Lw"/>
         <segue reference="uru-UJ-cE7"/>
-        <segue reference="yk5-qV-Iag"/>
         <segue reference="vo7-ud-5cu"/>
+        <segue reference="NMB-y1-hOv"/>
+        <segue reference="fzt-VO-B8K"/>
         <segue reference="b2C-ec-aqj"/>
         <segue reference="h7w-Ho-pqn"/>
     </inferredMetricsTieBreakers>

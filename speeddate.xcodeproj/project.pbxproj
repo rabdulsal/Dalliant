@@ -58,6 +58,7 @@
 		42DBCCDD19ACDD9C00CE6C93 /* MessageParse.m in Sources */ = {isa = PBXBuildFile; fileRef = 42DBCCDC19ACDD9C00CE6C93 /* MessageParse.m */; };
 		42DBCCE019ACDF7000CE6C93 /* UserParseHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 42DBCCDF19ACDF7000CE6C93 /* UserParseHelper.m */; };
 		42F5B28619B0C4CB0036938B /* Chat.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42F5B28519B0C4CB0036938B /* Chat.xcassets */; };
+		4C97CFEE1A6EAC4000C0B5B8 /* No_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C97CFED1A6EAC4000C0B5B8 /* No_icon.png */; };
 		4CBDB1941A3CDD3C006A9F1F /* ProfileTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBDB1931A3CDD3C006A9F1F /* ProfileTableVC.m */; };
 		4CBDB1971A427A11006A9F1F /* RevealRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBDB1961A427A11006A9F1F /* RevealRequest.m */; };
 		4CC7B8991A4B3EBE000982EA /* MatchProfileTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC7B8981A4B3EBE000982EA /* MatchProfileTVC.m */; };
@@ -264,6 +265,7 @@
 		42DBCCDE19ACDF7000CE6C93 /* UserParseHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserParseHelper.h; path = Model/UserParseHelper.h; sourceTree = "<group>"; };
 		42DBCCDF19ACDF7000CE6C93 /* UserParseHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserParseHelper.m; path = Model/UserParseHelper.m; sourceTree = "<group>"; };
 		42F5B28519B0C4CB0036938B /* Chat.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Chat.xcassets; sourceTree = "<group>"; };
+		4C97CFED1A6EAC4000C0B5B8 /* No_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = No_icon.png; sourceTree = "<group>"; };
 		4CBDB1921A3CDD3C006A9F1F /* ProfileTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileTableVC.h; sourceTree = "<group>"; };
 		4CBDB1931A3CDD3C006A9F1F /* ProfileTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileTableVC.m; sourceTree = "<group>"; };
 		4CBDB1951A427A11006A9F1F /* RevealRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RevealRequest.h; sourceTree = "<group>"; };
@@ -827,6 +829,7 @@
 				C25E748319EC03AD00779C23 /* logout_menu@2x.png */,
 				C25E747619EAD54F00779C23 /* location2@2x.png */,
 				C25E748519EC0ADD00779C23 /* vip_menu@2x.png */,
+				4C97CFED1A6EAC4000C0B5B8 /* No_icon.png */,
 				C25E746E19E8816D00779C23 /* back-m.png */,
 				C2A90EB719F4186B00FC0D04 /* sativa.png */,
 				C25E748119EC02F900779C23 /* share_menu@2x.png */,
@@ -1137,6 +1140,7 @@
 				C2300F8619E18E310044A4E5 /* chekBtn.png in Resources */,
 				C206B02519E28D91001A4D0C /* mnvip.png in Resources */,
 				426107DD19B3ABD80000536C /* Profile.xcassets in Resources */,
+				4C97CFEE1A6EAC4000C0B5B8 /* No_icon.png in Resources */,
 				C25E747C19EBFF6800779C23 /* heart_menu@2x.png in Resources */,
 				C2300F8419E18E030044A4E5 /* normBtn.png in Resources */,
 			);
