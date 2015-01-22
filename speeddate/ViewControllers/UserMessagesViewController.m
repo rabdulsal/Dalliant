@@ -54,6 +54,10 @@
     
     _yep = [NSNumber numberWithBool:YES];
     
+    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] init];
+    barButton.title = @"";
+    self.navigationController.navigationBar.topItem.backBarButtonItem = barButton;
+    
     // Fetch existing RevealRequest based on requestFromUser == _curUser and check if revealReply == NO, then show No_icon
     PFQuery *requestQuery = [RevealRequest query];
     [requestQuery whereKey:@"requestFromUser" equalTo:_curUser];
@@ -74,6 +78,7 @@
                 btnImage = [UIImage imageNamed:@"No_icon"];
                 [_cameraButton setImage:btnImage forState:UIControlStateNormal];
                 _cameraButton.enabled = NO;
+                _cameraButton.alpha = 1.0;
             }
         
         
@@ -88,17 +93,15 @@
                 btnImage = [UIImage imageNamed:@"camera2"];
                 [_cameraButton setImage:btnImage forState:UIControlStateNormal];
                 
-                
+                UIBarButtonItem *moreButton = [[UIBarButtonItem alloc] init];
+                moreButton.title = @"More";
+                self.navigationController.navigationBar.topItem.rightBarButtonItem = moreButton;
                 //[self fetchRevealRequest];
             }
         }
     
     }];
     
-    
-    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] init];
-    barButton.title = @"";
-    self.navigationController.navigationBar.topItem.backBarButtonItem = barButton;
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hiddeKeyBoard)];
     [self.collectionView addGestureRecognizer:tapGestureRecognizer];
     
@@ -965,6 +968,7 @@
                         [_matchedUsers saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                             if (succeeded) {
                                 [self reloadView];
+                                [self performSegueWithIdentifier:@"match_view" sender:nil];
                             }
                         }];
                         /*
@@ -1018,8 +1022,9 @@
         
         // Reload View after Current User Clicks 'Okay' in Revealed AlertView
         
-        if (_matchedUsers.usersRevealed) {
+        if ([_matchedUsers.usersRevealed isEqualToNumber:[NSNumber numberWithBool:YES] ]) {
             [self reloadView];
+            [self performSegueWithIdentifier:@"match_view" sender:nil];
         }
         
     }
