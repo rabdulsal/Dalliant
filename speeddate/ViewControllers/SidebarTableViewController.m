@@ -169,7 +169,7 @@
         self.userNearCell.backgroundColor = [UIColor clearColor];
     }
     
-    if (indexPath.row == 3) {
+    if (indexPath.row == 2) {
         
         self.userNearCell.backgroundColor = RED_LIGHT;
         self.cellMatch.backgroundColor = [UIColor clearColor];
@@ -182,8 +182,8 @@
     }
 
 // ----------------------------------- REMOVE -----------------------------------------
-    
-    if (indexPath.row == 2) {
+    /*
+    if (indexPath.row == 4) {
       
         self.userNearCell.backgroundColor = [UIColor clearColor];
         self.cellMatch.backgroundColor = RED_LIGHT;
@@ -194,10 +194,10 @@
         self.termsCell.backgroundColor = [UIColor clearColor];
         self.appCell.backgroundColor = [UIColor clearColor];
     }
-
+*/
 // ------------------------------------------------------------------------------------
     
-    if (indexPath.row == 4) {
+    if (indexPath.row == 3) {
       
         self.userNearCell.backgroundColor = [UIColor clearColor];
         self.cellMatch.backgroundColor = [UIColor clearColor];
@@ -208,7 +208,7 @@
         self.termsCell.backgroundColor = [UIColor clearColor];
         self.appCell.backgroundColor = [UIColor clearColor];
     }
-    
+    /*
     if (indexPath.row == 5) {
         
         self.cellShare.backgroundColor = RED_LIGHT;
@@ -264,7 +264,7 @@
         self.cellMessage.backgroundColor = [UIColor clearColor];
         self.cellLocation.backgroundColor = [UIColor clearColor];
         self.userNearCell.backgroundColor = [UIColor clearColor];
-    }
+    }*/
 
 // ------------------------------------------------------------------------------------
     
@@ -311,7 +311,7 @@
 }
 
 #pragma mark - SHARE BUTTONS
-
+/*
 - (IBAction)shareButton:(id)sender
 {
     CHTumblrMenuView *menuShare = [[CHTumblrMenuView alloc] init];
@@ -457,7 +457,7 @@
     
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
-
+*/
 /* ----------------------------------------------------------------------------------------------
  -------------------------------------------------------------------------------------------------
  
