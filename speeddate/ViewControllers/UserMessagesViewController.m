@@ -867,6 +867,8 @@
                 [push setQuery:query];
                 [push setData:data];
                 [push sendPushInBackground];
+                
+                _cameraButton.enabled = NO;
             }];
          }
         
@@ -1024,6 +1026,7 @@
         
         if ([_matchedUsers.usersRevealed isEqualToNumber:[NSNumber numberWithBool:YES] ]) {
             [self reloadView];
+            _cameraButton.enabled = YES;
             [self performSegueWithIdentifier:@"match_view" sender:nil];
         }
         

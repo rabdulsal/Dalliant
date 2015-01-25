@@ -166,7 +166,7 @@
             NSLog(@"No User Geolocation");
             [self currentLocationIdentifier];
         }
-         */
+        */
     }];
     
     _sidebarButton.target = self.revealViewController;
@@ -187,7 +187,6 @@
     [_matchedLabel setHidden:YES];
     
     self.navigationController.navigationBar.barTintColor = RED_LIGHT;
-    self.navigationItem.title = @"Speed Dating";
     inAnimation = NO;
     
     // Circle Animation <-- wrap in Toggle Button
@@ -341,7 +340,6 @@
     self.curUser.geoPoint = [PFGeoPoint geoPointWithLatitude:self.currentLocation.coordinate.latitude longitude:self.currentLocation.coordinate.longitude];
     [[UserParseHelper currentUser] save];
     NSLog(@"%@ location: %@", _curUser.nickname, _curUser.geoPoint);
-    
     //[self performSegueWithIdentifier:@"viewMatches" sender:nil];
 }
 
@@ -463,12 +461,13 @@
     // My Queries
     // Setting a query distance?
     if (self.curUser.distance.doubleValue == 0.0) {
-        self.curUser.distance = [NSNumber numberWithInt:100];
+        self.curUser.distance = [NSNumber numberWithDouble:1.6];
     }
     
     // Query Nearby Users based on distance; while require a time-based While-loop
     PFQuery *userQuery = [UserParseHelper query];
     [userQuery whereKey:@"geoPoint" nearGeoPoint:self.curUser.geoPoint withinKilometers:self.curUser.distance.doubleValue];
+    NSLog(@"After Geopoint query run");
     [userQuery whereKey:@"objectId" notEqualTo:_curUser.objectId];
     [userQuery whereKey:@"online" equalTo:@"yes"];
     [userQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {

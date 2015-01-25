@@ -122,16 +122,19 @@
          }];
          [self.user.photo2 getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
              if (!error) {
+                 NSLog(@"User photo2: %@", _user.photo2);
 [self.assets replaceObjectAtIndex:2 withObject:[UIImage imageWithData:data]];             }
              [self.collectionView reloadData];
          }];
          [self.user.photo3 getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
              if (!error) {
+                 NSLog(@"User photo3: %@", _user.photo3);
 [self.assets replaceObjectAtIndex:3 withObject:[UIImage imageWithData:data]];             }
              [self.collectionView reloadData];
          }];
          [self.user.photo4 getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
              if (!error) {
+                 NSLog(@"User photo4: %@", _user.photo4);
 [self.assets replaceObjectAtIndex:4 withObject:[UIImage imageWithData:data]];             }
              [self.collectionView reloadData];
          }];
@@ -152,11 +155,12 @@
 {
 	   PhotoCollectionViewCell*theCell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"DEMO_CELL" forIndexPath:indexPath];
 
+    /* Remove ability to tap cell and change image
 	if (theCell.gestureRecognizers.count == 0)
     {
 		[theCell addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapCell:)]];
     }
-
+     */
     UIImage *theImage = [self.assets objectAtIndex:indexPath.row];
   
     theCell.imageView.image = theImage;
@@ -389,10 +393,11 @@
             
         }
         [self.user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            
-            if (index == 1) {
-                [_assets replaceObjectAtIndex:0 withObject:[mainUser.imageAssets objectAtIndex:0]];
-                [_assets replaceObjectAtIndex:1 withObject:[mainUser.imageAssets objectAtIndex:1]];
+            // MUST REFACTOR!
+            if (index == 3) {
+                for (int i = 0; i < [mainUser.imageAssets count]; i++) {
+                    [_assets replaceObjectAtIndex:i withObject:[mainUser.imageAssets objectAtIndex:i]];
+                }
                 [mainUser.imageAssets removeAllObjects];
                 [self.collectionView reloadData];
             }

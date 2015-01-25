@@ -468,7 +468,7 @@
 
 - (void)configureUserImage:(PFUser *)user forResponse:(NSDictionary *)response userData:(NSDictionary *)userData
 {
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 4; i++) {
         // Get Pic URL
         NSString *picURL = [[[[[response objectForKey:@"data"]objectAtIndex:i]objectForKey:@"images"]objectAtIndex:1]objectForKey:@"source"];
         // Set Image (May need to make network request to retrieve Image)
@@ -522,8 +522,8 @@
                 }];
             }*/
             
-            if (i == 1) {
-                NSLog(@"Run i = 1");
+            if (i == 3) {
+                NSLog(@"Run i = %d", i);
                 if (image.size.width > 140) image = ResizeImage(image, 140, 140);
                 PFFile *file = [PFFile fileWithName:@"photo.jpg" data:UIImageJPEGRepresentation(image, 0.9)];
                 [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {

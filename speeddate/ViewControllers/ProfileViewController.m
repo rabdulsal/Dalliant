@@ -114,16 +114,18 @@
         [self.bannerView addSubview:bannerView_];
         
     
-    
-    CLGeocoder* geocoder = [CLGeocoder new];
-    CLLocation* locationz = [[CLLocation alloc]initWithLatitude:[UserParseHelper currentUser].geoPoint.latitude longitude:[UserParseHelper currentUser].geoPoint.longitude];
-    [geocoder reverseGeocodeLocation:locationz completionHandler:^(NSArray *placemarks, NSError *error) {
-        CLPlacemark* placemark = placemarks.firstObject;
+    if (![UserParseHelper currentUser].geoPoint) {
+        self.cityLable.text = @"No Location";
+    } else {
+        CLGeocoder* geocoder = [CLGeocoder new];
+        CLLocation* locationz = [[CLLocation alloc]initWithLatitude:[UserParseHelper currentUser].geoPoint.latitude longitude:[UserParseHelper currentUser].geoPoint.longitude];
+        [geocoder reverseGeocodeLocation:locationz completionHandler:^(NSArray *placemarks, NSError *error) {
+            CLPlacemark* placemark = placemarks.firstObject;
         
-        self.cityLable.text = [NSString stringWithFormat:@"%@, %@", placemark.locality, placemark.administrativeArea];
-        
-    }];
+            self.cityLable.text = [NSString stringWithFormat:@"%@, %@", placemark.locality, placemark.administrativeArea];
 
+        }];
+    }
    
     NSUserDefaults *touchFbP = [NSUserDefaults standardUserDefaults];
    NSString *touch = [touchFbP objectForKey:@"touchId"];

@@ -752,26 +752,20 @@
     }
 }
 
-- (void)SaveButtonPressed:(UIButton *)button
+- (void)storeUnpressedButtons
 {
-    [_saveProfileButton setSelected:YES];
-    _saveProfileButton.backgroundColor = RED_LIGHT;
-    [self convertPreferenceButtons:_userPrefs];
-    //_mainUser.interests = preferenceStrings;
-    _mainUser.interests = [[[NSSet alloc] initWithArray:preferenceStrings] allObjects];
-    
     // Set Segment Controls when left un-pressed
     
     if (_bodyTypeControl.selectedSegmentIndex == UISegmentedControlNoSegment) {
-        _mainUser.bodyTypePref = @"Skinny";
+        _mainUser.bodyType = @"Skinny";
     }
     
     if (_relationshipStatusControl.selectedSegmentIndex == UISegmentedControlNoSegment) {
-        _mainUser.relationshipStatusPref = @"Single";
+        _mainUser.relationshipStatus = @"Single";
     }
     
     if (_relationshipTypeControl.selectedSegmentIndex == UISegmentedControlNoSegment) {
-        _mainUser.romanticPreference = @"Company";
+        _mainUser.relationshipType = @"Company";
     }
     
     // Set Switches when left un-pressed
@@ -791,16 +785,28 @@
     if (!_hasBodyArtFilter.on && _mainUser.bodyArt == nil) {
         _mainUser.bodyArt = [NSNumber numberWithBool:NO];
     }
+}
+
+- (void)SaveButtonPressed:(UIButton *)button
+{
+    [_saveProfileButton setSelected:YES];
+    _saveProfileButton.backgroundColor = RED_LIGHT;
+    [self convertPreferenceButtons:_userPrefs];
+    //_mainUser.interests = preferenceStrings;
+    _mainUser.interests = [[[NSSet alloc] initWithArray:preferenceStrings] allObjects];
+    
+    [self storeUnpressedButtons];
     
     [_mainUser saveInBackground];
 }
 
-
-
-- (void)viewDidDisappear:(BOOL)animated
+- (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewDidDisappear:animated];
-     
+    [super viewWillDisappear:animated];
+    
+    [self storeUnpressedButtons];
+    
+    [_mainUser saveInBackground];
     /*
     // Check for an existing Parse database then set values and upload to database
     if (_mainUser.userRef) {

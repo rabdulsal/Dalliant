@@ -700,17 +700,21 @@
     
     if (_genderControl.selectedSegmentIndex == UISegmentedControlNoSegment) {
         _mainUser.genderPref = @"Male";
+        NSLog(@"No gender set");
     }
     if (_bodyTypeControl.selectedSegmentIndex == UISegmentedControlNoSegment) {
         _mainUser.bodyTypePref = @"Skinny";
+        NSLog(@"No Body Type set");
     }
     
     if (_relationshipStatusControl.selectedSegmentIndex == UISegmentedControlNoSegment) {
         _mainUser.relationshipStatusPref = @"Single";
+        NSLog(@"No RelatStat set");
     }
     
     if (_relationshipTypeControl.selectedSegmentIndex == UISegmentedControlNoSegment) {
         _mainUser.romanticPreference = @"Company";
+        NSLog(@"No RomPref set");
     }
     
     // Set Switches when left un-pressed
