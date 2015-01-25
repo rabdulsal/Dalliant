@@ -66,6 +66,7 @@
     
     [self configureRadialView];
     
+    NSLog(@"%@'s compatiblility Index: %@", _matchUser.nickname, _matchCompatibility.compatibilityIndex);
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -75,16 +76,23 @@
 
 - (void)setHighCompatibilityColor:(MDRadialProgressTheme *)newTheme
 {
-    newTheme.completedColor = RED_DEEP;
-    newTheme.incompletedColor = RED_LIGHT;
-    newTheme.centerColor = RED_OMNY;
+    newTheme.completedColor     = RED_DEEP;
+    newTheme.incompletedColor   = RED_LIGHT;
+    newTheme.centerColor        = RED_OMNY;
+}
+
+- (void)setMedCompatibilityColor:(MDRadialProgressTheme *)newTheme
+{
+    newTheme.completedColor     = SEA_DEEP_COLOR;
+    newTheme.incompletedColor   = SEA_COLOR;
+    newTheme.centerColor        = MENU_BLUE;
 }
 
 - (void)setLowCompatibilityColor:(MDRadialProgressTheme *)newTheme
 {
-    newTheme.completedColor = [UIColor darkGrayColor];
-    newTheme.incompletedColor = [UIColor lightGrayColor];
-    newTheme.centerColor = GRAY_COLOR;
+    newTheme.completedColor     = [UIColor darkGrayColor];
+    newTheme.incompletedColor   = [UIColor lightGrayColor];
+    newTheme.centerColor        = GRAY_COLOR;
 }
 
 - (void)configureRadialView
@@ -95,8 +103,14 @@
     //newTheme.incompletedColor = [UIColor colorWithRed:164/255.0 green:231/255.0 blue:134/255.0 alpha:1.0];
     newTheme.centerColor = [UIColor clearColor];
     //[self setHighCompatibilityColor:newTheme];
-    [self setLowCompatibilityColor:newTheme];
-    //newTheme.centerColor = [UIColor colorWithRed:224/255.0 green:248/255.0 blue:216/255.0 alpha:1.0];
+    
+    // Compatibility conditional
+    if (_matchCompatibility.compatibilityIndex > [NSNumber numberWithInt:66]) {
+        [self setHighCompatibilityColor:newTheme];
+    } else if (_matchCompatibility.compatibilityIndex < [NSNumber numberWithInt:66] && _matchCompatibility.compatibilityIndex > [NSNumber numberWithInt:33]) {
+        [self setMedCompatibilityColor:newTheme];
+    } else [self setLowCompatibilityColor:newTheme];
+    
     newTheme.sliceDividerHidden = YES;
     newTheme.labelColor = [UIColor blackColor];
     newTheme.labelShadowColor = [UIColor whiteColor];

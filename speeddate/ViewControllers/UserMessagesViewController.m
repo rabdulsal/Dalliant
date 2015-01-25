@@ -58,6 +58,9 @@
     barButton.title = @"";
     self.navigationController.navigationBar.topItem.backBarButtonItem = barButton;
     
+    // Fetch Match Relationship
+    [self fetchCompatibleMatch];
+    
     // Fetch existing RevealRequest based on requestFromUser == _curUser and check if revealReply == NO, then show No_icon
     PFQuery *requestQuery = [RevealRequest query];
     [requestQuery whereKey:@"requestFromUser" equalTo:_curUser];
@@ -117,7 +120,6 @@
     //[[NSNotificationCenter defaultCenter] postNotificationName:@"Fetch Reveal Reply" object:self];
 
     [self customizeApp];
-    
 }
 
 - (void)customizeApp
@@ -128,6 +130,19 @@
     UIImage *temp = [[UIImage imageNamed:@"x"] imageWithRenderingMode: UIImageRenderingModeAlwaysOriginal];
     UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithImage:temp style:UIBarButtonItemStyleBordered target:self action:@selector(popVC)];
     self.navigationItem.leftBarButtonItem = barButtonItem;
+}
+
+- (void)fetchCompatibleMatch
+{
+    NSArray *matchedUsers = [[NSArray alloc] initWithObjects:[UserParseHelper currentUser], _toUserParse, nil];
+    PFQuery *possMatch1 = [PossibleMatchHelper query];
+    [possMatch1 whereKey:@"matches" containsAllObjectsInArray:matchedUsers];
+    //[possMatch1 findObjects];
+    [possMatch1 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        //for (PossibleMatchHelper *match in objects) {
+        _matchedUsers = [objects objectAtIndex:0];
+        NSLog(@"%@'s compatiblility Index: %@", _toUserParse.nickname, _matchedUsers.compatibilityIndex);
+    }];
 }
 
 - (void)popVC

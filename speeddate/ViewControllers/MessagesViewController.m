@@ -82,16 +82,23 @@
 
 - (void)setHighCompatibilityColor:(MDRadialProgressTheme *)newTheme
 {
-    newTheme.completedColor = RED_DEEP;
-    newTheme.incompletedColor = RED_LIGHT;
-    newTheme.centerColor = RED_OMNY;
+    newTheme.completedColor     = RED_DEEP;
+    newTheme.incompletedColor   = RED_LIGHT;
+    newTheme.centerColor        = RED_OMNY;
+}
+
+- (void)setMedCompatibilityColor:(MDRadialProgressTheme *)newTheme
+{
+    newTheme.completedColor     = SEA_DEEP_COLOR;
+    newTheme.incompletedColor   = SEA_COLOR;
+    newTheme.centerColor        = MENU_BLUE;
 }
 
 - (void)setLowCompatibilityColor:(MDRadialProgressTheme *)newTheme
 {
-    newTheme.completedColor = [UIColor darkGrayColor];
-    newTheme.incompletedColor = [UIColor lightGrayColor];
-    newTheme.centerColor = GRAY_COLOR;
+    newTheme.completedColor     = [UIColor darkGrayColor];
+    newTheme.incompletedColor   = [UIColor lightGrayColor];
+    newTheme.centerColor        = GRAY_COLOR;
 }
 
 - (void)configureRadialView:(UserTableViewCell *)matchCell
@@ -102,7 +109,14 @@
     //newTheme.incompletedColor = [UIColor colorWithRed:164/255.0 green:231/255.0 blue:134/255.0 alpha:1.0];
     newTheme.centerColor = [UIColor clearColor];
     //[self setHighCompatibilityColor:newTheme];
-    [self setLowCompatibilityColor:newTheme];
+    
+    // Compatibility conditional
+    if (_matchUser.compatibilityIndex > [NSNumber numberWithInt:66]) {
+        [self setHighCompatibilityColor:newTheme];
+    } else if (_matchUser.compatibilityIndex < [NSNumber numberWithInt:66] && _matchUser.compatibilityIndex > [NSNumber numberWithInt:33]) {
+        [self setMedCompatibilityColor:newTheme];
+    } else [self setLowCompatibilityColor:newTheme];
+    
     //newTheme.centerColor = [UIColor colorWithRed:224/255.0 green:248/255.0 blue:216/255.0 alpha:1.0];
     newTheme.sliceDividerHidden = YES;
     newTheme.labelColor = [UIColor blackColor];
@@ -205,7 +219,7 @@
         //}
         NSNumber *yep = [NSNumber numberWithBool:YES];
         if (![_matchUser.usersRevealed isEqualToNumber:yep]) { // <-- Test purposes - change to check isRevealed on Matched User - NOT WORKING
-            NSLog(@"User anonymous");
+            NSLog(@"%@'s compatiblility Index: %@", user.nickname, _matchUser.compatibilityIndex);
             [self blurImages:cell.userImageView];
         
             if ([user.isMale isEqualToString:@"true"]) {
@@ -343,9 +357,10 @@
 */
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    // Try to use this code in AppDelegate for Chat Notification
     if ([segue.identifier isEqualToString:@"chat"]) {
         UserMessagesViewController *vc = segue.destinationViewController;
-        vc.matchedUsers = _matchUser;
+        //vc.matchedUsers = _matchUser;
         
         if (self.filteredAllUsersArray.count) {
             vc.toUserParse = [self.filteredAllUsersArray objectAtIndex:self.tableView.indexPathForSelectedRow.row];

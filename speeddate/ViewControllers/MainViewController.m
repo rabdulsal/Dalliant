@@ -467,7 +467,6 @@
     // Query Nearby Users based on distance; while require a time-based While-loop
     PFQuery *userQuery = [UserParseHelper query];
     [userQuery whereKey:@"geoPoint" nearGeoPoint:self.curUser.geoPoint withinKilometers:self.curUser.distance.doubleValue];
-    NSLog(@"After Geopoint query run");
     [userQuery whereKey:@"objectId" notEqualTo:_curUser.objectId];
     [userQuery whereKey:@"online" equalTo:@"yes"];
     [userQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {

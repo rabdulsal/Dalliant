@@ -64,7 +64,7 @@
     
     [_scroller setScrollEnabled:YES];
     //[_scroller setContentSize:CGSizeMake(320, 1555)];
-    [_scroller setContentSize:CGSizeMake(self.view.frame.size.width, 2495)];
+    [_scroller setContentSize:CGSizeMake(self.view.frame.size.width, 2515)];
     /*
     [_matchUser.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
         _imageData = data;
@@ -73,6 +73,8 @@
     
     [self configureButton:_matchingButton];
     [self configureButton:_reportUser];
+    
+    NSLog(@"%@'s compatiblility Index: %@", _matchUser.nickname, _possibleMatch.compatibilityIndex);
 
 }
 
