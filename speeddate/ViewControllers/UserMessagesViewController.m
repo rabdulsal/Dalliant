@@ -82,25 +82,21 @@
                 [_cameraButton setImage:btnImage forState:UIControlStateNormal];
                 _cameraButton.enabled = NO;
                 _cameraButton.alpha = 1.0;
-            }
-        
-        
-        }  else { // There's no RevealRequest from User to Match
-            NSLog(@"No objects found");
-            // The Matches haven't revealed
-            if ([_matchedUsers.usersRevealed isEqualToNumber:_yep]) {
+            } else if ([_sentRequest.requestReply isEqualToString:@"Yes"]) {
                 self.title = self.toUserParse.nickname;
                 
                 [_blurImageView removeFromSuperview];
                 
                 btnImage = [UIImage imageNamed:@"camera2"];
                 [_cameraButton setImage:btnImage forState:UIControlStateNormal];
-                
+                /*
                 UIBarButtonItem *moreButton = [[UIBarButtonItem alloc] init];
                 moreButton.title = @"More";
-                self.navigationController.navigationBar.topItem.rightBarButtonItem = moreButton;
+                self.navigationController.navigationBar.topItem.rightBarButtonItem = moreButton;*/
                 //[self fetchRevealRequest];
             }
+        
+        
         }
     
     }];
@@ -607,6 +603,7 @@
             
             NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
                                   [NSString stringWithFormat:@"%@ send image",pushUserto], @"alert",
+                                  [NSString stringWithFormat:@"%@", _toUserParse], @"match",
                                   @"Increment", @"badge",
                                   @"Ache.caf", @"sound",
                                   nil];
@@ -850,7 +847,7 @@
 
 }
 
-#pragma mark - ActionSheetDelegate
+#pragma mark - ActionSheetDelegates
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
@@ -873,7 +870,9 @@
                 [query whereKey:@"objectId" equalTo:self.toUserParse.installation.objectId];
                 
                 NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
-                                      [NSString stringWithFormat:@"Request to Share Identities"], @"alert",
+                                      @"Request to Share Identities", @"alert",
+                                      [NSString stringWithFormat:@"%@", _toUserParse], @"match",
+                                      /*[NSString stringWithFormat:@"%@", _matchedUsers], @"relationship",*/
                                       @"Increment", @"badge",
                                       @"Ache.caf", @"sound",
                                       nil];
@@ -883,7 +882,7 @@
                 [push setData:data];
                 [push sendPushInBackground];
                 
-                _cameraButton.enabled = NO;
+                //_cameraButton.enabled = NO;
             }];
          }
         
@@ -983,9 +982,10 @@
                         }
                         
                         [_matchedUsers saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                            if (succeeded) {
+                            if (succeeded && [_matchedUsers.usersRevealed isEqualToNumber:[NSNumber numberWithBool:YES]]) {
                                 [self reloadView];
                                 [self performSegueWithIdentifier:@"match_view" sender:nil];
+                                
                             }
                         }];
                         /*

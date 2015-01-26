@@ -10,6 +10,8 @@
 #import <ParseFacebookUtils/PFFacebookUtils.h>
 #import "RageIAPHelper.h"
 #import "UserParseHelper.h"
+#import "PossibleMatchHelper.h"
+#import "UserMessagesViewController.h"
 #import "config.h"
 
 @implementation AppDelegate
@@ -26,8 +28,6 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
-    
-
     [Parse setApplicationId:appIdparse
                   clientKey:appKeyparse];
     [PFFacebookUtils initializeFacebook];
@@ -49,6 +49,20 @@
         [application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
                                                          UIRemoteNotificationTypeAlert |
                                                          UIRemoteNotificationTypeSound)];
+    }
+    
+    NSDictionary *notificationPayload = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
+    if (notificationPayload) {
+        
+        // Get Match and Relationship
+        UserParseHelper *match = [notificationPayload objectForKey:@"match"];
+        //PossibleMatchHelper *relationship = [notificationPayload objectForKey:@"relationship"];
+        
+        // Instantiate ViewController, set values and push
+        UserMessagesViewController *vc = [[UserMessagesViewController alloc] init];
+        vc.toUserParse = match;
+        //vc.matchedUsers = relationship;
+        [self.navController pushViewController:vc animated:YES];
     }
     
    

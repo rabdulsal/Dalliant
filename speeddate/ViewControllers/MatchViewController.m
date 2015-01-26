@@ -133,6 +133,14 @@
      */
 }
 
+- (void)reloadView
+{
+    UIView *parent = self.view.superview;
+    [self.view removeFromSuperview];
+    self.view = nil; // unloads the view
+    [parent addSubview:self.view]; //reloads the view from the nib
+}
+
 - (void)configureButton:(UIButton *)button
 {
     button.layer.cornerRadius = 3;
