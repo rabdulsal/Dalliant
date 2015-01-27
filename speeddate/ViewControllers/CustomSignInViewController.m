@@ -24,7 +24,7 @@
 #endif
 
 
-@interface CustomSignInViewController ()
+@interface CustomSignInViewController () 
 {
     NSString *userImage;
     User *mainUser;
@@ -40,7 +40,9 @@
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (weak, nonatomic) IBOutlet UIView *containerViewPassword;
 @property (nonatomic,retain) MainViewController *startScreen;
+@property (strong, nonatomic) ICETutorialController *viewController;
 @property (nonatomic) NSMutableArray *imageAssets;
+@property (strong, nonatomic) UIWindow *window;
 @end
 #ifdef __APPLE__
 #include "TargetConditionals.h"
@@ -54,16 +56,41 @@
 {
     [super viewDidLoad];
     self.topLabel.backgroundColor = RED_DEEP;
+    _window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
     UIImageView *backgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background"]];
     [self.view addSubview:backgroundImage];
     [self.view sendSubviewToBack:backgroundImage];
+    
     [self customizeView];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHide:) name:UIKeyboardWillHideNotification object:nil];
     
     mainUser = [User singleObj];
     mainUser.imageAssets = [NSMutableArray new];
+    
 }
+
+#pragma mark - ICETutorialController delegate
+- (void)tutorialController:(ICETutorialController *)tutorialController scrollingFromPageIndex:(NSUInteger)fromIndex toPageIndex:(NSUInteger)toIndex {
+    NSLog(@"Scrolling from page %lu to page %lu.", (unsigned long)fromIndex, (unsigned long)toIndex);
+}
+
+- (void)tutorialControllerDidReachLastPage:(ICETutorialController *)tutorialController {
+    NSLog(@"Tutorial reached the last page.");
+}
+
+- (void)tutorialController:(ICETutorialController *)tutorialController didClickOnLeftButton:(UIButton *)sender {
+    NSLog(@"Button 1 pressed.");
+}
+
+- (void)tutorialController:(ICETutorialController *)tutorialController didClickOnRightButton:(UIButton *)sender {
+    NSLog(@"Button 2 pressed.");
+    NSLog(@"Auto-scrolling stopped.");
+    
+    [self.viewController stopScrolling];
+}
+
 
 #pragma mark - Resign the textField's keyboard
 - (IBAction)resignTheKeyboard:(UITextField*)sender

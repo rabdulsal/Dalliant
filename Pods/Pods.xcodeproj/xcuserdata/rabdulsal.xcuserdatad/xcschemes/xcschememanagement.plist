@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Pods-ICETutorial.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-ILTranslucentView.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -37,32 +42,37 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>3576C0D3B147B34D1B039FAC</key>
+		<key>3AB7E6BD12D3114770E54306</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>3E13F700855C8DE011089E81</key>
+		<key>52465A07C90C26422CD45584</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>4902DBD6AA4EB476CD1A38BC</key>
+		<key>544C59F975EF80A728406B26</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A5A76BB0F4057707F73AED49</key>
+		<key>5B9651068AD97B128C78B469</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>ABA76597FA6D774D4D9327E4</key>
+		<key>6160923FE5030967964DA2FE</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F9AF31FA0CC4B0E3CC64EF4E</key>
+		<key>CEFED70119C63A6522803239</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E4BE7AF26721E12CFFD8EF0D</key>
 		<dict>
 			<key>primary</key>
 			<true/>

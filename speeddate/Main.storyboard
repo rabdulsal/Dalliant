@@ -182,7 +182,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="102" y="-1473"/>
+            <point key="canvasLocation" x="-126" y="-2075"/>
         </scene>
         <!--Terms-->
         <scene sceneID="NXz-U0-dog">
@@ -327,6 +327,16 @@
                                     <action selector="faceLogin:" destination="0nu-LK-2zr" eventType="touchUpInside" id="cds-zu-UnQ"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="EXC-uP-OZk">
+                                <rect key="frame" x="114" y="479" width="91" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="How it Works">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="5TR-Sn-SGG" kind="modal" identifier="tutorial" id="NMe-ge-CL1"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -344,7 +354,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="U7u-u4-E6Z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-499" y="-1420"/>
+            <point key="canvasLocation" x="-563" y="-1473"/>
         </scene>
         <!--Starter View Controller-->
         <scene sceneID="ufC-wZ-h7g">
@@ -362,7 +372,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-609" y="139"/>
+            <point key="canvasLocation" x="-731" y="14"/>
         </scene>
         <!--Reveal View Controller-->
         <scene sceneID="Vw7-AJ-96Y">
@@ -917,11 +927,11 @@
             <objects>
                 <viewController storyboardIdentifier="Main" useStoryboardIdentifierAsRestorationIdentifier="YES" id="aqZ-SE-PFE" customClass="MainViewController" sceneMemberID="viewController">
                     <view key="view" clipsSubviews="YES" contentMode="scaleAspectFill" id="YIb-cp-v2d">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="821"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="AeO-SB-QWK">
-                                <rect key="frame" x="11" y="473" width="113" height="102"/>
+                                <rect key="frame" x="11" y="726" width="113" height="102"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <state key="normal" image="dislike">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -938,7 +948,7 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="1J8-9X-ye5">
-                                <rect key="frame" x="200" y="473" width="113" height="102"/>
+                                <rect key="frame" x="200" y="726" width="113" height="102"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <state key="normal" image="like">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -3745,10 +3755,10 @@
             </objects>
             <point key="canvasLocation" x="1719" y="848"/>
         </scene>
-        <!--View Controller-->
+        <!--Tutorial Controller-->
         <scene sceneID="dUh-91-c1U">
             <objects>
-                <viewController id="5TR-Sn-SGG" sceneMemberID="viewController">
+                <viewController id="5TR-Sn-SGG" customClass="ICETutorialController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Eyn-rt-iTW">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -3757,7 +3767,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qZY-Ni-iCY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="96" y="406"/>
+            <point key="canvasLocation" x="-93" y="-1354"/>
         </scene>
         <!--User Messages View Controller-->
         <scene sceneID="SfY-N7-trU">
@@ -4019,7 +4029,8 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="VlF-20-DHW"/>
-        <segue reference="Qh3-Ge-Ehw"/>
+        <segue reference="J9J-1N-Njp"/>
+        <segue reference="CXx-dC-o5U"/>
         <segue reference="z1E-8z-F9L"/>
         <segue reference="MjG-Tl-7wb"/>
         <segue reference="MLw-yj-LVg"/>
@@ -4027,7 +4038,6 @@
         <segue reference="fzt-VO-B8K"/>
         <segue reference="yk5-qV-Iag"/>
         <segue reference="WJE-pO-Iht"/>
-        <segue reference="oXm-ri-1Lw"/>
         <segue reference="b2C-ec-aqj"/>
         <segue reference="h7w-Ho-pqn"/>
     </inferredMetricsTieBreakers>

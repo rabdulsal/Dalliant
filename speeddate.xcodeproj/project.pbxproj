@@ -58,6 +58,11 @@
 		42DBCCDD19ACDD9C00CE6C93 /* MessageParse.m in Sources */ = {isa = PBXBuildFile; fileRef = 42DBCCDC19ACDD9C00CE6C93 /* MessageParse.m */; };
 		42DBCCE019ACDF7000CE6C93 /* UserParseHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 42DBCCDF19ACDF7000CE6C93 /* UserParseHelper.m */; };
 		42F5B28619B0C4CB0036938B /* Chat.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42F5B28519B0C4CB0036938B /* Chat.xcassets */; };
+		4C8F7C441A75F84200CCBDE8 /* tutorial_background_00@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C3F1A75F84200CCBDE8 /* tutorial_background_00@2x.jpg */; };
+		4C8F7C451A75F84200CCBDE8 /* tutorial_background_01@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C401A75F84200CCBDE8 /* tutorial_background_01@2x.jpg */; };
+		4C8F7C461A75F84200CCBDE8 /* tutorial_background_02@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C411A75F84200CCBDE8 /* tutorial_background_02@2x.jpg */; };
+		4C8F7C471A75F84200CCBDE8 /* tutorial_background_03@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C421A75F84200CCBDE8 /* tutorial_background_03@2x.jpg */; };
+		4C8F7C481A75F84200CCBDE8 /* tutorial_background_04@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C431A75F84200CCBDE8 /* tutorial_background_04@2x.jpg */; };
 		4C97CFEE1A6EAC4000C0B5B8 /* No_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C97CFED1A6EAC4000C0B5B8 /* No_icon.png */; };
 		4CBDB1941A3CDD3C006A9F1F /* ProfileTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBDB1931A3CDD3C006A9F1F /* ProfileTableVC.m */; };
 		4CBDB1971A427A11006A9F1F /* RevealRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBDB1961A427A11006A9F1F /* RevealRequest.m */; };
@@ -265,6 +270,11 @@
 		42DBCCDE19ACDF7000CE6C93 /* UserParseHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserParseHelper.h; path = Model/UserParseHelper.h; sourceTree = "<group>"; };
 		42DBCCDF19ACDF7000CE6C93 /* UserParseHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserParseHelper.m; path = Model/UserParseHelper.m; sourceTree = "<group>"; };
 		42F5B28519B0C4CB0036938B /* Chat.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Chat.xcassets; sourceTree = "<group>"; };
+		4C8F7C3F1A75F84200CCBDE8 /* tutorial_background_00@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_00@2x.jpg"; sourceTree = "<group>"; };
+		4C8F7C401A75F84200CCBDE8 /* tutorial_background_01@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_01@2x.jpg"; sourceTree = "<group>"; };
+		4C8F7C411A75F84200CCBDE8 /* tutorial_background_02@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_02@2x.jpg"; sourceTree = "<group>"; };
+		4C8F7C421A75F84200CCBDE8 /* tutorial_background_03@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_03@2x.jpg"; sourceTree = "<group>"; };
+		4C8F7C431A75F84200CCBDE8 /* tutorial_background_04@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_04@2x.jpg"; sourceTree = "<group>"; };
 		4C97CFED1A6EAC4000C0B5B8 /* No_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = No_icon.png; sourceTree = "<group>"; };
 		4CBDB1921A3CDD3C006A9F1F /* ProfileTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileTableVC.h; sourceTree = "<group>"; };
 		4CBDB1931A3CDD3C006A9F1F /* ProfileTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileTableVC.m; sourceTree = "<group>"; };
@@ -806,6 +816,11 @@
 		C20F0B1719D7CE72005958C0 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				4C8F7C3F1A75F84200CCBDE8 /* tutorial_background_00@2x.jpg */,
+				4C8F7C401A75F84200CCBDE8 /* tutorial_background_01@2x.jpg */,
+				4C8F7C411A75F84200CCBDE8 /* tutorial_background_02@2x.jpg */,
+				4C8F7C421A75F84200CCBDE8 /* tutorial_background_03@2x.jpg */,
+				4C8F7C431A75F84200CCBDE8 /* tutorial_background_04@2x.jpg */,
 				4CC7B8BF1A61083E000982EA /* dalliant_logo_med.png */,
 				4CC7B8BD1A60FFBD000982EA /* dalliant_logo.png */,
 				C28D423119E738F500C00ACA /* Ache.caf */,
@@ -1106,6 +1121,7 @@
 				42DBCC3519AC20BB00CE6C93 /* InfoPlist.strings in Resources */,
 				C25E748419EC03AD00779C23 /* logout_menu@2x.png in Resources */,
 				426107DF19B42D930000536C /* buttonbar.xcassets in Resources */,
+				4C8F7C451A75F84200CCBDE8 /* tutorial_background_01@2x.jpg in Resources */,
 				C25E747119E8981200779C23 /* about@2x.png in Resources */,
 				C25E747319E898D600779C23 /* genderz@2x.png in Resources */,
 				C20F0B1B19D7E982005958C0 /* Main.storyboard in Resources */,
@@ -1115,6 +1131,7 @@
 				C25E765619EF754600779C23 /* maiz.png in Resources */,
 				C25E760219EF485200779C23 /* terms_menu@2x.png in Resources */,
 				C25E747719EAD54F00779C23 /* location2@2x.png in Resources */,
+				4C8F7C471A75F84200CCBDE8 /* tutorial_background_03@2x.jpg in Resources */,
 				C2A90EBA19F41BBD00FC0D04 /* up2@2x.png in Resources */,
 				C25E765E19EF81D500779C23 /* nouserphoto.jpg in Resources */,
 				C237015B19D974260024F856 /* ProgressHUD.bundle in Resources */,
@@ -1132,12 +1149,15 @@
 				C25E765519EF754600779C23 /* instagram-share.png in Resources */,
 				C2A90EB819F4186B00FC0D04 /* sativa.png in Resources */,
 				4CC7B8BE1A60FFBD000982EA /* dalliant_logo.png in Resources */,
+				4C8F7C461A75F84200CCBDE8 /* tutorial_background_02@2x.jpg in Resources */,
+				4C8F7C481A75F84200CCBDE8 /* tutorial_background_04@2x.jpg in Resources */,
 				C25E746F19E8816D00779C23 /* back-m.png in Resources */,
 				C25E748619EC0ADD00779C23 /* vip_menu@2x.png in Resources */,
 				C206B02619E28D91001A4D0C /* mvip.png in Resources */,
 				C25E766019EF8D2100779C23 /* lock3@2x.png in Resources */,
 				C25E765C19EF767B00779C23 /* fastd.jpg in Resources */,
 				C2300F8619E18E310044A4E5 /* chekBtn.png in Resources */,
+				4C8F7C441A75F84200CCBDE8 /* tutorial_background_00@2x.jpg in Resources */,
 				C206B02519E28D91001A4D0C /* mnvip.png in Resources */,
 				426107DD19B3ABD80000536C /* Profile.xcassets in Resources */,
 				4C97CFEE1A6EAC4000C0B5B8 /* No_icon.png in Resources */,
