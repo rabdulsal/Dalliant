@@ -65,8 +65,6 @@
     [self tapUserImage];
     
     [self configureRadialView];
-    
-    NSLog(@"%@'s compatiblility Index: %@", _matchUser.nickname, _matchCompatibility.compatibilityIndex);
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     

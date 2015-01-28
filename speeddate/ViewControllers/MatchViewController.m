@@ -73,8 +73,6 @@
     
     [self configureButton:_matchingButton];
     [self configureButton:_reportUser];
-    
-    NSLog(@"%@'s compatiblility Index: %@", _matchUser.nickname, _possibleMatch.compatibilityIndex);
 
 }
 

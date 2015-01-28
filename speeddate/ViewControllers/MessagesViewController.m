@@ -219,7 +219,6 @@
         //}
         NSNumber *yep = [NSNumber numberWithBool:YES];
         if (![_matchUser.usersRevealed isEqualToNumber:yep]) { // <-- Test purposes - change to check isRevealed on Matched User - NOT WORKING
-            NSLog(@"%@'s compatiblility Index: %@", user.nickname, _matchUser.compatibilityIndex);
             [self blurImages:cell.userImageView];
         
             if ([user.isMale isEqualToString:@"true"]) {

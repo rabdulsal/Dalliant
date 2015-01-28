@@ -137,7 +137,6 @@
     [possMatch1 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         //for (PossibleMatchHelper *match in objects) {
         _matchedUsers = [objects objectAtIndex:0];
-        NSLog(@"%@'s compatiblility Index: %@", _toUserParse.nickname, _matchedUsers.compatibilityIndex);
     }];
 }
 
