@@ -124,7 +124,7 @@
     
     CGRect frame = CGRectMake(190, 8, 45, 45);
     MDRadialProgressView *radialView7 = [[MDRadialProgressView alloc] initWithFrame:frame andTheme:newTheme];
-    radialView7.progressTotal = (int)_matchUser.totalPrefs;;
+    radialView7.progressTotal = (int)_matchUser.totalPrefs;
     radialView7.progressCounter = (int)_matchUser.prefCounter;
     //[self.view addSubview:radialView7];
     [matchCell.contentView addSubview:radialView7];

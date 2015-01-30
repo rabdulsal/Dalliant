@@ -31,6 +31,10 @@
 #import "IAPHelper.h"
 #import <StoreKit/StoreKit.h>
 #import "RageIAPHelper.h"
+#import <MDRadialProgressLabel.h>
+#import <MDRadialProgressTheme.h>
+#import <MDRadialProgressView.h>
+#import "UserTableViewCell.h"
 #import "User.h"
 
 #define IS_IPHONE_5 ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )568 ) < DBL_EPSILON )
@@ -52,14 +56,16 @@
 #define dislikeViewTag 1
 #define topMarginView 60
 #define cornRadius 0
+#define SECONDS_DAY 24*60*60
 
-@interface MainViewController () <UIGestureRecognizerDelegate, CLLocationManagerDelegate, UIAlertViewDelegate>{
+@interface MainViewController () <UIGestureRecognizerDelegate, CLLocationManagerDelegate, UIAlertViewDelegate, UITableViewDataSource, UITableViewDelegate>{
     
     BOOL inAnimation;
     CALayer *waveLayer;
     NSTimer *animateTimer;
-    User *user;
+    User *userSingleton;
 }
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *sidebarButton;
 @property (strong, nonatomic) UIView *profileView;
 @property (strong, nonatomic) UIView* backgroundView;
@@ -107,7 +113,13 @@
 @property (weak, nonatomic) IBOutlet UITextView *activityLabel;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property UILabel* imageCountLabel;
+@property NSArray *filteredAllUsersArray;
+@property NSMutableArray *messages;
+@property NSMutableArray *usersArray;
+@property NSArray *matchedUsers;
+@property NSMutableArray *matchRelationships;
 @property PossibleMatchHelper *otherUser;
+@property PossibleMatchHelper *possibleMatch;
 @property double prefCounter;
 @property double totalPrefs; //<-- should be attribute on UserParseHelper
 @property (weak, nonatomic) IBOutlet UILabel *matchedLabel;
@@ -122,6 +134,7 @@
 
 @property (strong) NSDictionary *match;
 @property (strong) NSMutableArray *sharedPrefs;
+- (IBAction)pushToBaedar:(id)sender;
 
 @end
 
@@ -146,7 +159,7 @@
     }];
 
 #endif
-    user = [User singleObj];
+    userSingleton = [User singleObj];
     
     _matched = false;
     
@@ -192,9 +205,9 @@
     // Circle Animation <-- wrap in Toggle Button
     waveLayer=[CALayer layer];
     if (IS_IPHONE_5) {
-        waveLayer.frame = CGRectMake(155, 220, 10, 10);
+        waveLayer.frame = CGRectMake(155, 105, 10, 10);
     }else{
-        waveLayer.frame = CGRectMake(155, 180, 10, 10);
+        waveLayer.frame = CGRectMake(155, 105, 10, 10);
     }
     waveLayer.borderWidth =0.2;
     waveLayer.cornerRadius =5.0;
@@ -202,10 +215,23 @@
    
     [waveLayer setHidden:YES];
     
+    self.usersArray = [NSMutableArray new];
+    self.matchRelationships = [NSMutableArray new];
     
+    [self customizeApp];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:receivedMessage object:nil];
     //[self currentLocationIdentifier];
     //[self performSegueWithIdentifier:@"test_match" sender:nil];
 
+}
+
+- (void)customizeApp
+{
+    self.tableView.backgroundColor = WHITE_COLOR;
+    self.tableView.separatorColor = [UIColor lightGrayColor];
+    //self.searchTextField.backgroundColor = RED_DEEP;
+    
 }
 
 - (void)adViewDidReceiveAd:(GADBannerView *)bannerView {
@@ -218,6 +244,7 @@
 
 #pragma mark - Baedar Toggle
 
+// Turn on Baedar
 - (IBAction)toggleBaedar:(id)sender {
     if (_baedarLabel.isSelected) {
         [self baedarOff];
@@ -237,7 +264,7 @@
     [self startAnimation];
     //_baedarLabel.transform = CGAffineTransformMakeScale(1.1,1.1); // <-- Increase button size on press
     [_baedarLabel setSelected:YES];
-    user.baedarIsRunning = true;
+    userSingleton.baedarIsRunning = true;
     [self getMatches];
 }
 
@@ -250,12 +277,13 @@
     inAnimation = NO;
     [waveLayer removeFromSuperlayer];
     [waveLayer setHidden:YES];
-    user.baedarIsRunning = false;
+    userSingleton.baedarIsRunning = false;
 }
 
 - (IBAction)pressedMatchButton:(id)sender {
     
-    [self performSegueWithIdentifier:@"viewMatches" sender:nil];
+    //[self performSegueWithIdentifier:@"viewMatches" sender:nil];
+    [self performSegueWithIdentifier:@"newViewMatches" sender:nil];
     
 }
 
@@ -280,8 +308,8 @@
 {
     //[self checkIncomingViewController];
     //[self currentLocationIdentifier];
-    
-    if (user.baedarIsRunning) {
+    //[self loadingChat];
+    if (userSingleton.baedarIsRunning) {
         [self baedarOn];
     }
 }
@@ -306,6 +334,7 @@
 
 #pragma mark - LOCATION IDENTIFIER
 
+// Get User Geo
 -(void)currentLocationIdentifier
 {
     self.locationManager = [CLLocationManager new];
@@ -328,6 +357,7 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
     self.currentLocation = [locations objectAtIndex:0];
+    // Timestamp location capture?
     [self.locationManager stopUpdatingLocation];
     CLGeocoder* geocoder = [CLGeocoder new];
     [geocoder reverseGeocodeLocation:locations.firstObject completionHandler:^(NSArray *placemarks, NSError *error) {
@@ -464,18 +494,18 @@
         self.curUser.distance = [NSNumber numberWithDouble:1.6];
     }
     
-    // Query Nearby Users based on distance; while require a time-based While-loop
+    // Fetch Nearby Users based on distance; while require a time-based While-loop
     PFQuery *userQuery = [UserParseHelper query];
     [userQuery whereKey:@"geoPoint" nearGeoPoint:self.curUser.geoPoint withinKilometers:self.curUser.distance.doubleValue];
     [userQuery whereKey:@"objectId" notEqualTo:_curUser.objectId];
     [userQuery whereKey:@"online" equalTo:@"yes"];
     [userQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        [_posibleMatchesArray addObjectsFromArray:objects];
         
         if (!objects) {
             NSLog(@"No Matches found");
         } else {
             //[waveLayer setHidden:YES];
+            [_posibleMatchesArray addObjectsFromArray:objects];
             NSLog(@"Potential matches found, total: %ld", objects.count);
             /*
             for (UserParseHelper *possMatch in _posibleMatchesArray) {
@@ -490,19 +520,46 @@
     }];
 }
 
+// Loop Through Matches
 - (void)loopThroughMatches
 {
+    /*
     int possMatchArrSize = (int)_posibleMatchesArray.count;
-    
     for (int i = 0; i < possMatchArrSize; i++) {
+        // Push into Array
         _matchUser = [_posibleMatchesArray objectAtIndex:i];
         [self matchGender];
         if (i == possMatchArrSize - 1) {
             NSLog(@"Last match reached");
             //[self generateMatchMessage];
-            [self findMatches:_willBeMatches];
+            //[self findMatches:_willBeMatches];
+            
+            // Reload TableView
+            
+            /*[self. tableView beginUpdates];
+                for (PossibleMatchHelper *relationship in _matchRelationships) {
+                    NSLog(@"TableView Reload run");
+                    NSLog(@"Match Relationships Count before table animation: %lu", (unsigned long)[_matchRelationships count]);
+                    NSInteger position = [_matchRelationships indexOfObject:relationship];
+                    NSLog(@"Position: %ld", (long)position);
+                    //NSIndexPath *indexPath = [NSIndexPath indexPathForItem:position inSection:0];
+                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:position inSection:0];
+                    NSLog(@"IndexPath: %@", indexPath);
+                    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                    NSLog(@"TableView insertRow run");
+                    //[self generateMatchMessage]; //<-- Don't need this?
+                }
+            [self.tableView endUpdates];
+             
         }
+    }*/
+    
+    for (UserParseHelper *match in _posibleMatchesArray) {
+        _matchUser = match;
+        [self matchGender];
     }
+    
+    [self.tableView reloadData];
 }
 
 - (void)findMatches:(NSMutableArray *)matches
@@ -523,7 +580,7 @@
     [_matchButtonLabel setTitle:buttonTitle forState:UIControlStateNormal];
 }
 
-
+// Save Match Relationship to Database
 - (void) setPossMatchHelper
 {
     _otherUser                  = [PossibleMatchHelper object];
@@ -547,8 +604,8 @@
         }
     }];*/
     [_otherUser save];
-    NSLog(@"Before GenMess for %@", _otherUser.toUserEmail);
-    [self generateMatchMessage];
+    [_matchRelationships addObject:_otherUser];
+    
 }
 
 #pragma mark - MATCH FILTER
@@ -792,7 +849,7 @@
     }
 }
 
-- (void)generateMatchMessage
+- (void)generateMatchMessage // Don't Need?
 {
     // Check if a Message already exists
     PFQuery* query = [MessageParse query];
@@ -843,6 +900,297 @@
 {
     [super viewDidDisappear:animated];
     [self baedarOff];
+}
+
+#pragma mark - TableView Configurations
+
+- (void)setHighCompatibilityColor:(MDRadialProgressTheme *)newTheme
+{
+    newTheme.completedColor     = RED_DEEP;
+    newTheme.incompletedColor   = RED_LIGHT;
+    newTheme.centerColor        = RED_OMNY;
+}
+
+- (void)setMedCompatibilityColor:(MDRadialProgressTheme *)newTheme
+{
+    newTheme.completedColor     = SEA_DEEP_COLOR;
+    newTheme.incompletedColor   = SEA_COLOR;
+    newTheme.centerColor        = MENU_BLUE;
+}
+
+- (void)setLowCompatibilityColor:(MDRadialProgressTheme *)newTheme
+{
+    newTheme.completedColor     = [UIColor darkGrayColor];
+    newTheme.incompletedColor   = [UIColor lightGrayColor];
+    newTheme.centerColor        = GRAY_COLOR;
+}
+
+- (void)configureRadialView:(UserTableViewCell *)matchCell forConnection:(PossibleMatchHelper *)relationship
+{
+    MDRadialProgressTheme *newTheme = [[MDRadialProgressTheme alloc] init];
+    //newTheme.completedColor = [UIColor colorWithRed:90/255.0 green:212/255.0 blue:39/255.0 alpha:1.0];
+    
+    //newTheme.incompletedColor = [UIColor colorWithRed:164/255.0 green:231/255.0 blue:134/255.0 alpha:1.0];
+    newTheme.centerColor = [UIColor clearColor];
+    //[self setHighCompatibilityColor:newTheme];
+    
+    NSInteger compatibility = [relationship.compatibilityIndex integerValue];
+    // Compatibility conditional - change _otherUser variable
+    if (compatibility > 66) {
+        [self setHighCompatibilityColor:newTheme];
+    } else if (compatibility < 66 && compatibility > 33) {
+        [self setMedCompatibilityColor:newTheme];
+    } else {
+        [self setLowCompatibilityColor:newTheme];
+    }
+    
+    //newTheme.centerColor = [UIColor colorWithRed:224/255.0 green:248/255.0 blue:216/255.0 alpha:1.0];
+    newTheme.sliceDividerHidden = YES;
+    newTheme.labelColor = [UIColor blackColor];
+    newTheme.labelShadowColor = [UIColor whiteColor];
+    
+    CGRect frame = CGRectMake(190, 8, 45, 45);
+    MDRadialProgressView *radialView7 = [[MDRadialProgressView alloc] initWithFrame:frame andTheme:newTheme];
+    radialView7.progressTotal   = [relationship.totalPrefs integerValue];
+    radialView7.progressCounter = [relationship.prefCounter integerValue];
+    //[self.view addSubview:radialView7];
+    NSLog(@"%@ totalPrefs: %@, prefCounter: %@", relationship.toUser.nickname, relationship.totalPrefs, relationship.prefCounter);
+    [matchCell.contentView addSubview:radialView7];
+}
+/*
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:YES];
+    [self loadingChat];
+    [self reloadView];
+}
+*/
+- (void)receivedNotification:(NSNotification *)notification
+{
+    [self.usersArray removeAllObjects];
+    [self.messages removeAllObjects];
+    [self loadingChat];
+}
+
+- (void)loadingChat
+{
+    self.messages = [NSMutableArray new];
+    self.filteredAllUsersArray = [NSArray new];
+    
+    // Query for
+    PFQuery *matchQueryFrom = [PossibleMatchHelper query];
+    [matchQueryFrom whereKey:@"fromUser" equalTo:[UserParseHelper currentUser]];
+    PFQuery *matchQueryTo = [PossibleMatchHelper query];
+    [matchQueryTo whereKey:@"toUser" equalTo:[UserParseHelper currentUser]];
+    PFQuery *both = [PFQuery orQueryWithSubqueries:@[matchQueryFrom, matchQueryTo]];
+    [both orderByDescending:@"createdAt"];
+    //[both orderByDescending:@"compatibilityIndex"]; // <-- Won't work for now, need a compatibility attribute on messages somehow
+    
+    [both findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        NSMutableSet *users = [NSMutableSet new];
+        for (MessageParse *message in objects) {
+            if(![message.fromUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
+                NSUInteger count = users.count;
+                [users addObject:message.fromUserParse];
+                if (users.count > count) {
+                    [message.fromUserParse fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                        [self.messages addObject:message];
+                        
+                        // Move usersArray up and populate with _otherUser info
+                        [self.usersArray addObject:message.fromUserParse];
+                        NSInteger position = [self.usersArray indexOfObject:message.fromUserParse];
+                        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:position inSection:0];
+                        [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                    }];
+                }
+            }
+            if(![message.toUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
+                NSUInteger count = users.count;
+                [users addObject:message.toUserParse];
+                if (users.count > count) {
+                    [message.toUserParse fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                        [self.messages addObject:message];
+                        [self.usersArray addObject:message.toUserParse];
+                        
+                        NSInteger position = [self.usersArray indexOfObject:message.toUserParse];
+                        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:position inSection:0];
+                        
+                        [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                    }];
+                }
+            }
+        }
+        [self.tableView reloadData];
+    }];
+}
+
+#pragma mark TableView Delegate - Includes Blurring
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UserTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    UserParseHelper *user;
+    PossibleMatchHelper *matchedConnection;
+    /*
+    if (self.filteredAllUsersArray.count) {
+        user = [self.filteredAllUsersArray objectAtIndex:indexPath.row];
+    } else {
+        user = [self.usersArray objectAtIndex:indexPath.row];
+    }
+    */
+    // Get Possible Matches
+    matchedConnection = [_matchRelationships objectAtIndex:indexPath.row];
+    user = matchedConnection.toUser;
+    
+    NSNumber *yep = [NSNumber numberWithBool:YES];
+    [user.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+        
+        if (!error) {
+            
+            cell.userImageView.image = [UIImage imageWithData:data];
+            [self configureRadialView:cell forConnection:matchedConnection];
+            if (![matchedConnection.usersRevealed isEqualToNumber:yep]) { // <-- Test purposes - change to check isRevealed on Matched User - NOT WORKING
+                [self blurImages:cell.userImageView];
+        
+                if ([user.isMale isEqualToString:@"true"]) {
+                    NSString *matchGender = @"Male";
+                    cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
+                } else {
+                    NSString *matchGender = @"Female";
+                    cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
+                }
+        
+            } else{
+                NSLog(@"User revealed");
+                cell.nameTextLabel.text = user.nickname;
+            }
+        }
+    }];
+    // All old code
+    /*_matchedUsers = [[NSArray alloc] initWithObjects:[UserParseHelper currentUser], user, nil];
+    PFQuery *possMatch1 = [PossibleMatchHelper query];
+    [possMatch1 whereKey:@"matches" containsAllObjectsInArray:_matchedUsers];
+    //[possMatch1 findObjects];
+    [possMatch1 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        //for (PossibleMatchHelper *match in objects) {
+        _possibleMatch = [objects objectAtIndex:0];
+        [self configureRadialView:cell forConnection:_possibleMatch];
+        //}
+        NSNumber *yep = [NSNumber numberWithBool:YES];
+        if (![_possibleMatch.usersRevealed isEqualToNumber:yep]) { // <-- Test purposes - change to check isRevealed on Matched User - NOT WORKING
+            [self blurImages:cell.userImageView];
+            
+            if ([user.isMale isEqualToString:@"true"]) {
+                NSString *matchGender = @"Male";
+                cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
+            } else {
+                NSString *matchGender = @"Female";
+                cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
+            }
+            
+        } else{
+            NSLog(@"User revealed");
+            cell.nameTextLabel.text = user.nickname;
+        }
+        
+        
+        [user.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+            
+            cell.userImageView.image = [UIImage imageWithData:data];
+            
+        }];
+    }];
+    */
+    //[self setPossibleMatchesFromMessages:_matchedUsers for:cell];
+    
+    
+    // Revealed conditional -----------------------------------------------------
+    
+    
+    
+    // ----------------------------------------------------------------------------
+    
+    //cell.nameTextLabel.textColor = WHITE_COLOR;
+    cell.nameTextLabel.textColor = RED_LIGHT;
+    cell.userImageView.layer.cornerRadius = cell.userImageView.frame.size.width / 2;
+    cell.userImageView.clipsToBounds = YES;
+    cell.userImageView.layer.borderWidth = 1.0,
+    cell.userImageView.layer.borderColor = WHITE_COLOR.CGColor;
+    
+    /*
+    UIImageView *accesory = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"accesory"]];
+    accesory.frame = CGRectMake(15, 0, 15, 15);
+    accesory.contentMode = UIViewContentModeScaleAspectFit;
+    cell.accessoryView = accesory;
+    
+    MessageParse *message = [self.messages objectAtIndex:indexPath.row];
+    cell.lastMessageLabel.text = message.text;
+    if (!message.text && message.image) {
+        cell.lastMessageLabel.text = @"Image";
+    }
+    if (!message.read && [message.toUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
+        //cell.lastMessageLabel.textColor = WHITE_COLOR;
+        cell.dateLabel.textColor = [UIColor lightGrayColor];
+    } else {
+        //cell.lastMessageLabel.textColor = WHITE_COLOR;
+        cell.dateLabel.textColor = [UIColor lightGrayColor];
+    }
+    //cell.dateLabel.textColor = WHITE_COLOR;
+    cell.dateLabel.textColor = RED_LIGHT;
+    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+    [dateFormatter setDoesRelativeDateFormatting:YES];
+    if ([[message createdAt] timeIntervalSinceNow] * -1 < SECONDS_DAY) {
+        dateFormatter.timeStyle = NSDateFormatterShortStyle;
+    } else {
+        dateFormatter.dateStyle = NSDateFormatterShortStyle;
+    }
+    
+    cell.dateLabel.text = [dateFormatter stringFromDate:[message createdAt]];
+    */
+    
+    UIView *bgColorView = [[UIView alloc] init];
+    //bgColorView.backgroundColor = RED_COLOR;
+    bgColorView.backgroundColor = WHITE_COLOR;
+    [cell setSelectedBackgroundView:bgColorView];
+    
+    cell.lastMessageLabel.text = @"";
+    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+    [dateFormatter setDoesRelativeDateFormatting:YES];
+    cell.dateLabel.text = [dateFormatter stringFromDate:[NSDate date]];
+    
+    return cell;
+}
+
+#pragma mark - Blur Images
+
+- (void)blurImages:(UIImageView *)imageView
+{
+    UIVisualEffect *blurEffect;
+    blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+    
+    UIVisualEffectView *visualEffectView;
+    visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+    
+    visualEffectView.frame = imageView.bounds;
+    [imageView addSubview:visualEffectView];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    // Search Textfield
+    /*
+    if (self.searchTextField.text.length) {
+        return self.filteredAllUsersArray.count;
+    }
+    */
+    if (_usersArray.count) {
+        userSingleton.numberOfConvos = [[NSString alloc] initWithFormat:@"%lu", (unsigned long)_usersArray.count];
+    }
+    
+    //return [_posibleMatchesArray count];
+    return [_matchRelationships count];
 }
 
 - (void) firstPlacement
@@ -1812,4 +2160,8 @@
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
+- (IBAction)pushToBaedar:(id)sender {
+    
+    [self performSegueWithIdentifier:@"newViewMatches" sender:nil];
+}
 @end
