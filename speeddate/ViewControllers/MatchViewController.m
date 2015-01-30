@@ -54,8 +54,6 @@
     
     mainUser = [User singleObj];
     
-    _getPhotoArray = [[NSMutableArray alloc] init];
-    
     _userName.text = _matchUser.nickname;
     
     if (![_possibleMatch.usersRevealed isEqualToNumber:[NSNumber numberWithBool:YES]]) { //<-- Change to check if revealReply = YES
@@ -64,7 +62,7 @@
     
     [_scroller setScrollEnabled:YES];
     //[_scroller setContentSize:CGSizeMake(320, 1555)];
-    [_scroller setContentSize:CGSizeMake(self.view.frame.size.width, 2515)];
+    [_scroller setContentSize:CGSizeMake(self.view.frame.size.width, 2400)];
     /*
     [_matchUser.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
         _imageData = data;
@@ -74,6 +72,8 @@
     [self configureButton:_matchingButton];
     [self configureButton:_reportUser];
 
+    NSLog(@"Match: %@, Compatibility: %@", _matchUser.nickname, _possibleMatch.compatibilityIndex);
+    NSLog(@"User Images: %lu", (unsigned long)[_getPhotoArray count]);
 }
 
 - (void)viewDidAppear:(BOOL)animated

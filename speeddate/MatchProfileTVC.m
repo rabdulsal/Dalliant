@@ -101,11 +101,11 @@
     //newTheme.incompletedColor = [UIColor colorWithRed:164/255.0 green:231/255.0 blue:134/255.0 alpha:1.0];
     newTheme.centerColor = [UIColor clearColor];
     //[self setHighCompatibilityColor:newTheme];
-    
+    NSInteger compatibility = [_matchCompatibility.compatibilityIndex integerValue];
     // Compatibility conditional
-    if (_matchCompatibility.compatibilityIndex > [NSNumber numberWithInt:66]) {
+    if (compatibility > 66) {
         [self setHighCompatibilityColor:newTheme];
-    } else if (_matchCompatibility.compatibilityIndex < [NSNumber numberWithInt:66] && _matchCompatibility.compatibilityIndex > [NSNumber numberWithInt:33]) {
+    } else if (compatibility < 66 && compatibility > 33) {
         [self setMedCompatibilityColor:newTheme];
     } else [self setLowCompatibilityColor:newTheme];
     
@@ -115,8 +115,8 @@
     
     CGRect frame = CGRectMake(self.view.center.x - 30, 65, 60, 60);
     MDRadialProgressView *radialView7 = [[MDRadialProgressView alloc] initWithFrame:frame andTheme:newTheme];
-    radialView7.progressTotal = (int)_matchCompatibility.totalPrefs;;
-    radialView7.progressCounter = (int)_matchCompatibility.prefCounter;
+    radialView7.progressTotal   = [_matchCompatibility.totalPrefs integerValue];
+    radialView7.progressCounter = [_matchCompatibility.prefCounter integerValue];
     //[self.view addSubview:radialView7];
     [self.view addSubview:radialView7];
 }

@@ -35,6 +35,7 @@
 #import <MDRadialProgressTheme.h>
 #import <MDRadialProgressView.h>
 #import "UserTableViewCell.h"
+#import "MatchViewController.h"
 #import "User.h"
 
 #define IS_IPHONE_5 ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )568 ) < DBL_EPSILON )
@@ -837,15 +838,56 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([segue.identifier isEqualToString:@"viewMatches"]) {
+    if ([segue.identifier isEqualToString:@"viewMatch"]){
+        //if ([[segue identifier] isEqualToString:@"userprofileSee"]) {
+        // Move to ViewDidLoad
+        NSLog(@"View Profile Pressed");
+        MatchViewController *matchVC = [[MatchViewController alloc]init];
+        matchVC = segue.destinationViewController;
+        PossibleMatchHelper *matchRelationship = [self.matchRelationships objectAtIndex:self.tableView.indexPathForSelectedRow.row];
+        UserParseHelper *match = matchRelationship.toUser;
+        //matchVC.userFBPic.image             = _toUserParse.photo;
+        matchVC.matchUser = match;
+        matchVC.possibleMatch = matchRelationship;
+        matchVC.getPhotoArray = [NSMutableArray new];
         
-        //_matched = true;
-        /*
-        MessagesViewController *vc  = segue.destinationViewController;
-            vc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-                    vc.totalPrefs   = _otherUser.totalPrefs;
-                    vc.prefCounter  = _otherUser.prefCounter;
-         */
+        if (matchVC.matchUser.photo) {
+            NSData *imageData = [matchVC.matchUser.photo getData];
+            if (imageData) {
+                UIImage *matchImage = [[UIImage alloc] initWithData:imageData];
+                NSLog(@"MatchImage: %@", matchImage);
+                [matchVC.getPhotoArray addObject:matchImage];
+            }
+        }
+        
+        if (matchVC.matchUser.photo1) {
+            NSData *imageData = [matchVC.matchUser.photo1 getData];
+            if (imageData) {
+                UIImage *matchImage = [[UIImage alloc] initWithData:imageData];
+                NSLog(@"MatchImage: %@", matchImage);
+                [matchVC.getPhotoArray addObject:matchImage];
+            }
+        }
+        
+        if (matchVC.matchUser.photo2) {
+            NSData *imageData = [matchVC.matchUser.photo2 getData];
+            if (imageData) {
+                UIImage *matchImage = [[UIImage alloc] initWithData:imageData];
+                NSLog(@"MatchImage: %@", matchImage);
+                [matchVC.getPhotoArray addObject:matchImage];
+            }
+        }
+        
+        if (matchVC.matchUser.photo3) {
+            NSData *imageData = [matchVC.matchUser.photo3 getData];
+            if (imageData) {
+                UIImage *matchImage = [[UIImage alloc] initWithData:imageData];
+                NSLog(@"MatchImage: %@", matchImage);
+                [matchVC.getPhotoArray addObject:matchImage];
+            }
+            
+            
+        }
     }
 }
 
@@ -1158,6 +1200,7 @@
     cell.lastMessageLabel.text = @"";
     NSDateFormatter *dateFormatter = [NSDateFormatter new];
     [dateFormatter setDoesRelativeDateFormatting:YES];
+    dateFormatter.dateStyle = NSDateFormatterShortStyle;
     cell.dateLabel.text = [dateFormatter stringFromDate:[NSDate date]];
     
     return cell;
