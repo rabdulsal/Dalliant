@@ -138,7 +138,7 @@
         self.switchTouchId.on = NO;
     }
 
-
+    [UserParseHelper currentUser].credits = @5;
 }
 
 

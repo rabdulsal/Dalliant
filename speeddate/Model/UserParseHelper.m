@@ -31,7 +31,7 @@
 @dynamic membervip;
 @dynamic maxAgePref;
 @dynamic minAgePref;
-@dynamic isRevealed;
+@dynamic credits;
 
 ////thumb photo
 @dynamic photo_thumb;
@@ -142,6 +142,13 @@
                 break;
         }
     }];
+}
+
+- (void)calculateCredits
+{
+    NSInteger creditCount = [self.credits integerValue];
+    creditCount -= 1;
+    self.credits = [NSNumber numberWithInteger:creditCount];
 }
 
 

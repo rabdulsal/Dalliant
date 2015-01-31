@@ -29,7 +29,8 @@
 @property NSString *membervip;
 @property NSMutableArray *work;
 @property NSMutableArray *school;
-@property NSNumber *isRevealed;
+@property NSNumber *credits;
+
 
 ////thumb_photo
 @property PFFile* photo_thumb;
@@ -92,7 +93,7 @@
 - (NSString *)userWork;
 - (NSString *)userSchool;
 - (void)configureImage:(UIImage *)image picNumber:(int)photoNum;
-
+- (void)calculateCredits;
 
 
 

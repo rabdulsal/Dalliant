@@ -173,6 +173,9 @@
         vc                    = segue.destinationViewController;
         vc.toUserParse        = _matchUser;
         
+        //Check for prior Chat b/w 2 Users, if so, don't subtract credits
+        [[UserParseHelper currentUser] calculateCredits];
+        NSLog(@"%@'s credits: %@", [UserParseHelper currentUser].nickname, [UserParseHelper currentUser].credits);
     }
 }
 // START CHAT BUTTON
@@ -243,10 +246,18 @@
 }
 
 - (IBAction)matchOptionsButton:(id)sender {
-    NSString *chatTitle = [[NSString alloc] initWithFormat:@"Chat (%@ Tokens Left)", @"2"];
-    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Match Options" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:chatTitle,@"Report", nil];
-    sheet.tag = 2;
-    [sheet showInView:self.view];
+    
+    if ([UserParseHelper currentUser].credits > 0) {
+        NSString *chatTitle = [[NSString alloc] initWithFormat:@"Chat (%@ Credits Left)", [UserParseHelper currentUser].credits];
+        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Match Options" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Report", chatTitle, nil];
+        sheet.tag = 2;
+        [sheet showInView:self.view];
+        
+    } else {
+        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Match Options" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Report", nil];
+        sheet.tag = 7;
+        [sheet showInView:self.view];
+    }
 }
 
 - (IBAction)reportUser:(id)sender {
@@ -272,14 +283,14 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (actionSheet.tag == 2) { // <-- Clicked Match Options Button
+    if (actionSheet.tag == 2 || actionSheet.tag == 7) { // <-- Clicked Match Options Button
         
-        if (buttonIndex == 0) {
+        if (buttonIndex == 1) {
             //[self performSegueWithIdentifier:@"view_profile" sender:nil];
             [self performSegueWithIdentifier:@"matchChat" sender:nil];
         }
         
-        if (buttonIndex == 1) {
+        if (buttonIndex == 0) {
             UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Report"
                                                          message:@"Are you sure you want to report this user? The conversation will be deleted."
                                                         delegate:self
