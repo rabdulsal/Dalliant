@@ -7,10 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <ICETutorialController.h>
-#import <ICETutorialPage.h>
-#import <ICETutorialStyle.h>
 
-@interface CustomSignInViewController : UIViewController <ICETutorialControllerDelegate>
+@interface CustomSignInViewController : UIViewController 
 
 @end

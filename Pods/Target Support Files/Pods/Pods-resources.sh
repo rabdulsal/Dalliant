@@ -47,14 +47,7 @@ install_resource()
       ;;
   esac
 }
-          install_resource "ICETutorial/Resources/background-gradient.png"
-                    install_resource "ICETutorial/Resources/background-gradient@2x.png"
-                    install_resource "ICETutorial/Resources/button-background.png"
-                    install_resource "ICETutorial/Resources/button-background@2x.png"
-                    install_resource "ICETutorial/Resources/Default-568h@2x.png"
-                    install_resource "ICETutorial/Resources/Default.png"
-                    install_resource "ICETutorial/Resources/Default@2x.png"
-                    install_resource "KIImagePager/KIImagePager/KIImagePager/KICamera.png"
+          install_resource "KIImagePager/KIImagePager/KIImagePager/KICamera.png"
                     install_resource "KIImagePager/KIImagePager/KIImagePager/KICamera@2x.png"
                     install_resource "NMRangeSlider/NMRangeSlider/DefaultTheme/slider-default-handle-highlighted.png"
                     install_resource "NMRangeSlider/NMRangeSlider/DefaultTheme/slider-default-handle-highlighted@2x.png"

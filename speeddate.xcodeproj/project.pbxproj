@@ -58,6 +58,7 @@
 		42DBCCDD19ACDD9C00CE6C93 /* MessageParse.m in Sources */ = {isa = PBXBuildFile; fileRef = 42DBCCDC19ACDD9C00CE6C93 /* MessageParse.m */; };
 		42DBCCE019ACDF7000CE6C93 /* UserParseHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 42DBCCDF19ACDF7000CE6C93 /* UserParseHelper.m */; };
 		42F5B28619B0C4CB0036938B /* Chat.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42F5B28519B0C4CB0036938B /* Chat.xcassets */; };
+		4C03549B1A7D7AD800658BE9 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C03549A1A7D7AD800658BE9 /* TutorialViewController.m */; };
 		4C475FE21A7C9C8D00CB9283 /* more.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C475FE11A7C9C8D00CB9283 /* more.png */; };
 		4C8F7C441A75F84200CCBDE8 /* tutorial_background_00@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C3F1A75F84200CCBDE8 /* tutorial_background_00@2x.jpg */; };
 		4C8F7C451A75F84200CCBDE8 /* tutorial_background_01@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C401A75F84200CCBDE8 /* tutorial_background_01@2x.jpg */; };
@@ -272,6 +273,8 @@
 		42DBCCDE19ACDF7000CE6C93 /* UserParseHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserParseHelper.h; path = Model/UserParseHelper.h; sourceTree = "<group>"; };
 		42DBCCDF19ACDF7000CE6C93 /* UserParseHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserParseHelper.m; path = Model/UserParseHelper.m; sourceTree = "<group>"; };
 		42F5B28519B0C4CB0036938B /* Chat.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Chat.xcassets; sourceTree = "<group>"; };
+		4C0354991A7D7AD800658BE9 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
+		4C03549A1A7D7AD800658BE9 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
 		4C475FE11A7C9C8D00CB9283 /* more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = more.png; sourceTree = "<group>"; };
 		4C8F7C3F1A75F84200CCBDE8 /* tutorial_background_00@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_00@2x.jpg"; sourceTree = "<group>"; };
 		4C8F7C401A75F84200CCBDE8 /* tutorial_background_01@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_01@2x.jpg"; sourceTree = "<group>"; };
@@ -715,6 +718,8 @@
 				C2A90ED619F49CE900FC0D04 /* UserProfileViewController.m */,
 				C254F8A119F6C4B000473836 /* WhoSeeViewController.h */,
 				C254F8A219F6C4B000473836 /* WhoSeeViewController.m */,
+				4C0354991A7D7AD800658BE9 /* TutorialViewController.h */,
+				4C03549A1A7D7AD800658BE9 /* TutorialViewController.m */,
 			);
 			name = Application;
 			sourceTree = "<group>";
@@ -1252,6 +1257,7 @@
 				C25E75F119EF29D500779C23 /* UIImage+AlphaAdditions.m in Sources */,
 				C2A90ED719F49CE900FC0D04 /* UserProfileViewController.m in Sources */,
 				C25E763719EF5C1200779C23 /* UIImage+GIF.m in Sources */,
+				4C03549B1A7D7AD800658BE9 /* TutorialViewController.m in Sources */,
 				C237019119D974390024F856 /* UIWebView+AFNetworking.m in Sources */,
 				C25E764819EF5C4000779C23 /* CJSONDeserializer.m in Sources */,
 				C237019019D974390024F856 /* UIRefreshControl+AFNetworking.m in Sources */,

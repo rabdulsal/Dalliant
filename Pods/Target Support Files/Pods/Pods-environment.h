@@ -6,11 +6,11 @@
 // project.
 
 
-// ICETutorial
-#define COCOAPODS_POD_AVAILABLE_ICETutorial
-#define COCOAPODS_VERSION_MAJOR_ICETutorial 1
-#define COCOAPODS_VERSION_MINOR_ICETutorial 1
-#define COCOAPODS_VERSION_PATCH_ICETutorial 1
+// EAIntroView
+#define COCOAPODS_POD_AVAILABLE_EAIntroView
+#define COCOAPODS_VERSION_MAJOR_EAIntroView 2
+#define COCOAPODS_VERSION_MINOR_EAIntroView 6
+#define COCOAPODS_VERSION_PATCH_EAIntroView 4
 
 // ILTranslucentView
 #define COCOAPODS_POD_AVAILABLE_ILTranslucentView
