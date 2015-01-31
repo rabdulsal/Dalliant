@@ -58,6 +58,7 @@
 		42DBCCDD19ACDD9C00CE6C93 /* MessageParse.m in Sources */ = {isa = PBXBuildFile; fileRef = 42DBCCDC19ACDD9C00CE6C93 /* MessageParse.m */; };
 		42DBCCE019ACDF7000CE6C93 /* UserParseHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 42DBCCDF19ACDF7000CE6C93 /* UserParseHelper.m */; };
 		42F5B28619B0C4CB0036938B /* Chat.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42F5B28519B0C4CB0036938B /* Chat.xcassets */; };
+		4C475FE21A7C9C8D00CB9283 /* more.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C475FE11A7C9C8D00CB9283 /* more.png */; };
 		4C8F7C441A75F84200CCBDE8 /* tutorial_background_00@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C3F1A75F84200CCBDE8 /* tutorial_background_00@2x.jpg */; };
 		4C8F7C451A75F84200CCBDE8 /* tutorial_background_01@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C401A75F84200CCBDE8 /* tutorial_background_01@2x.jpg */; };
 		4C8F7C461A75F84200CCBDE8 /* tutorial_background_02@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C411A75F84200CCBDE8 /* tutorial_background_02@2x.jpg */; };
@@ -271,6 +272,7 @@
 		42DBCCDE19ACDF7000CE6C93 /* UserParseHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserParseHelper.h; path = Model/UserParseHelper.h; sourceTree = "<group>"; };
 		42DBCCDF19ACDF7000CE6C93 /* UserParseHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserParseHelper.m; path = Model/UserParseHelper.m; sourceTree = "<group>"; };
 		42F5B28519B0C4CB0036938B /* Chat.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Chat.xcassets; sourceTree = "<group>"; };
+		4C475FE11A7C9C8D00CB9283 /* more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = more.png; sourceTree = "<group>"; };
 		4C8F7C3F1A75F84200CCBDE8 /* tutorial_background_00@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_00@2x.jpg"; sourceTree = "<group>"; };
 		4C8F7C401A75F84200CCBDE8 /* tutorial_background_01@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_01@2x.jpg"; sourceTree = "<group>"; };
 		4C8F7C411A75F84200CCBDE8 /* tutorial_background_02@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_02@2x.jpg"; sourceTree = "<group>"; };
@@ -818,6 +820,7 @@
 		C20F0B1719D7CE72005958C0 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				4C475FE11A7C9C8D00CB9283 /* more.png */,
 				4C8F7C491A79327A00CCBDE8 /* Dalliant_Logo_XL.gif */,
 				4C8F7C3F1A75F84200CCBDE8 /* tutorial_background_00@2x.jpg */,
 				4C8F7C401A75F84200CCBDE8 /* tutorial_background_01@2x.jpg */,
@@ -1141,6 +1144,7 @@
 				C237015B19D974260024F856 /* ProgressHUD.bundle in Resources */,
 				C25E748219EC02F900779C23 /* share_menu@2x.png in Resources */,
 				C20F0B1919D7CE85005958C0 /* sdlogo.png in Resources */,
+				4C475FE21A7C9C8D00CB9283 /* more.png in Resources */,
 				C25E760719EF5A3A00779C23 /* MyappTableViewCell.xib in Resources */,
 				C25E765719EF754600779C23 /* washare.png in Resources */,
 				C25E766B19EF9C0C00779C23 /* Localizable.strings in Resources */,
@@ -1421,6 +1425,12 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/speeddate",
+					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/build-tools/android-4.4.2",
+					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/build-tools/android-4.4.2/renderscript/lib/intermediates/armeabi-v7a",
+					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/build-tools/android-4.4.2/renderscript/lib/intermediates/mips",
+					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/build-tools/android-4.4.2/renderscript/lib/intermediates/x86",
+					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/tools/Jet/JetCreator",
+					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/tools/lib",
 				);
 				PRODUCT_NAME = speeddate;
 				PROVISIONING_PROFILE = "";
@@ -1447,6 +1457,12 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/speeddate",
+					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/build-tools/android-4.4.2",
+					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/build-tools/android-4.4.2/renderscript/lib/intermediates/armeabi-v7a",
+					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/build-tools/android-4.4.2/renderscript/lib/intermediates/mips",
+					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/build-tools/android-4.4.2/renderscript/lib/intermediates/x86",
+					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/tools/Jet/JetCreator",
+					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/tools/lib",
 				);
 				PRODUCT_NAME = speeddate;
 				PROVISIONING_PROFILE = "";

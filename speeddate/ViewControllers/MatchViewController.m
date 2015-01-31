@@ -18,6 +18,7 @@
 #import "MatchViewController.h"
 #import "UserNearMeViewController.h"
 #import "MainViewController.h"
+#import "UserMessagesViewController.h"
 #import "SidebarTableViewController.h"
 #import <KIImagePager.h>
 #import "MatchProfileTVC.h"
@@ -27,7 +28,7 @@
 #import "MessageParse.h"
 #define MARGIN 50
 
-@interface MatchViewController ()
+@interface MatchViewController () <UIAlertViewDelegate, UIActionSheetDelegate>
 {
     User *mainUser;
 }
@@ -40,6 +41,8 @@
 @property (weak, nonatomic) IBOutlet UIScrollView *scroller;
 @property (nonatomic) UIVisualEffectView *blurImageView;
 @property (weak, nonatomic) IBOutlet UIButton *reportUser;
+@property (weak, nonatomic) IBOutlet UIButton *matchOptionsLabel;
+- (IBAction)matchOptionsButton:(id)sender;
 
 - (IBAction)reportUser:(id)sender;
 
@@ -160,10 +163,16 @@
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"matched_user"]) {
-        MatchProfileTVC *matchVC   = [[MatchProfileTVC alloc] init];
-        matchVC                    = segue.destinationViewController;
-        matchVC.matchUser          = _matchUser;
-        matchVC.matchCompatibility = _possibleMatch;
+        MatchProfileTVC *vc = [[MatchProfileTVC alloc] init];
+        vc                      = segue.destinationViewController;
+        vc.matchUser            = _matchUser;
+        vc.matchCompatibility   = _possibleMatch;
+    }
+    if ([segue.identifier isEqualToString:@"matchChat"]) {
+        UserMessagesViewController *vc   = [[UserMessagesViewController alloc] init];
+        vc                    = segue.destinationViewController;
+        vc.toUserParse        = _matchUser;
+        
     }
 }
 // START CHAT BUTTON
@@ -233,6 +242,13 @@
     }];
 }
 
+- (IBAction)matchOptionsButton:(id)sender {
+    NSString *chatTitle = [[NSString alloc] initWithFormat:@"Chat (%@ Tokens Left)", @"2"];
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Match Options" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:chatTitle,@"Report", nil];
+    sheet.tag = 2;
+    [sheet showInView:self.view];
+}
+
 - (IBAction)reportUser:(id)sender {
     [self deleteConversation];
     PFQuery *query = [Report query];
@@ -251,4 +267,57 @@
         
     }];
 }
+
+#pragma mark - ActionSheet Delegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (actionSheet.tag == 2) { // <-- Clicked Match Options Button
+        
+        if (buttonIndex == 0) {
+            //[self performSegueWithIdentifier:@"view_profile" sender:nil];
+            [self performSegueWithIdentifier:@"matchChat" sender:nil];
+        }
+        
+        if (buttonIndex == 1) {
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Report"
+                                                         message:@"Are you sure you want to report this user? The conversation will be deleted."
+                                                        delegate:self
+                                               cancelButtonTitle:@"Cancel"
+                                               otherButtonTitles:@"Report", nil];
+            av.tag = 2;
+            [av show];
+        }
+    }
+    
+}
+
+#pragma mark - AlertView Delegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == 2) {
+        /*
+        if (buttonIndex == 1) {
+            [self deleteConversation];
+            PFQuery *query = [Report query];
+            [query whereKey:@"user" equalTo:self.toUserParse];
+            [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                Report *report = objects.firstObject;
+                if (!report) {
+                    Report *repo = [Report object];
+                    report = repo;
+                    report.user = self.toUserParse;
+                }
+                report.report = [NSNumber numberWithInt:report.report.intValue + 1];
+                [report saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    [self popVC];
+                }];
+                
+            }];
+        }
+        */
+    }
+}
+
 @end

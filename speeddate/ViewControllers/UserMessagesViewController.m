@@ -713,7 +713,7 @@
 
 - (IBAction)actionPressed:(id)sender
 {
-    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Match Options" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"View Profile",@"Report",@"Un-Match", nil];
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Match Options" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"End Chat",@"Report",@"Block", nil];
     sheet.tag = 2;
     [sheet showInView:self.view];
 }
@@ -888,8 +888,13 @@
     } else if (actionSheet.tag == 2) { // <-- Clicked Match Options Button
         
         if (buttonIndex == 0) {
-            //[self performSegueWithIdentifier:@"view_profile" sender:nil];
-            [self performSegueWithIdentifier:@"match_view" sender:nil];
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"End Chat"
+                                                         message:@"Are you sure you want to End this Chat? The conversation will be deleted."
+                                                        delegate:self
+                                               cancelButtonTitle:@"Cancel"
+                                               otherButtonTitles:@"End Chat", nil];
+            av.tag = 5;
+            [av show];
         }
             
         if (buttonIndex == 1) {
@@ -1044,6 +1049,12 @@
             [self performSegueWithIdentifier:@"match_view" sender:nil];
         }
         
+    } else if (alertView.tag == 5) {
+        if (buttonIndex == 1) {
+            NSLog(@"End Chat pressed");
+            //[self deleteConversation];
+            [self popVC];
+        }
     }
 }
 

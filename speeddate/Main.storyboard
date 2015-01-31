@@ -1191,21 +1191,37 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="4Gg-UD-TpH"/>
+                    <navigationItem key="navigationItem" id="4Gg-UD-TpH">
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="P5Q-Dk-2Re">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="ua6-gu-Bh1">
+                                <rect key="frame" x="154" y="53" width="22" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="matchOptionsButton:" destination="rDU-7y-piv" eventType="touchUpInside" id="UGj-DI-ccM"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="1584"/>
                     <connections>
                         <outlet property="imagePager" destination="byP-b4-ONb" id="vfU-zo-Y0U"/>
                         <outlet property="imageView" destination="LkW-b4-rEj" id="Hc8-ql-gFO"/>
                         <outlet property="matchImageView" destination="Vb3-ld-uh8" id="iJU-Sf-US7"/>
+                        <outlet property="matchOptionsLabel" destination="ua6-gu-Bh1" id="PsS-Tu-CUe"/>
                         <outlet property="matchingLabel" destination="E20-Tt-bme" id="vK5-rp-xnV"/>
                         <outlet property="scroller" destination="One-Zj-tKF" id="O1K-np-efs"/>
                         <outlet property="userName" destination="U0c-mh-PTM" id="gOv-b1-LiW"/>
+                        <segue destination="OLv-wp-Wkd" kind="push" identifier="matchChat" id="zAq-nd-1cA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5nJ-ws-5nA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1626" y="1122"/>
+            <point key="canvasLocation" x="1629" y="1122"/>
         </scene>
         <!--Match View Controller-->
         <scene sceneID="QUK-7O-Yoa">
@@ -3019,11 +3035,11 @@
             <objects>
                 <viewController id="OLv-wp-Wkd" customClass="UserMessagesViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="7nY-6y-Yhf">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="1520"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="znx-55-aXc">
-                                <rect key="frame" x="0.0" y="462" width="320" height="42"/>
+                                <rect key="frame" x="0.0" y="1393" width="320" height="127"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="1cw-AD-1Ac">
@@ -3060,7 +3076,7 @@
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="cLf-s6-1pg">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="462"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="1478"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="fZ6-XE-pZA">
                                     <size key="itemSize" width="310" height="80"/>
@@ -3218,12 +3234,12 @@
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <navigationItem key="navigationItem" id="ZTu-k6-LqP">
-                        <barButtonItem key="rightBarButtonItem" style="plain" id="5y2-iA-jec">
-                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="v0i-7h-dgD">
-                                <rect key="frame" x="209" y="29" width="22" height="22"/>
+                        <barButtonItem key="rightBarButtonItem" title="Item" style="plain" id="5y2-iA-jec">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="v0i-7h-dgD">
+                                <rect key="frame" x="253" y="13" width="50" height="18"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <state key="normal">
+                                <state key="normal" image="more.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -3246,7 +3262,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sps-eH-99S" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1129" y="1641"/>
+            <point key="canvasLocation" x="1270" y="1617"/>
         </scene>
         <!--Image View Controller-->
         <scene sceneID="FYj-qu-kVq">
@@ -4261,6 +4277,7 @@
         <image name="magnifying-glass" width="128" height="128"/>
         <image name="mask_profile.png" width="640" height="400"/>
         <image name="message_menu.png" width="30" height="30"/>
+        <image name="more.png" width="51" height="13"/>
         <image name="profile_menu.png" width="30" height="30"/>
         <image name="sdlogo.png" width="500" height="300"/>
         <image name="searchPlus" width="512" height="512"/>
@@ -4276,17 +4293,17 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="MjG-Tl-7wb"/>
-        <segue reference="VlF-20-DHW"/>
-        <segue reference="J9J-1N-Njp"/>
-        <segue reference="MLw-yj-LVg"/>
-        <segue reference="oXm-ri-1Lw"/>
-        <segue reference="yRc-2z-5JR"/>
-        <segue reference="fn6-lQ-fgy"/>
-        <segue reference="uru-UJ-cE7"/>
-        <segue reference="yk5-qV-Iag"/>
-        <segue reference="vo7-ud-5cu"/>
         <segue reference="Qy0-fE-0Nr"/>
         <segue reference="h7w-Ho-pqn"/>
+        <segue reference="J9J-1N-Njp"/>
+        <segue reference="VlF-20-DHW"/>
+        <segue reference="MLw-yj-LVg"/>
+        <segue reference="MjG-Tl-7wb"/>
+        <segue reference="yRc-2z-5JR"/>
+        <segue reference="uru-UJ-cE7"/>
+        <segue reference="oXm-ri-1Lw"/>
+        <segue reference="zAq-nd-1cA"/>
+        <segue reference="fzt-VO-B8K"/>
+        <segue reference="NMB-y1-hOv"/>
     </inferredMetricsTieBreakers>
 </document>

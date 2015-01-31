@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "6160923FE5030967964DA2FE"
+               BlueprintIdentifier = "63D2E445921EFAF5353DD2B4"
                BuildableName = "libPods-TDBadgedCell.a"
                BlueprintName = "Pods-TDBadgedCell"
                ReferencedContainer = "container:Pods.xcodeproj">

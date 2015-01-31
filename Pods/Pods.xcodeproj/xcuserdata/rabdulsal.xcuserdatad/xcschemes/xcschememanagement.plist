@@ -8,71 +8,85 @@
 		<dict>
 			<key>isShown</key>
 			<false/>
+			<key>orderHint</key>
+			<integer>3</integer>
 		</dict>
 		<key>Pods-ILTranslucentView.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
+			<key>orderHint</key>
+			<integer>4</integer>
 		</dict>
 		<key>Pods-KIImagePager.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
+			<key>orderHint</key>
+			<integer>5</integer>
 		</dict>
 		<key>Pods-MDRadialProgress.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
+			<key>orderHint</key>
+			<integer>6</integer>
 		</dict>
 		<key>Pods-NMRangeSlider.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
+			<key>orderHint</key>
+			<integer>7</integer>
 		</dict>
 		<key>Pods-TDBadgedCell.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
+			<key>orderHint</key>
+			<integer>8</integer>
 		</dict>
 		<key>Pods.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
+			<key>orderHint</key>
+			<integer>2</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>3AB7E6BD12D3114770E54306</key>
+		<key>63D2E445921EFAF5353DD2B4</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>52465A07C90C26422CD45584</key>
+		<key>7A0F9E7B5C4F3DAA2008C303</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>544C59F975EF80A728406B26</key>
+		<key>854231209A543C82C765FFC5</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>5B9651068AD97B128C78B469</key>
+		<key>AECBBD37E00DA02EB63C8F5A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>6160923FE5030967964DA2FE</key>
+		<key>BF1E3EBDF163EC551DFC5436</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>CEFED70119C63A6522803239</key>
+		<key>D4D45C4472C15A1F894799EA</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>E4BE7AF26721E12CFFD8EF0D</key>
+		<key>DC0AB2091945602409782C87</key>
 		<dict>
 			<key>primary</key>
 			<true/>
