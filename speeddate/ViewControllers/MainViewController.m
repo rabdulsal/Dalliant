@@ -132,6 +132,9 @@
 
 @property (strong) NSDictionary *match;
 @property (strong) NSMutableArray *sharedPrefs;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *filtersButton;
+
+
 - (IBAction)pushToBaedar:(id)sender;
 
 @end
@@ -254,6 +257,8 @@
 - (void)baedarOn
 {
     //[self.locationManager startUpdatingLocation];
+    _filtersButton.enabled = false;
+    _filtersButton.title = @"";
     [self currentLocationIdentifier];
     _curUser.online = @"yes";
     [_curUser saveInBackground];
@@ -271,6 +276,8 @@
     //_baedarLabel.transform = CGAffineTransformMakeScale(1.1,1.1); // <-- Increase button size on press
     _curUser.online = @"no";
     [_curUser saveInBackground];
+    _filtersButton.enabled = true;
+    _filtersButton.title = @"Filters";
     [_baedarLabel setSelected:NO];
     inAnimation = NO;
     [waveLayer removeFromSuperlayer];

@@ -1078,6 +1078,7 @@
                         <outlet property="activityLabel" destination="aVY-JI-f2V" id="COR-sD-u3h"/>
                         <outlet property="baedarLabel" destination="fRd-VD-LWY" id="F47-ZR-qaG"/>
                         <outlet property="dislikeButton" destination="AeO-SB-QWK" id="Sqc-wg-DRG"/>
+                        <outlet property="filtersButton" destination="7Gj-y8-gJo" id="S9S-d4-g4D"/>
                         <outlet property="likeButton" destination="1J8-9X-ye5" id="Rkv-fM-0e9"/>
                         <outlet property="matchButtonLabel" destination="B96-wI-cmw" id="2cW-Uf-Luf"/>
                         <outlet property="matchedLabel" destination="Bsh-B4-FYc" id="knG-oM-kVL"/>
@@ -3269,7 +3270,7 @@
             <objects>
                 <viewController id="hsn-7u-aHf" customClass="ImageViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4Kl-I2-sAF">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="1520"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -4293,17 +4294,17 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="Qy0-fE-0Nr"/>
-        <segue reference="h7w-Ho-pqn"/>
         <segue reference="J9J-1N-Njp"/>
         <segue reference="VlF-20-DHW"/>
         <segue reference="MLw-yj-LVg"/>
         <segue reference="MjG-Tl-7wb"/>
+        <segue reference="fn6-lQ-fgy"/>
         <segue reference="yRc-2z-5JR"/>
-        <segue reference="uru-UJ-cE7"/>
         <segue reference="oXm-ri-1Lw"/>
+        <segue reference="uru-UJ-cE7"/>
         <segue reference="zAq-nd-1cA"/>
-        <segue reference="fzt-VO-B8K"/>
         <segue reference="NMB-y1-hOv"/>
+        <segue reference="h7w-Ho-pqn"/>
+        <segue reference="Qy0-fE-0Nr"/>
     </inferredMetricsTieBreakers>
 </document>
