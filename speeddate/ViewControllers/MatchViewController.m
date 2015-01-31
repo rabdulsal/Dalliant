@@ -23,15 +23,12 @@
 #import <KIImagePager.h>
 #import "MatchProfileTVC.h"
 #import <ILTranslucentView.h>
-#import "User.h"
 #import "Report.h"
 #import "MessageParse.h"
 #define MARGIN 50
 
 @interface MatchViewController () <UIAlertViewDelegate, UIActionSheetDelegate>
-{
-    User *mainUser;
-}
+
 @property (weak, nonatomic) IBOutlet UIButton *matchingButton;
 @property (weak, nonatomic) IBOutlet UIImageView *matchImageView;
 @property (weak, nonatomic) IBOutlet UILabel *matchingLabel;
@@ -55,9 +52,8 @@
 {
     [super viewDidLoad];
     
-    mainUser = [User singleObj];
-    
     _userName.text = _matchUser.nickname;
+    _user = [UserParseHelper currentUser];
     
     if (![_possibleMatch.usersRevealed isEqualToNumber:[NSNumber numberWithBool:YES]]) { //<-- Change to check if revealReply = YES
         [self blurImages:_imageView];
@@ -174,8 +170,8 @@
         vc.toUserParse        = _matchUser;
         
         //Check for prior Chat b/w 2 Users, if so, don't subtract credits
-        [[UserParseHelper currentUser] calculateCredits];
-        NSLog(@"%@'s credits: %@", [UserParseHelper currentUser].nickname, [UserParseHelper currentUser].credits);
+        [_user calculateCredits];
+        NSLog(@"%@'s credits: %@", _user.nickname, _user.credits);
     }
 }
 // START CHAT BUTTON
@@ -247,8 +243,8 @@
 
 - (IBAction)matchOptionsButton:(id)sender {
     
-    if ([UserParseHelper currentUser].credits > 0) {
-        NSString *chatTitle = [[NSString alloc] initWithFormat:@"Chat (%@ Credits Left)", [UserParseHelper currentUser].credits];
+    if (_user.credits > 0) {
+        NSString *chatTitle = [[NSString alloc] initWithFormat:@"Chat (%@ Credits Left)", _user.credits];
         UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Match Options" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Report", chatTitle, nil];
         sheet.tag = 2;
         [sheet showInView:self.view];

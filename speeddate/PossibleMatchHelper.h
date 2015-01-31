@@ -23,5 +23,6 @@
 @property NSNumber *usersRevealed;
 
 - (void)calculateCompatibility:(double)prefCounter with:(double)totalPreferences;
+- (void)configureRadialViewForView:(UIView *)view withFrame:(CGRect)frame;
 
 @end

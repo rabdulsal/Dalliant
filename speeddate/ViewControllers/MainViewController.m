@@ -31,9 +31,6 @@
 #import "IAPHelper.h"
 #import <StoreKit/StoreKit.h>
 #import "RageIAPHelper.h"
-#import <MDRadialProgressLabel.h>
-#import <MDRadialProgressTheme.h>
-#import <MDRadialProgressView.h>
 #import "UserTableViewCell.h"
 #import "MatchViewController.h"
 #import "User.h"
@@ -946,59 +943,6 @@
 
 #pragma mark - TableView Configurations
 
-- (void)setHighCompatibilityColor:(MDRadialProgressTheme *)newTheme
-{
-    newTheme.completedColor     = RED_DEEP;
-    newTheme.incompletedColor   = RED_LIGHT;
-    newTheme.centerColor        = RED_OMNY;
-}
-
-- (void)setMedCompatibilityColor:(MDRadialProgressTheme *)newTheme
-{
-    newTheme.completedColor     = SEA_DEEP_COLOR;
-    newTheme.incompletedColor   = SEA_COLOR;
-    newTheme.centerColor        = MENU_BLUE;
-}
-
-- (void)setLowCompatibilityColor:(MDRadialProgressTheme *)newTheme
-{
-    newTheme.completedColor     = [UIColor darkGrayColor];
-    newTheme.incompletedColor   = [UIColor lightGrayColor];
-    newTheme.centerColor        = GRAY_COLOR;
-}
-
-- (void)configureRadialView:(UserTableViewCell *)matchCell forConnection:(PossibleMatchHelper *)relationship
-{
-    MDRadialProgressTheme *newTheme = [[MDRadialProgressTheme alloc] init];
-    //newTheme.completedColor = [UIColor colorWithRed:90/255.0 green:212/255.0 blue:39/255.0 alpha:1.0];
-    
-    //newTheme.incompletedColor = [UIColor colorWithRed:164/255.0 green:231/255.0 blue:134/255.0 alpha:1.0];
-    newTheme.centerColor = [UIColor clearColor];
-    //[self setHighCompatibilityColor:newTheme];
-    
-    NSInteger compatibility = [relationship.compatibilityIndex integerValue];
-    // Compatibility conditional - change _otherUser variable
-    if (compatibility > 66) {
-        [self setHighCompatibilityColor:newTheme];
-    } else if (compatibility < 66 && compatibility > 33) {
-        [self setMedCompatibilityColor:newTheme];
-    } else {
-        [self setLowCompatibilityColor:newTheme];
-    }
-    
-    //newTheme.centerColor = [UIColor colorWithRed:224/255.0 green:248/255.0 blue:216/255.0 alpha:1.0];
-    newTheme.sliceDividerHidden = YES;
-    newTheme.labelColor = [UIColor blackColor];
-    newTheme.labelShadowColor = [UIColor whiteColor];
-    
-    CGRect frame = CGRectMake(190, 8, 45, 45);
-    MDRadialProgressView *radialView7 = [[MDRadialProgressView alloc] initWithFrame:frame andTheme:newTheme];
-    radialView7.progressTotal   = [relationship.totalPrefs integerValue];
-    radialView7.progressCounter = [relationship.prefCounter integerValue];
-    //[self.view addSubview:radialView7];
-    NSLog(@"%@ totalPrefs: %@, prefCounter: %@", relationship.toUser.nickname, relationship.totalPrefs, relationship.prefCounter);
-    [matchCell.contentView addSubview:radialView7];
-}
 /*
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -1092,7 +1036,9 @@
         if (!error) {
             
             cell.userImageView.image = [UIImage imageWithData:data];
-            [self configureRadialView:cell forConnection:matchedConnection];
+            //[self configureRadialView:cell forConnection:matchedConnection];
+            CGRect frame = CGRectMake(190, 8, 45, 45);
+            [matchedConnection configureRadialViewForView:cell.contentView withFrame:frame];
             if (![matchedConnection.usersRevealed isEqualToNumber:yep]) { // <-- Test purposes - change to check isRevealed on Matched User - NOT WORKING
                 [self blurImages:cell.userImageView];
         
