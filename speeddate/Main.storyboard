@@ -4030,12 +4030,25 @@
                             <view contentMode="scaleToFill" id="Lag-wU-boF" customClass="EAIntroView">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="gMN-ba-C6K">
+                                        <rect key="frame" x="-277" y="-54" width="640" height="1136"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Back">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="jumpToBeginning:" destination="5TR-Sn-SGG" eventType="touchUpInside" id="G4f-fe-8II"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <connections>
+                        <outlet property="beginningButton" destination="gMN-ba-C6K" id="YkY-0Y-xHd"/>
                         <outlet property="introView" destination="Lag-wU-boF" id="xN8-MU-TNN"/>
                     </connections>
                 </viewController>
