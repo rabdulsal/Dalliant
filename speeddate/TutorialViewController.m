@@ -60,11 +60,11 @@
     page4.title         = @"Reveal and Share Profiles";
     page4.desc          = @"Fourth Page";
     
-    EAIntroPage *page5          = [EAIntroPage page];
-    page5.bgImage               = [UIImage imageNamed:@"match"];
-    page5.title                 = @"Meet if you Connect";
-    page5.desc                  = @"Fifth Page";
-    page5.subviews              = @[_beginningButton]; // Move higher up in View
+    EAIntroPage *page5  = [EAIntroPage page];
+    page5.bgImage       = [UIImage imageNamed:@"match"];
+    page5.title         = @"Meet if you Connect";
+    page5.desc          = @"Fifth Page";
+    page5.subviews      = @[_beginningButton]; // Move higher up in View
     
     _pageArray = @[page1,page2,page3,page4,page5];
     [_introView setPages:_pageArray];

@@ -30,6 +30,7 @@
 @property NSMutableArray *work;
 @property NSMutableArray *school;
 @property NSNumber *credits;
+@property NSMutableArray *blockedUsers;
 
 
 ////thumb_photo
@@ -94,7 +95,7 @@
 - (NSString *)userSchool;
 - (void)configureImage:(UIImage *)image picNumber:(int)photoNum;
 - (void)calculateCredits;
-
+- (void)blockUser:(NSString *)matchUser;
 
 
 @end

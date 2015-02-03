@@ -899,7 +899,7 @@
             
         if (buttonIndex == 1) {
             UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Report"
-                                                         message:@"Are you sure you want to report this user? The conversation will be deleted."
+                                                         message:@"Are you sure you want to Block this user? The conversation will be deleted."
                                                         delegate:self
                                                cancelButtonTitle:@"Cancel"
                                                otherButtonTitles:@"Report", nil];
@@ -907,9 +907,15 @@
             [av show];
         }
             
-        if (buttonIndex == 2) {
-            NSLog(@"Delete button pressed");
-            //[self deleteConversation];
+        if (buttonIndex == 2) { //<-- Block User
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Block User"
+                                                         message:@"Are you sure you want to Block this user? The conversation will be deleted."
+                                                        delegate:self
+                                               cancelButtonTitle:@"Cancel"
+                                               otherButtonTitles:@"Block", nil];
+            av.tag = 6;
+            [av show];
+
         }
         
     }
@@ -1018,7 +1024,7 @@
         //});
         
         
-    } else if (alertView.tag == 2) {
+    } else if (alertView.tag == 2) { // Report User from ActionSheet
         
         if (buttonIndex == 1) {
             [self deleteConversation];
@@ -1039,7 +1045,8 @@
             }];
         }
         
-    } else if (alertView.tag == 3) {
+        
+    } else if (alertView.tag == 3) { // Share Request toUser Selected YES
         
         // Reload View after Current User Clicks 'Okay' in Revealed AlertView
         
@@ -1053,7 +1060,15 @@
         if (buttonIndex == 1) {
             NSLog(@"End Chat pressed");
             //[self deleteConversation];
-            [self popVC];
+            //[self popVC];
+        }
+    } else if (alertView.tag == 6) {
+        if (buttonIndex == 1) {
+            [_curUser blockUser:_toUserParse.objectId];
+            [_curUser saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                [self deleteConversation];
+                //[self popVC];
+            }];
         }
     }
 }

@@ -133,7 +133,7 @@
 @property (strong) NSDictionary *match;
 @property (strong) NSMutableArray *sharedPrefs;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *filtersButton;
-
+@property NSArray *blockedUsers;
 
 - (IBAction)pushToBaedar:(id)sender;
 
@@ -172,6 +172,7 @@
     [curQuery whereKey:@"username" equalTo:[UserParseHelper currentUser].username];
     [curQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         self.curUser = objects.firstObject;
+        
         [self.curUser.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
             self.userPhoto = [UIImage imageWithData:data];
         }];
@@ -268,6 +269,7 @@
     //_baedarLabel.transform = CGAffineTransformMakeScale(1.1,1.1); // <-- Increase button size on press
     [_baedarLabel setSelected:YES];
     userSingleton.baedarIsRunning = true;
+    NSLog(@"Block User count2: %lu", (unsigned long)[_curUser.blockedUsers count]);
     [self getMatches];
 }
 
@@ -388,6 +390,7 @@
 
 - (void)getMatches
 {
+        NSLog(@"Block User count3: %lu", (unsigned long)[_curUser.blockedUsers count]);
     /* ---------------- START BLOCK COMMENT
      
     // Fetch PossibleMatch ------------------------------------------------------------------
@@ -498,11 +501,12 @@
     if (self.curUser.distance.doubleValue == 0.0) {
         self.curUser.distance = [NSNumber numberWithDouble:1.6];
     }
-    
+    NSLog(@"Block User count4: %lu", (unsigned long)[_curUser.blockedUsers count]);
     // Fetch Nearby Users based on distance; while require a time-based While-loop
     PFQuery *userQuery = [UserParseHelper query];
     [userQuery whereKey:@"geoPoint" nearGeoPoint:self.curUser.geoPoint withinKilometers:self.curUser.distance.doubleValue];
     [userQuery whereKey:@"objectId" notEqualTo:_curUser.objectId];
+    [userQuery whereKey:@"objectId" notContainedIn:_curUser.blockedUsers];
     [userQuery whereKey:@"online" equalTo:@"yes"];
     [userQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         
@@ -512,6 +516,7 @@
             //[waveLayer setHidden:YES];
             [_posibleMatchesArray addObjectsFromArray:objects];
             NSLog(@"Potential matches found, total: %ld", objects.count);
+            
             /*
             for (UserParseHelper *possMatch in _posibleMatchesArray) {
                 _matchUser = possMatch;
@@ -564,6 +569,7 @@
         [self matchGender];
     }
     
+    [self fetchAllUserMatchRelationships];
     [self.tableView reloadData];
 }
 
@@ -609,7 +615,7 @@
         }
     }];*/
     [_otherUser save];
-    [_matchRelationships addObject:_otherUser];
+    //[_matchRelationships addObject:_otherUser];
     
 }
 
@@ -1017,6 +1023,28 @@
     }];
 }
 
+- (void)fetchAllUserMatchRelationships
+{
+    PFQuery *matchQueryFrom = [PossibleMatchHelper query];
+    [matchQueryFrom whereKey:@"fromUser" equalTo:[UserParseHelper currentUser]];
+    
+    PFQuery *matchQueryTo = [PossibleMatchHelper query];
+    [matchQueryTo whereKey:@"toUser" equalTo:[UserParseHelper currentUser]];
+    
+    PFQuery *both = [PFQuery orQueryWithSubqueries:@[matchQueryFrom, matchQueryTo]];
+    [both orderByDescending:@"compatibilityIndex"];
+    
+    
+        NSArray *fetchedMatches = [[NSArray alloc] initWithArray:[both findObjects]];
+        
+        // Add all returned Matches to MatchRelationships
+        for (PossibleMatchHelper *match in fetchedMatches) {
+            [_matchRelationships addObject:match];
+        }
+    
+    NSLog(@"Total MatchRelationships: %lu", (unsigned long)[_matchRelationships count]);
+}
+
 #pragma mark TableView Delegate - Includes Blurring
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -1035,7 +1063,13 @@
     */
     // Get Possible Matches
     matchedConnection = [_matchRelationships objectAtIndex:indexPath.row];
-    user = matchedConnection.toUser;
+    
+    if ([matchedConnection.toUser.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
+        user = (UserParseHelper *)matchedConnection.fromUser;
+    } else user = (UserParseHelper *)matchedConnection.toUser;
+    
+    user = (UserParseHelper *)user.fetchIfNeeded;
+    NSLog(@"Cell User: %@", user.nickname);
     
     NSNumber *yep = [NSNumber numberWithBool:YES];
     [user.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
@@ -1043,18 +1077,20 @@
         if (!error) {
             
             cell.userImageView.image = [UIImage imageWithData:data];
+            cell.userImageView.hidden = YES;
             //[self configureRadialView:cell forConnection:matchedConnection];
-            CGRect frame = CGRectMake(190, 8, 45, 45);
+            //CGRect frame = CGRectMake(190, 8, 45, 45);
+            CGRect frame = CGRectMake(20, 8, 50, 50);
             [matchedConnection configureRadialViewForView:cell.contentView withFrame:frame];
             if (![matchedConnection.usersRevealed isEqualToNumber:yep]) { // <-- Test purposes - change to check isRevealed on Matched User - NOT WORKING
                 [self blurImages:cell.userImageView];
         
                 if ([user.isMale isEqualToString:@"true"]) {
-                    NSString *matchGender = @"Male";
-                    cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
+                    NSString *matchGender = @"M";
+                    cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@ - %@ - %@", matchGender, user.age, user.bodyType];
                 } else {
-                    NSString *matchGender = @"Female";
-                    cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
+                    NSString *matchGender = @"F";
+                    cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@ - %@ - %@", matchGender, user.age, user.bodyType];
                 }
         
             } else{
