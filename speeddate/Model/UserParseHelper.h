@@ -31,6 +31,7 @@
 @property NSMutableArray *school;
 @property NSNumber *credits;
 @property NSMutableArray *blockedUsers;
+@property NSMutableArray *blockedBy;
 
 
 ////thumb_photo

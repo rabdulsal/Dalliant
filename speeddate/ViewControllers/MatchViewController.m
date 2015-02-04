@@ -53,7 +53,8 @@
     [super viewDidLoad];
     
     _userName.text = _matchUser.nickname;
-    _user = [UserParseHelper currentUser];
+    
+    NSLog(@"Blocked Users MatchVC: %lu", (unsigned long) [_user.blockedUsers count]);
     
     if (![_possibleMatch.usersRevealed isEqualToNumber:[NSNumber numberWithBool:YES]]) { //<-- Change to check if revealReply = YES
         [self blurImages:_imageView];
@@ -165,13 +166,14 @@
         vc.matchCompatibility   = _possibleMatch;
     }
     if ([segue.identifier isEqualToString:@"matchChat"]) {
-        UserMessagesViewController *vc   = [[UserMessagesViewController alloc] init];
-        vc                    = segue.destinationViewController;
-        vc.toUserParse        = _matchUser;
+        UserMessagesViewController *vc  = [[UserMessagesViewController alloc] init];
+        vc                              = segue.destinationViewController;
+        vc.toUserParse                  = _matchUser;
+        vc.curUser                      = _user;
         
         //Check for prior Chat b/w 2 Users, if so, don't subtract credits
-        [_user calculateCredits];
-        NSLog(@"%@'s credits: %@", _user.nickname, _user.credits);
+        //[_user calculateCredits];
+        //NSLog(@"%@'s credits: %@", _user.nickname, _user.credits);
     }
 }
 // START CHAT BUTTON
@@ -243,17 +245,19 @@
 
 - (IBAction)matchOptionsButton:(id)sender {
     
-    if (_user.credits > 0) {
+   // if (_user.credits > 0) {
         NSString *chatTitle = [[NSString alloc] initWithFormat:@"Chat (%@ Credits Left)", _user.credits];
         UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Match Options" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Report", chatTitle, nil];
         sheet.tag = 2;
         [sheet showInView:self.view];
         
-    } else {
+    //}
+    /*
+    else {
         UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Match Options" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Report", nil];
         sheet.tag = 7;
         [sheet showInView:self.view];
-    }
+    }*/
 }
 
 - (IBAction)reportUser:(id)sender {

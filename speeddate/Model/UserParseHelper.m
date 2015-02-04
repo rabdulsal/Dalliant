@@ -33,6 +33,7 @@
 @dynamic minAgePref;
 @dynamic credits;
 @dynamic blockedUsers;
+@dynamic blockedBy;
 
 ////thumb photo
 @dynamic photo_thumb;
@@ -154,8 +155,10 @@
 
 - (void)blockUser:(NSString *)matchUserId
 {
-    self.blockedUsers = [[NSMutableArray alloc] init];
-    [self.blockedUsers addObject:matchUserId];
+    if ([self.blockedUsers count] == 0 || !self.blockedUsers) {
+        self.blockedUsers = [NSMutableArray new];
+        [self.blockedUsers addObject:matchUserId];
+    } else [self.blockedUsers addObject:matchUserId];
 }
 
 @end

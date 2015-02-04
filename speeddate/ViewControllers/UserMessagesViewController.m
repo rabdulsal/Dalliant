@@ -17,6 +17,7 @@
 #import "User.h"
 #import "UserProfileViewController.h"
 #import "MatchViewController.h"
+#import "MainViewController.h"
 
 @interface UserMessagesViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 {
@@ -34,7 +35,6 @@
 @property (strong, nonatomic) NSMutableArray *photoArray;
 @property (strong, nonatomic) RevealRequest *receivedRequest;
 @property (strong, nonatomic) RevealRequest *sentRequest;
-@property UserParseHelper *curUser;
 @property NSNumber *yep;
 @end
 
@@ -47,7 +47,7 @@
     [super viewDidLoad];
     
     mainUser = [User singleObj];
-    _curUser = [UserParseHelper currentUser];
+    
     
     [self getPhotos];
     [self getMessages];
@@ -130,7 +130,7 @@
 
 - (void)fetchCompatibleMatch
 {
-    NSArray *matchedUsers = [[NSArray alloc] initWithObjects:[UserParseHelper currentUser], _toUserParse, nil];
+    NSArray *matchedUsers = [[NSArray alloc] initWithObjects:_curUser, _toUserParse, nil];
     PFQuery *possMatch1 = [PossibleMatchHelper query];
     [possMatch1 whereKey:@"matches" containsAllObjectsInArray:matchedUsers];
     //[possMatch1 findObjects];
@@ -162,7 +162,7 @@
     MessageParse *message = [MessageParse object];
     message.text = self.textField.text;
     message.createdAt = [NSDate date];
-    message.fromUserParse = [UserParseHelper currentUser];
+    message.fromUserParse = _curUser;
     message.toUserParse = self.toUserParse;
     message.read = NO;
     [message saveInBackground];
@@ -176,7 +176,7 @@
     if (self.toUserParse.installation.objectId) {
         PFQuery *query = [PFInstallation query];
         [query whereKey:@"objectId" equalTo:self.toUserParse.installation.objectId];
-        PFUser *pushUser = [PFUser currentUser];
+        PFUser *pushUser = _curUser;
         NSString *pushUserto = pushUser[@"nickname"];
         
         NSString *pushMessage = nil;
@@ -220,7 +220,7 @@
     }
 
    
-    if ((message.sendImage || message.image) && [message.fromUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
+    if ((message.sendImage || message.image) && [message.fromUserParse.objectId isEqualToString:_curUser.objectId]) {
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"fromCellImage" forIndexPath:indexPath];
         cell.userImageView.image = self.fromPhoto;
 
@@ -272,7 +272,7 @@
     }
 
     
-    if (!message.image && !message.sendImage && [message.fromUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
+    if (!message.image && !message.sendImage && [message.fromUserParse.objectId isEqualToString:_curUser.objectId]) {
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"fromCell" forIndexPath:indexPath];
         cell.userImageView.image = self.fromPhoto;
         cell.messageLabel.textColor = WHITE_COLOR;
@@ -318,7 +318,7 @@
         
         rect.origin = cell.messageLabel.frame.origin;
         CGRect outlineRect = CGRectInset(rect, -15, -10); // <-- Sets text position in BubbleView
-        if (!message.image && !message.sendImage && [message.fromUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
+        if (!message.image && !message.sendImage && [message.fromUserParse.objectId isEqualToString:_curUser.objectId]) {
             rect.origin.x = cell.userImageView.frame.origin.x - outlineRect.size.width;
             //rect.origin.x = cell.userImageView.frame.origin.x - outlineRect.size.width + 25; // <-- Pushes current User text bubble toward righ margin
         }
@@ -330,7 +330,7 @@
         outlineRect.origin.y -= MARGIN/1.5; //<-- Adds top/bottom padding to Bubbleview
         
         UIView *bubbleView = [[UIView alloc] initWithFrame:outlineRect];
-        if ( [message.fromUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
+        if ( [message.fromUserParse.objectId isEqualToString:_curUser.objectId]) {
             bubbleView.backgroundColor = RED_LIGHT;
         } else {
             //bubbleView.backgroundColor = MENU_GRAY_LIGHT;
@@ -375,13 +375,13 @@
 - (void)getMessages
 {
     PFQuery *query1 = [MessageParse query];
-    [query1 whereKey:@"fromUserParse" equalTo:[PFUser currentUser]];
+    [query1 whereKey:@"fromUserParse" equalTo:_curUser];
     [query1 whereKey:@"toUserParse" equalTo:self.toUserParse];
     [query1 whereKey:@"text" notEqualTo:@""];
 
     PFQuery *query2 = [MessageParse query];
     [query2 whereKey:@"fromUserParse" equalTo:self.toUserParse];
-    [query2 whereKey:@"toUserParse" equalTo:[PFUser currentUser]];
+    [query2 whereKey:@"toUserParse" equalTo:_curUser];
     [query2 whereKey:@"text" notEqualTo:@""];
 
 
@@ -408,7 +408,7 @@
 
     PFQuery *query = [MessageParse query];
     [query whereKey:@"fromUserParse" equalTo:self.toUserParse];
-    [query whereKey:@"toUserParse" equalTo:[PFUser currentUser]];
+    [query whereKey:@"toUserParse" equalTo:_curUser];
     [query whereKey:@"read" equalTo:[NSNumber numberWithBool:NO]]; // <-- Key to determine if Message is read - add to TDBadgeCell logic for
     
    
@@ -432,7 +432,7 @@
 {
     __block int count = 0;
     PFQuery *queryFrom = [UserParseHelper query];
-    [queryFrom getObjectInBackgroundWithId:[UserParseHelper currentUser].objectId
+    [queryFrom getObjectInBackgroundWithId:_curUser.objectId
                                      block:^(PFObject *object, NSError *error)
      {
          PFFile *file = [object objectForKey:@"photo"];
@@ -579,7 +579,7 @@
     [self dismissViewControllerAnimated:YES completion:nil];
     UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
     MessageParse *message = [MessageParse object];
-    message.fromUserParse = [UserParseHelper currentUser];
+    message.fromUserParse = _curUser;
     message.toUserParse = self.toUserParse;
     message.read = NO;
     [self.messages addObject:message];
@@ -596,7 +596,7 @@
         message.image = file;
         [message saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             PFQuery *query = [PFInstallation query];
-            PFUser *pushUser = [PFUser currentUser];
+            PFUser *pushUser = _curUser;
             NSString *pushUserto = pushUser[@"nickname"];
             [query whereKey:@"objectId" equalTo:self.toUserParse.installation.objectId];
             
@@ -721,12 +721,12 @@
 - (void)deleteConversation
 {
     PFQuery *query1 = [MessageParse query];
-    [query1 whereKey:@"fromUserParse" equalTo:[PFUser currentUser]];
+    [query1 whereKey:@"fromUserParse" equalTo:_curUser];
     [query1 whereKey:@"toUserParse" equalTo:self.toUserParse];
 
     PFQuery *query2 = [MessageParse query];
     [query2 whereKey:@"fromUserParse" equalTo:self.toUserParse];
-    [query2 whereKey:@"toUserParse" equalTo:[PFUser currentUser]];
+    [query2 whereKey:@"toUserParse" equalTo:_curUser];
 
 
     PFQuery *orQUery = [PFQuery orQueryWithSubqueries:@[query1, query2]];
@@ -734,8 +734,21 @@
     [orQUery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [MessageParse deleteAllInBackground:objects block:^(BOOL succeeded, NSError *error) {
           //  [self popVC];
-            [self.navigationController popViewControllerAnimated:YES];
+           // [self.navigationController popViewControllerAnimated:YES];
         }];
+    }];
+}
+
+- (void)deleteMatch
+{
+    PFQuery *matchQuery = [PossibleMatchHelper query];
+    [matchQuery whereKey:@"matches" containsAllObjectsInArray:_matchedUsers.matches];
+    
+    [matchQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            [PossibleMatchHelper deleteAll:objects];
+        }
+        
     }];
 }
 
@@ -802,7 +815,7 @@
     NSLog(@"Fetch Reveal Reply run");
     // Query for Incoming RevealRequest
     PFQuery *replyQuery = [RevealRequest query];
-    [replyQuery whereKey:@"requestFromUser" equalTo:[PFUser currentUser]];
+    [replyQuery whereKey:@"requestFromUser" equalTo:_curUser];
     [replyQuery whereKey:@"requestToUser" equalTo:self.toUserParse];
     [replyQuery whereKey:@"requestReply" notEqualTo:@""];
     
@@ -860,7 +873,7 @@
             // <-- Apparently this works when app is in background, a notification is sent and appears as alert
             // RevealRequest setup
             RevealRequest *revealRequest = [RevealRequest object];
-            revealRequest.requestFromUser = [UserParseHelper currentUser];
+            revealRequest.requestFromUser = _curUser;
             revealRequest.requestToUser = self.toUserParse;
             revealRequest.requestReply = @"";
             
@@ -1001,7 +1014,7 @@
                         /*
                         // Push Reveal Reply Updates Notification
                         PFQuery *query = [PFInstallation query];
-                        PFUser *pushUser = [PFUser currentUser];
+                        PFUser *pushUser = _curUser;
                         NSString *pushUserto = pushUser[@"nickname"];
                         [query whereKey:@"objectId" equalTo:self.toUserParse.installation.objectId];
                     
@@ -1064,11 +1077,28 @@
         }
     } else if (alertView.tag == 6) {
         if (buttonIndex == 1) {
-            [_curUser blockUser:_toUserParse.objectId];
-            [_curUser saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                [self deleteConversation];
+            // Add toUserParse to _curUser.blockedUsers
+            [_curUser.blockedUsers addObject:_toUserParse.objectId];
+            [_curUser save];
+            
+            // Add _curUser to toUserParse .blockedBy attrib
+            [_toUserParse.blockedBy addObject:_curUser.objectId];
+            [_toUserParse save];
+            
+                // Delete Chat
+                //[self deleteConversation];
+                
+                // Delete Match Relationship
+                [self deleteMatch];
+                
                 //[self popVC];
-            }];
+                // Pop to MainViewController
+                NSArray *arrayVCs = [self.navigationController viewControllers];
+                [self.navigationController popToViewController:[arrayVCs objectAtIndex:1] animated:YES];
+                
+                //Notification to MainViewController to update TableView?
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"TableUpdated" object:nil];
+            
         }
     }
 }

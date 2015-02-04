@@ -154,8 +154,8 @@
 #if (TARGET_IPHONE_SIMULATOR)
 
 #else
-    [UserParseHelper currentUser].installation = [PFInstallation currentInstallation];
-    [[UserParseHelper currentUser] saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+    _curUser.installation = [PFInstallation currentInstallation];
+    [_curUser saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
        
     }];
 
@@ -172,7 +172,7 @@
     [curQuery whereKey:@"username" equalTo:[UserParseHelper currentUser].username];
     [curQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         self.curUser = objects.firstObject;
-        
+        NSLog(@"Blocked Users MainVC: %lu", (unsigned long) [_curUser.blockedUsers count]);
         [self.curUser.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
             self.userPhoto = [UIImage imageWithData:data];
         }];
@@ -223,6 +223,8 @@
     [self customizeApp];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:receivedMessage object:nil];
+
+    
     //[self currentLocationIdentifier];
     //[self performSegueWithIdentifier:@"test_match" sender:nil];
 
@@ -313,6 +315,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    // Listen for TableView changes
     //[self checkIncomingViewController];
     //[self currentLocationIdentifier];
     //[self loadingChat];
@@ -326,7 +329,7 @@
     [super viewDidAppear:animated];
     [self checkFirstTime];
     [self performSelector:@selector(startAnimation) withObject:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTableView) name:@"TableUpdated" object:nil];
 }
 
 - (void)checkIncomingViewController
@@ -373,9 +376,9 @@
         self.activityLabel.text = [NSString stringWithFormat:@"Locating :\n %@, %@", placemark.locality, placemark.administrativeArea];
          */
     }];
-    [UserParseHelper currentUser].geoPoint = [PFGeoPoint geoPointWithLatitude:self.currentLocation.coordinate.latitude longitude:self.currentLocation.coordinate.longitude];
+    _curUser.geoPoint = [PFGeoPoint geoPointWithLatitude:self.currentLocation.coordinate.latitude longitude:self.currentLocation.coordinate.longitude];
     self.curUser.geoPoint = [PFGeoPoint geoPointWithLatitude:self.currentLocation.coordinate.latitude longitude:self.currentLocation.coordinate.longitude];
-    [[UserParseHelper currentUser] save];
+    [_curUser save];
     NSLog(@"%@ location: %@", _curUser.nickname, _curUser.geoPoint);
     //[self performSegueWithIdentifier:@"viewMatches" sender:nil];
 }
@@ -402,7 +405,7 @@
     
     //
     PFQuery *queryInside = [PossibleMatchHelper query];
-    [queryInside whereKey:@"toUser" equalTo:[UserParseHelper currentUser]];
+    [queryInside whereKey:@"toUser" equalTo:_curUser];
     [queryInside whereKey:@"toUserApproved" equalTo:@"YES"]; // May not need this, based on swipe
     
     // Make sure users returned in queries are not the Current User
@@ -440,17 +443,17 @@
         
         // Query for current User
         PFQuery *query = [PossibleMatchHelper query];
-        [query whereKey:@"fromUser" equalTo:[UserParseHelper currentUser]];
+        [query whereKey:@"fromUser" equalTo:_curUser];
         
         // Query for current User was liked (may not need)
         PFQuery *queryTwo = [PossibleMatchHelper query];
-        [queryTwo whereKey:@"toUser" equalTo:[UserParseHelper currentUser]];
+        [queryTwo whereKey:@"toUser" equalTo:_curUser];
         [queryTwo whereKey:@"toUserApproved" equalTo:@"YES"];
         
         // Make sure users returned in queries are not the Current User
         PFQuery* userQuery = [UserParseHelper query];
         PFQuery* checkQuery = [UserParseHelper query];
-        [userQuery whereKey:@"objectId" notEqualTo:[UserParseHelper currentUser].objectId];
+        [userQuery whereKey:@"objectId" notEqualTo:_curUser.objectId];
         [userQuery whereKey:@"email" doesNotMatchKey:@"toUserEmail" inQuery:query];
         [checkQuery whereKey:@"email" matchesKey:@"fromUserEmail" inQuery:queryTwo];
         
@@ -595,11 +598,11 @@
 - (void) setPossMatchHelper
 {
     _otherUser                  = [PossibleMatchHelper object];
-    _otherUser.fromUser         = [UserParseHelper currentUser];
+    _otherUser.fromUser         = _curUser;
     _otherUser.toUser           = _matchUser;
     _otherUser.toUserEmail      = _matchUser.email;
-    _otherUser.fromUserEmail    = [UserParseHelper currentUser].email;
-    _otherUser.matches          = [[NSArray alloc] initWithObjects:[UserParseHelper currentUser], _matchUser, nil];
+    _otherUser.fromUserEmail    = _curUser.email;
+    _otherUser.matches          = [[NSArray alloc] initWithObjects:_curUser, _matchUser, nil];
     NSLog(@"Possible Matches count: %lu", (unsigned long)[_otherUser.matches count]);
     NSLog(@"Other User: %@", _otherUser.toUserEmail);
     _otherUser.prefCounter = [NSNumber numberWithDouble:_prefCounter];
@@ -860,6 +863,7 @@
         matchVC.matchUser = match;
         matchVC.possibleMatch = matchRelationship;
         matchVC.getPhotoArray = [NSMutableArray new];
+        matchVC.user          = _curUser;
         
         if (matchVC.matchUser.photo) {
             NSData *imageData = [matchVC.matchUser.photo getData];
@@ -906,11 +910,11 @@
     // Check if a Message already exists
     PFQuery* query = [MessageParse query];
     [query whereKey:@"fromUserParse" equalTo:_matchUser];
-    [query whereKey:@"toUserParse" equalTo:[UserParseHelper currentUser]];
+    [query whereKey:@"toUserParse" equalTo:_curUser];
     
     PFQuery* query2 = [MessageParse query];
     [query2 whereKey:@"toUserParse" equalTo:_matchUser];
-    [query2 whereKey:@"fromUserParse" equalTo:[UserParseHelper currentUser]];
+    [query2 whereKey:@"fromUserParse" equalTo:_curUser];
     
     if ([query findObjects].firstObject || [query2 findObjects].firstObject) {
         NSLog(@"Message with %@ exists", _matchUser.nickname);
@@ -918,8 +922,8 @@
         //NSLog(@"Compatibility with %@ is: %@%%", match.nickname, [NSNumber numberWithDouble:*(_otherUser.compatibilityIndex)]);
         
         MessageParse* message       = [MessageParse object];
-        message.fromUserParse       = [UserParseHelper currentUser];
-        message.fromUserParseEmail  = [UserParseHelper currentUser].email;
+        message.fromUserParse       = _curUser;
+        message.fromUserParseEmail  = _curUser.email;
         message.toUserParse         = _matchUser;
         message.toUserParseEmail    = _matchUser.email;
         message.text                = @"";
@@ -978,9 +982,9 @@
     
     // Query for
     PFQuery *matchQueryFrom = [PossibleMatchHelper query];
-    [matchQueryFrom whereKey:@"fromUser" equalTo:[UserParseHelper currentUser]];
+    [matchQueryFrom whereKey:@"fromUser" equalTo:_curUser];
     PFQuery *matchQueryTo = [PossibleMatchHelper query];
-    [matchQueryTo whereKey:@"toUser" equalTo:[UserParseHelper currentUser]];
+    [matchQueryTo whereKey:@"toUser" equalTo:_curUser];
     PFQuery *both = [PFQuery orQueryWithSubqueries:@[matchQueryFrom, matchQueryTo]];
     [both orderByDescending:@"createdAt"];
     //[both orderByDescending:@"compatibilityIndex"]; // <-- Won't work for now, need a compatibility attribute on messages somehow
@@ -988,7 +992,7 @@
     [both findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         NSMutableSet *users = [NSMutableSet new];
         for (MessageParse *message in objects) {
-            if(![message.fromUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
+            if(![message.fromUserParse.objectId isEqualToString:_curUser.objectId]) {
                 NSUInteger count = users.count;
                 [users addObject:message.fromUserParse];
                 if (users.count > count) {
@@ -1003,7 +1007,7 @@
                     }];
                 }
             }
-            if(![message.toUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
+            if(![message.toUserParse.objectId isEqualToString:_curUser.objectId]) {
                 NSUInteger count = users.count;
                 [users addObject:message.toUserParse];
                 if (users.count > count) {
@@ -1026,12 +1030,14 @@
 - (void)fetchAllUserMatchRelationships
 {
     PFQuery *matchQueryFrom = [PossibleMatchHelper query];
-    [matchQueryFrom whereKey:@"fromUser" equalTo:[UserParseHelper currentUser]];
+    [matchQueryFrom whereKey:@"fromUser" equalTo:_curUser];
     
     PFQuery *matchQueryTo = [PossibleMatchHelper query];
-    [matchQueryTo whereKey:@"toUser" equalTo:[UserParseHelper currentUser]];
+    [matchQueryTo whereKey:@"toUser" equalTo:_curUser];
     
     PFQuery *both = [PFQuery orQueryWithSubqueries:@[matchQueryFrom, matchQueryTo]];
+    // Exclude duplicate matches and Blockeds
+    
     [both orderByDescending:@"compatibilityIndex"];
     
     
@@ -1043,6 +1049,14 @@
         }
     
     NSLog(@"Total MatchRelationships: %lu", (unsigned long)[_matchRelationships count]);
+}
+
+- (void)updateTableView
+{
+    [_matchRelationships removeAllObjects];
+    NSLog(@"UpdateTableView MatchRelationships: %lu", (unsigned long)[_matchRelationships count]);
+    [self fetchAllUserMatchRelationships];
+    [self.tableView reloadData];
 }
 
 #pragma mark TableView Delegate - Includes Blurring
@@ -1064,7 +1078,7 @@
     // Get Possible Matches
     matchedConnection = [_matchRelationships objectAtIndex:indexPath.row];
     
-    if ([matchedConnection.toUser.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
+    if ([matchedConnection.toUser.objectId isEqualToString:_curUser.objectId]) {
         user = (UserParseHelper *)matchedConnection.fromUser;
     } else user = (UserParseHelper *)matchedConnection.toUser;
     
@@ -1100,7 +1114,7 @@
         }
     }];
     // All old code
-    /*_matchedUsers = [[NSArray alloc] initWithObjects:[UserParseHelper currentUser], user, nil];
+    /*_matchedUsers = [[NSArray alloc] initWithObjects:_curUser, user, nil];
     PFQuery *possMatch1 = [PossibleMatchHelper query];
     [possMatch1 whereKey:@"matches" containsAllObjectsInArray:_matchedUsers];
     //[possMatch1 findObjects];
@@ -1161,7 +1175,7 @@
     if (!message.text && message.image) {
         cell.lastMessageLabel.text = @"Image";
     }
-    if (!message.read && [message.toUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
+    if (!message.read && [message.toUserParse.objectId isEqualToString:_curUser.objectId]) {
         //cell.lastMessageLabel.textColor = WHITE_COLOR;
         cell.dateLabel.textColor = [UIColor lightGrayColor];
     } else {
@@ -1882,7 +1896,7 @@
     if ([self.willBeMatches containsObject:self.currShowingProfile]) {
         PFQuery* query = [PossibleMatchHelper query];
         [query whereKey:@"fromUser" equalTo:self.currShowingProfile];
-        [query whereKey:@"toUser" equalTo:[UserParseHelper currentUser]];
+        [query whereKey:@"toUser" equalTo:_curUser];
         PossibleMatchHelper* posMatch = [query findObjects].firstObject;
         posMatch.toUserApproved = @"NO";
         [posMatch saveEventually:^(BOOL succeeded, NSError *error) {
@@ -1901,8 +1915,8 @@
         }];
     } else {
         PossibleMatchHelper* possibleMatch = [PossibleMatchHelper object];
-        possibleMatch.fromUser = [UserParseHelper currentUser];
-        possibleMatch.fromUserEmail = [UserParseHelper currentUser].email;
+        possibleMatch.fromUser = _curUser;
+        possibleMatch.fromUserEmail = _curUser.email;
         possibleMatch.toUserEmail = self.currShowingProfile.email;
         possibleMatch.toUser = self.currShowingProfile;
         possibleMatch.match = @"NO";
@@ -1951,12 +1965,12 @@
         MessageParse* message = [MessageParse object];
         message.fromUserParse = self.currShowingProfile;
         message.fromUserParseEmail = self.currShowingProfile.email;
-        message.toUserParse = [UserParseHelper currentUser];
-        message.toUserParseEmail = [UserParseHelper currentUser].email;
+        message.toUserParse = _curUser;
+        message.toUserParseEmail = _curUser.email;
         message.text = @"";
         PFQuery* query = [PossibleMatchHelper query];
         [query whereKey:@"fromUser" equalTo:self.currShowingProfile];
-        [query whereKey:@"toUser" equalTo:[UserParseHelper currentUser]];
+        [query whereKey:@"toUser" equalTo:_curUser];
         PossibleMatchHelper* posMatch = [query findObjects].firstObject;
         posMatch.toUserApproved = @"YES";
         [posMatch saveEventually];
@@ -1976,10 +1990,10 @@
         }];
     } else {
         PossibleMatchHelper* possibleMatch = [PossibleMatchHelper object];
-        possibleMatch.fromUser = [UserParseHelper currentUser];
+        possibleMatch.fromUser = _curUser;
         possibleMatch.toUser = self.currShowingProfile;
         possibleMatch.toUserEmail = self.currShowingProfile.email;
-        possibleMatch.fromUserEmail = [UserParseHelper currentUser].email;
+        possibleMatch.fromUserEmail = _curUser.email;
         possibleMatch.match = @"YES";
         possibleMatch.toUserApproved = @"notDone";
         [possibleMatch saveEventually:^(BOOL succeeded, NSError *error) {
@@ -2193,7 +2207,12 @@
 }
 
 - (IBAction)pushToBaedar:(id)sender {
-    
-    [self performSegueWithIdentifier:@"newViewMatches" sender:nil];
+    NSLog(@"BlockedUser Array count: %lu", (unsigned long)[_curUser.blockedUsers count]);
+    [_curUser.blockedUsers removeAllObjects];
+    [_curUser saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            NSLog(@"Users unBlocked, BlockedUser Array count: %lu", (unsigned long)[_curUser.blockedUsers count]);
+        }
+    }];
 }
 @end

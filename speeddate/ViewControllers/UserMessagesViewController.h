@@ -25,6 +25,7 @@
 }
 
 @property UserParseHelper *toUserParse;
+@property UserParseHelper *curUser;
 @property PossibleMatchHelper *matchedUsers;
 @property(nonatomic, strong)  GADBannerView *adBanner;
 @end
