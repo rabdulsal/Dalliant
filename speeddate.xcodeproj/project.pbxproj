@@ -72,6 +72,7 @@
 		4CC7B8991A4B3EBE000982EA /* MatchProfileTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC7B8981A4B3EBE000982EA /* MatchProfileTVC.m */; };
 		4CC7B8BE1A60FFBD000982EA /* dalliant_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CC7B8BD1A60FFBD000982EA /* dalliant_logo.png */; };
 		4CC7B8C01A61083E000982EA /* dalliant_logo_med.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CC7B8BF1A61083E000982EA /* dalliant_logo_med.png */; };
+		4CCB59DF1A87CF0B00CABC0E /* Filters-Preferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CCB59DE1A87CF0B00CABC0E /* Filters-Preferences.png */; };
 		4CF56F751A2301CF008E861D /* PreferencesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF56F741A2301CF008E861D /* PreferencesTableViewController.m */; };
 		4CF56F781A23D0A8008E861D /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF56F771A23D0A8008E861D /* User.m */; };
 		92E8E32284B3758EB4DC35B8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BA0CC71950E48F220C437C5 /* libPods.a */; };
@@ -291,6 +292,7 @@
 		4CC7B8981A4B3EBE000982EA /* MatchProfileTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MatchProfileTVC.m; sourceTree = "<group>"; };
 		4CC7B8BD1A60FFBD000982EA /* dalliant_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dalliant_logo.png; sourceTree = "<group>"; };
 		4CC7B8BF1A61083E000982EA /* dalliant_logo_med.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dalliant_logo_med.png; sourceTree = "<group>"; };
+		4CCB59DE1A87CF0B00CABC0E /* Filters-Preferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Filters-Preferences.png"; sourceTree = "<group>"; };
 		4CDD63D01A30A20E00AE9679 /* PodFile */ = {isa = PBXFileReference; lastKnownFileType = text; path = PodFile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		4CF56F731A2301CE008E861D /* PreferencesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesTableViewController.h; sourceTree = "<group>"; };
 		4CF56F741A2301CF008E861D /* PreferencesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesTableViewController.m; sourceTree = "<group>"; };
@@ -825,6 +827,7 @@
 		C20F0B1719D7CE72005958C0 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				4CCB59DE1A87CF0B00CABC0E /* Filters-Preferences.png */,
 				4C475FE11A7C9C8D00CB9283 /* more.png */,
 				4C8F7C491A79327A00CCBDE8 /* Dalliant_Logo_XL.gif */,
 				4C8F7C3F1A75F84200CCBDE8 /* tutorial_background_00@2x.jpg */,
@@ -1137,6 +1140,7 @@
 				C25E747119E8981200779C23 /* about@2x.png in Resources */,
 				C25E747319E898D600779C23 /* genderz@2x.png in Resources */,
 				C20F0B1B19D7E982005958C0 /* Main.storyboard in Resources */,
+				4CCB59DF1A87CF0B00CABC0E /* Filters-Preferences.png in Resources */,
 				C2CC355A19F58ACD00AC86D1 /* mask_profile.png in Resources */,
 				42F5B28619B0C4CB0036938B /* Chat.xcassets in Resources */,
 				C2A90EBC19F41C1E00FC0D04 /* down2@2x.png in Resources */,
