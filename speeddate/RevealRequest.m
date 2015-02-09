@@ -14,6 +14,7 @@
 @dynamic requestFromUser;
 @dynamic requestToUser;
 @dynamic requestReply;
+@dynamic requestClosed;
 
 + (void)load {
     [self registerSubclass];

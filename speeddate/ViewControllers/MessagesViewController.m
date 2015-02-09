@@ -363,8 +363,10 @@
         
         if (self.filteredAllUsersArray.count) {
             vc.toUserParse = [self.filteredAllUsersArray objectAtIndex:self.tableView.indexPathForSelectedRow.row];
+            vc.curUser = [UserParseHelper currentUser];
         } else {
             vc.toUserParse = [self.usersArray objectAtIndex:self.tableView.indexPathForSelectedRow.row];
+            vc.curUser = [UserParseHelper currentUser];
         }
     }
 }

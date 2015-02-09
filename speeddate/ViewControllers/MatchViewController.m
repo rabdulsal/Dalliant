@@ -76,13 +76,17 @@
     NSLog(@"User Images: %lu", (unsigned long)[_getPhotoArray count]);
 }
 
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super viewDidAppear:animated];
+    [super viewWillAppear:animated];
     
     _imagePager.pageControl.currentPageIndicatorTintColor = [UIColor lightGrayColor];
     _imagePager.pageControl.pageIndicatorTintColor = [UIColor blackColor];
     _imagePager.pageControl.center = CGPointMake(CGRectGetWidth(_imagePager.frame) / 2, CGRectGetHeight(_imagePager.frame) - 42);
+    
+    if (![_possibleMatch.usersRevealed isEqualToNumber:[NSNumber numberWithBool:YES]]) { //<-- Change to check if revealReply = YES
+        [self blurImages:_imageView];
+    }
     
     /*
     UIImageView *iv = [[UIImageView alloc] initWithFrame:self.view.frame];
@@ -157,6 +161,35 @@
     return UIViewContentModeScaleAspectFill;
 }
 
+- (void)generateMatchMessage // Don't Need?
+{
+    // Check if a Message already exists
+    PFQuery* query = [MessageParse query];
+    [query whereKey:@"fromUserParse" equalTo:_matchUser];
+    [query whereKey:@"toUserParse" equalTo:_user];
+    
+    PFQuery* query2 = [MessageParse query];
+    [query2 whereKey:@"toUserParse" equalTo:_matchUser];
+    [query2 whereKey:@"fromUserParse" equalTo:_user];
+    
+    if ([query findObjects].firstObject || [query2 findObjects].firstObject) {
+        NSLog(@"Message with %@ exists", _matchUser.nickname);
+    } else {
+        //NSLog(@"Compatibility with %@ is: %@%%", match.nickname, [NSNumber numberWithDouble:*(_otherUser.compatibilityIndex)]);
+        
+        MessageParse* message       = [MessageParse object];
+        message.fromUserParse       = _user;
+        message.fromUserParseEmail  = _user.email;
+        message.toUserParse         = _matchUser;
+        message.toUserParseEmail    = _matchUser.email;
+        message.text                = @"";
+        [message saveInBackground];
+        NSLog(@"Created message for %@", _matchUser.nickname);
+        
+    }
+    
+}
+
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"matched_user"]) {
@@ -171,6 +204,7 @@
         vc.toUserParse                  = _matchUser;
         vc.curUser                      = _user;
         
+        [self generateMatchMessage];
         //Check for prior Chat b/w 2 Users, if so, don't subtract credits
         //[_user calculateCredits];
         //NSLog(@"%@'s credits: %@", _user.nickname, _user.credits);
@@ -246,8 +280,7 @@
 - (IBAction)matchOptionsButton:(id)sender {
     
    // if (_user.credits > 0) {
-        NSString *chatTitle = [[NSString alloc] initWithFormat:@"Chat (%@ Credits Left)", _user.credits];
-        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Match Options" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Report", chatTitle, nil];
+        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Match Options" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Report", @"Chat", nil];
         sheet.tag = 2;
         [sheet showInView:self.view];
         

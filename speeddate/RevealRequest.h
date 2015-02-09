@@ -16,5 +16,6 @@
 @property (nonatomic) UserParseHelper *requestFromUser;
 @property (nonatomic) UserParseHelper *requestToUser;
 @property (nonatomic) NSString *requestReply;
+@property (nonatomic) NSNumber *requestClosed;
 
 @end

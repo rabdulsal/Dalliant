@@ -154,8 +154,9 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
              [alert setTag: 2];
              [alert show];
         */
+    /*} else if ([alertMessage isEqualToString:@"Identity Share Reply"]){
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"Fetch Reveal Reply" object:self];*/
     } else {
-        
         [[NSNotificationCenter defaultCenter] postNotificationName:receivedMessage object:userInfo];
         
     }

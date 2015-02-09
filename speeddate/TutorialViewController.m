@@ -80,6 +80,7 @@
     [_introView setPages:_pageArray];
     _introView.pageControlY = 400.f;
     _introView.skipButton.hidden = YES;
+    _introView.swipeToExit = NO;
     [_introView showInView:self.view animateDuration:0.0];
     
 }

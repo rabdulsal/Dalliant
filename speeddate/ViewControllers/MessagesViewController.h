@@ -12,6 +12,7 @@
 #import "GADAdNetworkExtras.h"
 #import "config.h"
 #import "User.h"
+#import "UserParseHelper.h"
 
 @class GADBannerView;
 @class GADRequest;
