@@ -28,4 +28,5 @@
 @property UserParseHelper *curUser;
 @property PossibleMatchHelper *matchedUsers;
 @property(nonatomic, strong)  GADBannerView *adBanner;
+@property BOOL fromConversation;
 @end

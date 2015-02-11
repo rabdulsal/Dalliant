@@ -54,7 +54,7 @@
     
     _userName.text = _matchUser.nickname;
     
-    NSLog(@"Blocked Users MatchVC: %lu", (unsigned long) [_user.blockedUsers count]);
+    NSLog(@"Blocked Users self: %lu", (unsigned long) [_user.blockedUsers count]);
     
     if (![_possibleMatch.usersRevealed isEqualToNumber:[NSNumber numberWithBool:YES]]) { //<-- Change to check if revealReply = YES
         [self blurImages:_imageView];
@@ -148,6 +148,49 @@
     button.layer.cornerRadius = 3;
     button.layer.borderWidth = 1.0;
     button.layer.borderColor = RED_LIGHT.CGColor;
+}
+
+- (void)setUserPhotosArray:(UserParseHelper *)match
+{
+    // Fetch the matchUser
+    
+    if (match.photo) {
+        NSData *imageData = [match.photo getData];
+        if (imageData) {
+            UIImage *matchImage = [[UIImage alloc] initWithData:imageData];
+            NSLog(@"MatchImage: %@", matchImage);
+            [self.getPhotoArray addObject:matchImage];
+        }
+    }
+    
+    if (match.photo1) {
+        NSData *imageData = [match.photo1 getData];
+        if (imageData) {
+            UIImage *matchImage = [[UIImage alloc] initWithData:imageData];
+            NSLog(@"MatchImage: %@", matchImage);
+            [self.getPhotoArray addObject:matchImage];
+        }
+    }
+    
+    if (match.photo2) {
+        NSData *imageData = [match.photo2 getData];
+        if (imageData) {
+            UIImage *matchImage = [[UIImage alloc] initWithData:imageData];
+            NSLog(@"MatchImage: %@", matchImage);
+            [self.getPhotoArray addObject:matchImage];
+        }
+    }
+    
+    if (match.photo3) {
+        NSData *imageData = [match.photo3 getData];
+        if (imageData) {
+            UIImage *matchImage = [[UIImage alloc] initWithData:imageData];
+            NSLog(@"MatchImage: %@", matchImage);
+            [self.getPhotoArray addObject:matchImage];
+        }
+        
+        
+    }
 }
 
 - (NSArray *) arrayWithImages:(KIImagePager*)pager
@@ -279,18 +322,18 @@
 
 - (IBAction)matchOptionsButton:(id)sender {
     
-   // if (_user.credits > 0) {
+    if (!self.fromConversation) {
         UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Match Options" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Report", @"Chat", nil];
         sheet.tag = 2;
         [sheet showInView:self.view];
         
-    //}
-    /*
+    }
+    
     else {
         UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Match Options" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Report", nil];
         sheet.tag = 7;
         [sheet showInView:self.view];
-    }*/
+    }
 }
 
 - (IBAction)reportUser:(id)sender {
@@ -316,13 +359,23 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (actionSheet.tag == 2 || actionSheet.tag == 7) { // <-- Clicked Match Options Button
+    if (actionSheet.tag == 2) { // <-- Clicked Match Options Button
         
         if (buttonIndex == 1) {
             //[self performSegueWithIdentifier:@"view_profile" sender:nil];
             [self performSegueWithIdentifier:@"matchChat" sender:nil];
         }
         
+        if (buttonIndex == 0) {
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Report"
+                                                         message:@"Are you sure you want to report this user? The conversation will be deleted."
+                                                        delegate:self
+                                               cancelButtonTitle:@"Cancel"
+                                               otherButtonTitles:@"Report", nil];
+            av.tag = 2;
+            [av show];
+        }
+    } else if (actionSheet.tag == 7) {
         if (buttonIndex == 0) {
             UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Report"
                                                          message:@"Are you sure you want to report this user? The conversation will be deleted."

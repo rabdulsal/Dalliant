@@ -1132,7 +1132,7 @@
             <objects>
                 <viewController id="rDU-7y-piv" customClass="MatchViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vz1-6L-pQP">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="1584"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="1520"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="One-Zj-tKF">
@@ -1222,7 +1222,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5nJ-ws-5nA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1629" y="1122"/>
+            <point key="canvasLocation" x="1531" y="1420"/>
         </scene>
         <!--Match View Controller-->
         <scene sceneID="QUK-7O-Yoa">
@@ -2854,11 +2854,11 @@
             <objects>
                 <viewController id="kXu-jt-bDQ" customClass="MessagesViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="eiv-6h-jso">
-                        <rect key="frame" x="0.0" y="64" width="320" height="757"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="67" sectionHeaderHeight="22" sectionFooterHeight="22" id="hlF-YJ-jnu">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="757"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="0.21568629149999999" green="0.231372565" blue="0.26274511220000002" alpha="1" colorSpace="deviceRGB"/>
                                 <color key="separatorColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -2905,7 +2905,7 @@
                                             <outlet property="lastMessageLabel" destination="0nn-VI-5Yr" id="VEo-oe-daT"/>
                                             <outlet property="nameTextLabel" destination="cHi-ue-AIB" id="LbA-z3-PX4"/>
                                             <outlet property="userImageView" destination="NSr-PA-S6K" id="hC9-aJ-eTg"/>
-                                            <segue destination="OLv-wp-Wkd" kind="push" identifier="chat" id="vo7-ud-5cu"/>
+                                            <segue destination="OLv-wp-Wkd" kind="push" identifier="chat" id="9Un-nJ-oGX"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -2931,7 +2931,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5LK-z1-DqZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="820" y="1040.5"/>
+            <point key="canvasLocation" x="964" y="995.5"/>
         </scene>
         <!--Nearby-->
         <scene sceneID="VoR-o6-E2J">
@@ -3036,11 +3036,11 @@
             <objects>
                 <viewController id="OLv-wp-Wkd" customClass="UserMessagesViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="7nY-6y-Yhf">
-                        <rect key="frame" x="0.0" y="64" width="320" height="757"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="1520"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="znx-55-aXc">
-                                <rect key="frame" x="0.0" y="694" width="320" height="63"/>
+                                <rect key="frame" x="0.0" y="1393" width="320" height="127"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="1cw-AD-1Ac">
@@ -3077,7 +3077,7 @@
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="cLf-s6-1pg">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="715"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="1478"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="fZ6-XE-pZA">
                                     <size key="itemSize" width="310" height="80"/>
@@ -3258,19 +3258,19 @@
                         <outlet property="textField" destination="1cw-AD-1Ac" id="mg8-aj-hH3"/>
                         <segue destination="hsn-7u-aHf" kind="push" identifier="image" id="Q0d-cM-tNE"/>
                         <segue destination="v51-0K-POn" kind="modal" identifier="view_profile" id="NMB-y1-hOv"/>
-                        <segue destination="rDU-7y-piv" kind="modal" identifier="match_view" id="fzt-VO-B8K"/>
+                        <segue destination="rDU-7y-piv" kind="push" identifier="match_view" id="zaL-5y-aHw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sps-eH-99S" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1270" y="1617"/>
+            <point key="canvasLocation" x="860" y="3076"/>
         </scene>
         <!--Image View Controller-->
         <scene sceneID="FYj-qu-kVq">
             <objects>
                 <viewController id="hsn-7u-aHf" customClass="ImageViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4Kl-I2-sAF">
-                        <rect key="frame" x="0.0" y="64" width="320" height="713"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -4278,7 +4278,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GgX-TJ-SWF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1421" y="2272"/>
+            <point key="canvasLocation" x="1547" y="2792"/>
         </scene>
     </scenes>
     <resources>
@@ -4322,13 +4322,13 @@
         <segue reference="Qy0-fE-0Nr"/>
         <segue reference="P3d-BW-UHp"/>
         <segue reference="MjG-Tl-7wb"/>
+        <segue reference="Qh3-Ge-Ehw"/>
+        <segue reference="z1E-8z-F9L"/>
         <segue reference="MLw-yj-LVg"/>
         <segue reference="WJE-pO-Iht"/>
-        <segue reference="uru-UJ-cE7"/>
         <segue reference="oXm-ri-1Lw"/>
-        <segue reference="vo7-ud-5cu"/>
+        <segue reference="zAq-nd-1cA"/>
+        <segue reference="zaL-5y-aHw"/>
         <segue reference="NMB-y1-hOv"/>
-        <segue reference="fzt-VO-B8K"/>
-        <segue reference="J9J-1N-Njp"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -22,6 +22,7 @@
 #import <MDRadialProgressLabel.h>
 #import <MDRadialProgressTheme.h>
 #import <MDRadialProgressView.h>
+#import "MatchViewController.h"
 
 #define SECONDS_DAY 24*60*60
 
@@ -358,16 +359,33 @@
 {
     // Try to use this code in AppDelegate for Chat Notification
     if ([segue.identifier isEqualToString:@"chat"]) {
+        
         UserMessagesViewController *vc = segue.destinationViewController;
         //vc.matchedUsers = _matchUser;
         
         if (self.filteredAllUsersArray.count) {
             vc.toUserParse = [self.filteredAllUsersArray objectAtIndex:self.tableView.indexPathForSelectedRow.row];
             vc.curUser = [UserParseHelper currentUser];
+            vc.fromConversation = true;
         } else {
             vc.toUserParse = [self.usersArray objectAtIndex:self.tableView.indexPathForSelectedRow.row];
             vc.curUser = [UserParseHelper currentUser];
+            vc.fromConversation = true;
         }
+         
+        /*
+        MatchViewController *matchVC = [[MatchViewController alloc]init];
+        matchVC = segue.destinationViewController;
+        //PossibleMatchHelper *matchRelationship = [self.matchRelationships objectAtIndex:self.tableView.indexPathForSelectedRow.row];
+        //matchVC.userFBPic.image             = _toUserParse.photo;
+        UserParseHelper *match  = _matchUser.toUser;
+        matchVC.matchUser       = (UserParseHelper *)[match fetchIfNeeded];
+        matchVC.possibleMatch   = _matchUser;
+        matchVC.getPhotoArray   = [NSMutableArray new];
+        matchVC.user            = [UserParseHelper currentUser];
+        
+        [matchVC setUserPhotosArray:matchVC.matchUser];
+         */
     }
 }
 

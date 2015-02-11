@@ -22,4 +22,7 @@
 @property (nonatomic) IBOutlet UILabel *userName;
 @property (nonatomic) double *compatibilityIndex;
 @property PossibleMatchHelper *possibleMatch;
+@property BOOL fromConversation;
+
+- (void)setUserPhotosArray:(UserParseHelper *)match;
 @end

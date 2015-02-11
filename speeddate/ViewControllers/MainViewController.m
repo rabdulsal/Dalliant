@@ -857,51 +857,15 @@
         NSLog(@"View Profile Pressed");
         MatchViewController *matchVC = [[MatchViewController alloc]init];
         matchVC = segue.destinationViewController;
-        PossibleMatchHelper *matchRelationship = [self.matchRelationships objectAtIndex:self.tableView.indexPathForSelectedRow.row];
-        UserParseHelper *match = matchRelationship.toUser;
+        PossibleMatchHelper *matchRelationship  = [self.matchRelationships objectAtIndex:self.tableView.indexPathForSelectedRow.row];
+        UserParseHelper *match                  = matchRelationship.toUser;
         //matchVC.userFBPic.image             = _toUserParse.photo;
-        matchVC.matchUser = match;
-        matchVC.possibleMatch = matchRelationship;
-        matchVC.getPhotoArray = [NSMutableArray new];
-        matchVC.user          = _curUser;
+        matchVC.matchUser                       = match;
+        matchVC.possibleMatch                   = matchRelationship;
+        matchVC.getPhotoArray                   = [NSMutableArray new];
+        matchVC.user                            = _curUser;
         
-        if (matchVC.matchUser.photo) {
-            NSData *imageData = [matchVC.matchUser.photo getData];
-            if (imageData) {
-                UIImage *matchImage = [[UIImage alloc] initWithData:imageData];
-                NSLog(@"MatchImage: %@", matchImage);
-                [matchVC.getPhotoArray addObject:matchImage];
-            }
-        }
-        
-        if (matchVC.matchUser.photo1) {
-            NSData *imageData = [matchVC.matchUser.photo1 getData];
-            if (imageData) {
-                UIImage *matchImage = [[UIImage alloc] initWithData:imageData];
-                NSLog(@"MatchImage: %@", matchImage);
-                [matchVC.getPhotoArray addObject:matchImage];
-            }
-        }
-        
-        if (matchVC.matchUser.photo2) {
-            NSData *imageData = [matchVC.matchUser.photo2 getData];
-            if (imageData) {
-                UIImage *matchImage = [[UIImage alloc] initWithData:imageData];
-                NSLog(@"MatchImage: %@", matchImage);
-                [matchVC.getPhotoArray addObject:matchImage];
-            }
-        }
-        
-        if (matchVC.matchUser.photo3) {
-            NSData *imageData = [matchVC.matchUser.photo3 getData];
-            if (imageData) {
-                UIImage *matchImage = [[UIImage alloc] initWithData:imageData];
-                NSLog(@"MatchImage: %@", matchImage);
-                [matchVC.getPhotoArray addObject:matchImage];
-            }
-            
-            
-        }
+        [matchVC setUserPhotosArray:matchVC.matchUser];
     }
 }
 

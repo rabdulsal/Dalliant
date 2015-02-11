@@ -36,6 +36,8 @@
 @property (strong, nonatomic) RevealRequest *receivedRequest;
 @property (strong, nonatomic) RevealRequest *sentRequest;
 @property (strong, nonatomic) RevealRequest *receivedReply;
+@property (strong, nonatomic) RevealRequest *incomingRequest;
+@property (strong, nonatomic) RevealRequest *outgoingRequest;
 @property NSNumber *yep;
 @end
 
@@ -114,6 +116,7 @@
 - (void)fetchShareRequest
 {
     NSLog(@"Fetched share request");
+    /*
     PFQuery *requestQuery = [RevealRequest query];
     [requestQuery whereKey:@"requestFromUser" equalTo:self.toUserParse];
     [requestQuery whereKey:@"requestToUser" equalTo:_curUser];
@@ -123,6 +126,32 @@
     if ([request count] != 0) {
         _receivedRequest = [request objectAtIndex:0];
     }
+    */
+    PFQuery *requestFromQuery = [RevealRequest query];
+    [requestFromQuery whereKey:@"requestFromUser" equalTo:_curUser];
+    
+    PFQuery *requestToQuery = [RevealRequest query];
+    [requestToQuery whereKey:@"requestToUser" equalTo:_curUser];
+    
+    PFQuery *orQuery = [PFQuery orQueryWithSubqueries:@[requestFromQuery, requestToQuery]];
+    
+    
+        NSArray *requests = [[NSArray alloc] initWithArray:[orQuery findObjects]];
+        NSLog(@"Requests count: %lu", (unsigned long)[requests count]);
+    
+        for (RevealRequest *request in requests) {
+            UserParseHelper *fromRequestUser = (UserParseHelper *)[request.requestFromUser fetchIfNeeded];
+            
+            UserParseHelper *toRequestUser = (UserParseHelper *)[request.requestToUser fetchIfNeeded];
+            
+            if ([fromRequestUser isEqual:_curUser]) {
+                _receivedReply = request; //Equivalent to receivedReply
+                NSLog(@"Request from Me");
+            } else if ([toRequestUser isEqual:_curUser]) {
+                _receivedRequest = request; //Equivalent to receivedRequest
+                NSLog(@"Request from Other User");
+            }
+        }
 
     //_receivedRequest = request objectAtIndex:0];
     /*
@@ -139,14 +168,16 @@
 
 - (void)fetchShareReply
 {
+    NSLog(@"Share Reply run");
     PFQuery *replyQuery = [RevealRequest query];
     [replyQuery whereKey:@"requestFromUser" equalTo:_curUser];
     [replyQuery whereKey:@"requestToUser" equalTo:self.toUserParse];
     [replyQuery whereKey:@"requestReply" notEqualTo:@""];
     
-    NSArray *request = [[NSArray alloc] initWithArray:[replyQuery findObjects]];
-    NSLog(@"Share reply count: %lu", (unsigned long)[request count]);
-    if ([request count] != 0) {
+    NSMutableArray *reply = [[NSMutableArray alloc] initWithArray:[replyQuery findObjects]];
+
+    NSLog(@"Share reply count: %lu", (unsigned long)[reply count]);
+    if ([reply count] != 0) {
         
         //_receivedReply = [request objectAtIndex:0];
     }
@@ -196,28 +227,42 @@
     
     if (_receivedRequest) {
         
-        if (![_receivedReply.requestReply isEqualToString:@"Yes"] && ![_receivedReply.requestReply isEqualToString:@"No"]) {
+        // Reply Null
+        if (![_receivedRequest.requestReply isEqualToString:@"Yes"] && ![_receivedRequest.requestReply isEqualToString:@"No"]) {
             NSLog(@"ReplyAlertView");
             [self replyAlertView];
+            
+            // Yes Reply
+        } else if ([_receivedRequest.requestReply isEqualToString:@"Yes"]) {
+            [self usersRevealed];
+            
         }
     }
     
     // Fetch incoming ShareReply for User to acknowledge
-    [self fetchShareReply];
+    //[self fetchShareReply];
     
     if (_receivedReply) {
-    
-            // User hasn't acknowledged
-        if (![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) {
-        
+    NSLog(@"Share Reply run");
+            // Yes Reply, No Confirm or No Reply, No confirm
+        if (([_receivedReply.requestReply isEqualToString:@"Yes"] && ![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || ([_receivedReply.requestReply isEqualToString:@"No"] && ![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
+            
             // Show AcknowledgeAlertView
             [self acknowledgeAlertView];
+            NSLog(@"Acknowledgement View");
         
-        } else if ([_receivedReply.requestReply isEqualToString:@"Yes"]){ // User's acknowledged and shared profile
+            // Yes Reply, Yes Confirm
+        } else if ([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]){ // User's acknowledged and shared profile
             [self usersRevealed];
-        } else if ([_receivedReply.requestReply isEqualToString:@"No"]) {
+            NSLog(@"Revealed View");
+            
+            // No Reply, Yes Confirm
+        } else if ([_receivedReply.requestReply isEqualToString:@"No"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) {
             // Request rejected
             [self shareRequestRejected];
+            NSLog(@"Rejected View");
+            
+            // No Reply, No confirm -> Acknow AlertView
         }
     }
 }
@@ -225,8 +270,9 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
-    NSLog(@"ViewWillAppear");
+    
     [self checkIncomingShareRequestsAndReplies];
+    //[self fetchShareRequest];
 }
 
 #pragma mark - Send Button Pressed
@@ -708,42 +754,14 @@
         //if ([[segue identifier] isEqualToString:@"userprofileSee"]) {
             // Move to ViewDidLoad
         NSLog(@"View Profile Pressed");
-        MatchViewController *matchVC = [[MatchViewController alloc]init];
-        matchVC = segue.destinationViewController;
+        MatchViewController *matchVC    = [[MatchViewController alloc]init];
+        matchVC                         = segue.destinationViewController;
         //matchVC.userFBPic.image             = _toUserParse.photo;
-        matchVC.matchUser = _toUserParse;
-        matchVC.possibleMatch = _matchedUsers;
+        matchVC.matchUser               = _toUserParse;
+        matchVC.possibleMatch           = _matchedUsers;
+        matchVC.fromConversation        = true;
         
-        if (matchVC.matchUser.photo) {
-            [matchVC.matchUser.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                matchVC.matchImage = [[UIImage alloc] initWithData:data];
-                NSLog(@"Image 0");
-                [matchVC.getPhotoArray addObject:matchVC.matchImage];
-            }];
-        } else NSLog(@"No Main photo");
-        if (matchVC.matchUser.photo1) {
-            [matchVC.matchUser.photo1 getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                matchVC.matchImage1 = [[UIImage alloc] initWithData:data];
-                NSLog(@"Image 1");
-                [matchVC.getPhotoArray addObject:matchVC.matchImage1];
-            }];
-        } else NSLog(@"No Main1 photo");
-        if (matchVC.matchUser.photo2) {
-            
-            [matchVC.matchUser.photo2 getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                matchVC.matchImage2 = [[UIImage alloc] initWithData:data];
-                NSLog(@"Image 2");
-                [matchVC.getPhotoArray addObject:matchVC.matchImage2];
-            }];
-        } else NSLog(@"No Main2 photo");
-        if (matchVC.matchUser.photo3) {
-            
-            [matchVC.matchUser.photo3 getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                matchVC.matchImage3 = [[UIImage alloc] initWithData:data];
-                NSLog(@"Image 3");
-                [matchVC.getPhotoArray addObject:matchVC.matchImage3];
-            }];
-        } else NSLog(@"No Main3 photo");
+        [matchVC setUserPhotosArray:matchVC.matchUser];
         
         /*
         for (int i = 0; i < (int)_photoArray.count; ++i) {
@@ -790,9 +808,16 @@
 
 - (IBAction)actionPressed:(id)sender
 {
-    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Match Options" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"End Chat",@"Report",@"Block", nil];
-    sheet.tag = 2;
-    [sheet showInView:self.view];
+    if (self.fromConversation) {
+        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Match Options" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"View Profile", @"End Chat",@"Report",@"Block", nil];
+        sheet.tag = 3;
+        [sheet showInView:self.view];
+    } else {
+        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Match Options" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"End Chat",@"Report",@"Block", nil];
+        sheet.tag = 2;
+        [sheet showInView:self.view];
+    }
+
 }
 
 - (void)deleteConversation
@@ -998,6 +1023,42 @@
 
         }
         
+    } else if (actionSheet.tag == 3) {
+        
+        if (buttonIndex == 0) {
+            [self performSegueWithIdentifier:@"match_view" sender:nil];
+        }
+        
+        if (buttonIndex == 1) {
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"End Chat"
+                                                         message:@"Are you sure you want to End this Chat? The conversation will be deleted."
+                                                        delegate:self
+                                               cancelButtonTitle:@"Cancel"
+                                               otherButtonTitles:@"End Chat", nil];
+            av.tag = 5;
+            [av show];
+        }
+        
+        if (buttonIndex == 2) {
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Report"
+                                                         message:@"Are you sure you want to Block this user? The conversation will be deleted."
+                                                        delegate:self
+                                               cancelButtonTitle:@"Cancel"
+                                               otherButtonTitles:@"Report", nil];
+            av.tag = 2;
+            [av show];
+        }
+        
+        if (buttonIndex == 3) { //<-- Block User
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Block User"
+                                                         message:@"Are you sure you want to Block this user? The conversation will be deleted."
+                                                        delegate:self
+                                               cancelButtonTitle:@"Cancel"
+                                               otherButtonTitles:@"Block", nil];
+            av.tag = 6;
+            [av show];
+            
+        }
     }
     
 }
