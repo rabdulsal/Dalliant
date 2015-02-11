@@ -23,6 +23,7 @@
 #import <MDRadialProgressTheme.h>
 #import <MDRadialProgressView.h>
 #import "MatchViewController.h"
+#import "RevealRequest.h"
 
 #define SECONDS_DAY 24*60*60
 
@@ -38,6 +39,8 @@
 @property int progressTotal;
 @property int progressCounter;
 @property NSArray *matchedUsers;
+@property RevealRequest *receivedRequest;
+@property RevealRequest *receivedReply;
 
 @end
 
@@ -73,6 +76,39 @@
     self.tableView.separatorColor = [UIColor lightGrayColor];
     //self.searchTextField.backgroundColor = RED_DEEP;
   
+}
+
+- (void)fetchShareRequest
+{
+    NSLog(@"Fetched share request");
+    
+    PFQuery *requestFromQuery = [RevealRequest query];
+    [requestFromQuery whereKey:@"requestFromUser" equalTo:[UserParseHelper currentUser]];
+    
+    PFQuery *requestToQuery = [RevealRequest query];
+    [requestToQuery whereKey:@"requestToUser" equalTo:[UserParseHelper currentUser]];
+    
+    PFQuery *orQuery = [PFQuery orQueryWithSubqueries:@[requestFromQuery, requestToQuery]];
+    
+    
+    NSArray *requests = [[NSArray alloc] initWithArray:[orQuery findObjects]];
+    NSLog(@"Requests count: %lu", (unsigned long)[requests count]);
+    
+    for (RevealRequest *request in requests) {
+        UserParseHelper *fromRequestUser = (UserParseHelper *)[request.requestFromUser fetchIfNeeded];
+        
+        UserParseHelper *toRequestUser = (UserParseHelper *)[request.requestToUser fetchIfNeeded];
+        
+        if ([fromRequestUser isEqual:[UserParseHelper currentUser]]) {
+            _receivedReply = request; //Equivalent to receivedReply
+            NSLog(@"Request from Me");
+        } else if ([toRequestUser isEqual:[UserParseHelper currentUser]]) {
+            _receivedRequest = request; //Equivalent to receivedRequest
+            NSLog(@"Request from Other User");
+        }
+    }
+    
+    
 }
 
 - (void)setPossibleMatchesFromMessages:(NSArray *)matches for:(UserTableViewCell *)cell
@@ -134,6 +170,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
+    [self fetchShareRequest];
     [self loadingChat];
     [self reloadView];
 }
@@ -200,6 +237,7 @@
 {
     UserTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.indicatorLabel.hidden = YES;
     
     UserParseHelper *user;
     if (self.filteredAllUsersArray.count) {
@@ -292,7 +330,15 @@
     bgColorView.backgroundColor = WHITE_COLOR;
     [cell setSelectedBackgroundView:bgColorView];
     
+    if (![_receivedRequest.requestReply isEqualToString:@"No"] && ![_receivedRequest.requestReply isEqualToString:@"Yes"]) {
+        cell.indicatorLabel.hidden = NO;
+        cell.indicatorLabel.backgroundColor = [UIColor purpleColor];
+    }
     
+    if (([_receivedReply.requestReply isEqualToString:@"Yes"] && ![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || ([_receivedReply.requestReply isEqualToString:@"No"] && ![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
+        cell.indicatorLabel.hidden = NO;
+        cell.indicatorLabel.backgroundColor = [UIColor yellowColor];
+    }
     return cell;
 }
 

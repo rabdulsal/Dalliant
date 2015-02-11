@@ -2896,12 +2896,20 @@
                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="vwJ-r6-DAG">
+                                                    <rect key="frame" x="56" y="39" width="21" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <connections>
                                             <outlet property="dateLabel" destination="mrI-8R-gCZ" id="ODV-qt-SBN"/>
+                                            <outlet property="indicatorLabel" destination="vwJ-r6-DAG" id="BNp-R8-GTt"/>
                                             <outlet property="lastMessageLabel" destination="0nn-VI-5Yr" id="VEo-oe-daT"/>
                                             <outlet property="nameTextLabel" destination="cHi-ue-AIB" id="LbA-z3-PX4"/>
                                             <outlet property="userImageView" destination="NSr-PA-S6K" id="hC9-aJ-eTg"/>
@@ -2931,7 +2939,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5LK-z1-DqZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="964" y="995.5"/>
+            <point key="canvasLocation" x="964" y="995"/>
         </scene>
         <!--Nearby-->
         <scene sceneID="VoR-o6-E2J">
@@ -3036,11 +3044,11 @@
             <objects>
                 <viewController id="OLv-wp-Wkd" customClass="UserMessagesViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="7nY-6y-Yhf">
-                        <rect key="frame" x="0.0" y="64" width="320" height="1520"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="znx-55-aXc">
-                                <rect key="frame" x="0.0" y="1393" width="320" height="127"/>
+                                <rect key="frame" x="0.0" y="462" width="320" height="42"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="1cw-AD-1Ac">
@@ -3077,7 +3085,7 @@
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="cLf-s6-1pg">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="1478"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="462"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="fZ6-XE-pZA">
                                     <size key="itemSize" width="310" height="80"/>
@@ -4325,10 +4333,10 @@
         <segue reference="Qh3-Ge-Ehw"/>
         <segue reference="z1E-8z-F9L"/>
         <segue reference="MLw-yj-LVg"/>
+        <segue reference="9Un-nJ-oGX"/>
+        <segue reference="NMB-y1-hOv"/>
+        <segue reference="zaL-5y-aHw"/>
         <segue reference="WJE-pO-Iht"/>
         <segue reference="oXm-ri-1Lw"/>
-        <segue reference="zAq-nd-1cA"/>
-        <segue reference="zaL-5y-aHw"/>
-        <segue reference="NMB-y1-hOv"/>
     </inferredMetricsTieBreakers>
 </document>
