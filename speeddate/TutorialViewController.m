@@ -79,7 +79,13 @@
     _pageArray = @[page1,page2,page3,page4,page5];
     [_introView setPages:_pageArray];
     _introView.pageControlY = 400.f;
-    _introView.skipButton.hidden = YES;
+    
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [btn setFrame:CGRectMake(250, 50, 80, 30)];
+    [btn setTitle:@"Skip" forState:UIControlStateNormal];
+    [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    
+    _introView.skipButton = btn;
     _introView.swipeToExit = NO;
     [_introView showInView:self.view animateDuration:0.0];
     
@@ -106,8 +112,8 @@
 {
     NSLog(@"Intro Done");
     //[_introView setCurrentPageIndex:0 animated:YES];
-    //[self dismissViewControllerAnimated:YES completion:nil];
-    [_introView showInView:self.view animateDuration:0.0];
+    [self dismissViewControllerAnimated:YES completion:nil];
+    //[_introView showInView:self.view animateDuration:0.0];
 }
 
 /*

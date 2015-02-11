@@ -964,10 +964,10 @@
             
             // <-- Apparently this works when app is in background, a notification is sent and appears as alert
             // RevealRequest setup
-            RevealRequest *revealRequest = [RevealRequest object];
-            revealRequest.requestFromUser = _curUser;
-            revealRequest.requestToUser = self.toUserParse;
-            revealRequest.requestReply = @"";
+            RevealRequest *revealRequest    = [RevealRequest object];
+            revealRequest.requestFromUser   = _curUser;
+            revealRequest.requestToUser     = self.toUserParse;
+            revealRequest.requestReply      = @"";
             
             [revealRequest saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 PFQuery *query = [PFInstallation query];
@@ -1159,6 +1159,7 @@
                     if (succeeded) {
                         
                         // Push Reveal Reply Updates Notification
+                        NSLog(@"Request-Reply saved.");
                         
                         // if _curUSer Reply = YES
                         [self repliedToShareRequest];
