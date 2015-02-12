@@ -129,9 +129,11 @@
     */
     PFQuery *requestFromQuery = [RevealRequest query];
     [requestFromQuery whereKey:@"requestFromUser" equalTo:_curUser];
+    [requestFromQuery whereKey:@"requestToUser" equalTo:_toUserParse];
     
     PFQuery *requestToQuery = [RevealRequest query];
     [requestToQuery whereKey:@"requestToUser" equalTo:_curUser];
+    [requestToQuery whereKey:@"requestFromUser" equalTo:_toUserParse];
     
     PFQuery *orQuery = [PFQuery orQueryWithSubqueries:@[requestFromQuery, requestToQuery]];
     
@@ -244,9 +246,14 @@
     
     if (_receivedReply) {
     NSLog(@"Share Reply run");
-            // Yes Reply, No Confirm or No Reply, No confirm
-        if (([_receivedReply.requestReply isEqualToString:@"Yes"] && ![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || ([_receivedReply.requestReply isEqualToString:@"No"] && ![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
-            
+        
+        //Null Reply, Null Confirm
+        if (![_receivedReply.requestReply isEqualToString:@"Yes"] && ![_receivedReply.requestReply isEqualToString:@"No"] && ![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+            _cameraButton.enabled = NO;
+        }
+            // Yes Reply, Null Confirm or No Reply, Null confirm
+        else if (([_receivedReply.requestReply isEqualToString:@"Yes"] && ![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || ([_receivedReply.requestReply isEqualToString:@"No"] && ![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
+            _cameraButton.enabled = NO;
             // Show AcknowledgeAlertView
             [self acknowledgeAlertView];
             NSLog(@"Acknowledgement View");
@@ -372,7 +379,7 @@
         cell.userImageView.image = self.toPhoto;
         
         // Blur conditional ********************
-        if (![_matchedUsers.usersRevealed isEqualToNumber:_yep]) {
+        if (!([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
             [self blurImages:cell.userImageView];
         }
         
@@ -408,7 +415,7 @@
         
         // Blur conditional ********************
         
-        if (![_matchedUsers.usersRevealed isEqualToNumber:_yep]) {
+        if (!([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
             [self blurImages:cell.userImageView];
         }
         
@@ -874,8 +881,8 @@
         
         // Request Accepted
         // Reveal AlertView
-        NSString *alertTitle = [[NSString alloc] initWithFormat:@"Your Match Agreed to Share Profiles!"];
-        NSString *alertMessage = [[NSString alloc] initWithFormat:@"You two have shared profiles. Have fun getting to know each other!"];
+        NSString *alertTitle = [[NSString alloc] initWithFormat:@"Your Match %@ Agreed to Share Profiles!", _toUserParse.nickname];
+        NSString *alertMessage = [[NSString alloc] initWithFormat:@"You two can now view and send each other photos - have fun!"];
         
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:alertTitle
                                                         message:alertMessage
@@ -889,8 +896,8 @@
         
     } else {
         // Request Rejected
-        NSString *alertTitle = [[NSString alloc] initWithFormat:@"%@ Declined Sharing Profiles", _toUserParse.nickname];
-        NSString *alertMessage = [[NSString alloc] initWithFormat:@"Right now %@ doesn't want to share. Maybe they'll request to share with you.", _toUserParse.nickname];
+        NSString *alertTitle = [[NSString alloc] initWithFormat:@"Your Match Declined Sharing Profiles"];
+        NSString *alertMessage = [[NSString alloc] initWithFormat:@"Right now your Match doesn't want to share, but maybe they'll request to share with you later."];
         
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:alertTitle
                                                         message:alertMessage
@@ -1236,6 +1243,7 @@
         _receivedReply.requestClosed = [NSNumber numberWithBool:YES];
         [_receivedReply saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             [self reloadView];
+            [self shareRequestRejected];
         }];
         
     

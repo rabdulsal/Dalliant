@@ -238,6 +238,8 @@
     UserTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.indicatorLabel.hidden = YES;
+    cell.indicatorLabel.layer.cornerRadius = cell.indicatorLabel.frame.size.width/2;
+    cell.indicatorLabel.layer.masksToBounds = YES;
     
     UserParseHelper *user;
     if (self.filteredAllUsersArray.count) {
@@ -257,7 +259,7 @@
         [self configureRadialView:cell];
         //}
         NSNumber *yep = [NSNumber numberWithBool:YES];
-        if (![_matchUser.usersRevealed isEqualToNumber:yep]) { // <-- Test purposes - change to check isRevealed on Matched User - NOT WORKING
+        if (!([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) { // <-- Test purposes - change to check isRevealed on Matched User - NOT WORKING
             [self blurImages:cell.userImageView];
         
             if ([user.isMale isEqualToString:@"true"]) {
@@ -293,10 +295,11 @@
     //cell.nameTextLabel.textColor = WHITE_COLOR;
     cell.nameTextLabel.textColor = RED_LIGHT;
     cell.userImageView.layer.cornerRadius = cell.userImageView.frame.size.width / 2;
-    cell.userImageView.clipsToBounds = YES;
+    cell.userImageView.layer.masksToBounds = YES;
+    /*
     cell.userImageView.layer.borderWidth = 1.0,
     cell.userImageView.layer.borderColor = WHITE_COLOR.CGColor;
-    
+    */
     UIImageView *accesory = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"accesory"]];
     accesory.frame = CGRectMake(15, 0, 15, 15);
     accesory.contentMode = UIViewContentModeScaleAspectFit;
@@ -330,15 +333,22 @@
     bgColorView.backgroundColor = WHITE_COLOR;
     [cell setSelectedBackgroundView:bgColorView];
     
-    if (![_receivedRequest.requestReply isEqualToString:@"No"] && ![_receivedRequest.requestReply isEqualToString:@"Yes"]) {
-        cell.indicatorLabel.hidden = NO;
-        cell.indicatorLabel.backgroundColor = [UIColor purpleColor];
+    if ([_receivedRequest.requestFromUser isEqual:user]) {
+        
+        if (![_receivedRequest.requestReply isEqualToString:@"No"] && ![_receivedRequest.requestReply isEqualToString:@"Yes"]) {
+            cell.indicatorLabel.hidden = NO;
+            cell.indicatorLabel.backgroundColor = [UIColor purpleColor];
+        }
     }
     
-    if (([_receivedReply.requestReply isEqualToString:@"Yes"] && ![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || ([_receivedReply.requestReply isEqualToString:@"No"] && ![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
-        cell.indicatorLabel.hidden = NO;
-        cell.indicatorLabel.backgroundColor = [UIColor yellowColor];
+    if ([_receivedReply.requestToUser isEqual:user]) {
+        
+        if (([_receivedReply.requestReply isEqualToString:@"Yes"] && ![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || ([_receivedReply.requestReply isEqualToString:@"No"] && ![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
+            cell.indicatorLabel.hidden = NO;
+            cell.indicatorLabel.backgroundColor = [UIColor yellowColor];
+        }
     }
+    
     return cell;
 }
 
