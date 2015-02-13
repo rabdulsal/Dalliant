@@ -200,7 +200,6 @@
     self.title = self.toUserParse.nickname;
     _cameraButton.enabled = YES;
     [_blurImageView removeFromSuperview];
-    
     UIImage *btnImage = [UIImage imageNamed:@"camera2"];
     [_cameraButton setImage:btnImage forState:UIControlStateNormal];
     
@@ -311,7 +310,7 @@
         
         NSString *pushMessage = nil;
         
-        if (![_matchedUsers.usersRevealed isEqualToNumber:_yep]) {
+        if (!([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
             pushMessage = [NSString stringWithFormat:@"Your Match says: %@", message.text];
         } else pushMessage = [NSString stringWithFormat:@"%@ says: %@",pushUserto,message.text];
        
@@ -646,7 +645,7 @@
 
 - (IBAction)sendPhoto:(id)sender
 {
-    if (![_matchedUsers.usersRevealed isEqualToNumber:_yep]) { // <-- Change to check on Matched User attribute
+    if (!([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) { // <-- Change to check on Matched User attribute
         _actionsheet = [[UIActionSheet alloc] initWithTitle:@"Send Reveal request?" delegate:self cancelButtonTitle:@"Don't Request" destructiveButtonTitle:nil otherButtonTitles:@"Yes", nil];
         _actionsheet.tag = 1;
         [_actionsheet showInView:self.view];
@@ -964,7 +963,7 @@
 {
     if (actionSheet.tag == 1) { // <-- Clicked Reveal Request Button
         
-        if (![_matchedUsers.usersRevealed isEqualToNumber:_yep] && buttonIndex == 0) { // <-- Change to isRevealed check on PossibleMatchHelper
+        if (!([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) && buttonIndex == 0) { // <-- Change to isRevealed check on PossibleMatchHelper
             // Test purposes
             /*mainUser.isRevealed = true;
             [self reloadView];*/

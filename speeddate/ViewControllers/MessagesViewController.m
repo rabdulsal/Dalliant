@@ -41,6 +41,7 @@
 @property NSArray *matchedUsers;
 @property RevealRequest *receivedRequest;
 @property RevealRequest *receivedReply;
+@property UIVisualEffectView *visualEffectView;
 
 @end
 
@@ -78,15 +79,17 @@
   
 }
 
-- (void)fetchShareRequest
+- (void)fetchShareRequestWith:(UserParseHelper *)user
 {
     NSLog(@"Fetched share request");
     
     PFQuery *requestFromQuery = [RevealRequest query];
     [requestFromQuery whereKey:@"requestFromUser" equalTo:[UserParseHelper currentUser]];
+    [requestFromQuery whereKey:@"requestToUser" equalTo:user];
     
     PFQuery *requestToQuery = [RevealRequest query];
     [requestToQuery whereKey:@"requestToUser" equalTo:[UserParseHelper currentUser]];
+    [requestToQuery whereKey:@"requestFromUser" equalTo:user];
     
     PFQuery *orQuery = [PFQuery orQueryWithSubqueries:@[requestFromQuery, requestToQuery]];
     
@@ -170,7 +173,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
-    [self fetchShareRequest];
     [self loadingChat];
     [self reloadView];
 }
@@ -248,6 +250,7 @@
         user = [self.usersArray objectAtIndex:indexPath.row];
     }
     
+    [self fetchShareRequestWith:user];
     // Get Possible Matches
     _matchedUsers = [[NSArray alloc] initWithObjects:[UserParseHelper currentUser], user, nil];
     PFQuery *possMatch1 = [PossibleMatchHelper query];
@@ -258,29 +261,37 @@
         _matchUser = [objects objectAtIndex:0];
         [self configureRadialView:cell];
         //}
-        NSNumber *yep = [NSNumber numberWithBool:YES];
-        if (!([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) { // <-- Test purposes - change to check isRevealed on Matched User - NOT WORKING
-            [self blurImages:cell.userImageView];
-        
-            if ([user.isMale isEqualToString:@"true"]) {
-                NSString *matchGender = @"Male";
-                cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
-            } else {
-                NSString *matchGender = @"Female";
-                cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
-            }
-            
-        } else{
-            NSLog(@"User revealed");
-            cell.nameTextLabel.text = user.nickname;
-        }
-        
         
         [user.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
             
             cell.userImageView.image = [UIImage imageWithData:data];
             
         }];
+            
+        [self blurImages:cell.userImageView];
+            
+        if ([user.isMale isEqualToString:@"true"]) {
+            NSString *matchGender = @"Male";
+            cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
+        } else {
+            NSString *matchGender = @"Female";
+            cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
+        }
+        
+        if (_receivedRequest) {
+            if ([_receivedRequest.requestReply isEqualToString:@"Yes"] && [_receivedRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_receivedRequest.requestFromUser isEqual:user]) {
+                cell.nameTextLabel.text = user.nickname;
+                [_visualEffectView removeFromSuperview];
+            }
+        }
+        
+        if (_receivedReply) {
+            if ([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_receivedReply.requestToUser isEqual:user]) {
+                cell.nameTextLabel.text = user.nickname;
+                [_visualEffectView removeFromSuperview];
+            }
+        }
+        
     }];
     
     //[self setPossibleMatchesFromMessages:_matchedUsers for:cell];
@@ -345,7 +356,7 @@
         
         if (([_receivedReply.requestReply isEqualToString:@"Yes"] && ![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || ([_receivedReply.requestReply isEqualToString:@"No"] && ![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
             cell.indicatorLabel.hidden = NO;
-            cell.indicatorLabel.backgroundColor = [UIColor yellowColor];
+            cell.indicatorLabel.backgroundColor = RED_LIGHT;
         }
     }
     
@@ -358,12 +369,9 @@
 {
     UIVisualEffect *blurEffect;
     blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
-    
-    UIVisualEffectView *visualEffectView;
-    visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-    
-    visualEffectView.frame = imageView.bounds;
-    [imageView addSubview:visualEffectView];
+    _visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+    _visualEffectView.frame = imageView.bounds;
+    [imageView addSubview:_visualEffectView];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

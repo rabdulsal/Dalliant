@@ -25,6 +25,7 @@
 #import <ILTranslucentView.h>
 #import "Report.h"
 #import "MessageParse.h"
+#import "RevealRequest.h"
 #define MARGIN 50
 
 @interface MatchViewController () <UIAlertViewDelegate, UIActionSheetDelegate>
@@ -37,8 +38,12 @@
 @property (weak, nonatomic) IBOutlet UIView *imageView;
 @property (weak, nonatomic) IBOutlet UIScrollView *scroller;
 @property (nonatomic) UIVisualEffectView *blurImageView;
+@property ILTranslucentView *translucentView;
 @property (weak, nonatomic) IBOutlet UIButton *reportUser;
 @property (weak, nonatomic) IBOutlet UIButton *matchOptionsLabel;
+@property RevealRequest *receivedRequest;
+@property RevealRequest *receivedReply;
+
 - (IBAction)matchOptionsButton:(id)sender;
 
 - (IBAction)reportUser:(id)sender;
@@ -56,10 +61,6 @@
     
     NSLog(@"Blocked Users self: %lu", (unsigned long) [_user.blockedUsers count]);
     
-    if (![_possibleMatch.usersRevealed isEqualToNumber:[NSNumber numberWithBool:YES]]) { //<-- Change to check if revealReply = YES
-        [self blurImages:_imageView];
-    }
-    
     [_scroller setScrollEnabled:YES];
     //[_scroller setContentSize:CGSizeMake(320, 1555)];
     [_scroller setContentSize:CGSizeMake(self.view.frame.size.width, 2400)];
@@ -71,6 +72,8 @@
     
     [self configureButton:_matchingButton];
     [self configureButton:_reportUser];
+    
+    [self blurImages:_imageView];
 
     NSLog(@"Match: %@, Compatibility: %@", _matchUser.nickname, _possibleMatch.compatibilityIndex);
     NSLog(@"User Images: %lu", (unsigned long)[_getPhotoArray count]);
@@ -80,12 +83,22 @@
 {
     [super viewWillAppear:animated];
     
+    [self fetchShareRequest];
+    
     _imagePager.pageControl.currentPageIndicatorTintColor = [UIColor lightGrayColor];
     _imagePager.pageControl.pageIndicatorTintColor = [UIColor blackColor];
     _imagePager.pageControl.center = CGPointMake(CGRectGetWidth(_imagePager.frame) / 2, CGRectGetHeight(_imagePager.frame) - 42);
     
-    if (![_possibleMatch.usersRevealed isEqualToNumber:[NSNumber numberWithBool:YES]]) { //<-- Change to check if revealReply = YES
-        [self blurImages:_imageView];
+    if (_receivedRequest) {
+        if ([_receivedRequest.requestReply isEqualToString:@"Yes"] && [_receivedRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_receivedRequest.requestFromUser isEqual:_matchUser]) {
+            [_translucentView removeFromSuperview];
+        }
+    }
+    
+    if (_receivedReply) {
+        if ([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_receivedReply.requestToUser isEqual:_matchUser]) {
+            [_translucentView removeFromSuperview];
+        }
     }
     
     /*
@@ -135,6 +148,38 @@
      */
 }
 
+- (void)fetchShareRequest
+{
+    PFQuery *requestFromQuery = [RevealRequest query];
+    [requestFromQuery whereKey:@"requestFromUser" equalTo:[UserParseHelper currentUser]];
+    [requestFromQuery whereKey:@"requestToUser" equalTo:_matchUser];
+    
+    PFQuery *requestToQuery = [RevealRequest query];
+    [requestToQuery whereKey:@"requestToUser" equalTo:[UserParseHelper currentUser]];
+    [requestToQuery whereKey:@"requestFromUser" equalTo:_matchUser];
+    
+    PFQuery *orQuery = [PFQuery orQueryWithSubqueries:@[requestFromQuery, requestToQuery]];
+    
+    
+    NSArray *requests = [[NSArray alloc] initWithArray:[orQuery findObjects]];
+    NSLog(@"Requests count: %lu", (unsigned long)[requests count]);
+    
+    for (RevealRequest *request in requests) {
+        UserParseHelper *fromRequestUser = (UserParseHelper *)[request.requestFromUser fetchIfNeeded];
+        
+        UserParseHelper *toRequestUser = (UserParseHelper *)[request.requestToUser fetchIfNeeded];
+        
+        if ([fromRequestUser isEqual:[UserParseHelper currentUser]]) {
+            _receivedReply = request; //Equivalent to receivedReply
+            NSLog(@"Request from Me");
+        } else if ([toRequestUser isEqual:[UserParseHelper currentUser]]) {
+            _receivedRequest = request; //Equivalent to receivedRequest
+            NSLog(@"Request from Other User");
+        }
+    }
+
+}
+
 - (void)reloadView
 {
     UIView *parent = self.view.superview;
@@ -153,6 +198,7 @@
 - (void)setUserPhotosArray:(UserParseHelper *)match
 {
     // Fetch the matchUser
+    self.getPhotoArray = [NSMutableArray new];
     
     if (match.photo) {
         NSData *imageData = [match.photo getData];
@@ -281,13 +327,13 @@
 #pragma mark - Blur Images
 - (void)blurImages:(UIView *)imageView
 {
-    ILTranslucentView *translucentView = [[ILTranslucentView alloc] initWithFrame:CGRectMake(_imagePager.frame.origin.x, _imagePager.frame.origin.y, _imagePager.frame.size.width, _imagePager.frame.size.height)];
+    _translucentView = [[ILTranslucentView alloc] initWithFrame:CGRectMake(_imagePager.frame.origin.x, _imagePager.frame.origin.y, _imagePager.frame.size.width, _imagePager.frame.size.height)];
     
-    translucentView.translucentAlpha = 1;
-    translucentView.translucentStyle = UIBarStyleDefault;
-    translucentView.translucentTintColor = [UIColor clearColor];
-    translucentView.backgroundColor = [UIColor clearColor];
-    [_imageView addSubview:translucentView];
+    _translucentView.translucentAlpha = 1;
+    _translucentView.translucentStyle = UIBarStyleDefault;
+    _translucentView.translucentTintColor = [UIColor clearColor];
+    _translucentView.backgroundColor = [UIColor clearColor];
+    [_imageView addSubview:_translucentView];
 }
 
 /* ----------------------------------------------------------------------------------------------

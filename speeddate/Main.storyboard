@@ -1151,7 +1151,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <view contentMode="scaleToFill" id="LkW-b4-rEj">
-                                        <rect key="frame" x="20" y="0.0" width="320" height="310"/>
+                                        <rect key="frame" x="20" y="0.0" width="320" height="320"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" id="byP-b4-ONb" customClass="KIImagePager">
@@ -1174,11 +1174,11 @@
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
                                     <view contentMode="scaleToFill" id="ahG-Eh-LNr">
-                                        <rect key="frame" x="20" y="319" width="320" height="1264"/>
+                                        <rect key="frame" x="20" y="320" width="320" height="1264"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <containerView opaque="NO" contentMode="scaleToFill" id="z4f-B6-l3b">
-                                                <rect key="frame" x="0.0" y="-11" width="320" height="1277"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="320" height="1277"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                 <connections>
                                                     <segue destination="v51-0K-POn" kind="embed" identifier="matched_user" id="yk5-qV-Iag"/>
@@ -2897,7 +2897,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="vwJ-r6-DAG">
-                                                    <rect key="frame" x="8" y="27" width="13" height="13"/>
+                                                    <rect key="frame" x="8" y="27" width="12" height="12"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
@@ -3044,11 +3044,11 @@
             <objects>
                 <viewController id="OLv-wp-Wkd" customClass="UserMessagesViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="7nY-6y-Yhf">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="1520"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="znx-55-aXc">
-                                <rect key="frame" x="0.0" y="462" width="320" height="42"/>
+                                <rect key="frame" x="0.0" y="1393" width="320" height="127"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="1cw-AD-1Ac">
@@ -3072,7 +3072,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="RQ4-La-IbU">
-                                        <rect key="frame" x="14" y="7" width="24" height="27"/>
+                                        <rect key="frame" x="14" y="7" width="27" height="27"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -3085,7 +3085,7 @@
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="cLf-s6-1pg">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="462"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="1478"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="fZ6-XE-pZA">
                                     <size key="itemSize" width="310" height="80"/>
@@ -4098,7 +4098,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="zpG-B2-gR9">
-                                        <rect key="frame" x="12" y="8" width="25" height="25"/>
+                                        <rect key="frame" x="12" y="8" width="30" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -4286,7 +4286,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GgX-TJ-SWF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1547" y="2792"/>
+            <point key="canvasLocation" x="1538" y="2831"/>
         </scene>
     </scenes>
     <resources>
@@ -4333,10 +4333,10 @@
         <segue reference="Qh3-Ge-Ehw"/>
         <segue reference="z1E-8z-F9L"/>
         <segue reference="MLw-yj-LVg"/>
-        <segue reference="9Un-nJ-oGX"/>
-        <segue reference="NMB-y1-hOv"/>
-        <segue reference="zaL-5y-aHw"/>
         <segue reference="WJE-pO-Iht"/>
         <segue reference="oXm-ri-1Lw"/>
+        <segue reference="zAq-nd-1cA"/>
+        <segue reference="zaL-5y-aHw"/>
+        <segue reference="yk5-qV-Iag"/>
     </inferredMetricsTieBreakers>
 </document>
