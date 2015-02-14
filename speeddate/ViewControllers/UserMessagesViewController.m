@@ -38,7 +38,7 @@
 @property (strong, nonatomic) RevealRequest *receivedReply;
 @property (strong, nonatomic) RevealRequest *incomingRequest;
 @property (strong, nonatomic) RevealRequest *outgoingRequest;
-@property NSNumber *yep;
+@property BOOL matchRevealed;
 @end
 
 @implementation UserMessagesViewController
@@ -54,7 +54,7 @@
     [self getPhotos];
     [self getMessages];
     
-    _yep = [NSNumber numberWithBool:YES];
+    _matchRevealed = false;
     
     UIBarButtonItem *barButton = [[UIBarButtonItem alloc] init];
     barButton.title = @"";
@@ -199,12 +199,12 @@
 
 - (void)usersRevealed
 {
+    _matchRevealed = true;
     self.title = self.toUserParse.nickname;
     _cameraButton.enabled = YES;
     [_blurImageView removeFromSuperview];
     UIImage *btnImage = [UIImage imageNamed:@"camera2"];
     [_cameraButton setImage:btnImage forState:UIControlStateNormal];
-    
 
 }
 
@@ -228,7 +228,7 @@
     // Fetch incoming ShareRequest for User to Reply
     [self fetchShareRequest];
     
-    if (_receivedRequest) {
+    if (_receivedRequest && ![_receivedRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) {
         NSLog(@"Received Request Reply: %@", _receivedRequest.requestReply);
         // Reply Null
         if (![_receivedRequest.requestReply isEqualToString:@"Yes"] && ![_receivedRequest.requestReply isEqualToString:@"No"]) {
@@ -246,7 +246,7 @@
     // Fetch incoming ShareReply for User to acknowledge
     //[self fetchShareReply];
     
-    if (_receivedReply) {
+    if (_receivedReply && [_receivedReply.requestToUser isEqual:_toUserParse]) {
     NSLog(@"Share Reply run");
         
         //Null Reply, Null Confirm
@@ -379,19 +379,26 @@
     if (message.image && [message.fromUserParse.objectId isEqualToString:self.toUserParse.objectId]) {
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"toCellImage" forIndexPath:indexPath];
         cell.userImageView.image = self.toPhoto;
-        
+        /*
         // Blur conditional ********************
         if (!_receivedRequest || ![_receivedRequest.requestReply isEqualToString:@"Yes"]) {
             [self blurImages:cell.userImageView];
+            NSLog(@"BlurView Text Image run w/ Null Request, or No Request");
         }
         
         if (_receivedReply) {
             if (!([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
                 [self blurImages:cell.userImageView];
             }
+            NSLog(@"BlurView Text Image run w/ Reply No and Reply Closed");
         }
         // *************************************
+        */
         
+        if (!_matchRevealed) {
+            NSLog(@"BlurView Image run");
+            [self blurImages:cell.userImageView];
+        }
         cell.dateLabel.text = [dateFormatter stringFromDate:[message createdAt]];
         __block UIImage *image;
         [message.image getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
@@ -419,18 +426,25 @@
     if (!message.image && !message.sendImage &&[message.fromUserParse.objectId isEqualToString:self.toUserParse.objectId]) {
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"toCell" forIndexPath:indexPath];
         cell.userImageView.image = self.toPhoto;
+        /*
+         // Blur conditional ********************
+         if (!_receivedRequest || ![_receivedRequest.requestReply isEqualToString:@"Yes"]) {
+         [self blurImages:cell.userImageView];
+         NSLog(@"BlurView Text Image run w/ Null Request, or No Request");
+         }
+         
+         if (_receivedReply) {
+         if (!([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
+         [self blurImages:cell.userImageView];
+         }
+         NSLog(@"BlurView Text Image run w/ Reply No and Reply Closed");
+         }
+        */
         
-        // Blur conditional ********************
-        if (!_receivedRequest || ![_receivedRequest.requestReply isEqualToString:@"Yes"]) {
+        if (!_matchRevealed) {
+            NSLog(@"BlurView Text run");
             [self blurImages:cell.userImageView];
         }
-        
-        if (_receivedReply) {
-            if (!([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
-                [self blurImages:cell.userImageView];
-            }
-        }
-        
         // *************************************
         
         cell.messageLabel.textColor = WHITE_COLOR;
@@ -441,8 +455,6 @@
     cell.userImageView.clipsToBounds = YES;
     cell.userImageView.layer.borderWidth = 0.0,
     cell.userImageView.layer.borderColor = BLUE_COLOR.CGColor;
-
-
 
     cell.dateLabel.text = [dateFormatter stringFromDate:[message createdAt]];
     cell.dateLabel.textColor = RED_DEEP;
@@ -487,6 +499,18 @@
         [cell.contentView addSubview:bubbleView];
         [cell.contentView sendSubviewToBack:bubbleView];
          
+    }
+    
+    if ((_receivedReply && _receivedRequest) || _receivedRequest) {
+        if ([_receivedRequest.requestReply isEqualToString:@"Yes"] && [_receivedRequest.requestFromUser isEqual:_toUserParse]) {
+            [_blurImageView removeFromSuperview];
+        }
+    }
+    
+    if ((_receivedRequest && _receivedReply) || _receivedReply) {
+        if ([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_receivedReply.requestToUser isEqual:_toUserParse]) {
+            [_blurImageView removeFromSuperview];
+        }
     }
     
     return cell;
@@ -1125,30 +1149,31 @@
     
     //[_matchedUsers saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
     //    if (succeeded) {
-            PFQuery *query = [PFInstallation query];
+    
             /*PFUser *pushUser = _curUser;
              NSString *pushUserto = pushUser[@"nickname"];*/
-            [query whereKey:@"objectId" equalTo:self.toUserParse.installation.objectId];
+
+    /* Push does not work from Sim-to-Phone!
+    PFQuery *query = [PFInstallation query];
+    [query whereKey:@"objectId" equalTo:self.toUserParse.installation.objectId];
             
-            NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
-                                  [NSString stringWithFormat:@"Identity Share Reply"], @"alert",
-                                  @"Increment", @"badge",
-                                  @"Ache.caf", @"sound",
-                                  nil];
+    NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Identity Share Reply"], @"alert",
+                          @"Increment", @"badge",
+                          @"Ache.caf", @"sound",nil];
             
-            PFPush *push = [[PFPush alloc] init];
-            [push setQuery:query];
-            [push setData:data];
-            [push sendPushInBackground];
-            
-            if ([_receivedRequest.requestReply isEqualToString:@"Yes"]) {
-                NSLog(@"Received Request Reply: %@", _receivedRequest.requestReply);
-                [self reloadView];
-                [self performSegueWithIdentifier:@"match_view" sender:nil];
-                NSLog(@"Pushed to Match User Profile");
-            } else {
-                NSLog(@"Notification pushed, but Request Reply code not run");
-            }
+    PFPush *push = [[PFPush alloc] init];
+    [push setQuery:query];
+    [push setData:data];
+    [push sendPushInBackground];
+     */
+    if ([_receivedRequest.requestReply isEqualToString:@"Yes"]) {
+        NSLog(@"Received Request Reply: %@", _receivedRequest.requestReply);
+        [self reloadView];
+        [self performSegueWithIdentifier:@"match_view" sender:nil];
+        NSLog(@"Pushed to Match User Profile");
+    } else {
+        NSLog(@"Notification pushed, but Request Reply code not run");
+    }
             // Must set check in @"match_view" ViewWillAppear
     //    }
    // }];
