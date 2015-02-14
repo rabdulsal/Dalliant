@@ -143,8 +143,10 @@
     
         for (RevealRequest *request in requests) {
             UserParseHelper *fromRequestUser = (UserParseHelper *)[request.requestFromUser fetchIfNeeded];
+            NSLog(@"Request from %@", fromRequestUser.nickname);
             
             UserParseHelper *toRequestUser = (UserParseHelper *)[request.requestToUser fetchIfNeeded];
+            NSLog(@"Request to %@", toRequestUser.nickname);
             
             if ([fromRequestUser isEqual:_curUser]) {
                 _receivedReply = request; //Equivalent to receivedReply
@@ -227,7 +229,7 @@
     [self fetchShareRequest];
     
     if (_receivedRequest) {
-        
+        NSLog(@"Received Request Reply: %@", _receivedRequest.requestReply);
         // Reply Null
         if (![_receivedRequest.requestReply isEqualToString:@"Yes"] && ![_receivedRequest.requestReply isEqualToString:@"No"]) {
             NSLog(@"ReplyAlertView");
@@ -235,6 +237,7 @@
             
             // Yes Reply
         } else if ([_receivedRequest.requestReply isEqualToString:@"Yes"]) {
+            NSLog(@"Users Revealed!");
             [self usersRevealed];
             
         }
@@ -378,10 +381,15 @@
         cell.userImageView.image = self.toPhoto;
         
         // Blur conditional ********************
-        if (!([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
+        if (!_receivedRequest || ![_receivedRequest.requestReply isEqualToString:@"Yes"]) {
             [self blurImages:cell.userImageView];
         }
         
+        if (_receivedReply) {
+            if (!([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
+                [self blurImages:cell.userImageView];
+            }
+        }
         // *************************************
         
         cell.dateLabel.text = [dateFormatter stringFromDate:[message createdAt]];
@@ -413,9 +421,14 @@
         cell.userImageView.image = self.toPhoto;
         
         // Blur conditional ********************
-        
-        if (!([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
+        if (!_receivedRequest || ![_receivedRequest.requestReply isEqualToString:@"Yes"]) {
             [self blurImages:cell.userImageView];
+        }
+        
+        if (_receivedReply) {
+            if (!([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
+                [self blurImages:cell.userImageView];
+            }
         }
         
         // *************************************
@@ -606,7 +619,7 @@
         
     _blurImageView.frame = imageView.bounds;
     [imageView addSubview:_blurImageView];
-    
+    NSLog(@"Applied BlurView");
 }
 
 - (void)scrollCollectionView
@@ -641,16 +654,29 @@
                         }];
 }
 
+- (void)shareRequestActionSheet
+{
+    NSLog(@"Share Request Action Sheet");
+    _actionsheet = [[UIActionSheet alloc] initWithTitle:@"Send Reveal request?" delegate:self cancelButtonTitle:@"Don't Request" destructiveButtonTitle:nil otherButtonTitles:@"Yes", nil];
+    _actionsheet.tag = 1;
+    [_actionsheet showInView:self.view];
+}
+
 #pragma mark - Send Photo Camera Press
 
 - (IBAction)sendPhoto:(id)sender
 {
-    if (!([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) { // <-- Change to check on Matched User attribute
-        _actionsheet = [[UIActionSheet alloc] initWithTitle:@"Send Reveal request?" delegate:self cancelButtonTitle:@"Don't Request" destructiveButtonTitle:nil otherButtonTitles:@"Yes", nil];
-        _actionsheet.tag = 1;
-        [_actionsheet showInView:self.view];
+    if (!_receivedRequest && !_receivedReply) { // <-- Change to check on Matched User attribute
         
-    } else {
+        [self shareRequestActionSheet];
+        
+    } else if ([_receivedRequest.requestReply isEqualToString:@"No"] && [_receivedRequest.requestFromUser isEqual:_toUserParse] && !_receivedReply) {
+        [self shareRequestActionSheet];
+    } else if ([_receivedReply.requestReply isEqualToString:@"No"] && [_receivedReply.requestToUser isEqual:_toUserParse] && !_receivedRequest) {
+        [self shareRequestActionSheet];
+    }
+    
+    else {
         
         [self hiddeKeyBoard];
         UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
@@ -957,43 +983,55 @@
 
 }
 
+- (void)sendShareRequest
+{
+    RevealRequest *revealRequest    = [RevealRequest object];
+    revealRequest.requestFromUser   = _curUser;
+    revealRequest.requestToUser     = self.toUserParse;
+    revealRequest.requestReply      = @"";
+    
+    [revealRequest saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        PFQuery *query = [PFInstallation query];
+        [query whereKey:@"objectId" equalTo:self.toUserParse.installation.objectId];
+        
+        NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
+                              @"Request to Share Identities", @"alert",
+                              [NSString stringWithFormat:@"%@", _toUserParse], @"match",
+                              /*[NSString stringWithFormat:@"%@", _matchedUsers], @"relationship",*/
+                              @"Increment", @"badge",
+                              @"Ache.caf", @"sound",
+                              nil];
+        PFPush *push = [[PFPush alloc] init];
+        
+        [push setQuery:query];
+        [push setData:data];
+        [push sendPushInBackground];
+        
+        _cameraButton.enabled = NO;
+    }];
+}
+
 #pragma mark - ActionSheetDelegates
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (actionSheet.tag == 1) { // <-- Clicked Reveal Request Button
         
-        if (!([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) && buttonIndex == 0) { // <-- Change to isRevealed check on PossibleMatchHelper
+        // No Received Request and No Received Reply
+        if (!_receivedRequest && !_receivedReply && buttonIndex == 0) {
+            [self sendShareRequest];
+        }
+        
+        // Rejected Received Reply
+        
+        if (!([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestFromUser isEqual:_toUserParse] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) && buttonIndex == 0) { // <-- Change to isRevealed check on PossibleMatchHelper
             // Test purposes
             /*mainUser.isRevealed = true;
             [self reloadView];*/
             
             // <-- Apparently this works when app is in background, a notification is sent and appears as alert
             // RevealRequest setup
-            RevealRequest *revealRequest    = [RevealRequest object];
-            revealRequest.requestFromUser   = _curUser;
-            revealRequest.requestToUser     = self.toUserParse;
-            revealRequest.requestReply      = @"";
-            
-            [revealRequest saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                PFQuery *query = [PFInstallation query];
-                [query whereKey:@"objectId" equalTo:self.toUserParse.installation.objectId];
-                
-                NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
-                                      @"Request to Share Identities", @"alert",
-                                      [NSString stringWithFormat:@"%@", _toUserParse], @"match",
-                                      /*[NSString stringWithFormat:@"%@", _matchedUsers], @"relationship",*/
-                                      @"Increment", @"badge",
-                                      @"Ache.caf", @"sound",
-                                      nil];
-                PFPush *push = [[PFPush alloc] init];
-                
-                [push setQuery:query];
-                [push setData:data];
-                [push sendPushInBackground];
-                
-                _cameraButton.enabled = NO;
-            }];
+            [self sendShareRequest];
          }
         
     } else if (actionSheet.tag == 2) { // <-- Clicked Match Options Button
@@ -1079,14 +1117,14 @@
 
 - (void)repliedToShareRequest
 {
-    if ([_receivedRequest.requestReply isEqualToString:@"Yes"]) {
-        _matchedUsers.usersRevealed = [NSNumber numberWithBool:YES];
+    NSLog(@"Start Replied To Share Request");
+    /* _matchedUsers.usersRevealed = [NSNumber numberWithBool:YES];
     } else if ([_receivedRequest.requestReply isEqualToString:@"No"]){
         [_matchedUsers.usersRevealed isEqualToNumber:[NSNumber numberWithBool:NO]];
-    }
+    }*/
     
-    [_matchedUsers saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (succeeded) {
+    //[_matchedUsers saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+    //    if (succeeded) {
             PFQuery *query = [PFInstallation query];
             /*PFUser *pushUser = _curUser;
              NSString *pushUserto = pushUser[@"nickname"];*/
@@ -1103,13 +1141,17 @@
             [push setData:data];
             [push sendPushInBackground];
             
-            if ([_matchedUsers.usersRevealed isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+            if ([_receivedRequest.requestReply isEqualToString:@"Yes"]) {
+                NSLog(@"Received Request Reply: %@", _receivedRequest.requestReply);
                 [self reloadView];
                 [self performSegueWithIdentifier:@"match_view" sender:nil];
+                NSLog(@"Pushed to Match User Profile");
+            } else {
+                NSLog(@"Notification pushed, but Request Reply code not run");
             }
             // Must set check in @"match_view" ViewWillAppear
-        }
-    }];
+    //    }
+   // }];
 }
 
 #pragma mark - UIAlertViewDelegate
@@ -1221,7 +1263,7 @@
         
         // Reload View after Current User Clicks 'Okay' in Revealed AlertView
         
-        if ([_matchedUsers.usersRevealed isEqualToNumber:[NSNumber numberWithBool:YES] ]) {
+        //if ([_matchedUsers.usersRevealed isEqualToNumber:[NSNumber numberWithBool:YES] ]) {
             
             _receivedReply.requestClosed = [NSNumber numberWithBool:YES];
             [_receivedReply saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
@@ -1234,7 +1276,7 @@
                 }
             }];
             
-        }
+        //}
         
     } else if (alertView.tag == 4) { // Share Request fromUser = _curUser, toUser Replied NO
         

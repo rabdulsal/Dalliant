@@ -278,14 +278,14 @@
             cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
         }
         
-        if (_receivedRequest) {
-            if ([_receivedRequest.requestReply isEqualToString:@"Yes"] && [_receivedRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_receivedRequest.requestFromUser isEqual:user]) {
+        if ((_receivedReply && _receivedRequest) || _receivedRequest) {
+            if ([_receivedRequest.requestReply isEqualToString:@"Yes"] && [_receivedRequest.requestFromUser isEqual:user]) {
                 cell.nameTextLabel.text = user.nickname;
                 [_visualEffectView removeFromSuperview];
             }
         }
         
-        if (_receivedReply) {
+        if ((_receivedRequest && _receivedReply) || _receivedReply) {
             if ([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_receivedReply.requestToUser isEqual:user]) {
                 cell.nameTextLabel.text = user.nickname;
                 [_visualEffectView removeFromSuperview];
@@ -344,6 +344,7 @@
     bgColorView.backgroundColor = WHITE_COLOR;
     [cell setSelectedBackgroundView:bgColorView];
     
+    // Indicator Label logic
     if ([_receivedRequest.requestFromUser isEqual:user]) {
         
         if (![_receivedRequest.requestReply isEqualToString:@"No"] && ![_receivedRequest.requestReply isEqualToString:@"Yes"]) {

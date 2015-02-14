@@ -90,8 +90,10 @@
     _imagePager.pageControl.center = CGPointMake(CGRectGetWidth(_imagePager.frame) / 2, CGRectGetHeight(_imagePager.frame) - 42);
     
     if (_receivedRequest) {
-        if ([_receivedRequest.requestReply isEqualToString:@"Yes"] && [_receivedRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_receivedRequest.requestFromUser isEqual:_matchUser]) {
+        if ([_receivedRequest.requestReply isEqualToString:@"Yes"] && [_receivedRequest.requestFromUser isEqual:_matchUser]) {
+            NSLog(@"Before TranslucentView removed");
             [_translucentView removeFromSuperview];
+            NSLog(@"After TranslucentView removed");
         }
     }
     
