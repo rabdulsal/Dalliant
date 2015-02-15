@@ -104,10 +104,10 @@
         
         if ([fromRequestUser isEqual:[UserParseHelper currentUser]]) {
             _receivedReply = request; //Equivalent to receivedReply
-            NSLog(@"Request from Me");
+            NSLog(@"Request from Me and to %@", _receivedReply.requestToUser.nickname);
         } else if ([toRequestUser isEqual:[UserParseHelper currentUser]]) {
             _receivedRequest = request; //Equivalent to receivedRequest
-            NSLog(@"Request from Other User");
+            NSLog(@"Request from Other User: %@", _receivedRequest.requestFromUser.nickname);
         }
     }
     
@@ -118,56 +118,6 @@
 {
     
     //PFQuery *both = [PFQuery orQueryWithSubqueries:@[messageQueryFrom, messageQueryTo]];
-}
-
-- (void)setHighCompatibilityColor:(MDRadialProgressTheme *)newTheme
-{
-    newTheme.completedColor     = RED_DEEP;
-    newTheme.incompletedColor   = RED_LIGHT;
-    newTheme.centerColor        = RED_OMNY;
-}
-
-- (void)setMedCompatibilityColor:(MDRadialProgressTheme *)newTheme
-{
-    newTheme.completedColor     = SEA_DEEP_COLOR;
-    newTheme.incompletedColor   = SEA_COLOR;
-    newTheme.centerColor        = MENU_BLUE;
-}
-
-- (void)setLowCompatibilityColor:(MDRadialProgressTheme *)newTheme
-{
-    newTheme.completedColor     = [UIColor darkGrayColor];
-    newTheme.incompletedColor   = [UIColor lightGrayColor];
-    newTheme.centerColor        = GRAY_COLOR;
-}
-
-- (void)configureRadialView:(UserTableViewCell *)matchCell
-{
-    MDRadialProgressTheme *newTheme = [[MDRadialProgressTheme alloc] init];
-    //newTheme.completedColor = [UIColor colorWithRed:90/255.0 green:212/255.0 blue:39/255.0 alpha:1.0];
-    
-    //newTheme.incompletedColor = [UIColor colorWithRed:164/255.0 green:231/255.0 blue:134/255.0 alpha:1.0];
-    newTheme.centerColor = [UIColor clearColor];
-    //[self setHighCompatibilityColor:newTheme];
-    
-    // Compatibility conditional
-    if (_matchUser.compatibilityIndex > [NSNumber numberWithInt:66]) {
-        [self setHighCompatibilityColor:newTheme];
-    } else if (_matchUser.compatibilityIndex < [NSNumber numberWithInt:66] && _matchUser.compatibilityIndex > [NSNumber numberWithInt:33]) {
-        [self setMedCompatibilityColor:newTheme];
-    } else [self setLowCompatibilityColor:newTheme];
-    
-    //newTheme.centerColor = [UIColor colorWithRed:224/255.0 green:248/255.0 blue:216/255.0 alpha:1.0];
-    newTheme.sliceDividerHidden = YES;
-    newTheme.labelColor = [UIColor blackColor];
-    newTheme.labelShadowColor = [UIColor whiteColor];
-    
-    CGRect frame = CGRectMake(190, 8, 45, 45);
-    MDRadialProgressView *radialView7 = [[MDRadialProgressView alloc] initWithFrame:frame andTheme:newTheme];
-    radialView7.progressTotal = (int)_matchUser.totalPrefs;
-    radialView7.progressCounter = (int)_matchUser.prefCounter;
-    //[self.view addSubview:radialView7];
-    [matchCell.contentView addSubview:radialView7];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -259,7 +209,10 @@
     [possMatch1 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         //for (PossibleMatchHelper *match in objects) {
         _matchUser = [objects objectAtIndex:0];
-        [self configureRadialView:cell];
+        
+        CGRect frame = CGRectMake(190, 8, 45, 45);
+        [_matchUser configureRadialViewForView:cell.contentView withFrame:frame];
+        //[self configureRadialView:cell];
         //}
         
         [user.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
@@ -279,9 +232,10 @@
         }
         
         if ((_receivedReply && _receivedRequest) || _receivedRequest) {
-            if ([_receivedRequest.requestReply isEqualToString:@"Yes"] && [_receivedRequest.requestFromUser isEqual:user]) {
+            if ([_receivedRequest.requestReply isEqualToString:@"Yes"] && [_receivedRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_receivedRequest.requestFromUser isEqual:user]) {
                 cell.nameTextLabel.text = user.nickname;
                 [_visualEffectView removeFromSuperview];
+                NSLog(@"%@ revealed!", user.nickname);
             }
         }
         
@@ -289,6 +243,7 @@
             if ([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_receivedReply.requestToUser isEqual:user]) {
                 cell.nameTextLabel.text = user.nickname;
                 [_visualEffectView removeFromSuperview];
+                NSLog(@"%@ revealed!", user.nickname);
             }
         }
         

@@ -38,7 +38,6 @@
 @property (strong, nonatomic) RevealRequest *receivedReply;
 @property (strong, nonatomic) RevealRequest *incomingRequest;
 @property (strong, nonatomic) RevealRequest *outgoingRequest;
-@property BOOL matchRevealed;
 @end
 
 @implementation UserMessagesViewController
@@ -53,8 +52,6 @@
     
     [self getPhotos];
     [self getMessages];
-    
-    _matchRevealed = false;
     
     UIBarButtonItem *barButton = [[UIBarButtonItem alloc] init];
     barButton.title = @"";
@@ -150,10 +147,10 @@
             
             if ([fromRequestUser isEqual:_curUser]) {
                 _receivedReply = request; //Equivalent to receivedReply
-                NSLog(@"Request from Me");
+                NSLog(@"Request from Me and to %@", _receivedReply.requestToUser.nickname);
             } else if ([toRequestUser isEqual:_curUser]) {
                 _receivedRequest = request; //Equivalent to receivedRequest
-                NSLog(@"Request from Other User");
+                NSLog(@"Request from Other User: %@", _receivedRequest.requestFromUser.nickname);
             }
         }
 
@@ -199,7 +196,6 @@
 
 - (void)usersRevealed
 {
-    _matchRevealed = true;
     self.title = self.toUserParse.nickname;
     _cameraButton.enabled = YES;
     [_blurImageView removeFromSuperview];
@@ -399,10 +395,8 @@
         // *************************************
         */
         
-        if (!_matchRevealed) {
-            NSLog(@"BlurView Image run");
-            [self blurImages:cell.userImageView];
-        }
+        [self blurImages:cell.userImageView];
+        
         cell.dateLabel.text = [dateFormatter stringFromDate:[message createdAt]];
         __block UIImage *image;
         [message.image getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
@@ -445,10 +439,7 @@
          }
         */
         
-        if (!_matchRevealed) {
-            NSLog(@"BlurView Text run");
-            [self blurImages:cell.userImageView];
-        }
+        [self blurImages:cell.userImageView];
         // *************************************
         
         cell.messageLabel.textColor = WHITE_COLOR;
@@ -1036,6 +1027,7 @@
         [push sendPushInBackground];
         
         _cameraButton.enabled = NO;
+        NSLog(@"Share Request Sent!");
     }];
 }
 
@@ -1063,7 +1055,10 @@
             [self sendShareRequest];
          }
         */
-        [self sendShareRequest];
+        if (buttonIndex == 0) {
+            [self sendShareRequest];
+        }
+        
     } else if (actionSheet.tag == 2) { // <-- Clicked Match Options Button
         
         if (buttonIndex == 0) {
@@ -1159,7 +1154,7 @@
             /*PFUser *pushUser = _curUser;
              NSString *pushUserto = pushUser[@"nickname"];*/
 
-    /* Push does not work from Sim-to-Phone!
+    // Push does not work from Sim-to-Phone!
     PFQuery *query = [PFInstallation query];
     [query whereKey:@"objectId" equalTo:self.toUserParse.installation.objectId];
             
@@ -1171,7 +1166,7 @@
     [push setQuery:query];
     [push setData:data];
     [push sendPushInBackground];
-     */
+    
     if ([_receivedRequest.requestReply isEqualToString:@"Yes"]) {
         NSLog(@"Received Request Reply: %@", _receivedRequest.requestReply);
         [self reloadView];
