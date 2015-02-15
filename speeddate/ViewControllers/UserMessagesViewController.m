@@ -241,6 +241,10 @@
             [self usersRevealed];
             
         }
+    } else if ([_receivedRequest.requestReply isEqualToString:@"Yes"]) {
+        NSLog(@"Users Revealed!");
+        [self usersRevealed];
+        
     }
     
     // Fetch incoming ShareReply for User to acknowledge
@@ -266,7 +270,7 @@
             NSLog(@"Revealed View");
             
             // No Reply, Yes Confirm
-        } else if ([_receivedReply.requestReply isEqualToString:@"No"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+        } else if ((!_receivedRequest && [_receivedReply.requestReply isEqualToString:@"No"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || ([_receivedRequest.requestReply isEqualToString:@"No"] && [_receivedReply.requestReply isEqualToString:@"No"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:NO]])) {
             // Request rejected
             [self shareRequestRejected];
             NSLog(@"Rejected View");
@@ -1042,6 +1046,7 @@
     if (actionSheet.tag == 1) { // <-- Clicked Reveal Request Button
         
         // No Received Request and No Received Reply
+        /*
         if (!_receivedRequest && !_receivedReply && buttonIndex == 0) {
             [self sendShareRequest];
         }
@@ -1051,13 +1056,14 @@
         if (!([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestFromUser isEqual:_toUserParse] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) && buttonIndex == 0) { // <-- Change to isRevealed check on PossibleMatchHelper
             // Test purposes
             /*mainUser.isRevealed = true;
-            [self reloadView];*/
+            [self reloadView];// Closed comment here
             
             // <-- Apparently this works when app is in background, a notification is sent and appears as alert
             // RevealRequest setup
             [self sendShareRequest];
          }
-        
+        */
+        [self sendShareRequest];
     } else if (actionSheet.tag == 2) { // <-- Clicked Match Options Button
         
         if (buttonIndex == 0) {
