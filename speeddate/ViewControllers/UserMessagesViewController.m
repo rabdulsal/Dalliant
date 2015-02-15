@@ -38,6 +38,11 @@
 @property (strong, nonatomic) RevealRequest *receivedReply;
 @property (strong, nonatomic) RevealRequest *incomingRequest;
 @property (strong, nonatomic) RevealRequest *outgoingRequest;
+@property (weak, nonatomic) IBOutlet UIView *unMatchedBlocker;
+- (IBAction)chatEndedClose:(id)sender;
+
+
+
 @end
 
 @implementation UserMessagesViewController
@@ -96,6 +101,7 @@
     UIImage *temp = [[UIImage imageNamed:@"x"] imageWithRenderingMode: UIImageRenderingModeAlwaysOriginal];
     UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithImage:temp style:UIBarButtonItemStyleBordered target:self action:@selector(popVC)];
     self.navigationItem.leftBarButtonItem = barButtonItem;
+    self.unMatchedBlocker.frame = CGRectMake(0, self.view.frame.size.height, self.unMatchedBlocker.frame.size.width, self.unMatchedBlocker.frame.size.height);
 }
 
 - (void)fetchCompatibleMatch
@@ -1317,8 +1323,15 @@
     } else if (alertView.tag == 5) {
         if (buttonIndex == 1) {
             NSLog(@"End Chat pressed");
-            //[self deleteConversation];
             //[self popVC];
+            //[self deleteConversation];
+            
+            // Below should be in separate method and triggered on toParseUser UI via notification
+            [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:0.9 initialSpringVelocity:0.9 options:UIViewAnimationOptionCurveEaseIn animations:^{
+                self.unMatchedBlocker.frame = CGRectMake(0, self.view.frame.size.height-self.unMatchedBlocker.frame.size.height, self.unMatchedBlocker.frame.size.width, self.unMatchedBlocker.frame.size.height);
+            } completion:^(BOOL finished) {
+                
+            }];
         }
     } else if (alertView.tag == 6) {
         if (buttonIndex == 1) {
@@ -1351,4 +1364,7 @@
 
 
 
+- (IBAction)chatEndedClose:(id)sender {
+    [self popVC];
+}
 @end

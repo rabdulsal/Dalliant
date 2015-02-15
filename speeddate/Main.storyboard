@@ -3084,6 +3084,32 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
+                            <view contentMode="scaleToFill" id="LkM-2W-u36">
+                                <rect key="frame" x="0.0" y="554" width="320" height="42"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Match Ended Chat" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="yet-cM-T6q">
+                                        <rect key="frame" x="88" y="10" width="144" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="B7E-E5-HdJ">
+                                        <rect key="frame" x="266" y="7" width="46" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                        <state key="normal" title="X">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="chatEndedClose:" destination="OLv-wp-Wkd" eventType="touchUpInside" id="vqT-hI-f4U"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                             <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="cLf-s6-1pg">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="462"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -3264,6 +3290,7 @@
                         <outlet property="collectionView" destination="cLf-s6-1pg" id="cZp-hT-XRf"/>
                         <outlet property="messagesView" destination="znx-55-aXc" id="BtU-Ni-qLu"/>
                         <outlet property="textField" destination="1cw-AD-1Ac" id="mg8-aj-hH3"/>
+                        <outlet property="unMatchedBlocker" destination="LkM-2W-u36" id="Lx9-Tu-wIJ"/>
                         <segue destination="hsn-7u-aHf" kind="push" identifier="image" id="Q0d-cM-tNE"/>
                         <segue destination="v51-0K-POn" kind="modal" identifier="view_profile" id="NMB-y1-hOv"/>
                         <segue destination="rDU-7y-piv" kind="push" identifier="match_view" id="zaL-5y-aHw"/>
