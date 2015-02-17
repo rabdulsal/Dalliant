@@ -77,6 +77,8 @@
 
     NSLog(@"Match: %@, Compatibility: %@", _matchUser.nickname, _possibleMatch.compatibilityIndex);
     NSLog(@"User Images: %lu", (unsigned long)[_getPhotoArray count]);
+    
+    self.restorationIdentifier = @"MatchViewController";
 }
 
 - (void)viewWillAppear:(BOOL)animated

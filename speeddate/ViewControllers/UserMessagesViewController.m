@@ -91,6 +91,8 @@
     //[[NSNotificationCenter defaultCenter] postNotificationName:@"Fetch Reveal Reply" object:self];
 
     [self customizeApp];
+    
+    self.restorationIdentifier = @"UserMessagesViewController";
 }
 
 - (void)customizeApp
@@ -319,7 +321,7 @@
         
         NSString *pushMessage = nil;
         
-        if (!([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
+        if ((!_receivedRequest && !_receivedReply) || !([_receivedRequest.requestReply isEqualToString:@"Yes"] && [_receivedRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || !([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
             pushMessage = [NSString stringWithFormat:@"Your Match says: %@", message.text];
         } else pushMessage = [NSString stringWithFormat:@"%@ says: %@",pushUserto,message.text];
        
@@ -334,7 +336,7 @@
         [push setQuery:query];
         [push setData:data];
         [push sendPushInBackground];
-        
+        NSLog(@"Push Message sent");
     }
 
     self.textField.text = @"";
@@ -1326,12 +1328,7 @@
             //[self popVC];
             //[self deleteConversation];
             
-            // Below should be in separate method and triggered on toParseUser UI via notification
-            [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:0.9 initialSpringVelocity:0.9 options:UIViewAnimationOptionCurveEaseIn animations:^{
-                self.unMatchedBlocker.frame = CGRectMake(0, self.view.frame.size.height-self.unMatchedBlocker.frame.size.height, self.unMatchedBlocker.frame.size.width, self.unMatchedBlocker.frame.size.height);
-            } completion:^(BOOL finished) {
-                
-            }];
+            //Block un-Matched Notification
         }
     } else if (alertView.tag == 6) {
         if (buttonIndex == 1) {
@@ -1361,7 +1358,15 @@
     }
 }
 
-
+- (void)blockUnMatched
+{
+    // Below should be in separate method and triggered on toParseUser UI via notification
+    [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:0.9 initialSpringVelocity:0.9 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        self.unMatchedBlocker.frame = CGRectMake(0, self.view.frame.size.height-self.unMatchedBlocker.frame.size.height, self.unMatchedBlocker.frame.size.width, self.unMatchedBlocker.frame.size.height);
+    } completion:^(BOOL finished) {
+        
+    }];
+}
 
 
 - (IBAction)chatEndedClose:(id)sender {

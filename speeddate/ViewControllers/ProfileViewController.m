@@ -139,6 +139,8 @@
     }
 
     [UserParseHelper currentUser].credits = @5;
+    
+    self.restorationIdentifier = @"ProfileViewController";
 }
 
 

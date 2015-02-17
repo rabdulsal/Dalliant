@@ -25,7 +25,7 @@
     return YES;
 }
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+- (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
     [Parse setApplicationId:appIdparse
@@ -142,13 +142,13 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    
+    /*
     NSDictionary *userInfoAlert = [userInfo objectForKey:@"aps"];
     NSString *alertMessage = [userInfoAlert objectForKey:@"alert"];
     
     if ([alertMessage isEqualToString:@"Request to Share Identities"]) {
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"Fetch Reveal Request" object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"Fetch Reveal Request" object:self];*/
             /*
              UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"In-app Reveal Request" message:@"Request received in app" delegate:self cancelButtonTitle:@"Done" otherButtonTitles: @"Anzeigen", nil];
              [alert setTag: 2];
@@ -156,10 +156,11 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
         */
     /*} else if ([alertMessage isEqualToString:@"Identity Share Reply"]){
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Fetch Reveal Reply" object:self];*/
-    } else {
+  //  } else {
+    NSLog(@"Did Receive Remote Notification started");
         [[NSNotificationCenter defaultCenter] postNotificationName:receivedMessage object:userInfo];
-        
-    }
+        NSLog(@"Did Receive Remote Notification ended");
+   // }
 }
 /*
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler
@@ -269,6 +270,16 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
         }];
     } */
 
+}
+
+#pragma mark - State Resoration Opt-In
+- (BOOL)application:(UIApplication *)application shouldSaveApplicationState:(NSCoder *)coder;
+{
+    return YES;
+}
+- (BOOL)application:(UIApplication *)application shouldRestoreApplicationState:(NSCoder *)coder;
+{
+    return YES;
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

@@ -224,7 +224,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:receivedMessage object:nil];
 
-    
+    self.restorationIdentifier = @"MainViewController";
     //[self currentLocationIdentifier];
     //[self performSegueWithIdentifier:@"test_match" sender:nil];
 
