@@ -1132,7 +1132,7 @@
             <objects>
                 <viewController id="rDU-7y-piv" customClass="MatchViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vz1-6L-pQP">
-                        <rect key="frame" x="0.0" y="64" width="320" height="1584"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="1520"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="One-Zj-tKF">
@@ -1345,6 +1345,21 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QTR-7U-6v7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="772" y="1883"/>
+        </scene>
+        <!--Chat Message View Controller-->
+        <scene sceneID="RHl-Xt-o6c">
+            <objects>
+                <viewController id="46o-cm-j24" customClass="ChatMessageViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="7BT-us-2wh">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="821"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="h3Q-b6-WTe"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SOg-PP-EsD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1188" y="2145.5"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="sc0-VA-FxC">
@@ -2849,7 +2864,7 @@
             </objects>
             <point key="canvasLocation" x="3867" y="-1225"/>
         </scene>
-        <!--MESSAGES-->
+        <!--Chats-->
         <scene sceneID="Cjt-Fa-Ymn">
             <objects>
                 <viewController id="kXu-jt-bDQ" customClass="MessagesViewController" sceneMemberID="viewController">
@@ -2913,7 +2928,7 @@
                                             <outlet property="lastMessageLabel" destination="0nn-VI-5Yr" id="VEo-oe-daT"/>
                                             <outlet property="nameTextLabel" destination="cHi-ue-AIB" id="LbA-z3-PX4"/>
                                             <outlet property="userImageView" destination="NSr-PA-S6K" id="hC9-aJ-eTg"/>
-                                            <segue destination="OLv-wp-Wkd" kind="push" identifier="chat" id="9Un-nJ-oGX"/>
+                                            <segue destination="46o-cm-j24" kind="push" identifier="chat" id="T3M-uL-jBd"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -2926,7 +2941,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
-                    <navigationItem key="navigationItem" title="MESSAGES" id="itm-kx-eJT">
+                    <navigationItem key="navigationItem" title="Chats" id="itm-kx-eJT">
                         <barButtonItem key="leftBarButtonItem" image="bubble" id="BRw-C8-r6D">
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         </barButtonItem>
@@ -3298,14 +3313,14 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sps-eH-99S" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1094" y="3126"/>
+            <point key="canvasLocation" x="1148" y="3325"/>
         </scene>
         <!--Image View Controller-->
         <scene sceneID="FYj-qu-kVq">
             <objects>
                 <viewController id="hsn-7u-aHf" customClass="ImageViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4Kl-I2-sAF">
-                        <rect key="frame" x="0.0" y="64" width="320" height="1476"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -4361,9 +4376,9 @@
         <segue reference="MLw-yj-LVg"/>
         <segue reference="WJE-pO-Iht"/>
         <segue reference="uru-UJ-cE7"/>
-        <segue reference="fn6-lQ-fgy"/>
         <segue reference="oXm-ri-1Lw"/>
-        <segue reference="yk5-qV-Iag"/>
         <segue reference="zAq-nd-1cA"/>
+        <segue reference="zaL-5y-aHw"/>
+        <segue reference="yk5-qV-Iag"/>
     </inferredMetricsTieBreakers>
 </document>

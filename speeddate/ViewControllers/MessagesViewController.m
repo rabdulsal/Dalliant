@@ -24,6 +24,7 @@
 #import <MDRadialProgressView.h>
 #import "MatchViewController.h"
 #import "RevealRequest.h"
+#import "ChatMessageViewController.h"
 
 #define SECONDS_DAY 24*60*60
 
@@ -379,7 +380,11 @@
 {
     // Try to use this code in AppDelegate for Chat Notification
     if ([segue.identifier isEqualToString:@"chat"]) {
-        
+        ChatMessageViewController *vc = segue.destinationViewController;
+        vc.toUserParse      = [self.usersArray objectAtIndex:self.tableView.indexPathForSelectedRow.row];
+        vc.curUser          = [UserParseHelper currentUser];
+        vc.fromConversation = true;
+        /*
         UserMessagesViewController *vc = segue.destinationViewController;
         //vc.matchedUsers = _matchUser;
         
@@ -392,7 +397,7 @@
             vc.curUser = [UserParseHelper currentUser];
             vc.fromConversation = true;
         }
-         
+         */
         /*
         MatchViewController *matchVC = [[MatchViewController alloc]init];
         matchVC = segue.destinationViewController;
