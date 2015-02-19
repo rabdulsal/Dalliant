@@ -24,6 +24,9 @@
 @property UIImage *fromPhoto;
 @property (strong, nonatomic) RevealRequest *receivedRequest;
 @property (strong, nonatomic) RevealRequest *receivedReply;
+@property (weak, nonatomic) IBOutlet UIView *unMatchedBlocker;
+- (IBAction)popFromChat:(id)sender;
+
 
 @end
 
@@ -31,6 +34,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     // Do any additional setup after loading the view.
     
     // Configure ChatUI NOTE: must set custom image dimensions via CGRectMake
@@ -68,13 +72,20 @@
     // Notification to fetch New Message
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getNewMessage:) name:receivedMessage object:nil];
     
+    // Notifications for Reveal Requests and Replies
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchRevealRequest:) name:@"Fetch Reveal Request" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchRevealReply:) name:@"Fetch Reveal Reply" object:nil];
+    
     [self customizeVC];
     
 }
 
 - (void)customizeVC
 {
+    self.unMatchedBlocker.frame = CGRectMake(0, self.view.frame.size.height, self.unMatchedBlocker.frame.size.width, self.unMatchedBlocker.frame.size.height);
     
+    [self.view addSubview:_unMatchedBlocker];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -148,7 +159,7 @@
         //self.messages = [objects mutableCopy];
         //[self.collectionView reloadData];
         //[self scrollCollectionView];
-        if (!error) {
+        if ([objects count] > 0) {
             [self processMessages:objects];
         }
         
@@ -166,10 +177,8 @@
     [query whereKey:@"toUserParse" equalTo:_curUser];
     [query whereKey:@"read" equalTo:[NSNumber numberWithBool:NO]]; // <-- Key to determine if Message is read - add to TDBadgeCell logic for
     
-    
-    
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
+        if ([objects count] > 0) {
             [self processMessages:objects];
         }
         
@@ -182,6 +191,7 @@
         message.read = YES;
         [message saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             
+            if (succeeded) {
             NSString *displayName   = nil;
             NSString *senderId      = nil;
             if ([message.fromUserParse isEqual:_curUser]) {
@@ -222,6 +232,8 @@
             [self.messages addObject:chatMessage];
             NSLog(@"Chat messages count: %lu", (unsigned long)[_messages count]);
             [self finishReceivingMessage];
+                
+            }
             
         }];
         
@@ -238,6 +250,126 @@
         //for (PossibleMatchHelper *match in objects) {
         _matchedUsers = [objects objectAtIndex:0];
     }];
+}
+
+#pragma mark - Incoming Reveal Request
+
+- (void)fetchRevealRequest:(NSNotification *)note
+{
+    NSLog(@"Fetch Reveal Request run");
+    // Query for Incoming RevealRequest
+    [self fetchShareRequest];
+    
+    /*for (RevealRequest *request in objects) {
+     NSLog(@"For Loop");
+     request.requestReply = @"No";
+     NSLog(@"Request Reply: %@", request.requestReply);
+     
+     // Save to Parse
+     [request saveInBackground];
+     }*/
+    
+    NSLog(@"Query run");
+    // Reveal AlertView
+    [self replyAlertView];
+}
+
+#pragma mark - Incoming Reveal Reply
+
+- (void)fetchRevealReply:(NSNotification *)note
+{
+    
+    // Query for Incoming RevealRequest fromUser = _curUser with Reply
+    [self fetchShareReply];
+    
+    NSLog(@"Reveal Reply query run");
+    
+    [self acknowledgeAlertView];
+    
+}
+
+- (void)fetchShareRequest
+{
+    NSLog(@"Fetched share request");
+    /*
+     PFQuery *requestQuery = [RevealRequest query];
+     [requestQuery whereKey:@"requestFromUser" equalTo:self.toUserParse];
+     [requestQuery whereKey:@"requestToUser" equalTo:_curUser];
+     [requestQuery whereKey:@"requestReply" equalTo:@""];
+     
+     NSArray *request = [requestQuery findObjects];
+     if ([request count] != 0) {
+     _receivedRequest = [request objectAtIndex:0];
+     }
+     */
+    PFQuery *requestFromQuery = [RevealRequest query];
+    [requestFromQuery whereKey:@"requestFromUser" equalTo:_curUser];
+    [requestFromQuery whereKey:@"requestToUser" equalTo:_toUserParse];
+    
+    PFQuery *requestToQuery = [RevealRequest query];
+    [requestToQuery whereKey:@"requestToUser" equalTo:_curUser];
+    [requestToQuery whereKey:@"requestFromUser" equalTo:_toUserParse];
+    
+    PFQuery *orQuery = [PFQuery orQueryWithSubqueries:@[requestFromQuery, requestToQuery]];
+    
+    
+    NSArray *requests = [[NSArray alloc] initWithArray:[orQuery findObjects]];
+    NSLog(@"Requests count: %lu", (unsigned long)[requests count]);
+    
+    for (RevealRequest *request in requests) {
+        UserParseHelper *fromRequestUser = (UserParseHelper *)[request.requestFromUser fetchIfNeeded];
+        NSLog(@"Request from %@", fromRequestUser.nickname);
+        
+        UserParseHelper *toRequestUser = (UserParseHelper *)[request.requestToUser fetchIfNeeded];
+        NSLog(@"Request to %@", toRequestUser.nickname);
+        
+        if ([fromRequestUser isEqual:_curUser]) {
+            _receivedReply = request; //Equivalent to receivedReply
+            NSLog(@"Request from Me and to %@", _receivedReply.requestToUser.nickname);
+        } else if ([toRequestUser isEqual:_curUser]) {
+            _receivedRequest = request; //Equivalent to receivedRequest
+            NSLog(@"Request from Other User: %@", _receivedRequest.requestFromUser.nickname);
+        }
+    }
+    
+    //_receivedRequest = request objectAtIndex:0];
+    /*
+     [requestQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+     NSLog(@"Objects count: %lu", (unsigned long)[objects count]);
+     if (!error && [objects count] != 0) {
+     NSLog(@"Objects retrieved");
+     _receivedRequest = (RevealRequest *)[objects objectAtIndex:0];
+     
+     NSLog(@"Share Request %@", _receivedRequest);
+     }
+     }];*/
+}
+
+- (void)fetchShareReply
+{
+    NSLog(@"Share Reply run");
+    PFQuery *replyQuery = [RevealRequest query];
+    [replyQuery whereKey:@"requestFromUser" equalTo:_curUser];
+    [replyQuery whereKey:@"requestToUser" equalTo:self.toUserParse];
+    [replyQuery whereKey:@"requestReply" notEqualTo:@""];
+    
+    NSMutableArray *reply = [[NSMutableArray alloc] initWithArray:[replyQuery findObjects]];
+    
+    NSLog(@"Share reply count: %lu", (unsigned long)[reply count]);
+    if ([reply count] != 0) {
+        
+        //_receivedReply = [request objectAtIndex:0];
+    }
+    
+    /*
+     [replyQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+     
+     if (!error && [objects count] != 0) {
+     _receivedReply = (RevealRequest *)[objects objectAtIndex:0];
+     
+     NSLog(@"%@'s Share Reply found.", _receivedReply.requestFromUser.nickname);
+     }
+     }];*/
 }
 
 #pragma mark - JSQMessagesViewController method overrides
@@ -258,7 +390,7 @@
     
     MessageParse *message = [MessageParse object];
     message.text = text;
-    message.createdAt = date;
+    message.createdAt = [NSDate date];
     message.fromUserParse = _curUser;
     message.toUserParse = self.toUserParse;
     message.read = NO;
@@ -269,7 +401,7 @@
             
             JSQMessage *chatMessage = [[JSQMessage alloc] initWithSenderId:senderId
                                                          senderDisplayName:senderDisplayName
-                                                                      date:date
+                                                                      date:message.createdAt
                                                                       text:text];
             [self.messages addObject:chatMessage];
             [self sendMessageNotification:message.text];
@@ -758,6 +890,55 @@
     
 }
 
+- (void)replyAlertView
+{
+    NSString *alertTitle = [[NSString alloc] initWithFormat:@"A Match Has Sent You a Share Request!"];
+    NSString *alertMessage = [[NSString alloc] initWithFormat:@"Do you want to share your Profile? If so, click 'Yes' to share your name and pictures."];
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:alertTitle
+                                                    message:alertMessage
+                                                   delegate:self
+                                          cancelButtonTitle:@"No"
+                                          otherButtonTitles:@"Yes", nil];
+    alert.tag = 1;
+    [alert show];
+}
+
+- (void)acknowledgeAlertView
+{
+    if ([_receivedReply.requestReply isEqualToString:@"Yes"]) {
+        
+        // Request Accepted
+        // Reveal AlertView
+        NSString *alertTitle = [[NSString alloc] initWithFormat:@"Your Match %@ Agreed to Share Profiles!", _toUserParse.nickname];
+        NSString *alertMessage = [[NSString alloc] initWithFormat:@"You two can now view and send each other photos - have fun!"];
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:alertTitle
+                                                        message:alertMessage
+                                                       delegate:self
+                                              cancelButtonTitle:@"Okay"
+                                              otherButtonTitles:nil];
+        NSLog(@"Reply AlertView run");
+        alert.tag = 3;
+        [alert show];
+        
+        
+    } else {
+        // Request Rejected
+        NSString *alertTitle = [[NSString alloc] initWithFormat:@"Your Match Declined Sharing Profiles"];
+        NSString *alertMessage = [[NSString alloc] initWithFormat:@"Right now your Match doesn't want to share, but maybe they'll request to share with you later."];
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:alertTitle
+                                                        message:alertMessage
+                                                       delegate:self
+                                              cancelButtonTitle:@"Okay"
+                                              otherButtonTitles:nil];
+        NSLog(@"Reply AlertView run");
+        alert.tag = 4;
+        [alert show];
+    }
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"view_match"]){
@@ -914,10 +1095,12 @@
     } else if (alertView.tag == 5) {
         if (buttonIndex == 1) {
             NSLog(@"End Chat pressed");
-            //[self popVC];
+            
             //[self deleteConversation];
             
             //Block un-Matched Notification
+            [self blockUnMatched];
+            //[self popVC];
         }
     } else if (alertView.tag == 6) {
         if (buttonIndex == 1) {
@@ -981,6 +1164,16 @@
     }];
 }
 
+- (void)blockUnMatched
+{
+    // Below should be in separate method and triggered on toParseUser UI via notification
+    [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:0.9 initialSpringVelocity:0.9 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        self.unMatchedBlocker.frame = CGRectMake(0, self.view.frame.size.height-self.unMatchedBlocker.frame.size.height, self.unMatchedBlocker.frame.size.width, self.unMatchedBlocker.frame.size.height);
+    } completion:^(BOOL finished) {
+        
+    }];
+}
+
 - (void)scrollCollectionView
 {
     if (self.messages.count > 0) {
@@ -1006,4 +1199,7 @@
 }
 */
 
+- (IBAction)popFromChat:(id)sender {
+    [self popVC];
+}
 @end

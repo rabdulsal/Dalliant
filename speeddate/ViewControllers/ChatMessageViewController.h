@@ -11,7 +11,7 @@
 #import "UserParseHelper.h"
 #import "MessageParse.h"
 
-@interface ChatMessageViewController : JSQMessagesViewController <UIActionSheetDelegate, UIImagePickerControllerDelegate>
+@interface ChatMessageViewController : JSQMessagesViewController <UIActionSheetDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 
 @property UserParseHelper *toUserParse;
 @property UserParseHelper *curUser;

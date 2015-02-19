@@ -193,7 +193,7 @@
     
     /*
     [replyQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        
+     
         if (!error && [objects count] != 0) {
             _receivedReply = (RevealRequest *)[objects objectAtIndex:0];
             
