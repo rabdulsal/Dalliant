@@ -1132,7 +1132,7 @@
             <objects>
                 <viewController id="rDU-7y-piv" customClass="MatchViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vz1-6L-pQP">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="1520"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="1584"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="One-Zj-tKF">
@@ -1356,10 +1356,13 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="h3Q-b6-WTe"/>
+                    <connections>
+                        <segue destination="rDU-7y-piv" kind="push" identifier="view_match" id="R6Q-BJ-zcV"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SOg-PP-EsD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1188" y="2145.5"/>
+            <point key="canvasLocation" x="1040" y="1930.5"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="sc0-VA-FxC">
@@ -3313,14 +3316,14 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sps-eH-99S" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1148" y="3325"/>
+            <point key="canvasLocation" x="1116" y="2890"/>
         </scene>
         <!--Image View Controller-->
         <scene sceneID="FYj-qu-kVq">
             <objects>
                 <viewController id="hsn-7u-aHf" customClass="ImageViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4Kl-I2-sAF">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="1476"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -4377,8 +4380,8 @@
         <segue reference="WJE-pO-Iht"/>
         <segue reference="uru-UJ-cE7"/>
         <segue reference="oXm-ri-1Lw"/>
+        <segue reference="R6Q-BJ-zcV"/>
         <segue reference="zAq-nd-1cA"/>
-        <segue reference="zaL-5y-aHw"/>
-        <segue reference="yk5-qV-Iag"/>
+        <segue reference="NMB-y1-hOv"/>
     </inferredMetricsTieBreakers>
 </document>
