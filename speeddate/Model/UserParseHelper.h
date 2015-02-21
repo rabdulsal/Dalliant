@@ -11,6 +11,8 @@
 @interface UserParseHelper : PFUser <PFSubclassing>
 @property NSNumber* age;
 @property NSString* isMale;
+@property NSString *userHeightFeet;
+@property NSString *userHeightInches;
 @property PFFile* photo;
 @property PFFile* photo1;
 @property PFFile* photo2;

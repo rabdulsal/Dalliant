@@ -155,7 +155,7 @@
         
         //Trigger AlertView error if inches > 11
         NSString *alertTitle = [[NSString alloc] initWithFormat:@"Height Error :("];
-        NSString *alertMessage = [[NSString alloc] initWithFormat:@"Woah there Goliath.....we get you're tall, but please enter an Inch-Height less than 11 inches"];
+        NSString *alertMessage = [[NSString alloc] initWithFormat:@"Woah there Beanstalk.....we get you're tall, but please enter an Inch-Height less than 11 inches"];
         
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:alertTitle
                                                         message:alertMessage
@@ -179,8 +179,10 @@
         [alert show];
     } else {
         
-    self.minHeightFeet.text     = [[NSString alloc] initWithFormat:@"%@",feet];
-    self.minHeightInches.text   = [[NSString alloc] initWithFormat:@"%@",inches];
+    self.minHeightFeet.text         = [[NSString alloc] initWithFormat:@"%@",feet];
+    self.minHeightInches.text       = [[NSString alloc] initWithFormat:@"%@",inches];
+    self.mainUser.userHeightFeet    = self.minHeightFeet.text;
+    self.mainUser.userHeightInches  = self.minHeightInches.text;
     }
     
 }
@@ -206,7 +208,7 @@
     // Body Type
     NSArray *bodyArray = [NSArray arrayWithObjects: @"Skinny", @"Average", @"Fit", @"XL", nil];
     _bodyTypeControl = [[UISegmentedControl alloc] initWithItems:bodyArray];
-    _bodyTypeControl.frame = CGRectMake(15, 268, 291, 29);
+    _bodyTypeControl.frame = CGRectMake(15, 234, 291, 29);
     _bodyTypeControl.tintColor = RED_LIGHT;
     //_bodyTypeControl.segmentedControlStyle = UISegmentedControlStylePlain;
     [_bodyTypeControl addTarget:self action:@selector(BodyTypeButtonPressed:) forControlEvents: UIControlEventValueChanged];
@@ -214,7 +216,7 @@
     // Relationship Status
     NSArray *statusArray = [NSArray arrayWithObjects: @"Single", @"Dating", @"Divorced", nil];
     _relationshipStatusControl = [[UISegmentedControl alloc] initWithItems:statusArray];
-    _relationshipStatusControl.frame = CGRectMake(15, 460, 291, 29);
+    _relationshipStatusControl.frame = CGRectMake(15, 422, 291, 29);
     _relationshipStatusControl.tintColor = RED_LIGHT;
     //_relationshipStatusControl.segmentedControlStyle = UISegmentedControlStylePlain;
     [_relationshipStatusControl addTarget:self action:@selector(RelationshipStatusPressed:) forControlEvents: UIControlEventValueChanged];
@@ -222,13 +224,13 @@
     // Relationship Type
     NSArray *typeArray = [NSArray arrayWithObjects: @"Company", @"Friend", @"Relationship", nil];
     _relationshipTypeControl = [[UISegmentedControl alloc] initWithItems:typeArray];
-    _relationshipTypeControl.frame = CGRectMake(15, 532, 291, 29);
+    _relationshipTypeControl.frame = CGRectMake(15, 490, 291, 29);
     _relationshipTypeControl.tintColor = RED_LIGHT;
     //_relationshipTypeControl.segmentedControlStyle = UISegmentedControlStylePlain;
     [_relationshipTypeControl addTarget:self action:@selector(RelationshipTypePressed:) forControlEvents: UIControlEventValueChanged];
     
     // Save Button
-    _saveProfileButton = [[UIButton alloc] initWithFrame:CGRectMake(15, 1302, 291, 50)];
+    _saveProfileButton = [[UIButton alloc] initWithFrame:CGRectMake(15, 1268, 291, 50)];
     [_saveProfileButton setTitle:@"Save Profile" forState:UIControlStateNormal];
     [_saveProfileButton setTitle:@"Saved!" forState:UIControlStateSelected];
     _saveProfileButton.backgroundColor = [UIColor lightGrayColor];
@@ -319,6 +321,8 @@
     _userAbout.text         = _mainUser.desc;
     _userEmployment.text    = [_mainUser userWork];
     _userEducation.text     = [_mainUser userSchool];
+    _minHeightFeet.text     = _mainUser.userHeightFeet;
+    _minHeightInches.text   = _mainUser.userHeightInches;
     //_userEmployment.text    = _mainUser.school;
     //_userEducation.text     = _mainUser.work;
     

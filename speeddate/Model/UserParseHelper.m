@@ -12,6 +12,8 @@
 @implementation UserParseHelper
 
 @dynamic age;
+@dynamic userHeightFeet;
+@dynamic userHeightInches;
 @dynamic photo;
 @dynamic photo1;
 @dynamic photo2;
