@@ -41,26 +41,26 @@
     self.title = @"Chat";
     UIImage *btnImage = [UIImage imageNamed:@"user"];
     CGRect btnImageFrame = CGRectMake(self.inputToolbar.contentView.leftBarButtonItem.frame.origin.x, self.inputToolbar.contentView.leftBarButtonItem.frame.origin.y, 27, 27);
-    
+    [self.inputToolbar.contentView.leftBarButtonItem setFrame:btnImageFrame];
+    [self.inputToolbar.contentView.leftBarButtonItem setImage:btnImage forState:UIControlStateNormal];
+
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage jsq_defaultTypingIndicatorImage]
                                                                               style:UIBarButtonItemStyleBordered
                                                                              target:self
                                                                              action:@selector(actionPressed:)];
+    //3 Dotted right bar button
     self.navigationItem.rightBarButtonItem.tintColor = [UIColor whiteColor];
-    
-    [self.inputToolbar.contentView.leftBarButtonItem setFrame:btnImageFrame];
-    [self.inputToolbar.contentView.leftBarButtonItem setImage:btnImage forState:UIControlStateNormal];
     
     self.senderId           = _curUser.objectId;
     self.senderDisplayName  = _curUser.nickname;
     
-    /* --------- Maybe instead of blur, hide/un-hide avatars after reveal
-    self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
-     */
+    // Set toUser avatar photo, must set conditional based on revealed or not
+    //[self getAvatarPhotos];
+    
     self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
     
     self.messages = [NSMutableArray new];
-    [self getAvatarPhotos];
+    
     [self getMessages];
     [self fetchCompatibleMatch];
     
@@ -83,16 +83,21 @@
 
 - (void)customizeVC
 {
+    //BubbleView
+    self.collectionView.collectionViewLayout.messageBubbleFont = [UIFont fontWithName:@"Helvetica" size:14];
     self.unMatchedBlocker.frame = CGRectMake(0, self.view.frame.size.height, self.unMatchedBlocker.frame.size.width, self.unMatchedBlocker.frame.size.height);
     
     [self.view addSubview:_unMatchedBlocker];
+    
+    self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
+    matchAvatar = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
-    
+    [self checkIncomingShareRequestsAndReplies];
 
 }
 
@@ -114,8 +119,68 @@
     
 }
 
+- (void)checkIncomingShareRequestsAndReplies
+{
+    NSLog(@"Check Incoming request");
+    // Fetch incoming ShareRequest for User to Reply
+    [self fetchShareRequest];
+    
+    if (_receivedRequest && ![_receivedRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+        NSLog(@"Received Request Reply: %@", _receivedRequest.requestReply);
+        // Reply Null
+        if (![_receivedRequest.requestReply isEqualToString:@"Yes"] && ![_receivedRequest.requestReply isEqualToString:@"No"]) {
+            NSLog(@"ReplyAlertView");
+            [self replyAlertView];
+            
+            // 'Yes' Reply
+        } else if ([_receivedRequest.requestReply isEqualToString:@"Yes"]) {
+            NSLog(@"Users Revealed!");
+            [self usersRevealed];
+            
+        }
+    } else if ([_receivedRequest.requestReply isEqualToString:@"Yes"]) {
+        NSLog(@"Users Revealed!");
+        [self usersRevealed];
+        
+    }
+    
+    // Fetch incoming ShareReply for User to acknowledge
+    //[self fetchShareReply];
+    
+    if (_receivedReply && [_receivedReply.requestToUser isEqual:_toUserParse]) {
+        NSLog(@"Share Reply run");
+        
+        //Null Reply, Null Confirm
+        if (![_receivedReply.requestReply isEqualToString:@"Yes"] && ![_receivedReply.requestReply isEqualToString:@"No"] && ![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+            self.inputToolbar.contentView.leftBarButtonItem.enabled = NO;
+            NSLog(@"No Request Reply, No Confirm");
+        }
+        // 'Yes' Reply, Null Confirm or 'No' Reply, Null confirm
+        else if (([_receivedReply.requestReply isEqualToString:@"Yes"] && ![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || ([_receivedReply.requestReply isEqualToString:@"No"] && ![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
+            self.inputToolbar.contentView.leftBarButtonItem.enabled = NO;
+            // Show AcknowledgeAlertView
+            [self acknowledgeAlertView];
+            NSLog(@"Acknowledgement View");
+            
+            // 'Yes' Reply, 'Yes' Confirm
+        } else if ([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]){ // User's acknowledged and shared profile
+            [self usersRevealed];
+            NSLog(@"Revealed View");
+            
+            // 'No' Reply, 'Yes' Confirm
+        } else if ((!_receivedRequest && [_receivedReply.requestReply isEqualToString:@"No"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || ([_receivedRequest.requestReply isEqualToString:@"No"] && [_receivedReply.requestReply isEqualToString:@"No"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:NO]])) {
+            // Request rejected
+            [self shareRequestRejected];
+            NSLog(@"Rejected View");
+            
+            // No Reply, No confirm -> Acknow AlertView
+        }
+    }
+}
+
 - (void)getAvatarPhotos
 {
+    self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeMake(30, 30);
     //__block int count = 0;
     PFQuery *queryFrom = [UserParseHelper query];
     [queryFrom getObjectInBackgroundWithId:self.toUserParse.objectId
@@ -192,14 +257,22 @@
         [message saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             
             if (succeeded) {
-            NSString *displayName   = nil;
-            NSString *senderId      = nil;
+                NSString *displayName   = nil;
+                NSString *senderId      = nil;
+                NSString *matchGender   = nil;
+                
+                if ([_toUserParse.isMale isEqualToString:@"true"]) {
+                    matchGender = @"Male";
+                } else {
+                    matchGender = @"Female";
+                }
+                
             if ([message.fromUserParse isEqual:_curUser]) {
                 senderId    = _curUser.objectId;
-                displayName = _curUser.nickname;
+                displayName = @"You";
             } else {
                 senderId    = _toUserParse.objectId;
-                displayName = _toUserParse.nickname;
+                displayName = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, _toUserParse.age];
             }
             __block JSQMessage *chatMessage = nil;
             
@@ -646,18 +719,37 @@
 
 - (void)didPressAccessoryButton:(UIButton *)sender
 {
-    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-    imagePicker.delegate = self;
-    
-    // if-conditional for using camera vs. photolibrary
-    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-        imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+    if (!_receivedRequest && !_receivedReply) { // <-- Change to check on Matched User attribute
+        
+        [self shareRequestActionSheet];
+        
+    } else if ([_receivedRequest.requestReply isEqualToString:@"No"] && [_receivedRequest.requestFromUser isEqual:_toUserParse] && !_receivedReply) {
+        [self shareRequestActionSheet];
+    } else if ([_receivedReply.requestReply isEqualToString:@"No"] && [_receivedReply.requestToUser isEqual:_toUserParse] && !_receivedRequest) {
+        [self shareRequestActionSheet];
     } else {
-        imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    }
-    //imagePicker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:imagePicker.sourceType]; <-- Comment-out Video option
-    [self presentViewController:imagePicker animated:YES completion:nil];
     
+        // If Share Request Sent & Accepted, allow camera
+        UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+        imagePicker.delegate = self;
+    
+        // if-conditional for using camera vs. photolibrary
+        if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+            imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        } else {
+            imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        }
+        //imagePicker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:imagePicker.sourceType]; <-- Comment-out Video option
+        [self presentViewController:imagePicker animated:YES completion:nil];
+    }
+}
+
+- (void)shareRequestActionSheet
+{
+    NSLog(@"Share Request Action Sheet");
+    UIActionSheet *actionsheet = [[UIActionSheet alloc] initWithTitle:@"Send Reveal request?" delegate:self cancelButtonTitle:@"Don't Request" destructiveButtonTitle:nil otherButtonTitles:@"Yes", nil];
+    actionsheet.tag = 1;
+    [actionsheet showInView:self.view];
 }
 
 - (void)addPhotoMediaMessageWithImage:(UIImage *)image
@@ -710,13 +802,27 @@
     // }];
 }
 
+- (void)usersRevealed
+{
+    self.title = self.toUserParse.nickname;
+    self.inputToolbar.contentView.leftBarButtonItem.enabled = YES;
+    //[_blurImageView removeFromSuperview];
+    UIImage *btnImage = [UIImage imageNamed:@"camera2"];
+    [self.inputToolbar.contentView.leftBarButtonItem setImage:btnImage forState:UIControlStateNormal];
+    [self getAvatarPhotos];
+}
+
 - (void)shareRequestRejected
 {
     UIImage *btnImage = [UIImage imageNamed:@"No_icon"];
-    /* Replace with Left Input button configuration
-    [_cameraButton setImage:btnImage forState:UIControlStateNormal];
-    _cameraButton.enabled = NO;
-    _cameraButton.alpha = 1.0;*/
+    //Disable left input button
+    // Replace with Left Input button configuration
+    [self.inputToolbar.contentView.leftBarButtonItem setImage:btnImage forState:UIControlStateNormal];
+    self.inputToolbar.contentView.leftBarButtonItem.enabled = NO;
+    self.inputToolbar.contentView.leftBarButtonItem.alpha = 1.0;
+    //No Avatar photo
+    self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
+    matchAvatar = nil;
 }
 
 #pragma mark - ImagePickerControllerDelegate
@@ -803,7 +909,7 @@
          
          if (!([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestFromUser isEqual:_toUserParse] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) && buttonIndex == 0) { // <-- Change to isRevealed check on PossibleMatchHelper
          // Test purposes
-         /*mainUser.isRevealed = true;
+         mainUser.isRevealed = true;
          [self reloadView];// Closed comment here
          
          // <-- Apparently this works when app is in background, a notification is sent and appears as alert
@@ -1098,8 +1204,8 @@
             
             //[self deleteConversation];
             
-            //Block un-Matched Notification
-            [self blockUnMatched];
+            //Post blockUnMatched Notification to toUserParse
+            
             //[self popVC];
         }
     } else if (alertView.tag == 6) {

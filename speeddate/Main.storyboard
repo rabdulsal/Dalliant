@@ -1132,7 +1132,7 @@
             <objects>
                 <viewController id="rDU-7y-piv" customClass="MatchViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vz1-6L-pQP">
-                        <rect key="frame" x="0.0" y="64" width="320" height="1584"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="1520"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="One-Zj-tKF">
@@ -3353,7 +3353,7 @@
             <objects>
                 <viewController id="hsn-7u-aHf" customClass="ImageViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4Kl-I2-sAF">
-                        <rect key="frame" x="0.0" y="64" width="320" height="1476"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -4410,8 +4410,8 @@
         <segue reference="WJE-pO-Iht"/>
         <segue reference="uru-UJ-cE7"/>
         <segue reference="oXm-ri-1Lw"/>
-        <segue reference="R6Q-BJ-zcV"/>
         <segue reference="zAq-nd-1cA"/>
+        <segue reference="zaL-5y-aHw"/>
         <segue reference="NMB-y1-hOv"/>
     </inferredMetricsTieBreakers>
 </document>
