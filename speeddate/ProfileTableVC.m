@@ -8,8 +8,9 @@
 
 #import "ProfileTableVC.h"
 #import "UserParseHelper.h"
+#import <ActionSheetDistancePicker.h>
 
-@interface ProfileTableVC ()
+@interface ProfileTableVC () <UIAlertViewDelegate>
 {
     BOOL *buttonsDisabled;
     NSMutableArray *preferenceStrings;
@@ -23,6 +24,13 @@
 @property (weak, nonatomic) IBOutlet UILabel *userAbout;
 @property (weak, nonatomic) IBOutlet UILabel *userEmployment;
 @property (weak, nonatomic) IBOutlet UILabel *userEducation;
+@property (weak, nonatomic) IBOutlet UILabel *minHeightFeet;
+@property (weak, nonatomic) IBOutlet UILabel *minHeightInches;
+@property (weak, nonatomic) IBOutlet UILabel *maxHeightFeet;
+@property (weak, nonatomic) IBOutlet UILabel *maxHeightInches;
+
+- (IBAction)minHeightSelect:(id)sender;
+- (IBAction)maxHeightSelect:(id)sender;
 
 
 @end
@@ -111,12 +119,94 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)minHeightSelect:(id)sender {
+    
+    int footHeight;
+    int inchHeight;
+    [ActionSheetDistancePicker showPickerWithTitle:@"Your Height"
+                                     bigUnitString:@"ft"
+                                        bigUnitMax:6
+                                   selectedBigUnit:footHeight
+                                   smallUnitString:@"in"
+                                      smallUnitMax:10
+                                 selectedSmallUnit:inchHeight
+                                            target:self
+                                            action:@selector(setMinHeightFeet:andInches:) origin:sender];
+}
+
+- (IBAction)maxHeightSelect:(id)sender {
+    
+    int footHeight;
+    int inchHeight;
+    [ActionSheetDistancePicker showPickerWithTitle:@"Select Length"
+                                     bigUnitString:@"ft"
+                                        bigUnitMax:6
+                                   selectedBigUnit:footHeight
+                                   smallUnitString:@"in"
+                                      smallUnitMax:12
+                                 selectedSmallUnit:inchHeight
+                                            target:self
+                                            action:@selector(setMaxHeightFeet:andInches:) origin:sender];
+}
+
+- (void)setMinHeightFeet:(NSNumber *)feet andInches:(NSNumber *)inches
+{
+    if ([inches integerValue] > 11) {
+        
+        //Trigger AlertView error if inches > 11
+        NSString *alertTitle = [[NSString alloc] initWithFormat:@"Height Error :("];
+        NSString *alertMessage = [[NSString alloc] initWithFormat:@"Woah there Goliath.....we get you're tall, but please enter an Inch-Height less than 11 inches"];
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:alertTitle
+                                                        message:alertMessage
+                                                       delegate:self
+                                              cancelButtonTitle:@"Okay"
+                                              otherButtonTitles:nil];
+        alert.tag = 1;
+        [alert show];
+        
+    } else if ([feet integerValue] < 4){
+        //Trigger AlertView error if inches > 11
+        NSString *alertTitle = [[NSString alloc] initWithFormat:@"Height Error :("];
+        NSString *alertMessage = [[NSString alloc] initWithFormat:@"Sorry but you have to be at least 4 feet to go on this ride my friend."];
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:alertTitle
+                                                        message:alertMessage
+                                                       delegate:self
+                                              cancelButtonTitle:@"Okay"
+                                              otherButtonTitles:nil];
+        alert.tag = 2;
+        [alert show];
+    } else {
+        
+    self.minHeightFeet.text     = [[NSString alloc] initWithFormat:@"%@",feet];
+    self.minHeightInches.text   = [[NSString alloc] initWithFormat:@"%@",inches];
+    }
+    
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSLog(@"Clicked 'Okay' AlertView Error");
+    
+    self.minHeightFeet.text     = @"0";
+    self.minHeightInches.text   = @"0";
+}
+
+- (void)setMaxHeightFeet:(NSNumber *)feet andInches:(NSNumber *)inches
+{
+    self.maxHeightFeet.text = [[NSString alloc] initWithFormat:@"%@",feet];
+    self.maxHeightInches.text = [[NSString alloc] initWithFormat:@"%@",inches];
+    
+    //Trigger AlertView error if inches > 11
+}
+
 - (void)buildSegmentControls
 {
     // Body Type
     NSArray *bodyArray = [NSArray arrayWithObjects: @"Skinny", @"Average", @"Fit", @"XL", nil];
     _bodyTypeControl = [[UISegmentedControl alloc] initWithItems:bodyArray];
-    _bodyTypeControl.frame = CGRectMake(15, 190, 291, 29);
+    _bodyTypeControl.frame = CGRectMake(15, 268, 291, 29);
     _bodyTypeControl.tintColor = RED_LIGHT;
     //_bodyTypeControl.segmentedControlStyle = UISegmentedControlStylePlain;
     [_bodyTypeControl addTarget:self action:@selector(BodyTypeButtonPressed:) forControlEvents: UIControlEventValueChanged];
@@ -124,7 +214,7 @@
     // Relationship Status
     NSArray *statusArray = [NSArray arrayWithObjects: @"Single", @"Dating", @"Divorced", nil];
     _relationshipStatusControl = [[UISegmentedControl alloc] initWithItems:statusArray];
-    _relationshipStatusControl.frame = CGRectMake(15, 378, 291, 29);
+    _relationshipStatusControl.frame = CGRectMake(15, 460, 291, 29);
     _relationshipStatusControl.tintColor = RED_LIGHT;
     //_relationshipStatusControl.segmentedControlStyle = UISegmentedControlStylePlain;
     [_relationshipStatusControl addTarget:self action:@selector(RelationshipStatusPressed:) forControlEvents: UIControlEventValueChanged];
@@ -132,13 +222,13 @@
     // Relationship Type
     NSArray *typeArray = [NSArray arrayWithObjects: @"Company", @"Friend", @"Relationship", nil];
     _relationshipTypeControl = [[UISegmentedControl alloc] initWithItems:typeArray];
-    _relationshipTypeControl.frame = CGRectMake(15, 450, 291, 29);
+    _relationshipTypeControl.frame = CGRectMake(15, 532, 291, 29);
     _relationshipTypeControl.tintColor = RED_LIGHT;
     //_relationshipTypeControl.segmentedControlStyle = UISegmentedControlStylePlain;
     [_relationshipTypeControl addTarget:self action:@selector(RelationshipTypePressed:) forControlEvents: UIControlEventValueChanged];
     
     // Save Button
-    _saveProfileButton = [[UIButton alloc] initWithFrame:CGRectMake(15, 1220, 291, 50)];
+    _saveProfileButton = [[UIButton alloc] initWithFrame:CGRectMake(15, 1302, 291, 50)];
     [_saveProfileButton setTitle:@"Save Profile" forState:UIControlStateNormal];
     [_saveProfileButton setTitle:@"Saved!" forState:UIControlStateSelected];
     _saveProfileButton.backgroundColor = [UIColor lightGrayColor];

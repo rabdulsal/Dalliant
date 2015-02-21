@@ -89,7 +89,7 @@
     //[self checkPurchase];
     
     //[_scroller setContentSize:CGSizeMake(320, 1555)];
-    [_scroller setContentSize:CGSizeMake(self.view.frame.size.width, 1422)];
+    [_scroller setContentSize:CGSizeMake(self.view.frame.size.width, 1500)];
     [_scroller setScrollEnabled:YES];
     
     mainUser = [User singleObj];
