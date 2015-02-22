@@ -52,9 +52,10 @@
 
 - (void)setMedCompatibilityColor:(MDRadialProgressTheme *)newTheme
 {
-    newTheme.completedColor     = SEA_DEEP_COLOR;
-    newTheme.incompletedColor   = SEA_COLOR;
-    newTheme.centerColor        = MENU_BLUE;
+    newTheme.completedColor     = [UIColor colorWithRed:0.8 green:0.8 blue:0 alpha:1.0];
+    newTheme.incompletedColor   = [UIColor colorWithRed:0.9 green:0.9 blue:0 alpha:1.0];
+    //newTheme.centerColor        = YELLOW_COLOR;
+    newTheme.centerColor        = [UIColor colorWithRed:1 green:1 blue:0.6 alpha:1];
 }
 
 - (void)setLowCompatibilityColor:(MDRadialProgressTheme *)newTheme
