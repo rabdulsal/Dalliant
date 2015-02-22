@@ -39,7 +39,7 @@
     
     // Configure ChatUI NOTE: must set custom image dimensions via CGRectMake
     self.title = @"Chat";
-    UIImage *btnImage = [UIImage imageNamed:@"user"];
+    UIImage *btnImage = [UIImage imageNamed:@"reveal"];
     CGRect btnImageFrame = CGRectMake(self.inputToolbar.contentView.leftBarButtonItem.frame.origin.x, self.inputToolbar.contentView.leftBarButtonItem.frame.origin.y, 27, 27);
     [self.inputToolbar.contentView.leftBarButtonItem setFrame:btnImageFrame];
     [self.inputToolbar.contentView.leftBarButtonItem setImage:btnImage forState:UIControlStateNormal];
@@ -807,8 +807,10 @@
     self.title = self.toUserParse.nickname;
     self.inputToolbar.contentView.leftBarButtonItem.enabled = YES;
     //[_blurImageView removeFromSuperview];
-    UIImage *btnImage = [UIImage imageNamed:@"camera2"];
-    [self.inputToolbar.contentView.leftBarButtonItem setImage:btnImage forState:UIControlStateNormal];
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(self.inputToolbar.contentView.leftBarButtonItem.frame.origin.x, self.inputToolbar.contentView.leftBarButtonItem.frame.origin.y+5, 30, 23)];
+    UIImage *btnImage = [UIImage imageNamed:@"camera"];
+    [button setImage:btnImage forState:UIControlStateNormal];
+    self.inputToolbar.contentView.leftBarButtonItem = button;
     [self getAvatarPhotos];
 }
 

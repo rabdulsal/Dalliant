@@ -66,7 +66,6 @@
 		4C8F7C471A75F84200CCBDE8 /* tutorial_background_03@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C421A75F84200CCBDE8 /* tutorial_background_03@2x.jpg */; };
 		4C8F7C481A75F84200CCBDE8 /* tutorial_background_04@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C431A75F84200CCBDE8 /* tutorial_background_04@2x.jpg */; };
 		4C8F7C4A1A79327A00CCBDE8 /* Dalliant_Logo_XL.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C491A79327A00CCBDE8 /* Dalliant_Logo_XL.gif */; };
-		4C97CFEE1A6EAC4000C0B5B8 /* No_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C97CFED1A6EAC4000C0B5B8 /* No_icon.png */; };
 		4CBDB1941A3CDD3C006A9F1F /* ProfileTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBDB1931A3CDD3C006A9F1F /* ProfileTableVC.m */; };
 		4CBDB1971A427A11006A9F1F /* RevealRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBDB1961A427A11006A9F1F /* RevealRequest.m */; };
 		4CC7B8991A4B3EBE000982EA /* MatchProfileTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC7B8981A4B3EBE000982EA /* MatchProfileTVC.m */; };
@@ -284,7 +283,6 @@
 		4C8F7C421A75F84200CCBDE8 /* tutorial_background_03@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_03@2x.jpg"; sourceTree = "<group>"; };
 		4C8F7C431A75F84200CCBDE8 /* tutorial_background_04@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_04@2x.jpg"; sourceTree = "<group>"; };
 		4C8F7C491A79327A00CCBDE8 /* Dalliant_Logo_XL.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Dalliant_Logo_XL.gif; sourceTree = "<group>"; };
-		4C97CFED1A6EAC4000C0B5B8 /* No_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = No_icon.png; sourceTree = "<group>"; };
 		4CBDB1921A3CDD3C006A9F1F /* ProfileTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileTableVC.h; sourceTree = "<group>"; };
 		4CBDB1931A3CDD3C006A9F1F /* ProfileTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileTableVC.m; sourceTree = "<group>"; };
 		4CBDB1951A427A11006A9F1F /* RevealRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RevealRequest.h; sourceTree = "<group>"; };
@@ -863,7 +861,6 @@
 				C25E748319EC03AD00779C23 /* logout_menu@2x.png */,
 				C25E747619EAD54F00779C23 /* location2@2x.png */,
 				C25E748519EC0ADD00779C23 /* vip_menu@2x.png */,
-				4C97CFED1A6EAC4000C0B5B8 /* No_icon.png */,
 				C25E746E19E8816D00779C23 /* back-m.png */,
 				C2A90EB719F4186B00FC0D04 /* sativa.png */,
 				C25E748119EC02F900779C23 /* share_menu@2x.png */,
@@ -1182,7 +1179,6 @@
 				4C8F7C441A75F84200CCBDE8 /* tutorial_background_00@2x.jpg in Resources */,
 				C206B02519E28D91001A4D0C /* mnvip.png in Resources */,
 				426107DD19B3ABD80000536C /* Profile.xcassets in Resources */,
-				4C97CFEE1A6EAC4000C0B5B8 /* No_icon.png in Resources */,
 				C25E747C19EBFF6800779C23 /* heart_menu@2x.png in Resources */,
 				C2300F8419E18E030044A4E5 /* normBtn.png in Resources */,
 			);
