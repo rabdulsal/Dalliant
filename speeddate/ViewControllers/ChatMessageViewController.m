@@ -36,7 +36,7 @@
     [super viewDidLoad];
     
     // Do any additional setup after loading the view.
-    
+   
     // Configure ChatUI NOTE: must set custom image dimensions via CGRectMake
     self.title = @"Chat";
     UIImage *btnImage = [UIImage imageNamed:@"reveal"];
@@ -89,16 +89,15 @@
     
     [self.view addSubview:_unMatchedBlocker];
     
-    self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
-    matchAvatar = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
+//    self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
+//    matchAvatar = nil;
     [self checkIncomingShareRequestsAndReplies];
-
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -804,10 +803,11 @@
 
 - (void)usersRevealed
 {
+    CGFloat chatCam = self.inputToolbar.contentView.frame.origin.y + 5;
     self.title = self.toUserParse.nickname;
     self.inputToolbar.contentView.leftBarButtonItem.enabled = YES;
     //[_blurImageView removeFromSuperview];
-    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(self.inputToolbar.contentView.leftBarButtonItem.frame.origin.x, self.inputToolbar.contentView.leftBarButtonItem.frame.origin.y+5, 30, 23)];
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(self.inputToolbar.contentView.leftBarButtonItem.frame.origin.x, chatCam, 30, 23)];
     UIImage *btnImage = [UIImage imageNamed:@"camera"];
     [button setImage:btnImage forState:UIControlStateNormal];
     self.inputToolbar.contentView.leftBarButtonItem = button;

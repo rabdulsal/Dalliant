@@ -262,6 +262,8 @@
     [PFFacebookUtils logInWithPermissions:permissions block:^(PFUser *user, NSError *error) {
         
         if (!user) {
+            NSLog(@"There is no User for some reason.");
+            
             NSString *errorMessage = nil;
             if (!error) {
                 NSLog(@"Uh oh. The user cancelled the Facebook login.");
@@ -289,11 +291,17 @@
         } else {
             if (user != nil)
             {
-                if (user[PF_USER_FACEBOOKID] == nil)
+                NSLog(@"There IS a User");
+                //if (user[PF_USER_FACEBOOKID] == nil)
+                if (user.isNew)
                 {
+                    NSLog(@"User in new");
                     [self requestFacebook:user];
                 }
-                else [self userLoggedIn:user];
+                else {
+                    NSLog(@"User is cached");
+                    [self userLoggedIn:user];
+                }
             }
             else [ProgressHUD showError:[error.userInfo valueForKey:@"error"]];
         }
@@ -417,10 +425,12 @@
          {
              NSDictionary *userData = (NSDictionary *)result;
              FBAccessTokenData *token = request.session.accessTokenData;
+             NSLog(@"Facebook Token: %@", token);
              [self processFacebook:user UserData:userData accessToken:token];
          }
-         else
-         {
+         else if ([[[[error userInfo] objectForKey:@"error"] objectForKey:@"type"]
+                   isEqualToString: @"OAuthException"]) { // Since the request failed, we can check if it was due to an invalid session
+             NSLog(@"The facebook session was invalidated");
              [PFUser logOut];
              [ProgressHUD showError:@"Failed to fetch Facebook user data."];
          }
@@ -431,18 +441,27 @@
 
 - (void)fetchProfileAlbum:(NSString *)uid forUser:(PFUser *)user withAccessToken:(FBAccessTokenData *)token userData:(NSDictionary *)userData
 {
+    NSLog(@"Fetch Profile Album started");
     NSString *photosLink =[NSString stringWithFormat:@"https://graph.facebook.com/%@/albums?access_token=%@",uid,token];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:photosLink]];
-    
+    NSLog(@"Photoslink: %@", photosLink);
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     operation.responseSerializer = [AFJSONResponseSerializer serializer];
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSString *album = [[[(NSDictionary *)responseObject objectForKey:@"data"] objectAtIndex:0] objectForKey:@"name"];
         
-        if ([album isEqualToString:@"Profile Pictures"])
-        {
-            [self fetchProfilePhotos:responseObject forUser:user withAccessToken:token userData:userData];
+        NSArray *allAlbums = [[NSArray alloc] initWithArray:(NSArray *)[(NSDictionary *)responseObject objectForKey:@"data"]];
+        int allAlbumsCount = allAlbums.count;
+        
+        for (int i=0; i < allAlbumsCount; i++) {
+            NSString *album = [[[(NSDictionary *)responseObject objectForKey:@"data"] objectAtIndex:i] objectForKey:@"name"];
+            NSLog(@"Fetch album: %@", album);
+            if ([album isEqualToString:@"Profile Pictures"])
+            {
+                [self fetchProfilePhotos:responseObject atIndex:i forUser:user withAccessToken:token userData:userData];
+                i = allAlbumsCount;
+            }
         }
+        
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error.description);
@@ -450,9 +469,9 @@
     [[NSOperationQueue mainQueue] addOperation:operation];
 }
 
-- (void)fetchProfilePhotos:(NSDictionary *)responseObject forUser:(PFUser *)user withAccessToken:(FBAccessTokenData *)token userData:(NSDictionary *)userData
+- (void)fetchProfilePhotos:(NSDictionary *)responseObject atIndex:(int)index forUser:(PFUser *)user withAccessToken:(FBAccessTokenData *)token userData:(NSDictionary *)userData
 {
-    NSString *albumid       = [[[responseObject objectForKey:@"data"]objectAtIndex:0]objectForKey:@"id"];
+    NSString *albumid       = [[[responseObject objectForKey:@"data"]objectAtIndex:index]objectForKey:@"id"];
     NSString *albumUrl      = [NSString stringWithFormat:@"https://graph.facebook.com/%@/photos?type=album&access_token=%@",albumid,token];
     NSURLRequest *request2  = [NSURLRequest requestWithURL:[NSURL URLWithString:albumUrl]];
     NSLog(@"Photo URL: %@", albumUrl);
@@ -528,7 +547,7 @@
                 }];
             }*/
             
-            if (i == 3) {
+            if (i == 3) {//<-- must be changed to a variable looking at the last image available in an array
                 NSLog(@"Run i = %d", i);
                 if (image.size.width > 140) image = ResizeImage(image, 140, 140);
                 PFFile *file = [PFFile fileWithName:@"photo.jpg" data:UIImageJPEGRepresentation(image, 0.9)];
@@ -609,7 +628,7 @@
 - (void)processFacebook:(PFUser *)user UserData:(NSDictionary *)userData accessToken:(FBAccessTokenData *)token
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 {
-    
+    NSLog(@"Process Facebook run");
     NSString *link = [NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large", userData[@"id"]];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:link]];
     //---------------------------------------------------------------------------------------------------------------------------------------------
@@ -636,12 +655,14 @@
               if (error != nil) [ProgressHUD showError:@"Network error."];
           }];*/
          //-----------------------------------------------------------------------------------------------------------------------------------------
+         NSLog(@"AFNetworking operation started");
          [self fetchProfileAlbum:userData[@"id"] forUser:user withAccessToken:token userData:userData];
          
          
      }
                                      failure:^(AFHTTPRequestOperation *operation, NSError *error)
      {
+         NSLog(@"AFNetworking failed");
          [PFUser logOut];
          [ProgressHUD showError:@"Failed to fetch Facebook profile picture."];
      }];

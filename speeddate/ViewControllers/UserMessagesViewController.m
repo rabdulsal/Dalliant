@@ -92,7 +92,6 @@
 
     [self customizeApp];
     
-    self.restorationIdentifier = @"UserMessagesViewController";
 }
 
 - (void)customizeApp

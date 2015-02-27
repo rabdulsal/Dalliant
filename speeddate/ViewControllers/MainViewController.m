@@ -62,6 +62,7 @@
     CALayer *waveLayer;
     NSTimer *animateTimer;
     User *userSingleton;
+    NSTimer *baedarTimer;
 }
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *sidebarButton;
@@ -268,6 +269,7 @@
     [self.view.layer addSublayer:waveLayer];
     [waveLayer setHidden:NO];
     [self startAnimation];
+    [self startBaedarTimer];
     //_baedarLabel.transform = CGAffineTransformMakeScale(1.1,1.1); // <-- Increase button size on press
     [_baedarLabel setSelected:YES];
     userSingleton.baedarIsRunning = true;
@@ -286,6 +288,7 @@
     inAnimation = NO;
     [waveLayer removeFromSuperlayer];
     [waveLayer setHidden:YES];
+    [baedarTimer invalidate];
     userSingleton.baedarIsRunning = false;
 }
 
@@ -340,6 +343,16 @@
         NSLog(@"Matched run");
         [self performSegueWithIdentifier:@"viewMatches" sender:nil];
     }
+}
+
+#pragma mark - TIMER
+- (void)startBaedarTimer
+{
+    baedarTimer = [NSTimer scheduledTimerWithTimeInterval:5.0
+                                                   target:self
+                                                 selector:@selector(getMatches)
+                                                 userInfo:nil
+                                                  repeats:YES];
 }
 
 #pragma mark - LOCATION IDENTIFIER
@@ -568,12 +581,37 @@
     }*/
     
     for (UserParseHelper *match in _posibleMatchesArray) {
-        _matchUser = match;
-        [self matchGender];
+        [self queryForExistingMatch:match];
+        //_matchUser = match;
+        //[self matchGender];
     }
     
     [self fetchAllUserMatchRelationships];
-    [self.tableView reloadData];
+    //[self.tableView reloadData];
+    [self addNewConnection];
+}
+
+- (void)queryForExistingMatch:(UserParseHelper *)match
+{
+     // All old code
+     _matchedUsers = [[NSArray alloc] initWithObjects:_curUser, match, nil];
+     PFQuery *possMatch1 = [PossibleMatchHelper query];
+     [possMatch1 whereKey:@"matches" containsAllObjectsInArray:_matchedUsers];
+     //[possMatch1 findObjects];
+     [possMatch1 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+         if (!objects) {
+             _matchUser = match;
+             [self matchGender];
+         } else NSLog(@"Duplicate Match found");
+     }];
+     
+}
+
+- (void)addNewConnection
+{
+    NSInteger item = [self.tableView numberOfRowsInSection:0];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:0];
+    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 - (void)findMatches:(NSMutableArray *)matches
@@ -993,11 +1031,14 @@
 
 - (void)fetchAllUserMatchRelationships
 {
+    PossibleMatchHelper *last_connection = [_matchRelationships lastObject];
     PFQuery *matchQueryFrom = [PossibleMatchHelper query];
     [matchQueryFrom whereKey:@"fromUser" equalTo:_curUser];
+    [matchQueryFrom whereKey:@"createdAt" greaterThan:last_connection.createdAt];
     
     PFQuery *matchQueryTo = [PossibleMatchHelper query];
     [matchQueryTo whereKey:@"toUser" equalTo:_curUser];
+    [matchQueryTo whereKey:@"createdAt" greaterThan:last_connection.createdAt];
     
     PFQuery *both = [PFQuery orQueryWithSubqueries:@[matchQueryFrom, matchQueryTo]];
     // Exclude duplicate matches and Blockeds
@@ -1077,41 +1118,7 @@
             }
         }
     }];
-    // All old code
-    /*_matchedUsers = [[NSArray alloc] initWithObjects:_curUser, user, nil];
-    PFQuery *possMatch1 = [PossibleMatchHelper query];
-    [possMatch1 whereKey:@"matches" containsAllObjectsInArray:_matchedUsers];
-    //[possMatch1 findObjects];
-    [possMatch1 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        //for (PossibleMatchHelper *match in objects) {
-        _possibleMatch = [objects objectAtIndex:0];
-        [self configureRadialView:cell forConnection:_possibleMatch];
-        //}
-        NSNumber *yep = [NSNumber numberWithBool:YES];
-        if (![_possibleMatch.usersRevealed isEqualToNumber:yep]) { // <-- Test purposes - change to check isRevealed on Matched User - NOT WORKING
-            [self blurImages:cell.userImageView];
-            
-            if ([user.isMale isEqualToString:@"true"]) {
-                NSString *matchGender = @"Male";
-                cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
-            } else {
-                NSString *matchGender = @"Female";
-                cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
-            }
-            
-        } else{
-            NSLog(@"User revealed");
-            cell.nameTextLabel.text = user.nickname;
-        }
-        
-        
-        [user.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-            
-            cell.userImageView.image = [UIImage imageWithData:data];
-            
-        }];
-    }];
-    */
+    
     //[self setPossibleMatchesFromMessages:_matchedUsers for:cell];
     
     
