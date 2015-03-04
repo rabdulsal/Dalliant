@@ -42,6 +42,7 @@
 @property (nonatomic,retain) MainViewController *startScreen;
 @property (nonatomic) NSMutableArray *imageAssets;
 @property (strong, nonatomic) UIWindow *window;
+@property int profilePhotosCount;
 @end
 #ifdef __APPLE__
 #include "TargetConditionals.h"
@@ -457,6 +458,8 @@
             NSLog(@"Fetch album: %@", album);
             if ([album isEqualToString:@"Profile Pictures"])
             {
+                _profilePhotosCount = [[[(NSDictionary *)responseObject objectForKey:@"data"] objectAtIndex:i] objectForKey:@"count"];
+                NSLog(@"Profile count: %@", _profilePhotosCount);
                 [self fetchProfilePhotos:responseObject atIndex:i forUser:user withAccessToken:token userData:userData];
                 i = allAlbumsCount;
             }
@@ -493,7 +496,14 @@
 
 - (void)configureUserImage:(PFUser *)user forResponse:(NSDictionary *)response userData:(NSDictionary *)userData
 {
-    for (int i = 0; i < 4; i++) {
+    
+    int photoCount = 4;
+    
+    if (_profilePhotosCount < 4) {
+        photoCount = _profilePhotosCount;
+    }
+    
+    for (int i = 0; i < photoCount; i++) {
         // Get Pic URL
         NSString *picURL = [[[[[response objectForKey:@"data"]objectAtIndex:i]objectForKey:@"images"]objectAtIndex:1]objectForKey:@"source"];
         // Set Image (May need to make network request to retrieve Image)

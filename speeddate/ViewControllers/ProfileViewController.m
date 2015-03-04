@@ -429,7 +429,14 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (alertView.tag == 1 && buttonIndex == 1) {
-        NSLog(@"Delete pressed");
+        
+        [self.user deleteInBackground];
+        if ([PFUser currentUser]) {
+            [[PFUser currentUser] deleteInBackground];
+        }
+        [self performSegueWithIdentifier:@"backToLogin" sender:nil];
+        
+        //[self.navigationController popToRootViewControllerAnimated:YES];
     }
 }
 

@@ -116,7 +116,8 @@
 @property NSMutableArray *messages;
 @property NSMutableArray *usersArray;
 @property NSArray *matchedUsers;
-@property NSMutableArray *matchRelationships;
+@property NSMutableSet *connections;
+@property NSMutableArray *uniqueConnections;
 @property PossibleMatchHelper *otherUser;
 @property PossibleMatchHelper *possibleMatch;
 @property double prefCounter;
@@ -173,10 +174,13 @@
     [curQuery whereKey:@"username" equalTo:[UserParseHelper currentUser].username];
     [curQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         self.curUser = objects.firstObject;
+        NSLog(@"Current User: %@", _curUser.nickname);
         NSLog(@"Blocked Users MainVC: %lu", (unsigned long) [_curUser.blockedUsers count]);
         [self.curUser.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
             self.userPhoto = [UIImage imageWithData:data];
         }];
+        
+        [self currentLocationIdentifier];
         /*
         if (!self.curUser.geoPoint) {
             NSLog(@"No User Geolocation");
@@ -218,14 +222,15 @@
    
     [waveLayer setHidden:YES];
     
-    self.usersArray = [NSMutableArray new];
-    self.matchRelationships = [NSMutableArray new];
+    self.usersArray         = [NSMutableArray new];
+    self.connections        = [NSMutableSet new];
+    self.uniqueConnections  = [NSMutableArray new];
     
     [self customizeApp];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:receivedMessage object:nil];
 
-    self.restorationIdentifier = @"MainViewController";
+    //self.restorationIdentifier = @"MainViewController";
     //[self currentLocationIdentifier];
     //[self performSegueWithIdentifier:@"test_match" sender:nil];
 
@@ -364,7 +369,7 @@
     self.locationManager.delegate = self;
     self.locationManager.distanceFilter = kCLDistanceFilterNone;
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    [self.locationManager requestWhenInUseAuthorization];
+    [self.locationManager requestAlwaysAuthorization];
     [self.locationManager startMonitoringSignificantLocationChanges];
     [self.locationManager startUpdatingLocation];
     
@@ -379,11 +384,12 @@
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
-    self.currentLocation = [locations objectAtIndex:0];
+    self.currentLocation = [locations lastObject];
+    NSLog(@"Current location: %@", self.currentLocation);
     // Timestamp location capture?
     [self.locationManager stopUpdatingLocation];
     CLGeocoder* geocoder = [CLGeocoder new];
-    [geocoder reverseGeocodeLocation:locations.firstObject completionHandler:^(NSArray *placemarks, NSError *error) {
+    [geocoder reverseGeocodeLocation:locations.lastObject completionHandler:^(NSArray *placemarks, NSError *error) {
         CLPlacemark* placemark = placemarks.firstObject;
         /* Shows City and State once radar is activitated
         self.activityLabel.text = [NSString stringWithFormat:@"Locating :\n %@, %@", placemark.locality, placemark.administrativeArea];
@@ -587,8 +593,8 @@
     }
     
     [self fetchAllUserMatchRelationships];
-    //[self.tableView reloadData];
-    [self addNewConnection];
+    [self.tableView reloadData];
+    //[self addNewConnection];
 }
 
 - (void)queryForExistingMatch:(UserParseHelper *)match
@@ -599,10 +605,11 @@
      [possMatch1 whereKey:@"matches" containsAllObjectsInArray:_matchedUsers];
      //[possMatch1 findObjects];
      [possMatch1 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-         if (!objects) {
+         
+         if (objects.count == 0) {
              _matchUser = match;
              [self matchGender];
-         } else NSLog(@"Duplicate Match found");
+         } else NSLog(@"Duplicate Match found: %@\n Objects:%@", match.nickname, objects);
      }];
      
 }
@@ -656,7 +663,7 @@
         }
     }];*/
     [_otherUser save];
-    //[_matchRelationships addObject:_otherUser];
+    [_connections addObject:_otherUser];
     
 }
 
@@ -895,7 +902,7 @@
         NSLog(@"View Profile Pressed");
         MatchViewController *matchVC = [[MatchViewController alloc]init];
         matchVC = segue.destinationViewController;
-        PossibleMatchHelper *matchRelationship  = [self.matchRelationships objectAtIndex:self.tableView.indexPathForSelectedRow.row];
+        PossibleMatchHelper *matchRelationship  = [self.uniqueConnections objectAtIndex:self.tableView.indexPathForSelectedRow.row];
         UserParseHelper *match                  = matchRelationship.toUser;
         //matchVC.userFBPic.image             = _toUserParse.photo;
         matchVC.matchUser                       = match;
@@ -1031,14 +1038,16 @@
 
 - (void)fetchAllUserMatchRelationships
 {
-    PossibleMatchHelper *last_connection = [_matchRelationships lastObject];
+    //PossibleMatchHelper *last_connection = [_matchRelationships lastObject];
     PFQuery *matchQueryFrom = [PossibleMatchHelper query];
     [matchQueryFrom whereKey:@"fromUser" equalTo:_curUser];
-    [matchQueryFrom whereKey:@"createdAt" greaterThan:last_connection.createdAt];
+    [matchQueryFrom whereKey:@"toUser" notContainedIn:_posibleMatchesArray];
+    //[matchQueryFrom whereKey:@"createdAt" greaterThan:last_connection.createdAt];
     
     PFQuery *matchQueryTo = [PossibleMatchHelper query];
     [matchQueryTo whereKey:@"toUser" equalTo:_curUser];
-    [matchQueryTo whereKey:@"createdAt" greaterThan:last_connection.createdAt];
+    [matchQueryTo whereKey:@"fromUser" notContainedIn:_posibleMatchesArray];
+    //[matchQueryTo whereKey:@"createdAt" greaterThan:last_connection.createdAt];
     
     PFQuery *both = [PFQuery orQueryWithSubqueries:@[matchQueryFrom, matchQueryTo]];
     // Exclude duplicate matches and Blockeds
@@ -1049,17 +1058,24 @@
         NSArray *fetchedMatches = [[NSArray alloc] initWithArray:[both findObjects]];
         
         // Add all returned Matches to MatchRelationships
+    if ([fetchedMatches count] != 0) {
+        
         for (PossibleMatchHelper *match in fetchedMatches) {
-            [_matchRelationships addObject:match];
+            [_connections addObject:match];
+            NSLog(@"Total Connections: %lu", (unsigned long)[_connections count]);
         }
+    }
     
-    NSLog(@"Total MatchRelationships: %lu", (unsigned long)[_matchRelationships count]);
+    [_uniqueConnections removeAllObjects];
+    _uniqueConnections = [NSMutableArray arrayWithArray:[_connections allObjects]];
+    
+    NSLog(@"Total MatchRelationships: %lu", (unsigned long)[_uniqueConnections count]);
 }
 
 - (void)updateTableView
 {
-    [_matchRelationships removeAllObjects];
-    NSLog(@"UpdateTableView MatchRelationships: %lu", (unsigned long)[_matchRelationships count]);
+    [_uniqueConnections removeAllObjects];
+    NSLog(@"UpdateTableView MatchRelationships: %lu", (unsigned long)[_uniqueConnections count]);
     [self fetchAllUserMatchRelationships];
     [self.tableView reloadData];
 }
@@ -1081,7 +1097,7 @@
     }
     */
     // Get Possible Matches
-    matchedConnection = [_matchRelationships objectAtIndex:indexPath.row];
+    matchedConnection = [_uniqueConnections objectAtIndex:indexPath.row];
     
     if ([matchedConnection.toUser.objectId isEqualToString:_curUser.objectId]) {
         user = (UserParseHelper *)matchedConnection.fromUser;
@@ -1207,7 +1223,7 @@
     }
     
     //return [_posibleMatchesArray count];
-    return [_matchRelationships count];
+    return [_connections count];
 }
 
 - (void) firstPlacement

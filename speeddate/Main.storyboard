@@ -354,7 +354,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="U7u-u4-E6Z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-563" y="-1473"/>
+            <point key="canvasLocation" x="-537" y="-869"/>
         </scene>
         <!--Starter View Controller-->
         <scene sceneID="ufC-wZ-h7g">
@@ -1132,7 +1132,7 @@
             <objects>
                 <viewController id="rDU-7y-piv" customClass="MatchViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vz1-6L-pQP">
-                        <rect key="frame" x="0.0" y="64" width="320" height="1584"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="1520"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="One-Zj-tKF">
@@ -2112,6 +2112,7 @@
                         <barButtonItem key="rightBarButtonItem" title="Delete" id="sLl-SP-2Uc">
                             <connections>
                                 <action selector="deleteButtonPressed:" destination="mLc-67-Pcw" id="AMZ-nR-gSg"/>
+                                <segue destination="0nu-LK-2zr" kind="modal" identifier="backToLogin" id="bt8-6f-Y1e"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -3151,7 +3152,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="znx-55-aXc">
-                                <rect key="frame" x="0.0" y="1393" width="320" height="127"/>
+                                <rect key="frame" x="-1" y="1393.0000000215239" width="320" height="126"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="1cw-AD-1Ac">
@@ -3214,7 +3215,7 @@
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="cLf-s6-1pg">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="1478"/>
+                                <rect key="frame" x="-1" y="-1" width="320" height="1478"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="fZ6-XE-pZA">
                                     <size key="itemSize" width="310" height="80"/>
@@ -3408,7 +3409,7 @@
             <objects>
                 <viewController id="hsn-7u-aHf" customClass="ImageViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4Kl-I2-sAF">
-                        <rect key="frame" x="0.0" y="64" width="320" height="1476"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -4456,10 +4457,10 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="43A-2r-DhM"/>
+        <segue reference="bt8-6f-Y1e"/>
         <segue reference="MjG-Tl-7wb"/>
         <segue reference="VlF-20-DHW"/>
-        <segue reference="rcd-MM-3td"/>
+        <segue reference="MLw-yj-LVg"/>
         <segue reference="WJE-pO-Iht"/>
         <segue reference="fn6-lQ-fgy"/>
         <segue reference="oXm-ri-1Lw"/>
