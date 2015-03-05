@@ -116,8 +116,9 @@
 @property NSMutableArray *messages;
 @property NSMutableArray *usersArray;
 @property NSArray *matchedUsers;
-@property NSMutableSet *connections;
-@property NSMutableArray *uniqueConnections;
+@property NSMutableArray *matchesFoundMe;
+@property NSMutableArray *connections;
+@property NSMutableArray *matchesIFound;
 @property PossibleMatchHelper *otherUser;
 @property PossibleMatchHelper *possibleMatch;
 @property double prefCounter;
@@ -223,8 +224,6 @@
     [waveLayer setHidden:YES];
     
     self.usersArray         = [NSMutableArray new];
-    self.connections        = [NSMutableSet new];
-    self.uniqueConnections  = [NSMutableArray new];
     
     [self customizeApp];
     
@@ -525,6 +524,9 @@
     }
     NSLog(@"Block User count4: %lu", (unsigned long)[_curUser.blockedUsers count]);
     // Fetch Nearby Users based on distance; while require a time-based While-loop
+    
+    self.connections        = [NSMutableArray new];
+    
     PFQuery *userQuery = [UserParseHelper query];
     [userQuery whereKey:@"geoPoint" nearGeoPoint:self.curUser.geoPoint withinKilometers:self.curUser.distance.doubleValue];
     [userQuery whereKey:@"objectId" notEqualTo:_curUser.objectId];
@@ -545,7 +547,8 @@
                 [self matchGender];
             }
              */
-            
+            [self fetchAllConnectionsToMe];
+            [self fetchAllConnectionsFromMe];
             [self loopThroughMatches];
             
         }
@@ -587,12 +590,21 @@
     }*/
     
     for (UserParseHelper *match in _posibleMatchesArray) {
-        [self queryForExistingMatch:match];
-        //_matchUser = match;
-        //[self matchGender];
+            
+        if ([_matchesIFound containsObject:match]) {
+            
+            [_connections addObject:match];
+            
+        } else if (![_matchesFoundMe containsObject:match]) {
+            _matchUser = match;
+            [self matchGender];
+            
+        } else NSLog(@"Duplicate match found: %@", match.nickname);
+        
     }
     
-    [self fetchAllUserMatchRelationships];
+    //[self fetchAllUserMatchRelationships];
+    [self fetchLatestConnections];
     [self.tableView reloadData];
     //[self addNewConnection];
 }
@@ -900,16 +912,24 @@
         //if ([[segue identifier] isEqualToString:@"userprofileSee"]) {
         // Move to ViewDidLoad
         NSLog(@"View Profile Pressed");
-        MatchViewController *matchVC = [[MatchViewController alloc]init];
-        matchVC = segue.destinationViewController;
-        PossibleMatchHelper *matchRelationship  = [self.uniqueConnections objectAtIndex:self.tableView.indexPathForSelectedRow.row];
-        UserParseHelper *match                  = matchRelationship.toUser;
+        MatchViewController *matchVC            = [[MatchViewController alloc]init];
+        matchVC                                 = segue.destinationViewController;
+        PossibleMatchHelper *matchRelationship  = [self.connections objectAtIndex:self.tableView.indexPathForSelectedRow.row];
+        UserParseHelper *match                  = nil;
+        if (![matchRelationship.toUser isEqual:_curUser]) {
+            match = matchRelationship.toUser;
+        } else match = matchRelationship.fromUser;
+        
         //matchVC.userFBPic.image             = _toUserParse.photo;
+        //matchVC.matchUser                       = (UserParseHelper *)[match fetchIfNeeded];
         matchVC.matchUser                       = match;
         matchVC.possibleMatch                   = matchRelationship;
         matchVC.getPhotoArray                   = [NSMutableArray new];
         matchVC.user                            = _curUser;
-        
+        NSLog(@"Match User profile: %@", matchVC.matchUser.nickname);
+        if (matchVC.matchUser.photo) {
+            NSLog(@"%@ has profile photo", matchVC.matchUser.nickname);
+        }
         [matchVC setUserPhotosArray:matchVC.matchUser];
     }
 }
@@ -1036,17 +1056,82 @@
     }];
 }
 
+- (void)fetchAllConnectionsToMe
+{
+    _matchesFoundMe = [NSMutableArray new];
+    
+    PFQuery *matchQueryTo = [PossibleMatchHelper query];
+    [matchQueryTo whereKey:@"toUser" equalTo:_curUser];
+    
+    NSArray *fetchedMatches = [[NSArray alloc] initWithArray:[matchQueryTo findObjects]];
+    
+    for (PossibleMatchHelper *connection in fetchedMatches) {
+        
+        for (UserParseHelper *user in connection.matches) {
+            if (![user isEqual:_curUser]){
+                [_matchesFoundMe addObject:user];
+            }
+        }
+        
+    }
+    
+    [_connections addObjectsFromArray:fetchedMatches];
+    
+    NSLog(@"Num matches who Found me: %lu", (unsigned long)[_matchesFoundMe count]);
+}
+
+- (void)fetchAllConnectionsFromMe
+{
+    _matchesIFound = [NSMutableArray new];
+    
+    PFQuery *matchQueryFrom = [PossibleMatchHelper query];
+    [matchQueryFrom whereKey:@"fromUser" equalTo:_curUser];
+    //Contrain query by createdAt = Today
+    
+    NSArray *fetchedMatches = [[NSArray alloc] initWithArray:[matchQueryFrom findObjects]];
+    
+    for (PossibleMatchHelper *connection in fetchedMatches) {
+        
+        for (UserParseHelper *user in connection.matches) {
+            if (![user isEqual:_curUser]){
+                [_matchesIFound addObject:user];
+            }
+        }
+        
+    }
+    
+    [_connections addObjectsFromArray:fetchedMatches];
+    
+    NSLog(@"Num matches I found: %lu", (unsigned long)[_matchesIFound count]);
+}
+
+- (void)fetchLatestConnections
+{
+    PossibleMatchHelper *last_connection = [_connections lastObject];
+    PFQuery *matchQueryTo = [PossibleMatchHelper query];
+    [matchQueryTo whereKey:@"toUser" equalTo:_curUser];
+    //[matchQueryTo whereKey:@"fromUser" notContainedIn:_posibleMatchesArray];
+    [matchQueryTo whereKey:@"createdAt" greaterThan:last_connection.createdAt];
+    
+    NSArray *fetchedMatches = [[NSArray alloc] initWithArray:[matchQueryTo findObjects]];
+    if ([fetchedMatches count] != 0) {
+        
+        [_connections addObjectsFromArray:fetchedMatches];
+    }
+    
+}
+
 - (void)fetchAllUserMatchRelationships
 {
     //PossibleMatchHelper *last_connection = [_matchRelationships lastObject];
     PFQuery *matchQueryFrom = [PossibleMatchHelper query];
     [matchQueryFrom whereKey:@"fromUser" equalTo:_curUser];
-    [matchQueryFrom whereKey:@"toUser" notContainedIn:_posibleMatchesArray];
+    //[matchQueryFrom whereKey:@"toUser" notContainedIn:_posibleMatchesArray];
     //[matchQueryFrom whereKey:@"createdAt" greaterThan:last_connection.createdAt];
     
     PFQuery *matchQueryTo = [PossibleMatchHelper query];
     [matchQueryTo whereKey:@"toUser" equalTo:_curUser];
-    [matchQueryTo whereKey:@"fromUser" notContainedIn:_posibleMatchesArray];
+    //[matchQueryTo whereKey:@"fromUser" notContainedIn:_posibleMatchesArray];
     //[matchQueryTo whereKey:@"createdAt" greaterThan:last_connection.createdAt];
     
     PFQuery *both = [PFQuery orQueryWithSubqueries:@[matchQueryFrom, matchQueryTo]];
@@ -1058,24 +1143,23 @@
         NSArray *fetchedMatches = [[NSArray alloc] initWithArray:[both findObjects]];
         
         // Add all returned Matches to MatchRelationships
-    if ([fetchedMatches count] != 0) {
+    for (PossibleMatchHelper *connection in fetchedMatches) {
         
-        for (PossibleMatchHelper *match in fetchedMatches) {
-            [_connections addObject:match];
-            NSLog(@"Total Connections: %lu", (unsigned long)[_connections count]);
+        for (UserParseHelper *user in connection.matches) {
+            if (![user isEqual:_curUser]){
+                [_matchesFoundMe addObject:user];
+            }
         }
+        
     }
     
-    [_uniqueConnections removeAllObjects];
-    _uniqueConnections = [NSMutableArray arrayWithArray:[_connections allObjects]];
-    
-    NSLog(@"Total MatchRelationships: %lu", (unsigned long)[_uniqueConnections count]);
+    NSLog(@"Total Connection: %lu", (unsigned long)[_connections count]);
 }
 
 - (void)updateTableView
 {
-    [_uniqueConnections removeAllObjects];
-    NSLog(@"UpdateTableView MatchRelationships: %lu", (unsigned long)[_uniqueConnections count]);
+    [_connections removeAllObjects];
+    NSLog(@"UpdateTableView MatchRelationships: %lu", (unsigned long)[_connections count]);
     [self fetchAllUserMatchRelationships];
     [self.tableView reloadData];
 }
@@ -1097,7 +1181,7 @@
     }
     */
     // Get Possible Matches
-    matchedConnection = [_uniqueConnections objectAtIndex:indexPath.row];
+    matchedConnection = [_connections objectAtIndex:indexPath.row];
     
     if ([matchedConnection.toUser.objectId isEqualToString:_curUser.objectId]) {
         user = (UserParseHelper *)matchedConnection.fromUser;
