@@ -39,6 +39,8 @@
     _matchWork.text              = [_matchUser userWork];
     _matchSchool.text            = [_matchUser userSchool];
     
+    _userDistance.text           = [_matchCompatibility calculateUserDistance];
+    
     if ([_matchUser.drinks isEqualToNumber:[NSNumber numberWithBool:YES]]) {
         _matchDrinksPref.text = @"Y";
         _matchDrinksPref.textColor = RED_LIGHT;
@@ -77,6 +79,14 @@
     _imagePager.pageControl.currentPageIndicatorTintColor = [UIColor lightGrayColor];
     _imagePager.pageControl.pageIndicatorTintColor = [UIColor blackColor];
     _imagePager.pageControl.center = CGPointMake(CGRectGetWidth(_imagePager.frame)/2, CGRectGetHeight(_imagePager.frame)/2);
+}
+
+- (void)calculateUserDistance
+{
+    double distanceDouble   = [_matchUser.geoPoint distanceInMilesTo:_curUser.geoPoint];
+    //_userDistance.text      = [[NSString alloc]initWithFormat:@"%@", [NSNumber numberWithDouble:distanceDouble]];
+    _userDistance.text    = [[NSString alloc] initWithFormat:@"%f", distanceDouble];
+    NSLog(@"%@ GeoPoint: %@ | %@ GeoPoint: %@",_matchUser.nickname, _matchUser.geoPoint, _curUser.nickname, _curUser.geoPoint); //
 }
 
 - (void)listInterests:(NSArray *)interests

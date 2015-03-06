@@ -261,7 +261,7 @@
     
     //cell.nameTextLabel.textColor = WHITE_COLOR;
     cell.nameTextLabel.textColor = RED_LIGHT;
-    cell.userImageView.layer.cornerRadius = cell.userImageView.frame.size.width / 2;
+    cell.userImageView.layer.cornerRadius = cell.userImageView.frame.size.width / 2.2;
     cell.userImageView.layer.masksToBounds = YES;
     /*
     cell.userImageView.layer.borderWidth = 1.0,

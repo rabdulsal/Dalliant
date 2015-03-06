@@ -879,6 +879,36 @@
      
 }
 
+#pragma mark - Reveal Request
+
+- (void)sendShareRequest
+{
+    RevealRequest *revealRequest = [RevealRequest object];
+    revealRequest.requestFromUser = _curUser;
+    revealRequest.requestToUser = self.toUserParse;
+    revealRequest.requestReply = @"";
+    
+    [revealRequest saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        PFQuery *query = [PFInstallation query];
+        [query whereKey:@"objectId" equalTo:self.toUserParse.installation.objectId];
+        
+        NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
+                              @"Request to Share Identities", @"alert",
+                              [NSString stringWithFormat:@"%@", _toUserParse], @"match",
+                              /*[NSString stringWithFormat:@"%@", _matchedUsers], @"relationship",*/
+                              @"Increment", @"badge",
+                              @"Ache.caf", @"sound",
+                              nil];
+        PFPush *push = [[PFPush alloc] init];
+        
+        [push setQuery:query];
+        [push setData:data];
+        [push sendPushInBackground];
+        
+        self.inputToolbar.contentView.leftBarButtonItem.enabled = NO;
+    }];
+}
+
 #pragma mark - Report / UnMatch Actionsheet
 
 - (IBAction)actionPressed:(id)sender
@@ -920,7 +950,7 @@
          }
          */
         if (buttonIndex == 0) {
-            //[self sendShareRequest];
+            [self sendShareRequest];
             NSLog(@"Share Request button pressed.");
         }
         
@@ -1056,6 +1086,7 @@
         MatchViewController *matchVC    = [[MatchViewController alloc]init];
         matchVC                         = segue.destinationViewController;
         //matchVC.userFBPic.image             = _toUserParse.photo;
+        matchVC.user                    = _curUser;
         matchVC.matchUser               = _toUserParse;
         matchVC.possibleMatch           = _matchedUsers;
         matchVC.fromConversation        = true;

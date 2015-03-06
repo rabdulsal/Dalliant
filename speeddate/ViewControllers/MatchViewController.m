@@ -290,6 +290,8 @@
         vc                      = segue.destinationViewController;
         vc.matchUser            = _matchUser;
         vc.matchCompatibility   = _possibleMatch;
+        vc.curUser              = _user;
+        NSLog(@"Current User: %@ | VC Current User: %@", _user.nickname, vc.curUser.nickname);
     }
     if ([segue.identifier isEqualToString:@"matchChat"]) {
         UserMessagesViewController *vc  = [[UserMessagesViewController alloc] init];

@@ -14,6 +14,7 @@
 @interface MatchProfileTVC : UITableViewController
 
 @property (weak, nonatomic) UserParseHelper *matchUser;
+@property (weak, nonatomic) UserParseHelper *curUser;
 @property (weak, nonatomic) PossibleMatchHelper *matchCompatibility;
 @property (weak, nonatomic) IBOutlet UIImageView *userFBPic;
 @property (weak, nonatomic) IBOutlet UILabel *userName;

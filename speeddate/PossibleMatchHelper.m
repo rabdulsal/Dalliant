@@ -93,4 +93,23 @@
     [view addSubview:radialView7];
 }
 
+- (NSString *)calculateUserDistance
+{
+    UserParseHelper *toUser     = (UserParseHelper *)[self.toUser fetchIfNeeded];
+    UserParseHelper *fromUser   = (UserParseHelper *)[self.fromUser fetchIfNeeded];
+    NSString *distanceOutput;
+    
+    double distanceDouble   = [fromUser.geoPoint distanceInMilesTo:toUser.geoPoint];
+    //_userDistance.text      = [[NSString alloc]initWithFormat:@"%@", [NSNumber numberWithDouble:distanceDouble]];
+    if (distanceDouble < 0.3) {
+        distanceOutput = @"5 min walk";
+    } else if (distanceDouble > 0.6) {
+        distanceOutput = @"15 min walk";
+    } else distanceOutput = @"10 min walk";
+    
+    return distanceOutput;
+    
+    NSLog(@"%@ GeoPoint: %@ | %@ GeoPoint: %@",self.toUser.nickname, self.toUser.geoPoint, self.fromUser.nickname, self.fromUser.geoPoint); //
+}
+
 @end

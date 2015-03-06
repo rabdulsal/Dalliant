@@ -113,7 +113,7 @@
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    [FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
+    //[FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
     
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     if (currentInstallation.badge != 0) {
@@ -129,6 +129,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
 
 #else
     NSLog(@"updating pf installation");
+    
     // Store the deviceToken in the current installation and save it to Parse.
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     [currentInstallation setDeviceTokenFromData:newDeviceToken];
