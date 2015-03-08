@@ -260,7 +260,6 @@
     // ----------------------------------------------------------------------------
     
     //cell.nameTextLabel.textColor = WHITE_COLOR;
-    cell.nameTextLabel.textColor = RED_LIGHT;
     cell.userImageView.layer.cornerRadius = cell.userImageView.frame.size.height / 2;
     cell.userImageView.layer.masksToBounds = YES;
     /*
@@ -278,14 +277,17 @@
         cell.lastMessageLabel.text = @"Image";
     }
     if (!message.read && [message.toUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
-        //cell.lastMessageLabel.textColor = WHITE_COLOR;
-        cell.dateLabel.textColor = [UIColor lightGrayColor];
+        cell.nameTextLabel.textColor = RED_LIGHT;
+        [cell.lastMessageLabel setFont:[UIFont boldSystemFontOfSize:13]];
+        cell.lastMessageLabel.textColor = RED_LIGHT;
+        cell.dateLabel.textColor = RED_LIGHT;
     } else {
         //cell.lastMessageLabel.textColor = WHITE_COLOR;
+        cell.nameTextLabel.textColor = [UIColor lightGrayColor];
+        cell.lastMessageLabel.textColor = [UIColor lightGrayColor];
         cell.dateLabel.textColor = [UIColor lightGrayColor];
     }
     //cell.dateLabel.textColor = WHITE_COLOR;
-    cell.dateLabel.textColor = RED_LIGHT;
     NSDateFormatter *dateFormatter = [NSDateFormatter new];
     [dateFormatter setDoesRelativeDateFormatting:YES];
     if ([[message createdAt] timeIntervalSinceNow] * -1 < SECONDS_DAY) {

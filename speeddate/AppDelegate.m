@@ -150,18 +150,24 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
     
     if ([alertMessage isEqualToString:@"Request to Share Identities"]) {
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"Fetch Reveal Request" object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"FetchRevealRequest" object:self];
             /*
              UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"In-app Reveal Request" message:@"Request received in app" delegate:self cancelButtonTitle:@"Done" otherButtonTitles: @"Anzeigen", nil];
              [alert setTag: 2];
              [alert show];
         */
-    /*} else if ([alertMessage isEqualToString:@"Identity Share Reply"]){
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"Fetch Reveal Reply" object:self];*/
+    } else if ([alertMessage isEqualToString:@"Identity Share Reply"]) {
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"FetchRevealReply" object:self];
+        
+    } else if ([alertMessage isEqualToString:@"Match Ended Chat"]) {
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"chatEnded" object:self];
+        
     } else {
-    NSLog(@"Did Receive Remote Notification started");
+        
         [[NSNotificationCenter defaultCenter] postNotificationName:receivedMessage object:userInfo];
-        NSLog(@"Did Receive Remote Notification ended");
+        
     }
 }
 /*

@@ -73,9 +73,11 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getNewMessage:) name:receivedMessage object:nil];
     
     // Notifications for Reveal Requests and Replies
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchRevealRequest:) name:@"Fetch Reveal Request" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchRevealRequest:) name:@"FetchRevealRequest" object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchRevealReply:) name:@"Fetch Reveal Reply" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchRevealReply:) name:@"FetchRevealReply" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(blockUnMatched) name:@"chatEnded" object:nil];
     
     [self customizeVC];
     
@@ -753,8 +755,8 @@
 
 - (void)addPhotoMediaMessageWithImage:(UIImage *)image
 {
-    JSQPhotoMediaItem *photoItem = [[JSQPhotoMediaItem alloc] initWithImage:image];
-    JSQMessage *photoMessage = [JSQMessage messageWithSenderId:_curUser.objectId displayName:_curUser.nickname media:photoItem];
+    JSQPhotoMediaItem *photoItem    = [[JSQPhotoMediaItem alloc] initWithImage:image];
+    JSQMessage *photoMessage        = [JSQMessage messageWithSenderId:_curUser.objectId displayName:_curUser.nickname media:photoItem];
     
     [self.messages addObject:photoMessage];
     [self finishSendingMessage];
@@ -883,10 +885,10 @@
 
 - (void)sendShareRequest
 {
-    RevealRequest *revealRequest = [RevealRequest object];
-    revealRequest.requestFromUser = _curUser;
-    revealRequest.requestToUser = self.toUserParse;
-    revealRequest.requestReply = @"";
+    RevealRequest *revealRequest    = [RevealRequest object];
+    revealRequest.requestFromUser   = _curUser;
+    revealRequest.requestToUser     = self.toUserParse;
+    revealRequest.requestReply      = @"";
     
     [revealRequest saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         PFQuery *query = [PFInstallation query];
@@ -1238,6 +1240,20 @@
             //[self deleteConversation];
             
             //Post blockUnMatched Notification to toUserParse
+            PFQuery *query = [PFInstallation query];
+            [query whereKey:@"objectId" equalTo:self.toUserParse.installation.objectId];
+            
+            NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
+                                  @"Match Ended Chat", @"alert",
+                                  [NSString stringWithFormat:@"%@", _toUserParse.nickname], @"match",
+                                  /*[NSString stringWithFormat:@"%@", _matchedUsers], @"relationship",*/
+                                  @"Increment", @"badge",
+                                  @"Ache.caf", @"sound",
+                                  nil];
+            PFPush *push = [[PFPush alloc] init];
+            [push setQuery:query];
+            [push setData:data];
+            [push sendPushInBackground];
             
             //[self popVC];
         }
