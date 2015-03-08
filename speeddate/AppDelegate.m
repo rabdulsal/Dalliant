@@ -25,7 +25,7 @@
     return YES;
 }
 
-- (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
     [Parse setApplicationId:appIdparse
@@ -125,31 +125,32 @@
 - (void)application:(UIApplication *)application
 didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
 
-#if (TARGET_IPHONE_SIMULATOR)
+//#if (TARGET_IPHONE_SIMULATOR)
 
-#else
+//#else
     NSLog(@"updating pf installation");
     
     // Store the deviceToken in the current installation and save it to Parse.
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     [currentInstallation setDeviceTokenFromData:newDeviceToken];
+    //currentInstallation[@"user"] = [UserParseHelper currentUser].objectId;
     currentInstallation.channels = @[@"global"];
     [currentInstallation saveInBackground];
     NSLog(@"finish");
-#endif
+//#endif
 
 
 
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    /*
+    
     NSDictionary *userInfoAlert = [userInfo objectForKey:@"aps"];
     NSString *alertMessage = [userInfoAlert objectForKey:@"alert"];
     
     if ([alertMessage isEqualToString:@"Request to Share Identities"]) {
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"Fetch Reveal Request" object:self];*/
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"Fetch Reveal Request" object:self];
             /*
              UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"In-app Reveal Request" message:@"Request received in app" delegate:self cancelButtonTitle:@"Done" otherButtonTitles: @"Anzeigen", nil];
              [alert setTag: 2];
@@ -157,11 +158,11 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
         */
     /*} else if ([alertMessage isEqualToString:@"Identity Share Reply"]){
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Fetch Reveal Reply" object:self];*/
-  //  } else {
+    } else {
     NSLog(@"Did Receive Remote Notification started");
         [[NSNotificationCenter defaultCenter] postNotificationName:receivedMessage object:userInfo];
         NSLog(@"Did Receive Remote Notification ended");
-   // }
+    }
 }
 /*
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler

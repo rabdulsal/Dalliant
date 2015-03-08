@@ -146,7 +146,7 @@
 
 
 - (void)checkPurchase {
-       
+    
     PFUser *chekUser = [PFUser currentUser];
     NSString *vip = chekUser[@"membervip"];
     if ([vip isEqualToString:@"vip"]) {
@@ -224,8 +224,7 @@
                                  block:^(PFObject *object, NSError *error)
      {
          self.user = (UserParseHelper *)object;
-
-
+         self.user.installation = [PFInstallation currentInstallation];
          self.charactersLabel.text = [NSString stringWithFormat:@"%lu/%d",(unsigned long)self.user.desc.length,MAXLENGTH];
          
          
@@ -258,7 +257,7 @@
              [self bothLikeSelect:nil];
          }
          [self.agePickerView scrollToElement:[NSNumber numberWithInt:self.user.age.intValue-18].intValue animated:YES];
-
+         
      }];
 }
 

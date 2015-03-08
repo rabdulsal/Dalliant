@@ -1005,19 +1005,15 @@
                                             <rect key="frame" x="0.0" y="0.0" width="287" height="66"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="i8n-uh-X0h">
-                                                    <rect key="frame" x="15" y="7" width="55" height="55"/>
-                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                </imageView>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NAME" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="aCe-yN-E10">
-                                                    <rect key="frame" x="78" y="9" width="203" height="21"/>
+                                                    <rect key="frame" x="79" y="9" width="202" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="16"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="--------" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="HeF-Zq-KZv">
-                                                    <rect key="frame" x="78" y="39" width="112" height="21"/>
+                                                    <rect key="frame" x="79" y="39" width="111" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="13"/>
                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -1030,6 +1026,10 @@
                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="i8n-uh-X0h">
+                                                    <rect key="frame" x="16" y="7" width="55" height="55"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableViewCellContentView>
@@ -1217,7 +1217,7 @@
                         <outlet property="matchingLabel" destination="E20-Tt-bme" id="vK5-rp-xnV"/>
                         <outlet property="scroller" destination="One-Zj-tKF" id="O1K-np-efs"/>
                         <outlet property="userName" destination="U0c-mh-PTM" id="gOv-b1-LiW"/>
-                        <segue destination="OLv-wp-Wkd" kind="push" identifier="matchChat" id="zAq-nd-1cA"/>
+                        <segue destination="46o-cm-j24" kind="push" identifier="matchChat" id="Tpc-4O-Pzu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5nJ-ws-5nA" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1351,7 +1351,7 @@
             <objects>
                 <viewController id="46o-cm-j24" customClass="ChatMessageViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="7BT-us-2wh">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="1584"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="kCJ-sF-htJ">
@@ -1392,7 +1392,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SOg-PP-EsD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1040" y="1930.5"/>
+            <point key="canvasLocation" x="1167" y="1447"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="sc0-VA-FxC">
@@ -2975,19 +2975,15 @@
                                             <rect key="frame" x="0.0" y="0.0" width="287" height="66"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="NSr-PA-S6K">
-                                                    <rect key="frame" x="24" y="5" width="55" height="55"/>
-                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                </imageView>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NAME" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="cHi-ue-AIB">
-                                                    <rect key="frame" x="87" y="9" width="187" height="21"/>
+                                                    <rect key="frame" x="84" y="9" width="176" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="16"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="--------" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="0nn-VI-5Yr">
-                                                    <rect key="frame" x="87" y="39" width="112" height="21"/>
+                                                    <rect key="frame" x="84" y="39" width="101" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="13"/>
                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -3007,6 +3003,10 @@
                                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="NSr-PA-S6K">
+                                                    <rect key="frame" x="26" y="8" width="50" height="50"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableViewCellContentView>
@@ -4457,17 +4457,17 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="z1E-8z-F9L"/>
-        <segue reference="VlF-20-DHW"/>
-        <segue reference="Qh3-Ge-Ehw"/>
+        <segue reference="Tpc-4O-Pzu"/>
+        <segue reference="R6Q-BJ-zcV"/>
+        <segue reference="yk5-qV-Iag"/>
+        <segue reference="h7w-Ho-pqn"/>
+        <segue reference="Qy0-fE-0Nr"/>
+        <segue reference="bt8-6f-Y1e"/>
         <segue reference="MjG-Tl-7wb"/>
+        <segue reference="VlF-20-DHW"/>
+        <segue reference="z1E-8z-F9L"/>
         <segue reference="MLw-yj-LVg"/>
         <segue reference="WJE-pO-Iht"/>
         <segue reference="oXm-ri-1Lw"/>
-        <segue reference="R6Q-BJ-zcV"/>
-        <segue reference="yk5-qV-Iag"/>
-        <segue reference="zAq-nd-1cA"/>
-        <segue reference="h7w-Ho-pqn"/>
-        <segue reference="Qy0-fE-0Nr"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -22,6 +22,7 @@
 #import "config.h"
 #import "UserParseHelper.h"
 #import "User.h"
+#import "MessageParse.h"
 #import <TDBadgedCell.h>
 
 #define DOCUMENTS [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject]
@@ -103,12 +104,7 @@
 {
     // ------------ MESSAGES BADGE -------------------
     
-    if (user.numberOfConvos) {
-        _cellMessage.badgeString = user.numberOfConvos;
-        _cellMessage.badge.radius = 5;
-        _cellMessage.badge.fontSize = 15;
-        _cellMessage.badgeColor = [UIColor whiteColor];
-    }
+    [self getUnreadMessages];
     
     // ------------------------------------------------
     
@@ -135,6 +131,24 @@
                                 }];
         }
     }
+}
+
+- (void)getUnreadMessages
+{
+    PFQuery *messageQueryTo = [MessageParse query];
+    [messageQueryTo whereKey:@"toUserParse" equalTo:[UserParseHelper currentUser]];
+    [messageQueryTo whereKey:@"read" equalTo:[NSNumber numberWithBool:NO]];
+    
+    [messageQueryTo findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        
+        if ([objects count] != 0) {
+            int numberMessagesUnread = (int)[objects count];
+            _cellMessage.badgeString = [[NSString alloc] initWithFormat:@"%d", numberMessagesUnread];
+            _cellMessage.badge.radius = 5;
+            _cellMessage.badge.fontSize = 15;
+            _cellMessage.badgeColor = [UIColor whiteColor];
+        }
+    }];
 }
 
 #pragma mark - TABLEVIEW SEGUES

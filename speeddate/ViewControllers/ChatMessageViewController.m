@@ -861,7 +861,7 @@
             
             NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
                                   [NSString stringWithFormat:@"%@ send image",pushUserto], @"alert",
-                                  [NSString stringWithFormat:@"%@", _toUserParse], @"match",
+                                  [NSString stringWithFormat:@"%@", _toUserParse.nickname], @"match",
                                   @"Increment", @"badge",
                                   @"Ache.caf", @"sound",
                                   nil];
@@ -894,18 +894,18 @@
         
         NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
                               @"Request to Share Identities", @"alert",
-                              [NSString stringWithFormat:@"%@", _toUserParse], @"match",
+                              [NSString stringWithFormat:@"%@", _toUserParse.nickname], @"match",
                               /*[NSString stringWithFormat:@"%@", _matchedUsers], @"relationship",*/
                               @"Increment", @"badge",
                               @"Ache.caf", @"sound",
                               nil];
         PFPush *push = [[PFPush alloc] init];
-        
         [push setQuery:query];
         [push setData:data];
         [push sendPushInBackground];
-        
         self.inputToolbar.contentView.leftBarButtonItem.enabled = NO;
+        
+        [self.collectionView reloadData];
     }];
 }
 

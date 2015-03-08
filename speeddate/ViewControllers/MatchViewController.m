@@ -18,7 +18,7 @@
 #import "MatchViewController.h"
 #import "UserNearMeViewController.h"
 #import "MainViewController.h"
-#import "UserMessagesViewController.h"
+#import "ChatMessageViewController.h"
 #import "SidebarTableViewController.h"
 #import <KIImagePager.h>
 #import "MatchProfileTVC.h"
@@ -294,11 +294,16 @@
         NSLog(@"Current User: %@ | VC Current User: %@", _user.nickname, vc.curUser.nickname);
     }
     if ([segue.identifier isEqualToString:@"matchChat"]) {
+        /*
         UserMessagesViewController *vc  = [[UserMessagesViewController alloc] init];
         vc                              = segue.destinationViewController;
         vc.toUserParse                  = _matchUser;
         vc.curUser                      = _user;
+        */
         
+        ChatMessageViewController *vc   = segue.destinationViewController;
+        vc.toUserParse                  = _matchUser;
+        vc.curUser                      = _user;
         [self generateMatchMessage];
         //Check for prior Chat b/w 2 Users, if so, don't subtract credits
         //[_user calculateCredits];
