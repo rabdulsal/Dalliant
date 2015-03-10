@@ -66,6 +66,7 @@
 		4C8F7C471A75F84200CCBDE8 /* tutorial_background_03@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C421A75F84200CCBDE8 /* tutorial_background_03@2x.jpg */; };
 		4C8F7C481A75F84200CCBDE8 /* tutorial_background_04@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C431A75F84200CCBDE8 /* tutorial_background_04@2x.jpg */; };
 		4C8F7C4A1A79327A00CCBDE8 /* Dalliant_Logo_XL.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C491A79327A00CCBDE8 /* Dalliant_Logo_XL.gif */; };
+		4CBACD931AAE4F9F007DBC9B /* ImageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBACD921AAE4F9F007DBC9B /* ImageVC.m */; };
 		4CBDB1941A3CDD3C006A9F1F /* ProfileTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBDB1931A3CDD3C006A9F1F /* ProfileTableVC.m */; };
 		4CBDB1971A427A11006A9F1F /* RevealRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBDB1961A427A11006A9F1F /* RevealRequest.m */; };
 		4CC7B8991A4B3EBE000982EA /* MatchProfileTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC7B8981A4B3EBE000982EA /* MatchProfileTVC.m */; };
@@ -283,6 +284,8 @@
 		4C8F7C421A75F84200CCBDE8 /* tutorial_background_03@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_03@2x.jpg"; sourceTree = "<group>"; };
 		4C8F7C431A75F84200CCBDE8 /* tutorial_background_04@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_04@2x.jpg"; sourceTree = "<group>"; };
 		4C8F7C491A79327A00CCBDE8 /* Dalliant_Logo_XL.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Dalliant_Logo_XL.gif; sourceTree = "<group>"; };
+		4CBACD911AAE4F9F007DBC9B /* ImageVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageVC.h; sourceTree = "<group>"; };
+		4CBACD921AAE4F9F007DBC9B /* ImageVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageVC.m; sourceTree = "<group>"; };
 		4CBDB1921A3CDD3C006A9F1F /* ProfileTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileTableVC.h; sourceTree = "<group>"; };
 		4CBDB1931A3CDD3C006A9F1F /* ProfileTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileTableVC.m; sourceTree = "<group>"; };
 		4CBDB1951A427A11006A9F1F /* RevealRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RevealRequest.h; sourceTree = "<group>"; };
@@ -563,6 +566,8 @@
 		42DBCC1E19AC20BB00CE6C93 = {
 			isa = PBXGroup;
 			children = (
+				4CBACD911AAE4F9F007DBC9B /* ImageVC.h */,
+				4CBACD921AAE4F9F007DBC9B /* ImageVC.m */,
 				4CDD63D01A30A20E00AE9679 /* PodFile */,
 				42DBCC3019AC20BB00CE6C93 /* speeddate */,
 				42DBCC4F19AC20BB00CE6C93 /* speeddateTests */,
@@ -1318,6 +1323,7 @@
 				C237018D19D974390024F856 /* UIButton+AFNetworking.m in Sources */,
 				42236F2A19B7DEEE00539466 /* CReflectionView.m in Sources */,
 				42DBCCC519AC4E4200CE6C93 /* StarterViewController.m in Sources */,
+				4CBACD931AAE4F9F007DBC9B /* ImageVC.m in Sources */,
 				42236F3119B7F30000539466 /* CDemoCollectionViewController.m in Sources */,
 				42236F2619B7DEEE00539466 /* CBetterCollectionViewCell.m in Sources */,
 				4281F25C19B22F72007724C6 /* UserCollectionViewCell.m in Sources */,

@@ -1132,7 +1132,7 @@
             <objects>
                 <viewController id="rDU-7y-piv" customClass="MatchViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vz1-6L-pQP">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="1584"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="1584"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="One-Zj-tKF">
@@ -1222,7 +1222,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5nJ-ws-5nA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1531" y="1420"/>
+            <point key="canvasLocation" x="1823" y="1228"/>
         </scene>
         <!--Match View Controller-->
         <scene sceneID="QUK-7O-Yoa">
@@ -1388,11 +1388,44 @@
                     <connections>
                         <outlet property="unMatchedBlocker" destination="kCJ-sF-htJ" id="qe3-JA-7Hj"/>
                         <segue destination="rDU-7y-piv" kind="push" identifier="view_match" id="R6Q-BJ-zcV"/>
+                        <segue destination="ONc-mO-09f" kind="modal" identifier="chatImage" id="hnd-lL-3Ao"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SOg-PP-EsD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1167" y="1447"/>
+        </scene>
+        <!--ImageVC-->
+        <scene sceneID="2cS-z8-VCH">
+            <objects>
+                <viewController id="ONc-mO-09f" customClass="ImageVC" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="fLG-Qr-GoD">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="Ru6-v6-mTU">
+                                <rect key="frame" x="-6" y="-6" width="332" height="574"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="9Md-2d-zwF">
+                                <rect key="frame" x="16" y="20" width="23" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <state key="normal" title="X"/>
+                                <connections>
+                                    <action selector="closeView:" destination="ONc-mO-09f" eventType="touchUpInside" id="z1b-cY-yv9"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="imageView" destination="Ru6-v6-mTU" id="wfI-8Y-jce"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EY0-9O-PMp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1595" y="928"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="sc0-VA-FxC">
@@ -3411,6 +3444,12 @@
                     <view key="view" contentMode="scaleToFill" id="4Kl-I2-sAF">
                         <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="G4e-as-JPf">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </imageView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
@@ -3422,10 +3461,13 @@
                         </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
+                    <connections>
+                        <outlet property="imageFrame" destination="G4e-as-JPf" id="9F2-gJ-cSZ"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gyC-Xa-Rgu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2723" y="406"/>
+            <point key="canvasLocation" x="2110" y="2771"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="LaU-Yd-Ncx">
@@ -4457,17 +4499,17 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="T3M-uL-jBd"/>
-        <segue reference="z1E-8z-F9L"/>
-        <segue reference="VlF-20-DHW"/>
+        <segue reference="Tpc-4O-Pzu"/>
+        <segue reference="R6Q-BJ-zcV"/>
+        <segue reference="h7w-Ho-pqn"/>
+        <segue reference="Qy0-fE-0Nr"/>
+        <segue reference="NMB-y1-hOv"/>
         <segue reference="Qh3-Ge-Ehw"/>
+        <segue reference="VlF-20-DHW"/>
         <segue reference="MjG-Tl-7wb"/>
+        <segue reference="z1E-8z-F9L"/>
         <segue reference="MLw-yj-LVg"/>
         <segue reference="WJE-pO-Iht"/>
         <segue reference="oXm-ri-1Lw"/>
-        <segue reference="R6Q-BJ-zcV"/>
-        <segue reference="yk5-qV-Iag"/>
-        <segue reference="h7w-Ho-pqn"/>
-        <segue reference="Qy0-fE-0Nr"/>
     </inferredMetricsTieBreakers>
 </document>

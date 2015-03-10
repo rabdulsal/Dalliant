@@ -8,6 +8,7 @@
 
 #import "ChatMessageViewController.h"
 #import "MatchViewController.h"
+#import "ImageVC.h"
 #import "Report.h"
 #import "RevealRequest.h"
 
@@ -718,6 +719,30 @@
     return 0.0f;
 }
 
+- (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    JSQMessage *message = [self.messages objectAtIndex:indexPath.item];
+    
+    if (message.isMediaMessage) {
+        id<JSQMessageMediaData> copyMediaData = message.media;
+        JSQPhotoMediaItem *photoItemCopy = [((JSQPhotoMediaItem *)copyMediaData) copy];
+        photoItemCopy.appliesMediaViewMaskAsOutgoing = NO;
+        UIImage *imageMessage = photoItemCopy.image;
+        
+            /**
+             *  Set image to nil to simulate "downloading" the image
+             *  and show the placeholder view
+             */
+        
+      [self performSegueWithIdentifier:@"chatImage" sender:imageMessage];
+    } else {
+        NSLog(@"Text bubble.");
+    }
+    
+    
+}
+
 - (void)didPressAccessoryButton:(UIButton *)sender
 {
     if (!_receivedRequest && !_receivedReply) { // <-- Change to check on Matched User attribute
@@ -1094,6 +1119,16 @@
         matchVC.fromConversation        = true;
         
         [matchVC setUserPhotosArray:matchVC.matchUser];
+    } else if ([segue.identifier isEqualToString:@"chatImage"]) {
+        
+        ImageVC *vc = segue.destinationViewController;
+        //UIImageView *imageView = (UIImageView *)sender;
+        vc.image                = (UIImage *)sender;
+        if (vc.image) {
+            NSLog(@"There is an image: %@", vc.image);
+        }
+        //vc.imageFrame.image     = vc.image;
+         
     }
 }
 
