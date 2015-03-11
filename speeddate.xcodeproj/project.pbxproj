@@ -235,7 +235,7 @@
 		4283BD8519BCB83A00AD1F63 /* Report.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Report.m; path = Model/Report.m; sourceTree = "<group>"; };
 		42BD2AFC19AE5A1B00FCC817 /* UserTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserTableViewCell.h; path = View/UserTableViewCell.h; sourceTree = "<group>"; };
 		42BD2AFD19AE5A1B00FCC817 /* UserTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserTableViewCell.m; path = View/UserTableViewCell.m; sourceTree = "<group>"; };
-		42DBCC2719AC20BB00CE6C93 /* speeddate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = speeddate.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		42DBCC2719AC20BB00CE6C93 /* Dalliant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dalliant.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		42DBCC2A19AC20BB00CE6C93 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		42DBCC2C19AC20BB00CE6C93 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		42DBCC2E19AC20BB00CE6C93 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -580,7 +580,7 @@
 		42DBCC2819AC20BB00CE6C93 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				42DBCC2719AC20BB00CE6C93 /* speeddate.app */,
+				42DBCC2719AC20BB00CE6C93 /* Dalliant.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1093,7 +1093,7 @@
 			);
 			name = speeddate;
 			productName = Tinder;
-			productReference = 42DBCC2719AC20BB00CE6C93 /* speeddate.app */;
+			productReference = 42DBCC2719AC20BB00CE6C93 /* Dalliant.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1450,7 +1450,7 @@
 					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/tools/Jet/JetCreator",
 					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/tools/lib",
 				);
-				PRODUCT_NAME = speeddate;
+				PRODUCT_NAME = Dalliant;
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1482,7 +1482,7 @@
 					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/tools/Jet/JetCreator",
 					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/tools/lib",
 				);
-				PRODUCT_NAME = speeddate;
+				PRODUCT_NAME = Dalliant;
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
