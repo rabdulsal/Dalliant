@@ -21,6 +21,7 @@
     JSQMessagesAvatarImage *matchAvatar;
 }
 @property NSMutableArray *messages;
+@property NSArray *sortedMessages;
 @property UIImage *toPhoto;
 @property UIImage *fromPhoto;
 @property (strong, nonatomic) RevealRequest *receivedRequest;
@@ -60,7 +61,8 @@
     
     self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
     
-    self.messages = [NSMutableArray new];
+    self.messages       = [NSMutableArray new];
+    self.sortedMessages = [NSArray new];
     
     [self getMessages];
     [self fetchCompatibleMatch];
@@ -306,6 +308,7 @@
             
             [self.messages addObject:chatMessage];
             NSLog(@"Chat messages count: %lu", (unsigned long)[_messages count]);
+            //[self sortMessages:_messages byDate:@"createdAt"];
             [self finishReceivingMessage];
                 
             }
@@ -313,6 +316,15 @@
         }];
         
     }
+}
+
+- (void)sortMessages:(NSMutableArray *)messages byDate:(NSString *)date
+{
+    NSSortDescriptor *sortDescriptor;
+    sortDescriptor = [[NSSortDescriptor alloc] initWithKey:date
+                                                 ascending:YES];
+    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+    [messages sortUsingDescriptors:@[date]];
 }
 
 - (void)fetchCompatibleMatch
@@ -480,6 +492,7 @@
                                                                       text:text];
             [self.messages addObject:chatMessage];
             [self sendMessageNotification:message.text];
+            //[self sortMessages:_messages byDate:@"createdAt"];
             [self finishSendingMessage];
         }
         
@@ -624,7 +637,12 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return [self.messages count];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc]
+                                        initWithKey: @"date" ascending: YES];
+    _sortedMessages = [_messages sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+    //return [self.messages count];
+    
+    return [_sortedMessages count];
 }
 
 - (UICollectionViewCell *)collectionView:(JSQMessagesCollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -784,6 +802,7 @@
     JSQMessage *photoMessage        = [JSQMessage messageWithSenderId:_curUser.objectId displayName:_curUser.nickname media:photoItem];
     
     [self.messages addObject:photoMessage];
+    //[self sortMessages:_messages byDate:@"createdAt"];
     [self finishSendingMessage];
 }
 
@@ -867,9 +886,7 @@
     message.fromUserParse   = _curUser;
     message.toUserParse     = self.toUserParse;
     message.read            = NO;
-    //[self.messages addObject:message];
-    
-    message.sendImage = image;
+    message.sendImage       = image;
     /*
     NSInteger item = [self.collectionView numberOfItemsInSection:0];
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:0];
