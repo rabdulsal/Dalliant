@@ -334,7 +334,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self checkFirstTime];
+    //[self checkFirstTime];
     [self performSelector:@selector(startAnimation) withObject:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTableView) name:@"TableUpdated" object:nil];
 }
@@ -685,16 +685,20 @@
 {
     _prefCounter = 0;
     _totalPrefs = 0;
-    NSString *matchGender = [[NSString alloc] init];
+    NSString *matchGender;
+    NSString *userGender;
     
     if ([_matchUser.isMale isEqualToString:@"true"]) {
         matchGender = @"Male";
     } else matchGender = @"Female";
     
+    if ([_curUser.isMale isEqualToString:@"true"]) {
+        userGender = @"Male";
+    } else userGender = @"Female";
    
-    if ([_curUser.genderPref isEqualToString:@"Both"]) {
+    if ([_curUser.genderPref isEqualToString:@"Both"] && [_matchUser.genderPref isEqualToString:userGender]) {
         
-        [_willBeMatches addObject:_matchUser];
+        
         NSLog(@"User gender: %@", _curUser.genderPref);
         NSLog(@"Match gender: %@", matchGender);
         _prefCounter++;
@@ -710,18 +714,22 @@
         //[self setPossMatchHelper];
         //[self performSegueWithIdentifier:@"viewMatch" sender:nil];
         
-        [self matchBodyType];
+        // Add to willBeMatches here
+        [_willBeMatches addObject:_matchUser];
+        [self matchAgePreference];
         //[self matchKids];
         
-    } else if ([_curUser.genderPref isEqualToString:matchGender]) {
-        [_willBeMatches addObject:_matchUser];
+    } else if ([_curUser.genderPref isEqualToString:matchGender] && [_matchUser.genderPref isEqualToString:userGender]) {
+        
         _prefCounter++;
         _totalPrefs++;
         
         NSLog(@"Just before Save run");
         //[self setPossMatchHelper];
         
-        [self matchBodyType];
+        // Add to willBeMatches here
+        [_willBeMatches addObject:_matchUser];
+        [self matchAgePreference];
         //[self matchKids];
         //[self performSegueWithIdentifier:@"viewMatch" sender:nil];
     } else NSLog(@"No match with %@", _matchUser.nickname);
@@ -746,11 +754,11 @@
         _prefCounter++;
         //[self matchRelationshipStatus];
         NSLog(@"Equal BodyType Run");
-        [self matchAgePreference];
+        [self matchRelationshipStatus];
     } else {
         //[self matchRelationshipStatus];
         NSLog(@"NOT Equal BodyType Run");
-        [self matchAgePreference];
+        [self matchRelationshipStatus];
     }
     
 }
@@ -765,13 +773,13 @@
     minAgeDiff += (int)_matchUser.age - (int)_curUser.minAgePref;
     maxAgeDiff += (int)_curUser.maxAgePref - (int)_matchUser.age;
     
-    if (minAgeDiff < 0 || maxAgeDiff < 0) {
+    if (minAgeDiff > 0 || maxAgeDiff > 0) {
         NSLog(@"MatchAge equal");
         _prefCounter++;
-        [self matchRelationshipStatus];
+        [self matchBodyType];
     } else {
         NSLog(@"MatchAge NOT equal");
-        [self matchRelationshipStatus];
+        [self matchBodyType];
     }
     
     NSLog(@" %@ minAgePref: %@ | maxAgePref: %@ ; %@'s age: %@", _curUser.nickname, _curUser.minAgePref, _curUser.maxAgePref, _matchUser.nickname, _matchUser.age);

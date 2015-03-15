@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "42DBCC2619AC20BB00CE6C93"
-               BuildableName = "speeddate.app"
+               BuildableName = "Dalliant.app"
                BlueprintName = "speeddate"
                ReferencedContainer = "container:speeddate.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "42DBCC2619AC20BB00CE6C93"
-            BuildableName = "speeddate.app"
+            BuildableName = "Dalliant.app"
             BlueprintName = "speeddate"
             ReferencedContainer = "container:speeddate.xcodeproj">
          </BuildableReference>
@@ -48,11 +48,12 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "42DBCC2619AC20BB00CE6C93"
-            BuildableName = "speeddate.app"
+            BuildableName = "Dalliant.app"
             BlueprintName = "speeddate"
             ReferencedContainer = "container:speeddate.xcodeproj">
          </BuildableReference>
@@ -66,11 +67,12 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "42DBCC2619AC20BB00CE6C93"
-            BuildableName = "speeddate.app"
+            BuildableName = "Dalliant.app"
             BlueprintName = "speeddate"
             ReferencedContainer = "container:speeddate.xcodeproj">
          </BuildableReference>

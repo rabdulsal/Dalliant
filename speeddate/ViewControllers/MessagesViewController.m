@@ -62,15 +62,13 @@
     self.searchTextField.leftView = paddingView;
     self.searchTextField.leftViewMode = UITextFieldViewModeAlways;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:receivedMessage object:nil];
-    
-    
     [self customizeApp];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:receivedMessage object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHide:) name:UIKeyboardWillHideNotification object:nil];
     
-  }
+}
 
 - (void)customizeApp
 {
@@ -125,7 +123,6 @@
 {
     [super viewWillAppear:YES];
     [self loadingChat];
-    [self reloadView];
 }
 
 - (void)receivedNotification:(NSNotification *)notification
@@ -137,6 +134,7 @@
 
 - (void)loadingChat
 {
+    NSLog(@"Loading chat run");
     self.usersArray = [NSMutableArray new];
     self.messages = [NSMutableArray new];
     self.filteredAllUsersArray = [NSArray new];
@@ -146,17 +144,37 @@
     PFQuery *messageQueryTo = [MessageParse query];
     [messageQueryTo whereKey:@"toUserParse" equalTo:[UserParseHelper currentUser]];
     PFQuery *both = [PFQuery orQueryWithSubqueries:@[messageQueryFrom, messageQueryTo]];
-    [both orderByDescending:@"createdAt"];
+    //[both orderByDescending:@"createdAt"];
     //[both orderByDescending:@"compatibilityIndex"]; // <-- Won't work for now, need a compatibility attribute on messages somehow
     
     [both findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         NSMutableSet *users = [NSMutableSet new];
+        
+        //Order Messages
+        objects = [objects sortedArrayUsingComparator:
+                   ^NSComparisonResult(PFObject *a, PFObject *b)
+                   {
+                       return [b.createdAt compare:a.createdAt];
+                   }];
+        
         for (MessageParse *message in objects) {
+            NSLog(@"Message Created at: %@", message.createdAt);
+            // Erase old Messages Conditional below
+            
+//            if ([[message createdAt] timeIntervalSinceNow] * -1 > SECONDS_DAY) {
+                
+                //[message deleteInBackground];
+                
+//            } else {
+                
+            // Display message
+                
             if(![message.fromUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
                 NSUInteger count = users.count;
                 [users addObject:message.fromUserParse];
                 if (users.count > count) {
                     [message.fromUserParse fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                        
                         [self.messages addObject:message];
                         [self.usersArray addObject:message.fromUserParse];
                         NSInteger position = [self.usersArray indexOfObject:message.fromUserParse];
@@ -170,16 +188,18 @@
                 [users addObject:message.toUserParse];
                 if (users.count > count) {
                     [message.toUserParse fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                        
                         [self.messages addObject:message];
                         [self.usersArray addObject:message.toUserParse];
-                        
                         NSInteger position = [self.usersArray indexOfObject:message.toUserParse];
                         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:position inSection:0];
                         [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
                     }];
                 }
             }
+//            }// End Chat erase conditional
         }
+        
         [self.tableView reloadData];
     }];
 }

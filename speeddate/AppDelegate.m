@@ -11,7 +11,8 @@
 #import "RageIAPHelper.h"
 #import "UserParseHelper.h"
 #import "PossibleMatchHelper.h"
-#import "UserMessagesViewController.h"
+#import "MessageParse.h"
+#import "ChatMessageViewController.h"
 #import "config.h"
 
 @implementation AppDelegate
@@ -52,17 +53,25 @@
     }
     
     NSDictionary *notificationPayload = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
+    
     if (notificationPayload) {
+        NSLog(@"Notification in AppDelegate: %@", [notificationPayload objectForKey:@"messageId"]);
+        //Query if NotificationPayload is from Chat or ShareRequest based on string
         
-        // Get Match and Relationship
-        UserParseHelper *match = [notificationPayload objectForKey:@"match"];
+        // Create Message from MessageId
+        /*
+        MessageParse *message = [notificationPayload objectForKey:@"messageId"];
         //PossibleMatchHelper *relationship = [notificationPayload objectForKey:@"relationship"];
         
         // Instantiate ViewController, set values and push
-        UserMessagesViewController *vc = [[UserMessagesViewController alloc] init];
-        vc.toUserParse = match;
-        //vc.matchedUsers = relationship;
-        [self.navController pushViewController:vc animated:YES];
+        UINavigationController *navController   = (UINavigationController *)self.window.rootViewController;
+        ChatMessageViewController *chatVC       = [navController.storyboard instantiateViewControllerWithIdentifier:@"chat"];
+        chatVC.toUserParse                      = message.toUserParse;
+        chatVC.curUser                          = message.fromUserParse;
+        chatVC.fromConversation                 = true;
+        
+        [navController pushViewController:chatVC animated:YES];
+         */
     }
     
    

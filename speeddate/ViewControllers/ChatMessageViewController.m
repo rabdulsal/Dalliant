@@ -219,7 +219,7 @@
     
     
     PFQuery *orQUery = [PFQuery orQueryWithSubqueries:@[query1, query2]];
-    [orQUery orderByAscending:@"createdAt"];
+    //[orQUery orderByAscending:@"createdAt"];
     
     // orQUery.limit = 3;
     // orQUery.skip = 5;
@@ -256,6 +256,13 @@
 
 - (void)processMessages:(NSArray *)objects
 {
+    //Order Messages
+    objects = [objects sortedArrayUsingComparator:
+               ^NSComparisonResult(PFObject *a, PFObject *b)
+               {
+                   return [a.createdAt compare:b.createdAt];
+               }];
+    
     for (MessageParse *message in objects) {
         message.read = YES;
         [message saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
@@ -292,18 +299,11 @@
                     mediaItem.appliesMediaViewMaskAsOutgoing = YES;
                 } else mediaItem.appliesMediaViewMaskAsOutgoing = NO;
                 
-                
-                chatMessage = [[JSQMessage alloc] initWithSenderId:senderId
-                                                 senderDisplayName:displayName
-                                                              date:message.createdAt
-                                                             media:mediaItem];
+                chatMessage = [[JSQMessage alloc] initWithSenderId:senderId senderDisplayName:displayName date:message.createdAt media:mediaItem];
                 
             } else {
                 
-                chatMessage = [[JSQMessage alloc] initWithSenderId:senderId
-                                                 senderDisplayName:displayName
-                                                              date:message.createdAt
-                                                              text:message.text];
+                chatMessage = [[JSQMessage alloc] initWithSenderId:senderId senderDisplayName:displayName date:message.createdAt text:message.text];
             }
             
             [self.messages addObject:chatMessage];
@@ -370,8 +370,6 @@
     [self fetchShareReply];
     
     NSLog(@"Reveal Reply query run");
-    
-    [self acknowledgeAlertView];
     
 }
 
@@ -446,6 +444,7 @@
     if ([reply count] != 0) {
         
         //_receivedReply = [request objectAtIndex:0];
+        [self acknowledgeAlertView];
     }
     
     /*
@@ -476,11 +475,10 @@
      */
     
     MessageParse *message = [MessageParse object];
-    message.text = text;
-    message.createdAt = [NSDate date];
+    message.text          = text;
     message.fromUserParse = _curUser;
-    message.toUserParse = self.toUserParse;
-    message.read = NO;
+    message.toUserParse   = self.toUserParse;
+    message.read          = NO;
     [message saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         
         if (!error) {
@@ -488,10 +486,10 @@
             
             JSQMessage *chatMessage = [[JSQMessage alloc] initWithSenderId:senderId
                                                          senderDisplayName:senderDisplayName
-                                                                      date:message.createdAt
+                                                                      date:date
                                                                       text:text];
             [self.messages addObject:chatMessage];
-            [self sendMessageNotification:message.text];
+            [self sendMessageNotification:message];
             //[self sortMessages:_messages byDate:@"createdAt"];
             [self finishSendingMessage];
         }
@@ -500,7 +498,7 @@
     
 }
 
-- (void)sendMessageNotification:(NSString *)message
+- (void)sendMessageNotification:(MessageParse *)message
 {
     if (self.toUserParse.installation.objectId) {
         PFQuery *query = [PFInstallation query];
@@ -511,11 +509,12 @@
         NSString *pushMessage = nil;
         
         if ((!_receivedRequest && !_receivedReply) || !([_receivedRequest.requestReply isEqualToString:@"Yes"] && [_receivedRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || !([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
-            pushMessage = [NSString stringWithFormat:@"Your Match says: %@", message];
-        } else pushMessage = [NSString stringWithFormat:@"%@ says: %@",pushUserto,message];
+            pushMessage = [NSString stringWithFormat:@"Your Match says: %@", message.text];
+        } else pushMessage = [NSString stringWithFormat:@"%@ says: %@",pushUserto,message.text];
         
         NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
                               pushMessage, @"alert",
+                              [NSString stringWithFormat:@"%@", message.objectId], @"messageId",
                               @"Increment", @"badge",
                               @"Ache.caf", @"sound",
                               nil];
@@ -533,7 +532,7 @@
 
 - (id<JSQMessageData>)collectionView:(JSQMessagesCollectionView *)collectionView messageDataForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [self.messages objectAtIndex:indexPath.item];
+    return [_messages objectAtIndex:indexPath.item];
 }
 
 - (id<JSQMessageBubbleImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView messageBubbleImageDataForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -637,12 +636,7 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc]
-                                        initWithKey: @"date" ascending: YES];
-    _sortedMessages = [_messages sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
-    //return [self.messages count];
-    
-    return [_sortedMessages count];
+    return [self.messages count];
 }
 
 - (UICollectionViewCell *)collectionView:(JSQMessagesCollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -776,13 +770,16 @@
         // If Share Request Sent & Accepted, allow camera
         UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
         imagePicker.delegate = self;
-    
+        imagePicker.allowsEditing = NO;
         // if-conditional for using camera vs. photolibrary
         if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
             imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
         } else {
             imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         }
+        
+        imagePicker.navigationBarHidden = YES;
+        imagePicker.toolbarHidden = YES;
         //imagePicker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:imagePicker.sourceType]; <-- Comment-out Video option
         [self presentViewController:imagePicker animated:YES completion:nil];
     }
@@ -905,7 +902,7 @@
             
             NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
                                   [NSString stringWithFormat:@"%@ send image",pushUserto], @"alert",
-                                  [NSString stringWithFormat:@"%@", _toUserParse.nickname], @"match",
+                                  [NSString stringWithFormat:@"%@", message.objectId], @"messageId",
                                   @"Increment", @"badge",
                                   @"Ache.caf", @"sound",
                                   nil];
