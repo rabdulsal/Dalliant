@@ -59,24 +59,32 @@
         //Query if NotificationPayload is from Chat or ShareRequest based on string
         
         // Create Message from MessageId
-        /*
-        MessageParse *message = [notificationPayload objectForKey:@"messageId"];
+        NSString *messageId   = [notificationPayload objectForKey:@"messageId"];
+        PFQuery *messageQuery = [MessageParse query];
+        
+        [messageQuery getObjectInBackgroundWithId:messageId block:^(PFObject *object, NSError *error) {
+            if (!error) {
+                
+                MessageParse *message                   = (MessageParse *)object;
+                // Instantiate ViewController, set values and push
+                UINavigationController *navController   = (UINavigationController *)self.window.rootViewController;
+                ChatMessageViewController *chatVC       = [navController.storyboard instantiateViewControllerWithIdentifier:@"ChatPushNotificationView"];
+                chatVC.toUserParse                      = message.toUserParse;
+                chatVC.curUser                          = message.fromUserParse;
+                chatVC.fromConversation                 = true;
+                
+                [navController pushViewController:chatVC animated:YES];
+            }
+        }];
+         
+        
         //PossibleMatchHelper *relationship = [notificationPayload objectForKey:@"relationship"];
         
-        // Instantiate ViewController, set values and push
-        UINavigationController *navController   = (UINavigationController *)self.window.rootViewController;
-        ChatMessageViewController *chatVC       = [navController.storyboard instantiateViewControllerWithIdentifier:@"chat"];
-        chatVC.toUserParse                      = message.toUserParse;
-        chatVC.curUser                          = message.fromUserParse;
-        chatVC.fromConversation                 = true;
-        
-        [navController pushViewController:chatVC animated:YES];
-         */
     }
     
-   
-    [[UINavigationBar appearance] setBarTintColor:BLUE_COLOR];
+    //[[UINavigationBar appearance] setBarTintColor:BLUE_COLOR];
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
+    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
     [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil]
      setTitleTextAttributes:[NSDictionary
                              dictionaryWithObjectsAndKeys:[UIColor whiteColor], NSForegroundColorAttributeName,nil]

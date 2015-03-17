@@ -23,6 +23,7 @@
 @dynamic compatibilityIndex;
 @dynamic usersRevealed;
 @dynamic matches;
+@dynamic messagesCount;
 
 + (void)load {
     [self registerSubclass];

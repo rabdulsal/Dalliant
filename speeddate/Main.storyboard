@@ -804,7 +804,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="404" y="1883"/>
+            <point key="canvasLocation" x="-848" y="785"/>
         </scene>
         <!--Locations-->
         <scene sceneID="FFb-s2-uwJ">
@@ -1393,7 +1393,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SOg-PP-EsD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1167" y="1447"/>
+            <point key="canvasLocation" x="1224" y="1457"/>
         </scene>
         <!--ImageVC-->
         <scene sceneID="2cS-z8-VCH">
@@ -3076,7 +3076,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5LK-z1-DqZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="759" y="1019"/>
+            <point key="canvasLocation" x="789" y="1020"/>
         </scene>
         <!--Nearby-->
         <scene sceneID="VoR-o6-E2J">
@@ -4460,6 +4460,53 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GgX-TJ-SWF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1559" y="2804"/>
+        </scene>
+        <!--Chat Message View Controller-->
+        <scene sceneID="cDM-4p-SeZ">
+            <objects>
+                <viewController storyboardIdentifier="ChatPushNotificationView" id="sAF-d0-0R3" customClass="ChatMessageViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="7Ah-2D-oHi">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" id="pKC-06-cvh">
+                                <rect key="frame" x="0.0" y="776" width="320" height="45"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Match Ended Chat" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="fxL-ZA-2jT">
+                                        <rect key="frame" x="88" y="13" width="144" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Woz-9I-br6">
+                                        <rect key="frame" x="266" y="10" width="46" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                        <state key="normal" title="X">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="chatEndedClose:" destination="OLv-wp-Wkd" eventType="touchUpInside" id="MQl-Lr-jed"/>
+                                            <action selector="popFromChat:" destination="sAF-d0-0R3" eventType="touchUpInside" id="KdJ-JP-6it"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="WUp-G9-hMf"/>
+                    <connections>
+                        <outlet property="unMatchedBlocker" destination="pKC-06-cvh" id="Uug-YQ-uJd"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qmC-BP-a74" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="359" y="1695"/>
         </scene>
     </scenes>
     <resources>

@@ -21,6 +21,7 @@
 @property NSNumber *totalPrefs;
 @property NSNumber *compatibilityIndex;
 @property NSNumber *usersRevealed;
+@property NSNumber *messagesCount;
 
 - (void)calculateCompatibility:(double)prefCounter with:(double)totalPreferences;
 - (void)configureRadialViewForView:(UIView *)view withFrame:(CGRect)frame;
