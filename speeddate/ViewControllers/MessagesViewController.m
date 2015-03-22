@@ -132,6 +132,22 @@
     [self loadingChat];
 }
 
+- (void)getConversations
+{
+    self.messages = [NSMutableArray new];
+    
+    PFQuery *connections = [PossibleMatchHelper query];
+    [connections whereKey:@"messagesCount" greaterThan:0];
+    //[connections whereKey:<#(NSString *)#> containedIn:<#(NSArray *)#>]
+    [connections orderByDescending:@"updatedAt"];
+    [connections findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            _messages = [[NSMutableArray alloc] initWithArray:objects];
+        }
+        
+    }];
+}
+
 - (void)loadingChat
 {
     NSLog(@"Loading chat run");
@@ -144,13 +160,14 @@
     PFQuery *messageQueryTo = [MessageParse query];
     [messageQueryTo whereKey:@"toUserParse" equalTo:[UserParseHelper currentUser]];
     PFQuery *both = [PFQuery orQueryWithSubqueries:@[messageQueryFrom, messageQueryTo]];
-    //[both orderByDescending:@"createdAt"];
+    [both orderByDescending:@"createdAt"];
     //[both orderByDescending:@"compatibilityIndex"]; // <-- Won't work for now, need a compatibility attribute on messages somehow
     
     [both findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         NSMutableSet *users = [NSMutableSet new];
         
         //Order Messages
+        
         objects = [objects sortedArrayUsingComparator:
                    ^NSComparisonResult(PFObject *a, PFObject *b)
                    {
@@ -158,7 +175,7 @@
                    }];
         
         for (MessageParse *message in objects) {
-            NSLog(@"Message Created at: %@", message.createdAt);
+            
             // Erase old Messages Conditional below
             
 //            if ([[message createdAt] timeIntervalSinceNow] * -1 > SECONDS_DAY) {
@@ -198,6 +215,7 @@
                 }
             }
 //            }// End Chat erase conditional
+            NSLog(@"Message Created at: %@", message.createdAt);
         }
         
         [self.tableView reloadData];

@@ -11,26 +11,31 @@
 @interface ImageVC ()
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@property (weak, nonatomic) IBOutlet UIButton *closeButton;
 
 @end
 
 @implementation ImageVC
-- (IBAction)closeView:(id)sender {
-    
-    [self dismissViewControllerAnimated:NO
-                             completion:nil];
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor blackColor];
+    self.view.backgroundColor = [UIColor clearColor];
+    _closeButton.layer.borderWidth = 2.0;
+    _closeButton.layer.borderColor = WHITE_COLOR.CGColor;
+    _closeButton.layer.cornerRadius = _closeButton.frame.size.width/2;
     _imageView.image = _image;
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)closeView:(id)sender {
+    
+    [self dismissViewControllerAnimated:NO
+                             completion:nil];
 }
 
 /*

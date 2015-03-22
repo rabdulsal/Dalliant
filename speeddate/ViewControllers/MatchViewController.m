@@ -304,7 +304,7 @@
         ChatMessageViewController *vc   = segue.destinationViewController;
         vc.toUserParse                  = _matchUser;
         vc.curUser                      = _user;
-        [self generateMatchMessage];
+        //[self generateMatchMessage];
         //Check for prior Chat b/w 2 Users, if so, don't subtract credits
         //[_user calculateCredits];
         //NSLog(@"%@'s credits: %@", _user.nickname, _user.credits);

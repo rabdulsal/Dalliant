@@ -97,13 +97,13 @@
 
 - (void) configureLabelSlider
 {
-    self.labelSlider.maximumValue = 100;
+    self.labelSlider.maximumValue = 55;
     self.labelSlider.minimumValue = 18;
     
     // Store these values to database, then CheckAndSet based on database values
     if (_mainUser.maxAgePref) {
         self.labelSlider.upperValue = [_mainUser.maxAgePref floatValue];
-    } else self.labelSlider.upperValue = 100;
+    } else self.labelSlider.upperValue =55;
     
     if (_mainUser.minAgePref) {
         self.labelSlider.lowerValue = [_mainUser.minAgePref floatValue];

@@ -219,7 +219,7 @@
     
     
     PFQuery *orQUery = [PFQuery orQueryWithSubqueries:@[query1, query2]];
-    //[orQUery orderByAscending:@"createdAt"];
+    [orQUery orderByAscending:@"createdAt"];
     
     // orQUery.limit = 3;
     // orQUery.skip = 5;
@@ -257,12 +257,13 @@
 - (void)processMessages:(NSArray *)objects
 {
     //Order Messages
+    /*
     objects = [objects sortedArrayUsingComparator:
                ^NSComparisonResult(PFObject *a, PFObject *b)
                {
                    return [a.createdAt compare:b.createdAt];
                }];
-    
+    */
     for (MessageParse *message in objects) {
         message.read = YES;
         [message saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
@@ -443,7 +444,7 @@
     NSLog(@"Share reply count: %lu", (unsigned long)[reply count]);
     if ([reply count] != 0) {
         
-        //_receivedReply = [request objectAtIndex:0];
+        _receivedReply = [reply objectAtIndex:0];
         [self acknowledgeAlertView];
     }
     
@@ -772,12 +773,14 @@
         imagePicker.delegate = self;
         imagePicker.allowsEditing = NO;
         // if-conditional for using camera vs. photolibrary
+        /*
         if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
             imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
         } else {
             imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         }
-        
+        */
+        imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         imagePicker.navigationBarHidden = YES;
         imagePicker.toolbarHidden = YES;
         //imagePicker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:imagePicker.sourceType]; <-- Comment-out Video option
@@ -828,17 +831,21 @@
     PFPush *push = [[PFPush alloc] init];
     [push setQuery:query];
     [push setData:data];
-    [push sendPushInBackground];
+    [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            if ([_receivedRequest.requestReply isEqualToString:@"Yes"]) {
+                NSLog(@"Received Request Reply: %@", _receivedRequest.requestReply);
+                //[self reloadView];
+                [self.collectionView reloadData];
+                [self performSegueWithIdentifier:@"view_match" sender:nil];
+                NSLog(@"Pushed to Match User Profile");
+            } else {
+                NSLog(@"Notification pushed, but Request Reply code not run");
+            }
+        }
+    }];
     
-    if ([_receivedRequest.requestReply isEqualToString:@"Yes"]) {
-        NSLog(@"Received Request Reply: %@", _receivedRequest.requestReply);
-        //[self reloadView];
-        [self.collectionView reloadData];
-        [self performSegueWithIdentifier:@"view_match" sender:nil];
-        NSLog(@"Pushed to Match User Profile");
-    } else {
-        NSLog(@"Notification pushed, but Request Reply code not run");
-    }
+    
     // Must set check in @"match_view" ViewWillAppear
     //    }
     // }];
@@ -1102,7 +1109,7 @@
         [alert show];
         
         
-    } else {
+    } else if ([_receivedReply.requestReply isEqualToString:@"No"]) {
         // Request Rejected
         NSString *alertTitle = [[NSString alloc] initWithFormat:@"Your Match Declined Sharing Profiles"];
         NSString *alertMessage = [[NSString alloc] initWithFormat:@"Right now your Match doesn't want to share, but maybe they'll request to share with you later."];

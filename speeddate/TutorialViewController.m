@@ -33,12 +33,15 @@
     // Do any additional setup after loading the view.
     _introView.delegate = self;
     
+    CGFloat titleHeight       = self.view.bounds.size.height/2 + 220;
+    CGFloat descriptionHeight = self.view.bounds.size.height/2 + 200;
+    
     EAIntroPage *page1      = [EAIntroPage page];
-    page1.bgImage           = [UIImage imageNamed:@"Filters-Preferences"];
+    page1.bgImage           = [UIImage imageNamed:@"Filters_Preferences"];
     page1.title             = @"Set Your Preferences";
-    page1.titlePositionY    = self.view.bounds.size.height/2 + 200;
+    page1.titlePositionY    = titleHeight;
     page1.desc              = @"First Page";
-    page1.descPositionY     = self.view.bounds.size.height/2 + 180;
+    page1.descPositionY     = descriptionHeight;
     
     // Change heights
     //page1.titlePositionY = self.view.bounds.size.height/2 - 10;
@@ -46,42 +49,42 @@
     
     // Change Navigation button (Page Control) height
     //_introView.pageControlY = 250.f;
-    
+
     EAIntroPage *page2      = [EAIntroPage page];
-    page2.bgImage           = [UIImage imageNamed:@"Filters-Preferences"];
+    page2.bgImage           = [UIImage imageNamed:@"Baedar"];
     page2.title             = @"Start Your Radar";
-    page2.titlePositionY    = self.view.bounds.size.height/2 + 200;
+    page2.titlePositionY    = titleHeight;
     page2.desc              = @"Second Page";
-    page2.descPositionY     = self.view.bounds.size.height/2 + 180;
+    page2.descPositionY     = descriptionHeight;
     
     EAIntroPage *page3      = [EAIntroPage page];
-    page3.bgImage           = [UIImage imageNamed:@"Filters-Preferences"];
+    page3.bgImage           = [UIImage imageNamed:@"Share_Request"];
     page3.title             = @"Match and Chat Anonymously";
     page3.desc              = @"Third Page";
-    page3.titlePositionY    = self.view.bounds.size.height/2 + 200;
-    page3.descPositionY     = self.view.bounds.size.height/2 + 180;
+    page3.titlePositionY    = titleHeight;
+    page3.descPositionY     = descriptionHeight;
     
     EAIntroPage *page4      = [EAIntroPage page];
-    page4.bgImage           = [UIImage imageNamed:@"Filters-Preferences"];
+    page4.bgImage           = [UIImage imageNamed:@"Match_Profile"];
     page4.title             = @"Share Identities and Take Photos";
     page4.desc              = @"Fourth Page";
-    page4.titlePositionY    = self.view.bounds.size.height/2 + 200;
-    page4.descPositionY     = self.view.bounds.size.height/2 + 180;
+    page4.titlePositionY    = titleHeight;
+    page4.descPositionY     = descriptionHeight;
     
     EAIntroPage *page5      = [EAIntroPage page];
-    page5.bgImage           = [UIImage imageNamed:@"Filters-Preferences"];
+    page5.bgImage           = [UIImage imageNamed:@"Match_Meetup"];
     page5.title             = @"Meet if you Connect";
     page5.desc              = @"Fifth Page";
-    page5.titlePositionY    = self.view.bounds.size.height/2 + 200;
-    page5.descPositionY     = self.view.bounds.size.height/2 + 180;
+    page5.titlePositionY    = titleHeight;
+    page5.descPositionY     = descriptionHeight;
     page5.subviews          = @[_beginningButton]; // Move higher up in View
     
     _pageArray = @[page1,page2,page3,page4,page5];
     [_introView setPages:_pageArray];
-    _introView.pageControlY = 400.f;
+    _introView.pageControlY = 420.f;
     
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [btn setFrame:CGRectMake(250, 50, 80, 30)];
+    [btn setFrame:CGRectMake(250, 30, 80, 30)];
     [btn setTitle:@"Skip" forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
