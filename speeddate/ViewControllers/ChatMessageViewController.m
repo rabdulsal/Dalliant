@@ -772,15 +772,15 @@
         UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
         imagePicker.delegate = self;
         imagePicker.allowsEditing = NO;
+        
         // if-conditional for using camera vs. photolibrary
-        /*
         if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
             imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
         } else {
             imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         }
-        */
-        imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        
+        //imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary; <-- PhotoLibrary on device for Testing purposes
         imagePicker.navigationBarHidden = YES;
         imagePicker.toolbarHidden = YES;
         //imagePicker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:imagePicker.sourceType]; <-- Comment-out Video option

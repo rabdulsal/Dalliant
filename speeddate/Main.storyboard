@@ -941,13 +941,6 @@
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="--------" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="HeF-Zq-KZv">
-                                                    <rect key="frame" x="79" y="39" width="111" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="13"/>
-                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Yesterday" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="gNf-Nj-abz">
                                                     <rect key="frame" x="222" y="24" width="61" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -959,13 +952,37 @@
                                                     <rect key="frame" x="16" y="7" width="55" height="55"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="6ga-cv-Ztv">
+                                                    <rect key="frame" x="79" y="42" width="20" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="xTH-fQ-UAt">
+                                                    <rect key="frame" x="107" y="42" width="20" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="dgz-d0-dTF">
+                                                    <rect key="frame" x="133" y="42" width="20" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="NtJ-Cj-R9W">
+                                                    <rect key="frame" x="161" y="42" width="20" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="B0n-rM-fst">
+                                                    <rect key="frame" x="189" y="42" width="20" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <connections>
                                             <outlet property="dateLabel" destination="gNf-Nj-abz" id="1NI-Ma-o5u"/>
-                                            <outlet property="lastMessageLabel" destination="HeF-Zq-KZv" id="RFI-ZF-1VC"/>
+                                            <outlet property="image1" destination="6ga-cv-Ztv" id="W36-P2-jmw"/>
+                                            <outlet property="image2" destination="xTH-fQ-UAt" id="TEy-Aj-rgm"/>
+                                            <outlet property="image3" destination="dgz-d0-dTF" id="mHA-Px-nJB"/>
+                                            <outlet property="image4" destination="NtJ-Cj-R9W" id="dME-ug-YBg"/>
+                                            <outlet property="image5" destination="B0n-rM-fst" id="TTq-N4-pe5"/>
                                             <outlet property="nameTextLabel" destination="aCe-yN-E10" id="JwJ-gt-ZXb"/>
                                             <outlet property="userImageView" destination="i8n-uh-X0h" id="9t3-Lx-zDW"/>
                                             <segue destination="rDU-7y-piv" kind="push" identifier="viewMatch" id="fn6-lQ-fgy"/>
@@ -2921,11 +2938,11 @@
             <objects>
                 <viewController restorationIdentifier="messagesViewController" id="kXu-jt-bDQ" customClass="MessagesViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="eiv-6h-jso">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="757"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="67" sectionHeaderHeight="22" sectionFooterHeight="22" id="hlF-YJ-jnu">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="757"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="0.21568629149999999" green="0.231372565" blue="0.26274511220000002" alpha="1" colorSpace="deviceRGB"/>
                                 <color key="separatorColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -3115,7 +3132,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="znx-55-aXc">
-                                <rect key="frame" x="-1" y="461.00000003466084" width="320" height="42"/>
+                                <rect key="frame" x="-1" y="461.00000004626042" width="320" height="42"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="1cw-AD-1Ac">
@@ -4596,17 +4613,17 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="J9J-1N-Njp"/>
-        <segue reference="VlF-20-DHW"/>
-        <segue reference="MLw-yj-LVg"/>
-        <segue reference="z1E-8z-F9L"/>
-        <segue reference="MjG-Tl-7wb"/>
+        <segue reference="yk5-qV-Iag"/>
+        <segue reference="fn6-lQ-fgy"/>
         <segue reference="WJE-pO-Iht"/>
+        <segue reference="MLw-yj-LVg"/>
+        <segue reference="VlF-20-DHW"/>
+        <segue reference="bt8-6f-Y1e"/>
+        <segue reference="MjG-Tl-7wb"/>
+        <segue reference="uru-UJ-cE7"/>
         <segue reference="oXm-ri-1Lw"/>
+        <segue reference="Tpc-4O-Pzu"/>
         <segue reference="Qy0-fE-0Nr"/>
         <segue reference="h7w-Ho-pqn"/>
-        <segue reference="yk5-qV-Iag"/>
-        <segue reference="R6Q-BJ-zcV"/>
-        <segue reference="Tpc-4O-Pzu"/>
     </inferredMetricsTieBreakers>
 </document>

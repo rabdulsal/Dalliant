@@ -60,24 +60,35 @@
 		42F5B28619B0C4CB0036938B /* Chat.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42F5B28519B0C4CB0036938B /* Chat.xcassets */; };
 		4C03549B1A7D7AD800658BE9 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C03549A1A7D7AD800658BE9 /* TutorialViewController.m */; };
 		4C475FE21A7C9C8D00CB9283 /* more.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C475FE11A7C9C8D00CB9283 /* more.png */; };
+		4C4E032A1AC2DE2600597EB9 /* Animals & Pets.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E031E1AC2DE2600597EB9 /* Animals & Pets.png */; };
+		4C4E032B1AC2DE2600597EB9 /* Art Galleries & Photography.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E031F1AC2DE2600597EB9 /* Art Galleries & Photography.png */; };
+		4C4E032C1AC2DE2600597EB9 /* Beer & Wine-tasting.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03201AC2DE2600597EB9 /* Beer & Wine-tasting.png */; };
+		4C4E032D1AC2DE2600597EB9 /* Book Club & Reading.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03211AC2DE2600597EB9 /* Book Club & Reading.png */; };
+		4C4E032E1AC2DE2600597EB9 /* Cooking.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03221AC2DE2600597EB9 /* Cooking.png */; };
+		4C4E032F1AC2DE2600597EB9 /* Dining-out.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03231AC2DE2600597EB9 /* Dining-out.png */; };
+		4C4E03301AC2DE2600597EB9 /* Hiking, Camping, Nature-walks.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03241AC2DE2600597EB9 /* Hiking, Camping, Nature-walks.png */; };
+		4C4E03311AC2DE2600597EB9 /* Opera & Theatre.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03251AC2DE2600597EB9 /* Opera & Theatre.png */; };
+		4C4E03321AC2DE2600597EB9 /* Tech, Gadgets, Science.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03261AC2DE2600597EB9 /* Tech, Gadgets, Science.png */; };
+		4C4E03331AC2DE2600597EB9 /* Religion & Spirituality.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03271AC2DE2600597EB9 /* Religion & Spirituality.png */; };
+		4C4E03341AC2DE2600597EB9 /* Volunteering, Social-activism, Politics.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03281AC2DE2600597EB9 /* Volunteering, Social-activism, Politics.png */; };
+		4C4E03351AC2DE2600597EB9 /* Working-out & Exercise.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03291AC2DE2600597EB9 /* Working-out & Exercise.png */; };
 		4C8F7C441A75F84200CCBDE8 /* tutorial_background_00@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C3F1A75F84200CCBDE8 /* tutorial_background_00@2x.jpg */; };
 		4C8F7C451A75F84200CCBDE8 /* tutorial_background_01@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C401A75F84200CCBDE8 /* tutorial_background_01@2x.jpg */; };
 		4C8F7C461A75F84200CCBDE8 /* tutorial_background_02@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C411A75F84200CCBDE8 /* tutorial_background_02@2x.jpg */; };
 		4C8F7C471A75F84200CCBDE8 /* tutorial_background_03@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C421A75F84200CCBDE8 /* tutorial_background_03@2x.jpg */; };
 		4C8F7C481A75F84200CCBDE8 /* tutorial_background_04@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C431A75F84200CCBDE8 /* tutorial_background_04@2x.jpg */; };
 		4C8F7C4A1A79327A00CCBDE8 /* Dalliant_Logo_XL.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C491A79327A00CCBDE8 /* Dalliant_Logo_XL.gif */; };
-		4C9452A01ABA5C4F0053A951 /* Baedar.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C94529B1ABA5C4F0053A951 /* Baedar.png */; };
-		4C9452A11ABA5C4F0053A951 /* Filters_Preferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C94529C1ABA5C4F0053A951 /* Filters_Preferences.png */; };
-		4C9452A21ABA5C4F0053A951 /* Match_Meetup.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C94529D1ABA5C4F0053A951 /* Match_Meetup.png */; };
-		4C9452A31ABA5C4F0053A951 /* Match_Profile.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C94529E1ABA5C4F0053A951 /* Match_Profile.png */; };
-		4C9452A41ABA5C4F0053A951 /* Share_Request.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C94529F1ABA5C4F0053A951 /* Share_Request.png */; };
+		4C9452AA1ABE63BD0053A951 /* Baedar.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C9452A51ABE63BD0053A951 /* Baedar.png */; };
+		4C9452AB1ABE63BD0053A951 /* Filters_Preferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C9452A61ABE63BD0053A951 /* Filters_Preferences.png */; };
+		4C9452AC1ABE63BD0053A951 /* Match_Meetup.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C9452A71ABE63BD0053A951 /* Match_Meetup.png */; };
+		4C9452AD1ABE63BD0053A951 /* Match_Profile.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C9452A81ABE63BD0053A951 /* Match_Profile.png */; };
+		4C9452AE1ABE63BD0053A951 /* Share_Request.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C9452A91ABE63BD0053A951 /* Share_Request.png */; };
 		4CBACD931AAE4F9F007DBC9B /* ImageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBACD921AAE4F9F007DBC9B /* ImageVC.m */; };
 		4CBDB1941A3CDD3C006A9F1F /* ProfileTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBDB1931A3CDD3C006A9F1F /* ProfileTableVC.m */; };
 		4CBDB1971A427A11006A9F1F /* RevealRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBDB1961A427A11006A9F1F /* RevealRequest.m */; };
 		4CC7B8991A4B3EBE000982EA /* MatchProfileTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC7B8981A4B3EBE000982EA /* MatchProfileTVC.m */; };
 		4CC7B8BE1A60FFBD000982EA /* dalliant_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CC7B8BD1A60FFBD000982EA /* dalliant_logo.png */; };
 		4CC7B8C01A61083E000982EA /* dalliant_logo_med.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CC7B8BF1A61083E000982EA /* dalliant_logo_med.png */; };
-		4CCB59DF1A87CF0B00CABC0E /* Filters-Preferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CCB59DE1A87CF0B00CABC0E /* Filters-Preferences.png */; };
 		4CCED3131A92DCD800069EAD /* ChatMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCED3121A92DCD800069EAD /* ChatMessageViewController.m */; };
 		4CF56F751A2301CF008E861D /* PreferencesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF56F741A2301CF008E861D /* PreferencesTableViewController.m */; };
 		4CF56F781A23D0A8008E861D /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF56F771A23D0A8008E861D /* User.m */; };
@@ -283,17 +294,29 @@
 		4C0354991A7D7AD800658BE9 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
 		4C03549A1A7D7AD800658BE9 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
 		4C475FE11A7C9C8D00CB9283 /* more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = more.png; sourceTree = "<group>"; };
+		4C4E031E1AC2DE2600597EB9 /* Animals & Pets.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Animals & Pets.png"; sourceTree = "<group>"; };
+		4C4E031F1AC2DE2600597EB9 /* Art Galleries & Photography.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Art Galleries & Photography.png"; sourceTree = "<group>"; };
+		4C4E03201AC2DE2600597EB9 /* Beer & Wine-tasting.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Beer & Wine-tasting.png"; sourceTree = "<group>"; };
+		4C4E03211AC2DE2600597EB9 /* Book Club & Reading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Book Club & Reading.png"; sourceTree = "<group>"; };
+		4C4E03221AC2DE2600597EB9 /* Cooking.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Cooking.png; sourceTree = "<group>"; };
+		4C4E03231AC2DE2600597EB9 /* Dining-out.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dining-out.png"; sourceTree = "<group>"; };
+		4C4E03241AC2DE2600597EB9 /* Hiking, Camping, Nature-walks.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Hiking, Camping, Nature-walks.png"; sourceTree = "<group>"; };
+		4C4E03251AC2DE2600597EB9 /* Opera & Theatre.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Opera & Theatre.png"; sourceTree = "<group>"; };
+		4C4E03261AC2DE2600597EB9 /* Tech, Gadgets, Science.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Tech, Gadgets, Science.png"; sourceTree = "<group>"; };
+		4C4E03271AC2DE2600597EB9 /* Religion & Spirituality.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Religion & Spirituality.png"; sourceTree = "<group>"; };
+		4C4E03281AC2DE2600597EB9 /* Volunteering, Social-activism, Politics.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Volunteering, Social-activism, Politics.png"; sourceTree = "<group>"; };
+		4C4E03291AC2DE2600597EB9 /* Working-out & Exercise.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Working-out & Exercise.png"; sourceTree = "<group>"; };
 		4C8F7C3F1A75F84200CCBDE8 /* tutorial_background_00@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_00@2x.jpg"; sourceTree = "<group>"; };
 		4C8F7C401A75F84200CCBDE8 /* tutorial_background_01@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_01@2x.jpg"; sourceTree = "<group>"; };
 		4C8F7C411A75F84200CCBDE8 /* tutorial_background_02@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_02@2x.jpg"; sourceTree = "<group>"; };
 		4C8F7C421A75F84200CCBDE8 /* tutorial_background_03@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_03@2x.jpg"; sourceTree = "<group>"; };
 		4C8F7C431A75F84200CCBDE8 /* tutorial_background_04@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_04@2x.jpg"; sourceTree = "<group>"; };
 		4C8F7C491A79327A00CCBDE8 /* Dalliant_Logo_XL.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Dalliant_Logo_XL.gif; sourceTree = "<group>"; };
-		4C94529B1ABA5C4F0053A951 /* Baedar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Baedar.png; sourceTree = "<group>"; };
-		4C94529C1ABA5C4F0053A951 /* Filters_Preferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Filters_Preferences.png; sourceTree = "<group>"; };
-		4C94529D1ABA5C4F0053A951 /* Match_Meetup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Match_Meetup.png; sourceTree = "<group>"; };
-		4C94529E1ABA5C4F0053A951 /* Match_Profile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Match_Profile.png; sourceTree = "<group>"; };
-		4C94529F1ABA5C4F0053A951 /* Share_Request.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Share_Request.png; sourceTree = "<group>"; };
+		4C9452A51ABE63BD0053A951 /* Baedar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Baedar.png; sourceTree = "<group>"; };
+		4C9452A61ABE63BD0053A951 /* Filters_Preferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Filters_Preferences.png; sourceTree = "<group>"; };
+		4C9452A71ABE63BD0053A951 /* Match_Meetup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Match_Meetup.png; sourceTree = "<group>"; };
+		4C9452A81ABE63BD0053A951 /* Match_Profile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Match_Profile.png; sourceTree = "<group>"; };
+		4C9452A91ABE63BD0053A951 /* Share_Request.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Share_Request.png; sourceTree = "<group>"; };
 		4CBACD911AAE4F9F007DBC9B /* ImageVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageVC.h; path = ../ImageVC.h; sourceTree = "<group>"; };
 		4CBACD921AAE4F9F007DBC9B /* ImageVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImageVC.m; path = ../ImageVC.m; sourceTree = "<group>"; };
 		4CBDB1921A3CDD3C006A9F1F /* ProfileTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileTableVC.h; sourceTree = "<group>"; };
@@ -304,7 +327,6 @@
 		4CC7B8981A4B3EBE000982EA /* MatchProfileTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MatchProfileTVC.m; sourceTree = "<group>"; };
 		4CC7B8BD1A60FFBD000982EA /* dalliant_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dalliant_logo.png; sourceTree = "<group>"; };
 		4CC7B8BF1A61083E000982EA /* dalliant_logo_med.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dalliant_logo_med.png; sourceTree = "<group>"; };
-		4CCB59DE1A87CF0B00CABC0E /* Filters-Preferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Filters-Preferences.png"; sourceTree = "<group>"; };
 		4CCED3111A92DCD800069EAD /* ChatMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChatMessageViewController.h; path = ViewControllers/ChatMessageViewController.h; sourceTree = "<group>"; };
 		4CCED3121A92DCD800069EAD /* ChatMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChatMessageViewController.m; path = ViewControllers/ChatMessageViewController.m; sourceTree = "<group>"; };
 		4CDD63D01A30A20E00AE9679 /* PodFile */ = {isa = PBXFileReference; lastKnownFileType = text; path = PodFile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
@@ -845,12 +867,23 @@
 		C20F0B1719D7CE72005958C0 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				4C94529B1ABA5C4F0053A951 /* Baedar.png */,
-				4C94529C1ABA5C4F0053A951 /* Filters_Preferences.png */,
-				4C94529D1ABA5C4F0053A951 /* Match_Meetup.png */,
-				4C94529E1ABA5C4F0053A951 /* Match_Profile.png */,
-				4C94529F1ABA5C4F0053A951 /* Share_Request.png */,
-				4CCB59DE1A87CF0B00CABC0E /* Filters-Preferences.png */,
+				4C4E031E1AC2DE2600597EB9 /* Animals & Pets.png */,
+				4C4E031F1AC2DE2600597EB9 /* Art Galleries & Photography.png */,
+				4C4E03201AC2DE2600597EB9 /* Beer & Wine-tasting.png */,
+				4C4E03211AC2DE2600597EB9 /* Book Club & Reading.png */,
+				4C4E03221AC2DE2600597EB9 /* Cooking.png */,
+				4C4E03231AC2DE2600597EB9 /* Dining-out.png */,
+				4C4E03241AC2DE2600597EB9 /* Hiking, Camping, Nature-walks.png */,
+				4C4E03251AC2DE2600597EB9 /* Opera & Theatre.png */,
+				4C4E03261AC2DE2600597EB9 /* Tech, Gadgets, Science.png */,
+				4C4E03271AC2DE2600597EB9 /* Religion & Spirituality.png */,
+				4C4E03281AC2DE2600597EB9 /* Volunteering, Social-activism, Politics.png */,
+				4C4E03291AC2DE2600597EB9 /* Working-out & Exercise.png */,
+				4C9452A51ABE63BD0053A951 /* Baedar.png */,
+				4C9452A61ABE63BD0053A951 /* Filters_Preferences.png */,
+				4C9452A71ABE63BD0053A951 /* Match_Meetup.png */,
+				4C9452A81ABE63BD0053A951 /* Match_Profile.png */,
+				4C9452A91ABE63BD0053A951 /* Share_Request.png */,
 				4C475FE11A7C9C8D00CB9283 /* more.png */,
 				4C8F7C491A79327A00CCBDE8 /* Dalliant_Logo_XL.gif */,
 				4C8F7C3F1A75F84200CCBDE8 /* tutorial_background_00@2x.jpg */,
@@ -1154,57 +1187,68 @@
 				C25E748019EC01F400779C23 /* profile_menu@2x.png in Resources */,
 				C25E765319EF754600779C23 /* fbshare.png in Resources */,
 				C25E765A19EF759700779C23 /* 1024_gm.png in Resources */,
+				4C9452AB1ABE63BD0053A951 /* Filters_Preferences.png in Resources */,
 				42DBCC3519AC20BB00CE6C93 /* InfoPlist.strings in Resources */,
 				C25E748419EC03AD00779C23 /* logout_menu@2x.png in Resources */,
+				4C9452AE1ABE63BD0053A951 /* Share_Request.png in Resources */,
 				4C8F7C4A1A79327A00CCBDE8 /* Dalliant_Logo_XL.gif in Resources */,
 				426107DF19B42D930000536C /* buttonbar.xcassets in Resources */,
 				4C8F7C451A75F84200CCBDE8 /* tutorial_background_01@2x.jpg in Resources */,
 				C25E747119E8981200779C23 /* about@2x.png in Resources */,
 				C25E747319E898D600779C23 /* genderz@2x.png in Resources */,
+				4C9452AA1ABE63BD0053A951 /* Baedar.png in Resources */,
 				C20F0B1B19D7E982005958C0 /* Main.storyboard in Resources */,
-				4CCB59DF1A87CF0B00CABC0E /* Filters-Preferences.png in Resources */,
 				C2CC355A19F58ACD00AC86D1 /* mask_profile.png in Resources */,
 				42F5B28619B0C4CB0036938B /* Chat.xcassets in Resources */,
-				4C9452A31ABA5C4F0053A951 /* Match_Profile.png in Resources */,
+				4C4E03311AC2DE2600597EB9 /* Opera & Theatre.png in Resources */,
 				C2A90EBC19F41C1E00FC0D04 /* down2@2x.png in Resources */,
 				C25E765619EF754600779C23 /* maiz.png in Resources */,
+				4C4E03321AC2DE2600597EB9 /* Tech, Gadgets, Science.png in Resources */,
 				C25E760219EF485200779C23 /* terms_menu@2x.png in Resources */,
-				4C9452A11ABA5C4F0053A951 /* Filters_Preferences.png in Resources */,
 				C25E747719EAD54F00779C23 /* location2@2x.png in Resources */,
 				4C8F7C471A75F84200CCBDE8 /* tutorial_background_03@2x.jpg in Resources */,
 				C2A90EBA19F41BBD00FC0D04 /* up2@2x.png in Resources */,
 				C25E765E19EF81D500779C23 /* nouserphoto.jpg in Resources */,
 				C237015B19D974260024F856 /* ProgressHUD.bundle in Resources */,
+				4C4E03341AC2DE2600597EB9 /* Volunteering, Social-activism, Politics.png in Resources */,
 				C25E748219EC02F900779C23 /* share_menu@2x.png in Resources */,
 				C20F0B1919D7CE85005958C0 /* sdlogo.png in Resources */,
 				4C475FE21A7C9C8D00CB9283 /* more.png in Resources */,
 				C25E760719EF5A3A00779C23 /* MyappTableViewCell.xib in Resources */,
 				C25E765719EF754600779C23 /* washare.png in Resources */,
+				4C4E03351AC2DE2600597EB9 /* Working-out & Exercise.png in Resources */,
 				C25E766B19EF9C0C00779C23 /* Localizable.strings in Resources */,
 				C25E764C19EF6E9300779C23 /* app_menu@2x.png in Resources */,
 				4CC7B8C01A61083E000982EA /* dalliant_logo_med.png in Resources */,
+				4C4E032A1AC2DE2600597EB9 /* Animals & Pets.png in Resources */,
 				C25E765819EF754600779C23 /* share_i.png in Resources */,
 				4281F25319B11CF7007724C6 /* Menu.xcassets in Resources */,
+				4C4E03331AC2DE2600597EB9 /* Religion & Spirituality.png in Resources */,
 				C25E765419EF754600779C23 /* twshare.png in Resources */,
-				4C9452A01ABA5C4F0053A951 /* Baedar.png in Resources */,
 				C25E747E19EC013A00779C23 /* message_menu@2x.png in Resources */,
+				4C4E032F1AC2DE2600597EB9 /* Dining-out.png in Resources */,
 				C25E765519EF754600779C23 /* instagram-share.png in Resources */,
+				4C4E032D1AC2DE2600597EB9 /* Book Club & Reading.png in Resources */,
+				4C4E032C1AC2DE2600597EB9 /* Beer & Wine-tasting.png in Resources */,
 				C2A90EB819F4186B00FC0D04 /* sativa.png in Resources */,
 				4CC7B8BE1A60FFBD000982EA /* dalliant_logo.png in Resources */,
+				4C9452AD1ABE63BD0053A951 /* Match_Profile.png in Resources */,
 				4C8F7C461A75F84200CCBDE8 /* tutorial_background_02@2x.jpg in Resources */,
 				4C8F7C481A75F84200CCBDE8 /* tutorial_background_04@2x.jpg in Resources */,
 				C25E746F19E8816D00779C23 /* back-m.png in Resources */,
 				C25E748619EC0ADD00779C23 /* vip_menu@2x.png in Resources */,
-				4C9452A41ABA5C4F0053A951 /* Share_Request.png in Resources */,
 				C206B02619E28D91001A4D0C /* mvip.png in Resources */,
-				4C9452A21ABA5C4F0053A951 /* Match_Meetup.png in Resources */,
 				C25E766019EF8D2100779C23 /* lock3@2x.png in Resources */,
+				4C4E032E1AC2DE2600597EB9 /* Cooking.png in Resources */,
 				C25E765C19EF767B00779C23 /* fastd.jpg in Resources */,
+				4C4E03301AC2DE2600597EB9 /* Hiking, Camping, Nature-walks.png in Resources */,
 				C2300F8619E18E310044A4E5 /* chekBtn.png in Resources */,
 				4C8F7C441A75F84200CCBDE8 /* tutorial_background_00@2x.jpg in Resources */,
 				C206B02519E28D91001A4D0C /* mnvip.png in Resources */,
+				4C4E032B1AC2DE2600597EB9 /* Art Galleries & Photography.png in Resources */,
 				426107DD19B3ABD80000536C /* Profile.xcassets in Resources */,
 				C25E747C19EBFF6800779C23 /* heart_menu@2x.png in Resources */,
+				4C9452AC1ABE63BD0053A951 /* Match_Meetup.png in Resources */,
 				C2300F8419E18E030044A4E5 /* normBtn.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
