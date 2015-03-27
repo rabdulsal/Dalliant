@@ -1284,7 +1284,6 @@
     [dateFormatter setDoesRelativeDateFormatting:YES];
     dateFormatter.dateStyle = NSDateFormatterShortStyle;
     cell.dateLabel.text = [dateFormatter stringFromDate:[NSDate date]];
-    [cell setInterests:user.interests];
     
     return cell;
 }
