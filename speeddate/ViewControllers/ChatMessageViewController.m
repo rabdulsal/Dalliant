@@ -229,6 +229,14 @@
         //[self.collectionView reloadData];
         //[self scrollCollectionView];
         if ([objects count] > 0) {
+            /*
+            NSArray *messages = [NSArray new];
+            messages = [objects sortedArrayUsingComparator:^NSComparisonResult(PFObject *a, PFObject *b)
+                       {
+                           return [a.createdAt compare:b.createdAt];
+                       }];
+            
+            */
             [self processMessages:objects];
         }
         
@@ -254,7 +262,7 @@
     }];
 }
 
-- (void)processMessages:(NSArray *)objects
+- (void)processMessages:(NSArray *)messages
 {
     //Order Messages
     /*
@@ -264,11 +272,12 @@
                    return [a.createdAt compare:b.createdAt];
                }];
     */
-    for (MessageParse *message in objects) {
+    for (MessageParse *message in messages) {
+        NSLog(@"Chat Message START Created at: %@", message.createdAt);
         message.read = YES;
-        [message saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        [message saveInBackground];
             
-            if (succeeded) {
+            
                 NSString *displayName   = nil;
                 NSString *senderId      = nil;
                 NSString *matchGender   = nil;
@@ -308,13 +317,9 @@
             }
             
             [self.messages addObject:chatMessage];
-            NSLog(@"Chat messages count: %lu", (unsigned long)[_messages count]);
+            NSLog(@"Chat Message END Created at: %@", chatMessage.date);
             //[self sortMessages:_messages byDate:@"createdAt"];
             [self finishReceivingMessage];
-                
-            }
-            
-        }];
         
     }
 }

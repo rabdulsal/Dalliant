@@ -167,13 +167,13 @@
         NSMutableSet *users = [NSMutableSet new];
         
         //Order Messages
-        
-        objects = [objects sortedArrayUsingComparator:
-                   ^NSComparisonResult(PFObject *a, PFObject *b)
-                   {
-                       return [b.createdAt compare:a.createdAt];
-                   }];
-        
+        /*
+         NSArray *messages = [NSArray new];
+         messages = [objects sortedArrayUsingComparator:^NSComparisonResult(PFObject *a, PFObject *b)
+         {
+         return [b.createdAt compare:a.createdAt];
+         }];
+        */
         for (MessageParse *message in objects) {
             
             // Erase old Messages Conditional below
