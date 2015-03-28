@@ -60,18 +60,23 @@
 		42F5B28619B0C4CB0036938B /* Chat.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42F5B28519B0C4CB0036938B /* Chat.xcassets */; };
 		4C03549B1A7D7AD800658BE9 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C03549A1A7D7AD800658BE9 /* TutorialViewController.m */; };
 		4C475FE21A7C9C8D00CB9283 /* more.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C475FE11A7C9C8D00CB9283 /* more.png */; };
-		4C4E032A1AC2DE2600597EB9 /* Animals & Pets.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E031E1AC2DE2600597EB9 /* Animals & Pets.png */; };
-		4C4E032B1AC2DE2600597EB9 /* Art Galleries & Photography.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E031F1AC2DE2600597EB9 /* Art Galleries & Photography.png */; };
-		4C4E032C1AC2DE2600597EB9 /* Beer & Wine-tasting.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03201AC2DE2600597EB9 /* Beer & Wine-tasting.png */; };
-		4C4E032D1AC2DE2600597EB9 /* Book Club & Reading.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03211AC2DE2600597EB9 /* Book Club & Reading.png */; };
-		4C4E032E1AC2DE2600597EB9 /* Cooking.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03221AC2DE2600597EB9 /* Cooking.png */; };
-		4C4E032F1AC2DE2600597EB9 /* Dining-out.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03231AC2DE2600597EB9 /* Dining-out.png */; };
-		4C4E03301AC2DE2600597EB9 /* Hiking, Camping, Nature-walks.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03241AC2DE2600597EB9 /* Hiking, Camping, Nature-walks.png */; };
-		4C4E03311AC2DE2600597EB9 /* Opera & Theatre.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03251AC2DE2600597EB9 /* Opera & Theatre.png */; };
-		4C4E03321AC2DE2600597EB9 /* Tech, Gadgets, Science.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03261AC2DE2600597EB9 /* Tech, Gadgets, Science.png */; };
-		4C4E03331AC2DE2600597EB9 /* Religion & Spirituality.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03271AC2DE2600597EB9 /* Religion & Spirituality.png */; };
-		4C4E03341AC2DE2600597EB9 /* Volunteering, Social-activism, Politics.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03281AC2DE2600597EB9 /* Volunteering, Social-activism, Politics.png */; };
-		4C4E03351AC2DE2600597EB9 /* Working-out & Exercise.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03291AC2DE2600597EB9 /* Working-out & Exercise.png */; };
+		4C4E033F1AC6301800597EB9 /* Animals & Pets.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03361AC6301800597EB9 /* Animals & Pets.png */; };
+		4C4E03401AC6301800597EB9 /* Cooking.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03371AC6301800597EB9 /* Cooking.png */; };
+		4C4E03411AC6301800597EB9 /* Dining-out.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03381AC6301800597EB9 /* Dining-out.png */; };
+		4C4E03421AC6301800597EB9 /* Hiking, Camping, Nature-walks.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03391AC6301800597EB9 /* Hiking, Camping, Nature-walks.png */; };
+		4C4E03431AC6301800597EB9 /* Opera & Theatre.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E033A1AC6301800597EB9 /* Opera & Theatre.png */; };
+		4C4E03441AC6301800597EB9 /* Religion & Spirituality.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E033B1AC6301800597EB9 /* Religion & Spirituality.png */; };
+		4C4E03451AC6301800597EB9 /* Tech, Gadgets, Science.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E033C1AC6301800597EB9 /* Tech, Gadgets, Science.png */; };
+		4C4E03461AC6301800597EB9 /* Volunteering, Social-activism, Politics.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E033D1AC6301800597EB9 /* Volunteering, Social-activism, Politics.png */; };
+		4C4E03471AC6301800597EB9 /* Working-out & Exercise.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E033E1AC6301800597EB9 /* Working-out & Exercise.png */; };
+		4C4E034D1AC63D6300597EB9 /* Dancing.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03481AC63D6300597EB9 /* Dancing.png */; };
+		4C4E034E1AC63D6400597EB9 /* Lectures & Conferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03491AC63D6300597EB9 /* Lectures & Conferences.png */; };
+		4C4E034F1AC63D6400597EB9 /* Sports.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E034A1AC63D6300597EB9 /* Sports.png */; };
+		4C4E03501AC63D6400597EB9 /* Travel.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E034B1AC63D6300597EB9 /* Travel.png */; };
+		4C4E03511AC63D6400597EB9 /* TV & Movies.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E034C1AC63D6300597EB9 /* TV & Movies.png */; };
+		4C4E03531AC63DFA00597EB9 /* Music Concerts.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03521AC63DFA00597EB9 /* Music Concerts.png */; };
+		4C4E03561AC63EF100597EB9 /* Beer & Wine-tasting.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03541AC63EF100597EB9 /* Beer & Wine-tasting.png */; };
+		4C4E03571AC63EF100597EB9 /* Book Club & Reading.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03551AC63EF100597EB9 /* Book Club & Reading.png */; };
 		4C8F7C441A75F84200CCBDE8 /* tutorial_background_00@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C3F1A75F84200CCBDE8 /* tutorial_background_00@2x.jpg */; };
 		4C8F7C451A75F84200CCBDE8 /* tutorial_background_01@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C401A75F84200CCBDE8 /* tutorial_background_01@2x.jpg */; };
 		4C8F7C461A75F84200CCBDE8 /* tutorial_background_02@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C411A75F84200CCBDE8 /* tutorial_background_02@2x.jpg */; };
@@ -294,18 +299,23 @@
 		4C0354991A7D7AD800658BE9 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
 		4C03549A1A7D7AD800658BE9 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
 		4C475FE11A7C9C8D00CB9283 /* more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = more.png; sourceTree = "<group>"; };
-		4C4E031E1AC2DE2600597EB9 /* Animals & Pets.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Animals & Pets.png"; sourceTree = "<group>"; };
-		4C4E031F1AC2DE2600597EB9 /* Art Galleries & Photography.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Art Galleries & Photography.png"; sourceTree = "<group>"; };
-		4C4E03201AC2DE2600597EB9 /* Beer & Wine-tasting.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Beer & Wine-tasting.png"; sourceTree = "<group>"; };
-		4C4E03211AC2DE2600597EB9 /* Book Club & Reading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Book Club & Reading.png"; sourceTree = "<group>"; };
-		4C4E03221AC2DE2600597EB9 /* Cooking.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Cooking.png; sourceTree = "<group>"; };
-		4C4E03231AC2DE2600597EB9 /* Dining-out.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dining-out.png"; sourceTree = "<group>"; };
-		4C4E03241AC2DE2600597EB9 /* Hiking, Camping, Nature-walks.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Hiking, Camping, Nature-walks.png"; sourceTree = "<group>"; };
-		4C4E03251AC2DE2600597EB9 /* Opera & Theatre.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Opera & Theatre.png"; sourceTree = "<group>"; };
-		4C4E03261AC2DE2600597EB9 /* Tech, Gadgets, Science.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Tech, Gadgets, Science.png"; sourceTree = "<group>"; };
-		4C4E03271AC2DE2600597EB9 /* Religion & Spirituality.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Religion & Spirituality.png"; sourceTree = "<group>"; };
-		4C4E03281AC2DE2600597EB9 /* Volunteering, Social-activism, Politics.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Volunteering, Social-activism, Politics.png"; sourceTree = "<group>"; };
-		4C4E03291AC2DE2600597EB9 /* Working-out & Exercise.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Working-out & Exercise.png"; sourceTree = "<group>"; };
+		4C4E03361AC6301800597EB9 /* Animals & Pets.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Animals & Pets.png"; sourceTree = "<group>"; };
+		4C4E03371AC6301800597EB9 /* Cooking.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Cooking.png; sourceTree = "<group>"; };
+		4C4E03381AC6301800597EB9 /* Dining-out.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dining-out.png"; sourceTree = "<group>"; };
+		4C4E03391AC6301800597EB9 /* Hiking, Camping, Nature-walks.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Hiking, Camping, Nature-walks.png"; sourceTree = "<group>"; };
+		4C4E033A1AC6301800597EB9 /* Opera & Theatre.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Opera & Theatre.png"; sourceTree = "<group>"; };
+		4C4E033B1AC6301800597EB9 /* Religion & Spirituality.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Religion & Spirituality.png"; sourceTree = "<group>"; };
+		4C4E033C1AC6301800597EB9 /* Tech, Gadgets, Science.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Tech, Gadgets, Science.png"; sourceTree = "<group>"; };
+		4C4E033D1AC6301800597EB9 /* Volunteering, Social-activism, Politics.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Volunteering, Social-activism, Politics.png"; sourceTree = "<group>"; };
+		4C4E033E1AC6301800597EB9 /* Working-out & Exercise.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Working-out & Exercise.png"; sourceTree = "<group>"; };
+		4C4E03481AC63D6300597EB9 /* Dancing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Dancing.png; sourceTree = "<group>"; };
+		4C4E03491AC63D6300597EB9 /* Lectures & Conferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Lectures & Conferences.png"; sourceTree = "<group>"; };
+		4C4E034A1AC63D6300597EB9 /* Sports.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Sports.png; sourceTree = "<group>"; };
+		4C4E034B1AC63D6300597EB9 /* Travel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Travel.png; sourceTree = "<group>"; };
+		4C4E034C1AC63D6300597EB9 /* TV & Movies.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TV & Movies.png"; sourceTree = "<group>"; };
+		4C4E03521AC63DFA00597EB9 /* Music Concerts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Music Concerts.png"; sourceTree = "<group>"; };
+		4C4E03541AC63EF100597EB9 /* Beer & Wine-tasting.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Beer & Wine-tasting.png"; sourceTree = "<group>"; };
+		4C4E03551AC63EF100597EB9 /* Book Club & Reading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Book Club & Reading.png"; sourceTree = "<group>"; };
 		4C8F7C3F1A75F84200CCBDE8 /* tutorial_background_00@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_00@2x.jpg"; sourceTree = "<group>"; };
 		4C8F7C401A75F84200CCBDE8 /* tutorial_background_01@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_01@2x.jpg"; sourceTree = "<group>"; };
 		4C8F7C411A75F84200CCBDE8 /* tutorial_background_02@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_02@2x.jpg"; sourceTree = "<group>"; };
@@ -867,18 +877,23 @@
 		C20F0B1719D7CE72005958C0 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				4C4E031E1AC2DE2600597EB9 /* Animals & Pets.png */,
-				4C4E031F1AC2DE2600597EB9 /* Art Galleries & Photography.png */,
-				4C4E03201AC2DE2600597EB9 /* Beer & Wine-tasting.png */,
-				4C4E03211AC2DE2600597EB9 /* Book Club & Reading.png */,
-				4C4E03221AC2DE2600597EB9 /* Cooking.png */,
-				4C4E03231AC2DE2600597EB9 /* Dining-out.png */,
-				4C4E03241AC2DE2600597EB9 /* Hiking, Camping, Nature-walks.png */,
-				4C4E03251AC2DE2600597EB9 /* Opera & Theatre.png */,
-				4C4E03261AC2DE2600597EB9 /* Tech, Gadgets, Science.png */,
-				4C4E03271AC2DE2600597EB9 /* Religion & Spirituality.png */,
-				4C4E03281AC2DE2600597EB9 /* Volunteering, Social-activism, Politics.png */,
-				4C4E03291AC2DE2600597EB9 /* Working-out & Exercise.png */,
+				4C4E03541AC63EF100597EB9 /* Beer & Wine-tasting.png */,
+				4C4E03551AC63EF100597EB9 /* Book Club & Reading.png */,
+				4C4E03521AC63DFA00597EB9 /* Music Concerts.png */,
+				4C4E03481AC63D6300597EB9 /* Dancing.png */,
+				4C4E03491AC63D6300597EB9 /* Lectures & Conferences.png */,
+				4C4E034A1AC63D6300597EB9 /* Sports.png */,
+				4C4E034B1AC63D6300597EB9 /* Travel.png */,
+				4C4E034C1AC63D6300597EB9 /* TV & Movies.png */,
+				4C4E03361AC6301800597EB9 /* Animals & Pets.png */,
+				4C4E03371AC6301800597EB9 /* Cooking.png */,
+				4C4E03381AC6301800597EB9 /* Dining-out.png */,
+				4C4E03391AC6301800597EB9 /* Hiking, Camping, Nature-walks.png */,
+				4C4E033A1AC6301800597EB9 /* Opera & Theatre.png */,
+				4C4E033B1AC6301800597EB9 /* Religion & Spirituality.png */,
+				4C4E033C1AC6301800597EB9 /* Tech, Gadgets, Science.png */,
+				4C4E033D1AC6301800597EB9 /* Volunteering, Social-activism, Politics.png */,
+				4C4E033E1AC6301800597EB9 /* Working-out & Exercise.png */,
 				4C9452A51ABE63BD0053A951 /* Baedar.png */,
 				4C9452A61ABE63BD0053A951 /* Filters_Preferences.png */,
 				4C9452A71ABE63BD0053A951 /* Match_Meetup.png */,
@@ -1181,10 +1196,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C4E034F1AC63D6400597EB9 /* Sports.png in Resources */,
 				42DBCC4319AC20BB00CE6C93 /* Images.xcassets in Resources */,
 				C22D0E3F19DBEB4200EF18C4 /* food.png in Resources */,
 				C25E747519EAD3F000779C23 /* birthday2@2x.png in Resources */,
 				C25E748019EC01F400779C23 /* profile_menu@2x.png in Resources */,
+				4C4E03431AC6301800597EB9 /* Opera & Theatre.png in Resources */,
 				C25E765319EF754600779C23 /* fbshare.png in Resources */,
 				C25E765A19EF759700779C23 /* 1024_gm.png in Resources */,
 				4C9452AB1ABE63BD0053A951 /* Filters_Preferences.png in Resources */,
@@ -1193,6 +1210,7 @@
 				4C9452AE1ABE63BD0053A951 /* Share_Request.png in Resources */,
 				4C8F7C4A1A79327A00CCBDE8 /* Dalliant_Logo_XL.gif in Resources */,
 				426107DF19B42D930000536C /* buttonbar.xcassets in Resources */,
+				4C4E03471AC6301800597EB9 /* Working-out & Exercise.png in Resources */,
 				4C8F7C451A75F84200CCBDE8 /* tutorial_background_01@2x.jpg in Resources */,
 				C25E747119E8981200779C23 /* about@2x.png in Resources */,
 				C25E747319E898D600779C23 /* genderz@2x.png in Resources */,
@@ -1200,53 +1218,55 @@
 				C20F0B1B19D7E982005958C0 /* Main.storyboard in Resources */,
 				C2CC355A19F58ACD00AC86D1 /* mask_profile.png in Resources */,
 				42F5B28619B0C4CB0036938B /* Chat.xcassets in Resources */,
-				4C4E03311AC2DE2600597EB9 /* Opera & Theatre.png in Resources */,
 				C2A90EBC19F41C1E00FC0D04 /* down2@2x.png in Resources */,
+				4C4E033F1AC6301800597EB9 /* Animals & Pets.png in Resources */,
 				C25E765619EF754600779C23 /* maiz.png in Resources */,
-				4C4E03321AC2DE2600597EB9 /* Tech, Gadgets, Science.png in Resources */,
 				C25E760219EF485200779C23 /* terms_menu@2x.png in Resources */,
+				4C4E03511AC63D6400597EB9 /* TV & Movies.png in Resources */,
+				4C4E03411AC6301800597EB9 /* Dining-out.png in Resources */,
+				4C4E03531AC63DFA00597EB9 /* Music Concerts.png in Resources */,
 				C25E747719EAD54F00779C23 /* location2@2x.png in Resources */,
+				4C4E03421AC6301800597EB9 /* Hiking, Camping, Nature-walks.png in Resources */,
 				4C8F7C471A75F84200CCBDE8 /* tutorial_background_03@2x.jpg in Resources */,
 				C2A90EBA19F41BBD00FC0D04 /* up2@2x.png in Resources */,
+				4C4E034D1AC63D6300597EB9 /* Dancing.png in Resources */,
+				4C4E03441AC6301800597EB9 /* Religion & Spirituality.png in Resources */,
 				C25E765E19EF81D500779C23 /* nouserphoto.jpg in Resources */,
 				C237015B19D974260024F856 /* ProgressHUD.bundle in Resources */,
-				4C4E03341AC2DE2600597EB9 /* Volunteering, Social-activism, Politics.png in Resources */,
 				C25E748219EC02F900779C23 /* share_menu@2x.png in Resources */,
 				C20F0B1919D7CE85005958C0 /* sdlogo.png in Resources */,
+				4C4E03461AC6301800597EB9 /* Volunteering, Social-activism, Politics.png in Resources */,
 				4C475FE21A7C9C8D00CB9283 /* more.png in Resources */,
 				C25E760719EF5A3A00779C23 /* MyappTableViewCell.xib in Resources */,
 				C25E765719EF754600779C23 /* washare.png in Resources */,
-				4C4E03351AC2DE2600597EB9 /* Working-out & Exercise.png in Resources */,
 				C25E766B19EF9C0C00779C23 /* Localizable.strings in Resources */,
+				4C4E03571AC63EF100597EB9 /* Book Club & Reading.png in Resources */,
 				C25E764C19EF6E9300779C23 /* app_menu@2x.png in Resources */,
+				4C4E03401AC6301800597EB9 /* Cooking.png in Resources */,
 				4CC7B8C01A61083E000982EA /* dalliant_logo_med.png in Resources */,
-				4C4E032A1AC2DE2600597EB9 /* Animals & Pets.png in Resources */,
 				C25E765819EF754600779C23 /* share_i.png in Resources */,
 				4281F25319B11CF7007724C6 /* Menu.xcassets in Resources */,
-				4C4E03331AC2DE2600597EB9 /* Religion & Spirituality.png in Resources */,
 				C25E765419EF754600779C23 /* twshare.png in Resources */,
 				C25E747E19EC013A00779C23 /* message_menu@2x.png in Resources */,
-				4C4E032F1AC2DE2600597EB9 /* Dining-out.png in Resources */,
 				C25E765519EF754600779C23 /* instagram-share.png in Resources */,
-				4C4E032D1AC2DE2600597EB9 /* Book Club & Reading.png in Resources */,
-				4C4E032C1AC2DE2600597EB9 /* Beer & Wine-tasting.png in Resources */,
 				C2A90EB819F4186B00FC0D04 /* sativa.png in Resources */,
 				4CC7B8BE1A60FFBD000982EA /* dalliant_logo.png in Resources */,
+				4C4E034E1AC63D6400597EB9 /* Lectures & Conferences.png in Resources */,
 				4C9452AD1ABE63BD0053A951 /* Match_Profile.png in Resources */,
+				4C4E03561AC63EF100597EB9 /* Beer & Wine-tasting.png in Resources */,
 				4C8F7C461A75F84200CCBDE8 /* tutorial_background_02@2x.jpg in Resources */,
+				4C4E03501AC63D6400597EB9 /* Travel.png in Resources */,
 				4C8F7C481A75F84200CCBDE8 /* tutorial_background_04@2x.jpg in Resources */,
 				C25E746F19E8816D00779C23 /* back-m.png in Resources */,
 				C25E748619EC0ADD00779C23 /* vip_menu@2x.png in Resources */,
 				C206B02619E28D91001A4D0C /* mvip.png in Resources */,
 				C25E766019EF8D2100779C23 /* lock3@2x.png in Resources */,
-				4C4E032E1AC2DE2600597EB9 /* Cooking.png in Resources */,
 				C25E765C19EF767B00779C23 /* fastd.jpg in Resources */,
-				4C4E03301AC2DE2600597EB9 /* Hiking, Camping, Nature-walks.png in Resources */,
 				C2300F8619E18E310044A4E5 /* chekBtn.png in Resources */,
 				4C8F7C441A75F84200CCBDE8 /* tutorial_background_00@2x.jpg in Resources */,
 				C206B02519E28D91001A4D0C /* mnvip.png in Resources */,
-				4C4E032B1AC2DE2600597EB9 /* Art Galleries & Photography.png in Resources */,
 				426107DD19B3ABD80000536C /* Profile.xcassets in Resources */,
+				4C4E03451AC6301800597EB9 /* Tech, Gadgets, Science.png in Resources */,
 				C25E747C19EBFF6800779C23 /* heart_menu@2x.png in Resources */,
 				4C9452AC1ABE63BD0053A951 /* Match_Meetup.png in Resources */,
 				C2300F8419E18E030044A4E5 /* normBtn.png in Resources */,
