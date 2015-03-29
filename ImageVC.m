@@ -20,7 +20,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor clearColor];
+    self.view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7f];
     _closeButton.layer.borderWidth = 2.0;
     _closeButton.layer.borderColor = WHITE_COLOR.CGColor;
     _closeButton.layer.cornerRadius = _closeButton.frame.size.width/2;

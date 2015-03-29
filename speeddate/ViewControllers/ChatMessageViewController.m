@@ -753,7 +753,7 @@
              *  and show the placeholder view
              */
         
-      [self performSegueWithIdentifier:@"chatImage" sender:imageMessage];
+        [self performSegueWithIdentifier:@"chatImage" sender:imageMessage];
     } else {
         NSLog(@"Text bubble.");
     }
@@ -1148,11 +1148,9 @@
     } else if ([segue.identifier isEqualToString:@"chatImage"]) {
         
         ImageVC *vc = segue.destinationViewController;
+        [vc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
         //UIImageView *imageView = (UIImageView *)sender;
         vc.image                = (UIImage *)sender;
-        if (vc.image) {
-            NSLog(@"There is an image: %@", vc.image);
-        }
         //vc.imageFrame.image     = vc.image;
          
     }

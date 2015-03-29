@@ -1297,7 +1297,7 @@
             <objects>
                 <viewController id="46o-cm-j24" customClass="ChatMessageViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="7BT-us-2wh">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="1584"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="kCJ-sF-htJ">
@@ -1339,7 +1339,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SOg-PP-EsD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1127" y="1469"/>
+            <point key="canvasLocation" x="1228" y="1455"/>
         </scene>
         <!--ImageVC-->
         <scene sceneID="2cS-z8-VCH">
@@ -4613,16 +4613,16 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="yk5-qV-Iag"/>
-        <segue reference="fn6-lQ-fgy"/>
-        <segue reference="WJE-pO-Iht"/>
-        <segue reference="MLw-yj-LVg"/>
+        <segue reference="MjG-Tl-7wb"/>
         <segue reference="VlF-20-DHW"/>
         <segue reference="bt8-6f-Y1e"/>
-        <segue reference="MjG-Tl-7wb"/>
-        <segue reference="uru-UJ-cE7"/>
+        <segue reference="MLw-yj-LVg"/>
+        <segue reference="WJE-pO-Iht"/>
         <segue reference="oXm-ri-1Lw"/>
-        <segue reference="Tpc-4O-Pzu"/>
+        <segue reference="uru-UJ-cE7"/>
+        <segue reference="T3M-uL-jBd"/>
+        <segue reference="R6Q-BJ-zcV"/>
+        <segue reference="yk5-qV-Iag"/>
         <segue reference="Qy0-fE-0Nr"/>
         <segue reference="h7w-Ho-pqn"/>
     </inferredMetricsTieBreakers>
