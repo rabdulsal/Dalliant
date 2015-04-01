@@ -796,7 +796,7 @@
 - (void)shareRequestActionSheet
 {
     NSLog(@"Share Request Action Sheet");
-    UIActionSheet *actionsheet = [[UIActionSheet alloc] initWithTitle:@"Send Reveal request?" delegate:self cancelButtonTitle:@"Don't Request" destructiveButtonTitle:nil otherButtonTitles:@"Yes", nil];
+    UIActionSheet *actionsheet = [[UIActionSheet alloc] initWithTitle:@"Send Share Request?" delegate:self cancelButtonTitle:@"Don't Request" destructiveButtonTitle:nil otherButtonTitles:@"Yes", nil];
     actionsheet.tag = 1;
     [actionsheet showInView:self.view];
 }

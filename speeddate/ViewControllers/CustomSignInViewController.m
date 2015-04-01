@@ -255,28 +255,53 @@
 
 -(IBAction)faceLogin:(id)sender{
     
-    NSArray *permissions = @[@"public_profile", @"email", @"user_friends", @"user_birthday", @"user_about_me", @"user_education_history", @"user_work_history", @"user_photos"];
+    NSArray *permissions = [[NSArray alloc] initWithObjects:@"public_profile", @"email", @"user_friends", @"user_birthday", @"user_about_me", @"user_education_history", @"user_work_history", @"user_photos", nil];
     //NSArray *permissions = @[];
     
     // Login PFUser using Facebook
     [ProgressHUD show:@"Signing in..." Interaction:NO];
     [PFFacebookUtils logInWithPermissions:permissions block:^(PFUser *user, NSError *error) {
         
+        NSString *errorMessage = nil;
+        if (user != nil)
+        {
+            if (user[PF_USER_FACEBOOKID] == nil)
+            {
+                NSLog(@"User in new");
+                [self requestFacebook:user];
+            }
+            else {
+                NSLog(@"User is cached");
+                [self userLoggedIn:user];
+            }
+        }
+        
+        else if (error)
+            
+        {
+            if ([[[error userInfo] objectForKey:@"com.facebook.sdk:ErrorLoginFailedReason"]
+                      isEqualToString:@"com.facebook.sdk:SystemLoginDisallowedWithoutError"])
+        { // Facebook Login not allowed on Device
+            NSLog(@"Uh oh. An error occurred: %@", error);
+            errorMessage = @"Please go to Device Settings > Facebook > Toggle 'On' Allow Dalliant to Use Facebook";
+         
+            [ProgressHUD showError:errorMessage];
+        }
+            else {
+                errorMessage = @"Ooops, an error occurred....please try logging-in again.";
+                [ProgressHUD showError:errorMessage];
+            }
+        
+        }
+        /*
         if (!user) {
             NSLog(@"There is no User for some reason.");
             
-            NSString *errorMessage = nil;
+         
             if (!error) {
                 NSLog(@"Uh oh. The user cancelled the Facebook login.");
                 errorMessage = @"Uh oh. The user cancelled the Facebook login.";
-            } else if ([[[error userInfo] objectForKey:@"com.facebook.sdk:ErrorLoginFailedReason"]
-                        isEqualToString:@"com.facebook.sdk:SystemLoginDisallowedWithoutError"])
-            { // Facebook Login not allowed on Device
-                NSLog(@"Uh oh. An error occurred: %@", error);
-                errorMessage = @"Please go to Device Settings > Facebook > Toggle 'On' Allow Dalliant to Use Facebook";
-                
-                [ProgressHUD showError:errorMessage];
-            }
+         
             else {
                 NSLog(@"Uh oh. An error occurred: %@", error);
                 errorMessage = [error localizedDescription];
@@ -290,22 +315,8 @@
             }
             
         } else {
-            if (user != nil)
-            {
-                NSLog(@"There IS a User");
-                //if (user[PF_USER_FACEBOOKID] == nil)
-                if (user.isNew)
-                {
-                    NSLog(@"User in new");
-                    [self requestFacebook:user];
-                }
-                else {
-                    NSLog(@"User is cached");
-                    [self userLoggedIn:user];
-                }
-            }
-            else [ProgressHUD showError:[error.userInfo valueForKey:@"error"]];
-        }
+            
+        } */
     }];
     
     

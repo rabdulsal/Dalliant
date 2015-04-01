@@ -138,7 +138,6 @@
     
     PFQuery *connections = [PossibleMatchHelper query];
     [connections whereKey:@"messagesCount" greaterThan:0];
-    //[connections whereKey:<#(NSString *)#> containedIn:<#(NSArray *)#>]
     [connections orderByDescending:@"updatedAt"];
     [connections findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {

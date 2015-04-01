@@ -130,7 +130,7 @@
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    //[FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
+    [FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
     
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     if (currentInstallation.badge != 0) {
