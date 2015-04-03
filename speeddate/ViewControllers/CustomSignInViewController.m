@@ -462,15 +462,15 @@
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         NSArray *allAlbums = [[NSArray alloc] initWithArray:(NSArray *)[(NSDictionary *)responseObject objectForKey:@"data"]];
-        int allAlbumsCount = allAlbums.count;
+        int allAlbumsCount = (int)allAlbums.count;
         
         for (int i=0; i < allAlbumsCount; i++) {
             NSString *album = [[[(NSDictionary *)responseObject objectForKey:@"data"] objectAtIndex:i] objectForKey:@"name"];
             NSLog(@"Fetch album: %@", album);
             if ([album isEqualToString:@"Profile Pictures"])
             {
-                _profilePhotosCount = [[[(NSDictionary *)responseObject objectForKey:@"data"] objectAtIndex:i] objectForKey:@"count"];
-                NSLog(@"Profile count: %@", _profilePhotosCount);
+                _profilePhotosCount = (int)[[[(NSDictionary *)responseObject objectForKey:@"data"] objectAtIndex:i] objectForKey:@"count"];
+                //NSLog(@"Profile count: %@", _profilePhotosCount);
                 [self fetchProfilePhotos:responseObject atIndex:i forUser:user withAccessToken:token userData:userData];
                 i = allAlbumsCount;
             }

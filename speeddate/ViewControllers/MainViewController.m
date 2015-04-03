@@ -539,7 +539,7 @@
         } else {
             //[waveLayer setHidden:YES];
             [_posibleMatchesArray addObjectsFromArray:objects];
-            NSLog(@"Potential matches found, total: %ld", objects.count);
+            NSLog(@"Potential matches found, total: %ld", (unsigned long)objects.count);
             
             /*
             for (UserParseHelper *possMatch in _posibleMatchesArray) {
@@ -591,11 +591,7 @@
     
     for (UserParseHelper *match in _posibleMatchesArray) {
             
-        if ([_matchesIFound containsObject:match]) {
-            
-            [_connections addObject:match];
-            
-        } else if (![_matchesFoundMe containsObject:match]) {
+        if (![_matchesIFound containsObject:match] || ![_matchesFoundMe containsObject:match]) {
             _matchUser = match;
             [self matchGender];
             
@@ -696,7 +692,7 @@
         userGender = @"Male";
     } else userGender = @"Female";
    
-    if ([_curUser.genderPref isEqualToString:@"Both"] && [_matchUser.genderPref isEqualToString:userGender]) {
+    if (([_curUser.genderPref isEqualToString:@"Both"] && [_matchUser.genderPref isEqualToString:userGender]) || ([_curUser.genderPref isEqualToString:matchGender] && [_matchUser.genderPref isEqualToString:@"Both"]) || ([_curUser.genderPref isEqualToString:@"Both"] && [_matchUser.genderPref isEqualToString:@"Both"])) {
         
         
         NSLog(@"User gender: %@", _curUser.genderPref);
@@ -902,7 +898,7 @@
                 _prefCounter++;
                 NSLog(@"PrefMatchCounter after compare: %ld", (long)_prefCounter);
                 [_sharedPrefs addObject:preference];
-                NSLog(@"Shared Prefs: %ld", [_sharedPrefs count]);
+                NSLog(@"Shared Prefs: %ld", (unsigned long)[_sharedPrefs count]);
             }
         }
     }
@@ -1180,7 +1176,6 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     UserParseHelper *user;
-    PossibleMatchHelper *matchedConnection;
     /*
     if (self.filteredAllUsersArray.count) {
         user = [self.filteredAllUsersArray objectAtIndex:indexPath.row];
@@ -1189,9 +1184,10 @@
     }
     */
     // Get Possible Matches
-    matchedConnection = [_connections objectAtIndex:indexPath.row];
+    PossibleMatchHelper *matchedConnection = [_connections objectAtIndex:indexPath.row];
+    UserParseHelper *match = (UserParseHelper *)[matchedConnection.toUser fetchIfNeeded];
     
-    if ([matchedConnection.toUser.objectId isEqualToString:_curUser.objectId]) {
+    if ([match.objectId isEqualToString:_curUser.objectId]) {
         user = (UserParseHelper *)matchedConnection.fromUser;
     } else user = (UserParseHelper *)matchedConnection.toUser;
     

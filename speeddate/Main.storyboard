@@ -1297,7 +1297,7 @@
             <objects>
                 <viewController id="46o-cm-j24" customClass="ChatMessageViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="7BT-us-2wh">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="1584"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="kCJ-sF-htJ">
@@ -3132,7 +3132,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="znx-55-aXc">
-                                <rect key="frame" x="-1" y="461.00000005788303" width="320" height="42"/>
+                                <rect key="frame" x="-1" y="461" width="320" height="42"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="1cw-AD-1Ac">
@@ -4114,7 +4114,9 @@
                         <outlet property="matchDrugsPref" destination="scu-Vv-Wj9" id="B2L-MR-Eul"/>
                         <outlet property="matchInterest1" destination="OGW-pK-sfW" id="37h-PQ-fv5"/>
                         <outlet property="matchRelationshipType" destination="rjc-il-I3y" id="iPe-HQ-A8z"/>
+                        <outlet property="matchSchool" destination="3pg-FA-XJJ" id="ItV-DT-0Jc"/>
                         <outlet property="matchSmokesPref" destination="3fi-fa-4BZ" id="fTE-TV-HlG"/>
+                        <outlet property="matchWork" destination="eE7-rc-cjz" id="amd-Xt-fJk"/>
                         <outlet property="userAge" destination="KBE-gd-JbM" id="L6Z-yX-GPA"/>
                         <outlet property="userDescription" destination="NP9-bD-BSW" id="AJl-P1-bFg"/>
                         <outlet property="userDistance" destination="mZv-Rx-jPY" id="YK0-vM-zXJ"/>
