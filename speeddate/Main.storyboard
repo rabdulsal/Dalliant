@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="vXZ-lx-hvc">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
@@ -238,8 +238,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dalliant_logo_med.png" id="mgM-ya-ynC">
-                                <rect key="frame" x="84" y="82" width="150" height="116"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Dalliant-Logo-White.png" id="mgM-ya-ynC">
+                                <rect key="frame" x="84" y="103" width="150" height="116"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="sEm-rZ-hXY">
@@ -256,7 +256,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="EXC-uP-OZk">
-                                <rect key="frame" x="99" y="338" width="121" height="30"/>
+                                <rect key="frame" x="99" y="353" width="121" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <state key="normal" title="How it Works">
@@ -268,7 +268,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dalliant" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="651-pk-mQu">
-                                <rect key="frame" x="36" y="206" width="249" height="68"/>
+                                <rect key="frame" x="36" y="227" width="249" height="68"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="50"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -375,8 +375,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dalliant_logo.png" highlighted="YES" id="H5w-sK-zGh">
-                                                    <rect key="frame" x="15" y="20" width="30" height="25"/>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Dalliant-Logo-White.png" highlighted="YES" id="H5w-sK-zGh">
+                                                    <rect key="frame" x="15" y="18" width="30" height="24"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="tintColor" red="0.0" green="0.65882354970000001" blue="1" alpha="1" colorSpace="deviceRGB"/>
                                                 </imageView>
@@ -902,7 +902,7 @@
                                 <rect key="frame" x="117" y="73" width="87" height="68"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <state key="normal" image="dalliant_logo_med.png">
+                                <state key="normal" image="Dalliant-Logo-White.png">
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -957,19 +957,19 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="xTH-fQ-UAt">
-                                                    <rect key="frame" x="107" y="42" width="20" height="20"/>
+                                                    <rect key="frame" x="110" y="42" width="20" height="20"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="dgz-d0-dTF">
-                                                    <rect key="frame" x="133" y="42" width="20" height="20"/>
+                                                    <rect key="frame" x="142" y="42" width="20" height="20"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="NtJ-Cj-R9W">
-                                                    <rect key="frame" x="161" y="42" width="20" height="20"/>
+                                                    <rect key="frame" x="173" y="42" width="20" height="20"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="B0n-rM-fst">
-                                                    <rect key="frame" x="189" y="42" width="20" height="20"/>
+                                                    <rect key="frame" x="205" y="42" width="20" height="20"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
                                             </subviews>
@@ -1005,13 +1005,6 @@
                                 <action selector="backToPreferences:" destination="aqZ-SE-PFE" id="hwg-dd-e5N"/>
                             </connections>
                         </barButtonItem>
-                        <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="T8I-K2-bjb">
-                            <rect key="frame" x="129" y="-18" width="63" height="80"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <state key="normal" image="dalliant_logo.png">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                        </button>
                         <barButtonItem key="rightBarButtonItem" title="unBlock" id="NRb-Qp-iYU">
                             <connections>
                                 <action selector="pushToBaedar:" destination="aqZ-SE-PFE" id="3be-bD-AJg"/>
@@ -3023,7 +3016,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5LK-z1-DqZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="789" y="1020"/>
+            <point key="canvasLocation" x="931" y="993"/>
         </scene>
         <!--Nearby-->
         <scene sceneID="VoR-o6-E2J">
@@ -3132,7 +3125,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="znx-55-aXc">
-                                <rect key="frame" x="-1" y="461" width="320" height="42"/>
+                                <rect key="frame" x="-1" y="461.00000001153069" width="320" height="42"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="1cw-AD-1Ac">
@@ -4579,6 +4572,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Dalliant-Logo-White.png" width="281" height="211"/>
         <image name="Dalliant_Logo_XL.gif" width="1070" height="1070"/>
         <image name="about.png" width="36" height="36"/>
         <image name="amatch" width="320" height="100"/>
@@ -4587,7 +4581,6 @@
         <image name="birthday" width="30" height="30"/>
         <image name="bubble" width="22" height="19"/>
         <image name="dalliant_logo.png" width="46" height="35"/>
-        <image name="dalliant_logo_med.png" width="132" height="103"/>
         <image name="dislike" width="80" height="80"/>
         <image name="email" width="128" height="128"/>
         <image name="genderz.png" width="30" height="29"/>
@@ -4617,15 +4610,15 @@
     <inferredMetricsTieBreakers>
         <segue reference="MjG-Tl-7wb"/>
         <segue reference="VlF-20-DHW"/>
-        <segue reference="bt8-6f-Y1e"/>
+        <segue reference="Qh3-Ge-Ehw"/>
         <segue reference="MLw-yj-LVg"/>
         <segue reference="WJE-pO-Iht"/>
-        <segue reference="oXm-ri-1Lw"/>
         <segue reference="uru-UJ-cE7"/>
+        <segue reference="fn6-lQ-fgy"/>
+        <segue reference="oXm-ri-1Lw"/>
         <segue reference="T3M-uL-jBd"/>
-        <segue reference="R6Q-BJ-zcV"/>
         <segue reference="yk5-qV-Iag"/>
-        <segue reference="Qy0-fE-0Nr"/>
         <segue reference="h7w-Ho-pqn"/>
+        <segue reference="Qy0-fE-0Nr"/>
     </inferredMetricsTieBreakers>
 </document>

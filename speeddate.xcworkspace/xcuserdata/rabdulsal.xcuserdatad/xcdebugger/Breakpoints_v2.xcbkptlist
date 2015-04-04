@@ -54,12 +54,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "speeddate/ViewControllers/MainViewController.m"
-            timestampString = "449717266.509939"
+            timestampString = "449868894.082864"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1186"
-            endingLineNumber = "1186"
+            startingLineNumber = "1255"
+            endingLineNumber = "1255"
             landmarkName = "-tableView:cellForRowAtIndexPath:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "speeddate/ViewControllers/MainViewController.m"
+            timestampString = "449868894.082864"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "591"
+            endingLineNumber = "591"
+            landmarkName = "-getMatches"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

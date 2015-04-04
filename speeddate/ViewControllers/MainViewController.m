@@ -21,6 +21,7 @@
 #import "UserParseHelper.h"
 #import "PossibleMatchHelper.h"
 #import "MessageParse.h"
+#import "ProgressHUD.h"
 #import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKit.h>
 #import "MessagesViewController.h"
@@ -118,6 +119,7 @@
 @property NSArray *matchedUsers;
 @property NSMutableArray *matchesFoundMe;
 @property NSMutableArray *connections;
+@property NSMutableArray *oldConnections;
 @property NSMutableArray *matchesIFound;
 @property PossibleMatchHelper *otherUser;
 @property PossibleMatchHelper *possibleMatch;
@@ -208,6 +210,7 @@
     [_matchedLabel setHidden:YES];
     
     self.navigationController.navigationBar.barTintColor = RED_LIGHT;
+    
     inAnimation = NO;
     
     // Circle Animation <-- wrap in Toggle Button
@@ -223,7 +226,11 @@
    
     [waveLayer setHidden:YES];
     
-    self.usersArray         = [NSMutableArray new];
+    self.usersArray     = [NSMutableArray new];
+    self.connections    = [NSMutableArray new];
+    self.oldConnections = [NSMutableArray new];
+    _matchesIFound      = [NSMutableArray new];
+    _matchesFoundMe     = [NSMutableArray new];
     
     [self customizeApp];
     
@@ -265,15 +272,18 @@
 - (void)baedarOn
 {
     //[self.locationManager startUpdatingLocation];
+    [ProgressHUD show:@"Finding Matches...." Interaction:NO];
     _filtersButton.enabled = false;
     _filtersButton.title = @"";
+    self.navigationItem.title = @"Active";
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor greenColor]};
     [self currentLocationIdentifier];
     _curUser.online = @"yes";
     [_curUser saveInBackground];
     [self.view.layer addSublayer:waveLayer];
     [waveLayer setHidden:NO];
     [self startAnimation];
-    [self startBaedarTimer];
+    //[self startBaedarTimer];
     //_baedarLabel.transform = CGAffineTransformMakeScale(1.1,1.1); // <-- Increase button size on press
     [_baedarLabel setSelected:YES];
     userSingleton.baedarIsRunning = true;
@@ -284,10 +294,13 @@
 - (void)baedarOff
 {
     //_baedarLabel.transform = CGAffineTransformMakeScale(1.1,1.1); // <-- Increase button size on press
+    [ProgressHUD dismiss];
     _curUser.online = @"no";
     [_curUser saveInBackground];
     _filtersButton.enabled = true;
     _filtersButton.title = @"Filters";
+    self.navigationItem.title = @"Offline";
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor darkGrayColor]};
     [_baedarLabel setSelected:NO];
     inAnimation = NO;
     [waveLayer removeFromSuperlayer];
@@ -326,9 +339,13 @@
     //[self checkIncomingViewController];
     //[self currentLocationIdentifier];
     //[self loadingChat];
+    self.navigationItem.title = @"Offline";
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor darkGrayColor]};
+    /*
     if (userSingleton.baedarIsRunning) {
         [self baedarOn];
     }
+     */
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -354,12 +371,22 @@
 {
     baedarTimer = [NSTimer scheduledTimerWithTimeInterval:5.0
                                                    target:self
-                                                 selector:@selector(getMatches)
+                                                 selector:@selector(comebackAlert)
                                                  userInfo:nil
-                                                  repeats:YES];
+                                                  repeats:NO];
 }
 
 #pragma mark - LOCATION IDENTIFIER
+
+-(void)comebackAlert
+{
+    UIAlertView *comebackAlert = [[UIAlertView alloc] initWithTitle:@"Great job matching!"
+                                                            message:@"Congrats on finding matches. Take some time to chat with them, keep your Baedar running, and come back later to find new matches"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"Okay!"
+                                                  otherButtonTitles:nil];
+    [comebackAlert show];
+}
 
 // Get User Geo
 -(void)currentLocationIdentifier
@@ -524,18 +551,39 @@
     }
     NSLog(@"Block User count4: %lu", (unsigned long)[_curUser.blockedUsers count]);
     // Fetch Nearby Users based on distance; while require a time-based While-loop
+    [_connections removeAllObjects];
     
-    self.connections        = [NSMutableArray new];
+    [self fetchAllConnectionsToMe];
+    [self fetchAllConnectionsFromMe];
+    
+    if ([_matchesIFound count] > 0) {
+        for (NSString *matchId in _matchesIFound) {
+            NSLog(@"I found match: %@", matchId);
+        }
+        
+    
+    }
+    
+    if ([_matchesFoundMe count] > 0) {
+        for (NSString *matchId in _matchesFoundMe) {
+            NSLog(@"Match %@ found me", matchId);
+        }
+        
+        
+    }
     
     PFQuery *userQuery = [UserParseHelper query];
     [userQuery whereKey:@"geoPoint" nearGeoPoint:self.curUser.geoPoint withinKilometers:self.curUser.distance.doubleValue];
-    [userQuery whereKey:@"objectId" notEqualTo:_curUser.objectId];
-    [userQuery whereKey:@"objectId" notContainedIn:_curUser.blockedUsers];
+    [userQuery whereKey:@"objectId" notEqualTo:_curUser.objectId];          // Don't retrieve current User
+    [userQuery whereKey:@"objectId" notContainedIn:_curUser.blockedUsers];  // Don't retrieve Blocked Users
+    [userQuery whereKey:@"objectId" notContainedIn:_matchesFoundMe];        // Don't retrieve Users who searched me
+    [userQuery whereKey:@"objectId" notContainedIn:_matchesIFound];         // Don't retrieve Users who I searched for
     [userQuery whereKey:@"online" equalTo:@"yes"];
     [userQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         
         if (!objects) {
             NSLog(@"No Matches found");
+            [ProgressHUD showError:@"Sorry, no Matches found. Please try again later."];
         } else {
             //[waveLayer setHidden:YES];
             [_posibleMatchesArray addObjectsFromArray:objects];
@@ -547,8 +595,7 @@
                 [self matchGender];
             }
              */
-            [self fetchAllConnectionsToMe];
-            [self fetchAllConnectionsFromMe];
+            
             [self loopThroughMatches];
             
         }
@@ -589,9 +636,12 @@
         }
     }*/
     
+    NSUInteger count = [_connections count];
+    
     for (UserParseHelper *match in _posibleMatchesArray) {
             
-        if (![_matchesIFound containsObject:match] || ![_matchesFoundMe containsObject:match]) {
+        if (![_matchesIFound containsObject:match.objectId] && ![_matchesFoundMe containsObject:match.objectId]) {
+            NSLog(@"Match not a duplicate");
             _matchUser = match;
             [self matchGender];
             
@@ -601,7 +651,19 @@
     
     //[self fetchAllUserMatchRelationships];
     [self fetchLatestConnections];
+    
+    if ([_connections count] != 0) {
+        
+        if ([_connections count] == count) {
+            [ProgressHUD dismiss];
+        } else if ([_connections count] > count) {
+            [ProgressHUD showSuccess:@"Found New Matches!"];
+        }
+        
+    } else [ProgressHUD showError:@"Sorry, no Matches found. Please try again later."];
+    
     [self.tableView reloadData];
+    [self startBaedarTimer];
     //[self addNewConnection];
 }
 
@@ -672,6 +734,7 @@
     }];*/
     [_otherUser save];
     [_connections addObject:_otherUser];
+    [_oldConnections addObject:_otherUser.objectId];
     
 }
 
@@ -988,6 +1051,7 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
+    [baedarTimer invalidate];
     [self baedarOff];
 }
 
@@ -1062,18 +1126,21 @@
 
 - (void)fetchAllConnectionsToMe
 {
-    _matchesFoundMe = [NSMutableArray new];
     
     PFQuery *matchQueryTo = [PossibleMatchHelper query];
     [matchQueryTo whereKey:@"toUser" equalTo:_curUser];
+    //[matchQueryTo whereKey:@"objectId" notContainedIn:_oldConnections];
     
     NSArray *fetchedMatches = [[NSArray alloc] initWithArray:[matchQueryTo findObjects]];
     
     for (PossibleMatchHelper *connection in fetchedMatches) {
         
+        //[_oldConnections addObject:connection.objectId];
+        
         for (UserParseHelper *user in connection.matches) {
             if (![user isEqual:_curUser]){
-                [_matchesFoundMe addObject:user];
+                NSLog(@"Old User found me: %@", user);
+                [_matchesFoundMe addObject:user.objectId];
             }
         }
         
@@ -1081,32 +1148,34 @@
     
     [_connections addObjectsFromArray:fetchedMatches];
     
-    NSLog(@"Num matches who Found me: %lu", (unsigned long)[_matchesFoundMe count]);
 }
 
 - (void)fetchAllConnectionsFromMe
 {
-    _matchesIFound = [NSMutableArray new];
+    
     
     PFQuery *matchQueryFrom = [PossibleMatchHelper query];
     [matchQueryFrom whereKey:@"fromUser" equalTo:_curUser];
+    //[matchQueryFrom whereKey:@"objectId" notContainedIn:_oldConnections];
     //Contrain query by createdAt = Today
     
     NSArray *fetchedMatches = [[NSArray alloc] initWithArray:[matchQueryFrom findObjects]];
     
     for (PossibleMatchHelper *connection in fetchedMatches) {
         
+        //[_oldConnections addObject:connection.objectId];
+        
         for (UserParseHelper *user in connection.matches) {
+            
             if (![user isEqual:_curUser]){
-                [_matchesIFound addObject:user];
+                NSLog(@"Old User I found: %@", user);
+                [_matchesIFound addObject:user.objectId];
             }
         }
         
     }
     
     [_connections addObjectsFromArray:fetchedMatches];
-    
-    NSLog(@"Num matches I found: %lu", (unsigned long)[_matchesIFound count]);
 }
 
 - (void)fetchLatestConnections
