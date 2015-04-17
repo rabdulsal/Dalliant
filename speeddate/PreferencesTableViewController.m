@@ -79,6 +79,8 @@
 {
     [super viewWillAppear:animated];
     
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
+    
     PFQuery *query = [UserParseHelper query];
     [query getObjectInBackgroundWithId:[UserParseHelper currentUser].objectId
                                  block:^(PFObject *object, NSError *error)

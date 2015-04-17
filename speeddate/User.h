@@ -91,7 +91,7 @@
 @property (assign, nonatomic) BOOL *workoutPref;
 
 // Baedar ------------------------------------------------------
-@property (nonatomic) BOOL baedarIsRunning;
+@property (assign, nonatomic) BOOL baedarIsRunning;
 
 +(User *)singleObj;
 

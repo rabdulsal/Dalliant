@@ -78,6 +78,7 @@
 		4C4E03561AC63EF100597EB9 /* Beer & Wine-tasting.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03541AC63EF100597EB9 /* Beer & Wine-tasting.png */; };
 		4C4E03571AC63EF100597EB9 /* Book Club & Reading.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03551AC63EF100597EB9 /* Book Club & Reading.png */; };
 		4C4E03591ACE2BBE00597EB9 /* Dalliant-Logo-White.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03581ACE2BBE00597EB9 /* Dalliant-Logo-White.png */; };
+		4C4F7B581AD07E1A0014C737 /* Art Galleries & Photography.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4F7B571AD07E190014C737 /* Art Galleries & Photography.png */; };
 		4C8F7C441A75F84200CCBDE8 /* tutorial_background_00@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C3F1A75F84200CCBDE8 /* tutorial_background_00@2x.jpg */; };
 		4C8F7C451A75F84200CCBDE8 /* tutorial_background_01@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C401A75F84200CCBDE8 /* tutorial_background_01@2x.jpg */; };
 		4C8F7C461A75F84200CCBDE8 /* tutorial_background_02@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C411A75F84200CCBDE8 /* tutorial_background_02@2x.jpg */; };
@@ -318,6 +319,7 @@
 		4C4E03541AC63EF100597EB9 /* Beer & Wine-tasting.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Beer & Wine-tasting.png"; sourceTree = "<group>"; };
 		4C4E03551AC63EF100597EB9 /* Book Club & Reading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Book Club & Reading.png"; sourceTree = "<group>"; };
 		4C4E03581ACE2BBE00597EB9 /* Dalliant-Logo-White.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dalliant-Logo-White.png"; sourceTree = "<group>"; };
+		4C4F7B571AD07E190014C737 /* Art Galleries & Photography.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Art Galleries & Photography.png"; sourceTree = "<group>"; };
 		4C8F7C3F1A75F84200CCBDE8 /* tutorial_background_00@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_00@2x.jpg"; sourceTree = "<group>"; };
 		4C8F7C401A75F84200CCBDE8 /* tutorial_background_01@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_01@2x.jpg"; sourceTree = "<group>"; };
 		4C8F7C411A75F84200CCBDE8 /* tutorial_background_02@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_02@2x.jpg"; sourceTree = "<group>"; };
@@ -879,6 +881,7 @@
 		C20F0B1719D7CE72005958C0 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				4C4F7B571AD07E190014C737 /* Art Galleries & Photography.png */,
 				4C4E03581ACE2BBE00597EB9 /* Dalliant-Logo-White.png */,
 				4C4E03541AC63EF100597EB9 /* Beer & Wine-tasting.png */,
 				4C4E03551AC63EF100597EB9 /* Book Club & Reading.png */,
@@ -1271,6 +1274,7 @@
 				C206B02519E28D91001A4D0C /* mnvip.png in Resources */,
 				426107DD19B3ABD80000536C /* Profile.xcassets in Resources */,
 				4C4E03451AC6301800597EB9 /* Tech, Gadgets, Science.png in Resources */,
+				4C4F7B581AD07E1A0014C737 /* Art Galleries & Photography.png in Resources */,
 				C25E747C19EBFF6800779C23 /* heart_menu@2x.png in Resources */,
 				4C9452AC1ABE63BD0053A951 /* Match_Meetup.png in Resources */,
 				C2300F8419E18E030044A4E5 /* normBtn.png in Resources */,

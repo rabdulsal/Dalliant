@@ -286,7 +286,7 @@
     //[self startBaedarTimer];
     //_baedarLabel.transform = CGAffineTransformMakeScale(1.1,1.1); // <-- Increase button size on press
     [_baedarLabel setSelected:YES];
-    userSingleton.baedarIsRunning = true;
+    userSingleton.baedarIsRunning = YES;
     NSLog(@"Block User count2: %lu", (unsigned long)[_curUser.blockedUsers count]);
     [self getMatches];
 }
@@ -306,7 +306,7 @@
     [waveLayer removeFromSuperlayer];
     [waveLayer setHidden:YES];
     [baedarTimer invalidate];
-    userSingleton.baedarIsRunning = false;
+    userSingleton.baedarIsRunning = NO;
 }
 
 - (IBAction)pressedMatchButton:(id)sender {
@@ -341,17 +341,17 @@
     //[self loadingChat];
     self.navigationItem.title = @"Offline";
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor darkGrayColor]};
-    /*
-    if (userSingleton.baedarIsRunning) {
-        [self baedarOn];
-    }
-     */
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     //[self checkFirstTime];
+    if (userSingleton.baedarIsRunning) {
+        NSLog(@"Baedar is ON");
+        [self baedarOn];
+    }
     [self performSelector:@selector(startAnimation) withObject:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTableView) name:@"TableUpdated" object:nil];
 }
@@ -1052,7 +1052,7 @@
 {
     [super viewDidDisappear:animated];
     [baedarTimer invalidate];
-    [self baedarOff];
+    //[self baedarOff];
 }
 
 #pragma mark - TableView Configurations
