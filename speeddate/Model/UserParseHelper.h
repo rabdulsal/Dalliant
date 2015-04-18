@@ -99,6 +99,6 @@
 - (void)configureImage:(UIImage *)image picNumber:(int)photoNum;
 - (void)calculateCredits;
 - (void)blockUser:(NSString *)matchUser;
-
+- (void)userGeolocationOutput:(UILabel *)locationLabel;
 
 @end

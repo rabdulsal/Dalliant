@@ -3840,7 +3840,7 @@
                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Distance" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="7hn-sB-qNR">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Locale" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="7hn-sB-qNR">
                                                     <rect key="frame" x="215" y="90" width="93" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -3862,6 +3862,41 @@
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="68" id="g8x-uj-kVk">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="g8x-uj-kVk" id="OSU-4C-E1G">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Shared Interests:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="cj8-xy-ZDy">
+                                                    <rect key="frame" x="16" y="8" width="130" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="jAR-RX-qdr">
+                                                    <rect key="frame" x="16" y="37" width="20" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="O1f-lH-FeE">
+                                                    <rect key="frame" x="82" y="37" width="20" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="YWk-pO-HLZ">
+                                                    <rect key="frame" x="150" y="37" width="20" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="oHQ-TH-5Ns">
+                                                    <rect key="frame" x="286" y="37" width="20" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="UGB-T0-hzt">
+                                                    <rect key="frame" x="218" y="37" width="20" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -4080,13 +4115,33 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="nOa-Ax-ymQ" id="4IG-Pb-iRE">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Interests" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="OGW-pK-sfW">
-                                                    <rect key="frame" x="17" y="8" width="286" height="140"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Interests (hgt: 140px)" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="OGW-pK-sfW">
+                                                    <rect key="frame" x="17" y="86" width="286" height="27"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="T3y-k0-Da8">
+                                                    <rect key="frame" x="17" y="8" width="20" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="xX0-CM-0HG">
+                                                    <rect key="frame" x="81" y="8" width="20" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="DOH-aY-vPU">
+                                                    <rect key="frame" x="150" y="8" width="20" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="9a0-26-0xF">
+                                                    <rect key="frame" x="283" y="8" width="20" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="hIk-5F-JKS">
+                                                    <rect key="frame" x="217" y="8" width="20" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -4100,6 +4155,16 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="1046"/>
                     <connections>
+                        <outlet property="image1" destination="T3y-k0-Da8" id="bC5-1Z-WGe"/>
+                        <outlet property="image2" destination="xX0-CM-0HG" id="chs-D6-TaB"/>
+                        <outlet property="image3" destination="DOH-aY-vPU" id="F4m-Cx-GEh"/>
+                        <outlet property="image4" destination="hIk-5F-JKS" id="7ur-Mk-U8D"/>
+                        <outlet property="image5" destination="9a0-26-0xF" id="jtG-o7-xUR"/>
+                        <outlet property="interest1" destination="jAR-RX-qdr" id="cMj-i9-G1A"/>
+                        <outlet property="interest2" destination="O1f-lH-FeE" id="Aj4-AZ-Isx"/>
+                        <outlet property="interest3" destination="YWk-pO-HLZ" id="9T5-Dz-l6d"/>
+                        <outlet property="interest4" destination="UGB-T0-hzt" id="GD8-I5-7KB"/>
+                        <outlet property="interest5" destination="oHQ-TH-5Ns" id="GWx-FF-Qez"/>
                         <outlet property="matchBodyArPref" destination="ztM-1a-dZe" id="kzw-Wj-0dm"/>
                         <outlet property="matchBodyType" destination="2M2-mr-jFR" id="ACb-qj-89r"/>
                         <outlet property="matchDatingStatus" destination="PeZ-ZW-RpW" id="3aR-da-wnZ"/>
@@ -4613,12 +4678,12 @@
         <segue reference="WJE-pO-Iht"/>
         <segue reference="MLw-yj-LVg"/>
         <segue reference="VlF-20-DHW"/>
-        <segue reference="Qh3-Ge-Ehw"/>
+        <segue reference="bt8-6f-Y1e"/>
         <segue reference="MjG-Tl-7wb"/>
         <segue reference="oXm-ri-1Lw"/>
+        <segue reference="fn6-lQ-fgy"/>
         <segue reference="uru-UJ-cE7"/>
-        <segue reference="T3M-uL-jBd"/>
-        <segue reference="R6Q-BJ-zcV"/>
         <segue reference="yk5-qV-Iag"/>
+        <segue reference="T3M-uL-jBd"/>
     </inferredMetricsTieBreakers>
 </document>

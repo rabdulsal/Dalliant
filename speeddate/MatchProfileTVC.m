@@ -12,6 +12,11 @@
 @interface MatchProfileTVC ()
 
 @property (nonatomic) NSData *imageData;
+@property (weak, nonatomic) IBOutlet UIImageView *image1;
+@property (weak, nonatomic) IBOutlet UIImageView *image2;
+@property (weak, nonatomic) IBOutlet UIImageView *image3;
+@property (weak, nonatomic) IBOutlet UIImageView *image4;
+@property (weak, nonatomic) IBOutlet UIImageView *image5;
 
 @end
 
@@ -33,13 +38,17 @@
     _userName.text               = _matchUser.nickname;
     _userDescription.text        = _matchUser.desc;
     _userAge.text                = [[NSString alloc] initWithFormat:@"%@", _matchUser.age];
+    
+    [_matchCompatibility compareUser:_curUser.interests andMatchInterests:_matchUser.interests forImages:_interest1 and:_interest2 and:_interest3 and:_interest4 andFinally:_interest5];
+    
     _matchBodyType.text          = _matchUser.bodyType;
     _matchDatingStatus.text      = _matchUser.relationshipStatus;
     _matchRelationshipType.text  = _matchUser.relationshipType;
     _matchWork.text              = [_matchUser userWork];
     _matchSchool.text            = [_matchUser userSchool];
     
-    _userDistance.text           = [_matchCompatibility calculateUserDistance];
+    //_userDistance.text           = [_matchCompatibility calculateUserDistance];
+    [_matchUser userGeolocationOutput:_userDistance];
     
     if ([_matchUser.drinks isEqualToNumber:[NSNumber numberWithBool:YES]]) {
         _matchDrinksPref.text = @"Y";
@@ -83,14 +92,19 @@
 
 - (void)calculateUserDistance
 {
+    /*
     double distanceDouble   = [_matchUser.geoPoint distanceInMilesTo:_curUser.geoPoint];
     //_userDistance.text      = [[NSString alloc]initWithFormat:@"%@", [NSNumber numberWithDouble:distanceDouble]];
     _userDistance.text    = [[NSString alloc] initWithFormat:@"%f", distanceDouble];
-    NSLog(@"%@ GeoPoint: %@ | %@ GeoPoint: %@",_matchUser.nickname, _matchUser.geoPoint, _curUser.nickname, _curUser.geoPoint); //
+    NSLog(@"%@ GeoPoint: %@ | %@ GeoPoint: %@",_matchUser.nickname, _matchUser.geoPoint, _curUser.nickname, _curUser.geoPoint);
+     */
+    
+    [_curUser userGeolocationOutput:_userDistance];
 }
 
 - (void)listInterests:(NSArray *)interests
 {
+    /*
     NSString *string = @"";
     for (int i = 0; i < interests.count; i++) {
         //_matchInterest1.numberOfLines = 1;
@@ -100,6 +114,36 @@
     }
     
     _matchInterest1.text = string;
+    */
+    
+    NSString *interest;
+    for (int i = 0; i < [_matchUser.interests count]; i++) {
+        interest = [_matchUser.interests objectAtIndex:i];
+        
+        switch (i) {
+            case 0:
+                self.image1.image = [UIImage imageNamed:interest];
+                
+                break;
+            case 1:
+                self.image2.image = [UIImage imageNamed:interest];
+                
+                break;
+            case 2:
+                self.image3.image = [UIImage imageNamed:interest];
+                
+                break;
+            case 3:
+                self.image4.image = [UIImage imageNamed:interest];
+                
+                break;
+            case 4:
+                self.image5.image = [UIImage imageNamed:interest];
+               
+                break;
+        }
+        
+    }
 }
 
 - (NSArray *) arrayWithImages:(KIImagePager*)pager

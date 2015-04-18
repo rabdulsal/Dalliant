@@ -32,6 +32,12 @@
 @property (weak, nonatomic) IBOutlet UILabel *matchBodyArPref;
 @property (weak, nonatomic) IBOutlet UILabel *matchWork;
 @property (weak, nonatomic) IBOutlet UILabel *matchSchool;
+@property (weak, nonatomic) IBOutlet UIImageView *interest1;
+@property (weak, nonatomic) IBOutlet UIImageView *interest2;
+@property (weak, nonatomic) IBOutlet UIImageView *interest3;
+@property (weak, nonatomic) IBOutlet UIImageView *interest4;
+@property (weak, nonatomic) IBOutlet UIImageView *interest5;
+
 
 @property (weak, nonatomic) IBOutlet KIImagePager *imagePager;
 

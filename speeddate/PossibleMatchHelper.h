@@ -26,5 +26,6 @@
 - (void)calculateCompatibility:(double)prefCounter with:(double)totalPreferences;
 - (void)configureRadialViewForView:(UIView *)view withFrame:(CGRect)frame;
 - (NSString *)calculateUserDistance;
+- (void)compareUser:(NSArray *)userInterests andMatchInterests:(NSArray *)matchInterests forImages:(UIImageView *)image1 and:(UIImageView *)image2 and:(UIImageView *)image3 and:(UIImageView *)image4 andFinally:(UIImageView *)image5;
 
 @end

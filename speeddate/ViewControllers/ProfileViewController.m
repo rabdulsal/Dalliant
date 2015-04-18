@@ -117,6 +117,8 @@
     if (![UserParseHelper currentUser].geoPoint) {
         self.cityLable.text = @"No Location";
     } else {
+        [[UserParseHelper currentUser] userGeolocationOutput:self.cityLable];
+        /*
         CLGeocoder* geocoder = [CLGeocoder new];
         CLLocation* locationz = [[CLLocation alloc]initWithLatitude:[UserParseHelper currentUser].geoPoint.latitude longitude:[UserParseHelper currentUser].geoPoint.longitude];
         [geocoder reverseGeocodeLocation:locationz completionHandler:^(NSArray *placemarks, NSError *error) {
@@ -125,6 +127,7 @@
             self.cityLable.text = [NSString stringWithFormat:@"%@, %@", placemark.locality, placemark.administrativeArea];
 
         }];
+         */
     }
    
     NSUserDefaults *touchFbP = [NSUserDefaults standardUserDefaults];

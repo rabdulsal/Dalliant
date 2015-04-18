@@ -113,4 +113,39 @@
     NSLog(@"%@ GeoPoint: %@ | %@ GeoPoint: %@",self.toUser.nickname, self.toUser.geoPoint, self.fromUser.nickname, self.fromUser.geoPoint); //
 }
 
+- (void)compareUser:(NSArray *)userInterests andMatchInterests:(NSArray *)matchInterests forImages:(UIImageView *)image1 and:(UIImageView *)image2 and:(UIImageView *)image3 and:(UIImageView *)image4 andFinally:(UIImageView *)image5
+{
+    NSMutableArray *mutualInterests = [NSMutableArray new];
+    
+    for (NSString *userInterest in userInterests) {
+        if ([matchInterests containsObject:userInterest]) {
+            [mutualInterests addObject:userInterest];
+        }
+    }
+    
+    NSString *interest;
+    for (int i = 0; i < [mutualInterests count]; i++) {
+        interest = [mutualInterests objectAtIndex:i];
+        NSLog(@"Interest count: %lu", (unsigned long)[userInterests count]);
+        switch (i) {
+            case 0:
+                image1.image = [UIImage imageNamed:interest];
+                break;
+            case 1:
+                image2.image = [UIImage imageNamed:interest];
+                break;
+            case 2:
+                image3.image = [UIImage imageNamed:interest];
+                break;
+            case 3:
+                image4.image = [UIImage imageNamed:interest];
+                break;
+            case 4:
+                image5.image = [UIImage imageNamed:interest];
+                break;
+        }
+        
+    }
+}
+
 @end

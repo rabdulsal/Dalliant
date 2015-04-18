@@ -163,4 +163,15 @@
     } else [self.blockedUsers addObject:matchUserId];
 }
 
+- (void)userGeolocationOutput:(UILabel *)locationLabel
+{
+    CLGeocoder* geocoder = [CLGeocoder new];
+    CLLocation* locationz = [[CLLocation alloc]initWithLatitude:[UserParseHelper currentUser].geoPoint.latitude longitude:[UserParseHelper currentUser].geoPoint.longitude];
+    [geocoder reverseGeocodeLocation:locationz completionHandler:^(NSArray *placemarks, NSError *error) {
+        CLPlacemark* placemark = placemarks.firstObject;
+        
+        locationLabel.text = [NSString stringWithFormat:@"%@, %@", placemark.locality, placemark.administrativeArea];
+    }];
+}
+
 @end
