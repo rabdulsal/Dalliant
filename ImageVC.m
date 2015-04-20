@@ -7,11 +7,15 @@
 //
 
 #import "ImageVC.h"
+#import "ReportViewController.h"
 
 @interface ImageVC ()
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIButton *closeButton;
+@property (weak, nonatomic) IBOutlet UIButton *reportButton;
+
+- (IBAction)reportButtonPressed:(id)sender;
 
 @end
 
@@ -24,6 +28,11 @@
     _closeButton.layer.borderWidth = 2.0;
     _closeButton.layer.borderColor = WHITE_COLOR.CGColor;
     _closeButton.layer.cornerRadius = _closeButton.frame.size.width/2;
+    
+    _reportButton.layer.borderWidth = 2.0;
+    _reportButton.layer.borderColor = WHITE_COLOR.CGColor;
+    _reportButton.layer.cornerRadius = _reportButton.frame.size.width/2;
+    
     _imageView.image = _image;
 }
 
@@ -34,8 +43,17 @@
 
 - (IBAction)closeView:(id)sender {
     
-    [self dismissViewControllerAnimated:NO
+    [self dismissViewControllerAnimated:YES
                              completion:nil];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
+    ReportViewController *vc = segue.destinationViewController;
+    vc.user                    = _user;
+    vc.matchUser               = _matchUser;
+    vc.reportedImage           = _image;
+    [vc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
 }
 
 /*
@@ -48,4 +66,7 @@
 }
 */
 
+- (IBAction)reportButtonPressed:(id)sender {
+    [self performSegueWithIdentifier:@"reportMatch" sender:nil];
+}
 @end

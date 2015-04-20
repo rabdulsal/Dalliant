@@ -24,6 +24,8 @@
 @dynamic usersRevealed;
 @dynamic matches;
 @dynamic messagesCount;
+@dynamic toUserRating;
+@dynamic fromUserRating;
 
 + (void)load {
     [self registerSubclass];

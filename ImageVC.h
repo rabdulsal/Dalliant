@@ -7,9 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UserParseHelper.h"
 
 @interface ImageVC : UIViewController
 
 @property UIImage *image;
+@property UserParseHelper *user;
+@property UserParseHelper *matchUser;
 
 @end

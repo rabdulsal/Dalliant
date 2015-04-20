@@ -32,9 +32,11 @@
 @property NSMutableArray *work;
 @property NSMutableArray *school;
 @property NSNumber *credits;
+@property NSNumber *goodRating;
+@property NSNumber *badRating;
 @property NSMutableArray *blockedUsers;
 @property NSMutableArray *blockedBy;
-
+@property NSNumber *reportCount;
 
 ////thumb_photo
 @property PFFile* photo_thumb;

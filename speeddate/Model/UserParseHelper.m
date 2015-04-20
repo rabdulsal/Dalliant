@@ -150,9 +150,12 @@
 
 - (void)calculateCredits
 {
-    NSInteger creditCount = [self.credits integerValue];
-    creditCount -= 1;
-    self.credits = [NSNumber numberWithInteger:creditCount];
+    self.credits = [NSNumber numberWithInteger:self.credits.intValue +1];
+}
+
+- (void)decreaseCredits
+{
+    self.credits = [NSNumber numberWithInt:self.credits.intValue -1];
 }
 
 - (void)blockUser:(NSString *)matchUserId

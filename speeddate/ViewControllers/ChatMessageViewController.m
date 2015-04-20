@@ -1150,6 +1150,8 @@
         ImageVC *vc = segue.destinationViewController;
         [vc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
         //UIImageView *imageView = (UIImageView *)sender;
+        vc.user                    = _curUser;
+        vc.matchUser               = _toUserParse;
         vc.image                = (UIImage *)sender;
         //vc.imageFrame.image     = vc.image;
          
@@ -1250,7 +1252,7 @@
                 if (!report) {
                     Report *repo = [Report object];
                     report = repo;
-                    report.user = self.toUserParse;
+                    report.reportedUser = self.toUserParse;
                 }
                 report.report = [NSNumber numberWithInt:report.report.intValue + 1];
                 [report saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {

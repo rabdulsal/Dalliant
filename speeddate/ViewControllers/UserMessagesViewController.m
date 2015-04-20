@@ -1281,7 +1281,7 @@
                 if (!report) {
                     Report *repo = [Report object];
                     report = repo;
-                    report.user = self.toUserParse;
+                    report.reportedUser = self.toUserParse;
                 }
                 report.report = [NSNumber numberWithInt:report.report.intValue + 1];
                 [report saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {

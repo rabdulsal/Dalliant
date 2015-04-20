@@ -79,6 +79,8 @@
 		4C4E03571AC63EF100597EB9 /* Book Club & Reading.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03551AC63EF100597EB9 /* Book Club & Reading.png */; };
 		4C4E03591ACE2BBE00597EB9 /* Dalliant-Logo-White.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03581ACE2BBE00597EB9 /* Dalliant-Logo-White.png */; };
 		4C4F7B581AD07E1A0014C737 /* Art Galleries & Photography.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4F7B571AD07E190014C737 /* Art Galleries & Photography.png */; };
+		4C4F7B5B1AE429CC0014C737 /* UserRating.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4F7B5A1AE429CC0014C737 /* UserRating.m */; };
+		4C4F7B5E1AE451AE0014C737 /* ReportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4F7B5D1AE451AE0014C737 /* ReportViewController.m */; };
 		4C8F7C441A75F84200CCBDE8 /* tutorial_background_00@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C3F1A75F84200CCBDE8 /* tutorial_background_00@2x.jpg */; };
 		4C8F7C451A75F84200CCBDE8 /* tutorial_background_01@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C401A75F84200CCBDE8 /* tutorial_background_01@2x.jpg */; };
 		4C8F7C461A75F84200CCBDE8 /* tutorial_background_02@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C411A75F84200CCBDE8 /* tutorial_background_02@2x.jpg */; };
@@ -320,6 +322,10 @@
 		4C4E03551AC63EF100597EB9 /* Book Club & Reading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Book Club & Reading.png"; sourceTree = "<group>"; };
 		4C4E03581ACE2BBE00597EB9 /* Dalliant-Logo-White.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dalliant-Logo-White.png"; sourceTree = "<group>"; };
 		4C4F7B571AD07E190014C737 /* Art Galleries & Photography.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Art Galleries & Photography.png"; sourceTree = "<group>"; };
+		4C4F7B591AE429CC0014C737 /* UserRating.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserRating.h; sourceTree = "<group>"; };
+		4C4F7B5A1AE429CC0014C737 /* UserRating.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserRating.m; sourceTree = "<group>"; };
+		4C4F7B5C1AE451AE0014C737 /* ReportViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReportViewController.h; sourceTree = "<group>"; };
+		4C4F7B5D1AE451AE0014C737 /* ReportViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReportViewController.m; sourceTree = "<group>"; };
 		4C8F7C3F1A75F84200CCBDE8 /* tutorial_background_00@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_00@2x.jpg"; sourceTree = "<group>"; };
 		4C8F7C401A75F84200CCBDE8 /* tutorial_background_01@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_01@2x.jpg"; sourceTree = "<group>"; };
 		4C8F7C411A75F84200CCBDE8 /* tutorial_background_02@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_02@2x.jpg"; sourceTree = "<group>"; };
@@ -772,6 +778,8 @@
 				C254F8A219F6C4B000473836 /* WhoSeeViewController.m */,
 				4C0354991A7D7AD800658BE9 /* TutorialViewController.h */,
 				4C03549A1A7D7AD800658BE9 /* TutorialViewController.m */,
+				4C4F7B5C1AE451AE0014C737 /* ReportViewController.h */,
+				4C4F7B5D1AE451AE0014C737 /* ReportViewController.m */,
 			);
 			name = Application;
 			sourceTree = "<group>";
@@ -846,6 +854,8 @@
 				C25E747919EAEF4200779C23 /* PurchaseHelper.m */,
 				C254F89E19F6C28F00473836 /* WhoSeeMeHelper.h */,
 				C254F89F19F6C28F00473836 /* WhoSeeMeHelper.m */,
+				4C4F7B591AE429CC0014C737 /* UserRating.h */,
+				4C4F7B5A1AE429CC0014C737 /* UserRating.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1321,6 +1331,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C4F7B5E1AE451AE0014C737 /* ReportViewController.m in Sources */,
 				C237018A19D974390024F856 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				4CBDB1941A3CDD3C006A9F1F /* ProfileTableVC.m in Sources */,
 				4CCED3131A92DCD800069EAD /* ChatMessageViewController.m in Sources */,
@@ -1417,6 +1428,7 @@
 				42DBCCC519AC4E4200CE6C93 /* StarterViewController.m in Sources */,
 				4CBACD931AAE4F9F007DBC9B /* ImageVC.m in Sources */,
 				42236F3119B7F30000539466 /* CDemoCollectionViewController.m in Sources */,
+				4C4F7B5B1AE429CC0014C737 /* UserRating.m in Sources */,
 				42236F2619B7DEEE00539466 /* CBetterCollectionViewCell.m in Sources */,
 				4281F25C19B22F72007724C6 /* UserCollectionViewCell.m in Sources */,
 			);
