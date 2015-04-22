@@ -9,7 +9,7 @@
 #import "ReportViewController.h"
 #import "Report.h"
 
-@interface ReportViewController ()
+@interface ReportViewController () <UITextViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *reportedUserImage;
 @property (weak, nonatomic) IBOutlet UITextView *reportText;
@@ -25,6 +25,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.reportText.delegate = self;
     
     self.view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7f];
     
@@ -56,6 +58,16 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    NSRange resultRange = [text rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet] options:NSBackwardsSearch];
+    if ([text length] == 1 && resultRange.location != NSNotFound) {
+        [textView resignFirstResponder];
+        return NO;
+    }
+    
+    return YES;
+}
 
 - (IBAction)cancelButtonPressed:(id)sender {
     [self dismissViewControllerAnimated:NO completion:nil];

@@ -60,6 +60,8 @@
 		42F5B28619B0C4CB0036938B /* Chat.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42F5B28519B0C4CB0036938B /* Chat.xcassets */; };
 		4C03549B1A7D7AD800658BE9 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C03549A1A7D7AD800658BE9 /* TutorialViewController.m */; };
 		4C475FE21A7C9C8D00CB9283 /* more.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C475FE11A7C9C8D00CB9283 /* more.png */; };
+		4C4D71DB1AE5D33E000FE139 /* UserRatingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4D71DA1AE5D33E000FE139 /* UserRatingViewController.m */; };
+		4C4D71DE1AE6F458000FE139 /* UserRating2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4D71DD1AE6F458000FE139 /* UserRating2ViewController.m */; };
 		4C4E033F1AC6301800597EB9 /* Animals & Pets.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03361AC6301800597EB9 /* Animals & Pets.png */; };
 		4C4E03401AC6301800597EB9 /* Cooking.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03371AC6301800597EB9 /* Cooking.png */; };
 		4C4E03411AC6301800597EB9 /* Dining-out.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03381AC6301800597EB9 /* Dining-out.png */; };
@@ -303,6 +305,10 @@
 		4C0354991A7D7AD800658BE9 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
 		4C03549A1A7D7AD800658BE9 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
 		4C475FE11A7C9C8D00CB9283 /* more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = more.png; sourceTree = "<group>"; };
+		4C4D71D91AE5D33E000FE139 /* UserRatingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserRatingViewController.h; sourceTree = "<group>"; };
+		4C4D71DA1AE5D33E000FE139 /* UserRatingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserRatingViewController.m; sourceTree = "<group>"; };
+		4C4D71DC1AE6F458000FE139 /* UserRating2ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserRating2ViewController.h; sourceTree = "<group>"; };
+		4C4D71DD1AE6F458000FE139 /* UserRating2ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserRating2ViewController.m; sourceTree = "<group>"; };
 		4C4E03361AC6301800597EB9 /* Animals & Pets.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Animals & Pets.png"; sourceTree = "<group>"; };
 		4C4E03371AC6301800597EB9 /* Cooking.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Cooking.png; sourceTree = "<group>"; };
 		4C4E03381AC6301800597EB9 /* Dining-out.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dining-out.png"; sourceTree = "<group>"; };
@@ -780,6 +786,10 @@
 				4C03549A1A7D7AD800658BE9 /* TutorialViewController.m */,
 				4C4F7B5C1AE451AE0014C737 /* ReportViewController.h */,
 				4C4F7B5D1AE451AE0014C737 /* ReportViewController.m */,
+				4C4D71D91AE5D33E000FE139 /* UserRatingViewController.h */,
+				4C4D71DA1AE5D33E000FE139 /* UserRatingViewController.m */,
+				4C4D71DC1AE6F458000FE139 /* UserRating2ViewController.h */,
+				4C4D71DD1AE6F458000FE139 /* UserRating2ViewController.m */,
 			);
 			name = Application;
 			sourceTree = "<group>";
@@ -1332,6 +1342,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C4F7B5E1AE451AE0014C737 /* ReportViewController.m in Sources */,
+				4C4D71DE1AE6F458000FE139 /* UserRating2ViewController.m in Sources */,
 				C237018A19D974390024F856 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				4CBDB1941A3CDD3C006A9F1F /* ProfileTableVC.m in Sources */,
 				4CCED3131A92DCD800069EAD /* ChatMessageViewController.m in Sources */,
@@ -1430,6 +1441,7 @@
 				42236F3119B7F30000539466 /* CDemoCollectionViewController.m in Sources */,
 				4C4F7B5B1AE429CC0014C737 /* UserRating.m in Sources */,
 				42236F2619B7DEEE00539466 /* CBetterCollectionViewCell.m in Sources */,
+				4C4D71DB1AE5D33E000FE139 /* UserRatingViewController.m in Sources */,
 				4281F25C19B22F72007724C6 /* UserCollectionViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

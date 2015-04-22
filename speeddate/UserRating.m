@@ -7,6 +7,7 @@
 //
 
 #import "UserRating.h"
+#import "PossibleMatchHelper.h"
 
 @implementation UserRating
 
@@ -22,6 +23,36 @@
 
 + (NSString *)parseClassName {
     return @"UserRating";
+}
+
+- (void)giveMatch:(UserParseHelper *)match ratingOf:(NSString *)rating byUser:(UserParseHelper *)user inView:(UIViewController *)view forConnection:(PossibleMatchHelper *)connection because:(NSString *)description
+{
+    self.toUser               = match;
+    self.fromUser             = user;
+    self.ratingType           = rating;
+    self.badRatingDescription = description;
+    
+    if ([connection.fromUser isEqual:user]) {
+        // User made the Connection
+        connection.toUserRating = rating;
+    } else connection.fromUserRating = rating;
+    
+    
+    [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            [connection saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    [view dismissViewControllerAnimated:NO completion:nil];
+                }
+            }];
+        }
+    }];
+    
+}
+
+- (void)addRating:(NSString *)rating toConnection:(NSArray *)matchPair
+{
+    // Get the Connection using
 }
 
 @end

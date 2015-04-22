@@ -45,4 +45,9 @@
     }];
 }
 
+- (void)reportImage:(UIImage *)image fromMatch:(UserParseHelper *)match byUser:(UserParseHelper *)user because:(NSString *)description inView:(UIViewController *)view
+{
+    
+}
+
 @end

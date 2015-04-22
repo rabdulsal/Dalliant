@@ -148,14 +148,14 @@
     }];
 }
 
-- (void)calculateCredits
+- (void)increaseCreditsBy:(int)points
 {
-    self.credits = [NSNumber numberWithInteger:self.credits.intValue +1];
+    self.credits = [NSNumber numberWithInteger:self.credits.intValue + points];
 }
 
-- (void)decreaseCredits
+- (void)decreaseCreditsBy:(int)points
 {
-    self.credits = [NSNumber numberWithInt:self.credits.intValue -1];
+    self.credits = [NSNumber numberWithInt:self.credits.intValue - points];
 }
 
 - (void)blockUser:(NSString *)matchUserId

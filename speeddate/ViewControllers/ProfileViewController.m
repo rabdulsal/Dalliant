@@ -15,6 +15,9 @@
 #import "config.h"
 #import "RageIAPHelper.h"
 #import "User.h"
+#import "UserRatingViewController.h"
+#import "UserRating2ViewController.h"
+#import "PossibleMatchHelper.h"
 #import <StoreKit/StoreKit.h>
 
 #define DEFAULT_DESCRIPTION  @"Please fill information about you"
@@ -143,7 +146,11 @@
 
     [UserParseHelper currentUser].credits = @5;
     
+    
+    [self findUnratedMatches];
+    
     self.restorationIdentifier = @"ProfileViewController";
+    
 }
 
 
@@ -168,14 +175,12 @@
         self.whoseeVip.hidden = NO;
         
     }
-
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navigationItem.title = [UserParseHelper currentUser].nickname;
+    //self.navigationItem.title = [UserParseHelper currentUser].nickname;
     
     // My Edits -------------------------------------
     self.bannerView.hidden = YES;
@@ -186,6 +191,53 @@
     
     //[self checkPurchase];
     //------------------------------------------------
+}
+
+- (void)findUnratedMatches
+{
+    NSLog(@"Connection query started");
+    PFQuery *unRatedConnectionsFromMe = [PossibleMatchHelper query];
+    [unRatedConnectionsFromMe whereKey:@"fromUser" equalTo:[UserParseHelper currentUser]];
+    PFQuery *unRatedConnectionsToMe = [PossibleMatchHelper query];
+    [unRatedConnectionsToMe whereKey:@"toUser" equalTo:[UserParseHelper currentUser]];
+    PFQuery *both = [PFQuery orQueryWithSubqueries:@[unRatedConnectionsFromMe, unRatedConnectionsToMe]];
+    [both findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        NSLog(@"Connections found: %lu", (unsigned long)[objects count]);
+
+        if ([objects count] > 0) {
+            
+            for (int i=0; i < [objects count]; i++) {
+                
+                PossibleMatchHelper *connection = (PossibleMatchHelper *)[objects objectAtIndex:i];
+                if ([connection.toUser isEqual:[UserParseHelper currentUser]]) {
+                    connection.fromUser = (UserParseHelper *)[connection.fromUser fetchIfNeeded];
+                    NSLog(@"Connection: %@", connection.fromUser.nickname);
+                    [self performSegueWithIdentifier:@"userRating2" sender:connection.fromUser];
+                    
+                } else {
+                    connection.toUser = (UserParseHelper *)[connection.toUser fetchIfNeeded];
+                    NSLog(@"Connection: %@", connection.toUser.nickname);
+                    [self performSegueWithIdentifier:@"userRating" sender:connection.toUser];
+                    
+                }
+            }
+            
+            /*
+                        for (PossibleMatchHelper *connection in objects) {
+                            
+                            if ([connection.toUser isEqual:[UserParseHelper currentUser]]) {
+                                connection.fromUser = (UserParseHelper *)[connection.fromUser fetchIfNeeded];
+                                //[self performSegueWithIdentifier:@"userRating" sender:connection.fromUser];
+                                NSLog(@"Connection: %@", connection.fromUser.nickname);
+                            } else {
+                                connection.toUser = (UserParseHelper *)[connection.toUser fetchIfNeeded];
+                                //[self performSegueWithIdentifier:@"userRating" sender:connection.toUser];
+                                NSLog(@"Connection: %@", connection.toUser.nickname);
+                            }
+            }
+             */
+        }
+    }];
 }
 
 - (void)createAgePickerView
@@ -417,6 +469,8 @@
 
 - (IBAction)deleteButtonPressed:(id)sender // Delete Profile via Parse
 {
+    [self performSegueWithIdentifier:@"userRating" sender:nil];
+    /*
     UIAlertView *deleteAlert = [[UIAlertView alloc] initWithTitle:@"Delete Profile"
                                                           message:@"Are you sure you want to permanently Delete your Dalliant Profile? This cannot be un-done."
                                                          delegate:self
@@ -424,7 +478,7 @@
                                                 otherButtonTitles:@"Delete",nil];
     deleteAlert.tag = 1;
     [deleteAlert show];
-
+     */
 }
 
 // Alertview handler
@@ -444,7 +498,26 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    self.navigationItem.title = @"Profile";
+    if ([segue.identifier isEqualToString:@"userRating"]) {
+        NSLog(@"Segue 1 run");
+        UserRatingViewController *vc = segue.destinationViewController;
+        vc.matchUser = (UserParseHelper *)sender; // Will be Match returned in PossMatch Query
+        vc.user = [UserParseHelper currentUser];
+        vc.matchUserImage = [UIImage imageWithData:[vc.matchUser.photo getData]];
+        [vc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
+        
+    } else if ([segue.identifier isEqualToString:@"userRating2"]) {
+        
+        NSLog(@"Segue 2 run");
+        
+        UserRating2ViewController *rateVC = segue.destinationViewController;
+        rateVC.matchUser = (UserParseHelper *)sender; // Will be Match returned in PossMatch Query
+        rateVC.user = [UserParseHelper currentUser];
+        rateVC.matchUserImage = [UIImage imageWithData:[rateVC.matchUser.photo getData]];
+        /*
+        [rateVC setModalPresentationStyle:UIModalPresentationOverCurrentContext];
+         */
+    } else self.navigationItem.title = @"Profile";
 }
 
 -(IBAction)buyMemberPro:(id)sender{

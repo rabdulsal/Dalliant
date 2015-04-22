@@ -99,7 +99,8 @@
 - (NSString *)userWork;
 - (NSString *)userSchool;
 - (void)configureImage:(UIImage *)image picNumber:(int)photoNum;
-- (void)calculateCredits;
+- (void)increaseCreditsBy:(int)points;
+- (void)decreaseCreditsBy:(int)points;
 - (void)blockUser:(NSString *)matchUser;
 - (void)userGeolocationOutput:(UILabel *)locationLabel;
 
