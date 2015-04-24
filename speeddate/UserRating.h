@@ -8,6 +8,7 @@
 
 #import <Parse/Parse.h>
 #import "UserParseHelper.h"
+#import "PossibleMatchHelper.h"
 
 @interface UserRating : PFObject <PFSubclassing>
 
@@ -15,5 +16,7 @@
 @property UserParseHelper *fromUser;
 @property NSString *ratingType;
 @property NSString *badRatingDescription;
+
+- (void)giveMatch:(UserParseHelper *)match ratingOf:(NSString *)rating byUser:(UserParseHelper *)user inView:(UIViewController *)view forConnection:(PossibleMatchHelper *)connection because:(NSString *)description;
 
 @end

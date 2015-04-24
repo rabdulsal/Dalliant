@@ -7,6 +7,7 @@
 //
 
 #import "UserRating2ViewController.h"
+#import "UserRating.h"
 
 @interface UserRating2ViewController () <UITextViewDelegate>
 
@@ -42,6 +43,8 @@
     _badRatingDescription.clipsToBounds = NO;
     [_badRatingDetails setHidden:YES];
     _matchUserLabel.text = _matchUser.nickname; // Refer to Relationship Model
+    _matchUserImageView.layer.cornerRadius = _matchUserImageView.frame.size.width/2;
+    _matchUserImageView.layer.masksToBounds = YES;
     _matchUserImageView.image = _matchUserImage;
 }
 
@@ -75,7 +78,8 @@
 }
 
 - (IBAction)goodRatingPressed:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    UserRating *userRating = [UserRating object];
+    [userRating giveMatch:_matchUser ratingOf:@"Good" byUser:_user inView:self forConnection:_relationship because:nil];
 }
 
 - (IBAction)cancelButtonPressed:(id)sender {
@@ -83,7 +87,8 @@
 }
 
 - (IBAction)submitButtonPressed:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    UserRating *userRating = [UserRating object];
+    [userRating giveMatch:_matchUser ratingOf:@"Bad" byUser:_user inView:self forConnection:_relationship because:_badRatingDescription.text];
 }
 
 @end

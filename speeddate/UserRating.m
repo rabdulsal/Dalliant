@@ -7,7 +7,6 @@
 //
 
 #import "UserRating.h"
-#import "PossibleMatchHelper.h"
 
 @implementation UserRating
 

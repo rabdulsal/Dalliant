@@ -8,11 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "UserParseHelper.h"
+#import "PossibleMatchHelper.h"
 
 @interface UserRating2ViewController : UIViewController
 
 @property UserParseHelper *matchUser;
 @property UserParseHelper *user;
+@property PossibleMatchHelper *relationship;
 @property UIImage *matchUserImage;
 
 @end

@@ -68,6 +68,7 @@
 @property (nonatomic,retain)  IBOutlet UISwitch *switchTouchId;
 
 @property UserParseHelper *user;
+@property PossibleMatchHelper *connection;
 
 ////who?
 
@@ -147,7 +148,7 @@
     [UserParseHelper currentUser].credits = @5;
     
     
-    [self findUnratedMatches];
+    //[self findUnratedMatches];
     
     self.restorationIdentifier = @"ProfileViewController";
     
@@ -208,16 +209,16 @@
             
             for (int i=0; i < [objects count]; i++) {
                 
-                PossibleMatchHelper *connection = (PossibleMatchHelper *)[objects objectAtIndex:i];
-                if ([connection.toUser isEqual:[UserParseHelper currentUser]]) {
-                    connection.fromUser = (UserParseHelper *)[connection.fromUser fetchIfNeeded];
-                    NSLog(@"Connection: %@", connection.fromUser.nickname);
-                    [self performSegueWithIdentifier:@"userRating2" sender:connection.fromUser];
+                _connection = (PossibleMatchHelper *)[objects objectAtIndex:i];
+                if ([_connection.toUser isEqual:[UserParseHelper currentUser]]) {
+                    _connection.fromUser = (UserParseHelper *)[_connection.fromUser fetchIfNeeded];
+                    
+                    [self performSegueWithIdentifier:@"userRating2" sender:_connection.fromUser];
                     
                 } else {
-                    connection.toUser = (UserParseHelper *)[connection.toUser fetchIfNeeded];
-                    NSLog(@"Connection: %@", connection.toUser.nickname);
-                    [self performSegueWithIdentifier:@"userRating" sender:connection.toUser];
+                    _connection.toUser = (UserParseHelper *)[_connection.toUser fetchIfNeeded];
+                    
+                    [self performSegueWithIdentifier:@"userRating" sender:_connection.toUser];
                     
                 }
             }
@@ -499,8 +500,9 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"userRating"]) {
-        NSLog(@"Segue 1 run");
+        
         UserRatingViewController *vc = segue.destinationViewController;
+        vc.relationship = _connection;
         vc.matchUser = (UserParseHelper *)sender; // Will be Match returned in PossMatch Query
         vc.user = [UserParseHelper currentUser];
         vc.matchUserImage = [UIImage imageWithData:[vc.matchUser.photo getData]];
@@ -508,9 +510,8 @@
         
     } else if ([segue.identifier isEqualToString:@"userRating2"]) {
         
-        NSLog(@"Segue 2 run");
-        
         UserRating2ViewController *rateVC = segue.destinationViewController;
+        rateVC.relationship = _connection;
         rateVC.matchUser = (UserParseHelper *)sender; // Will be Match returned in PossMatch Query
         rateVC.user = [UserParseHelper currentUser];
         rateVC.matchUserImage = [UIImage imageWithData:[rateVC.matchUser.photo getData]];
