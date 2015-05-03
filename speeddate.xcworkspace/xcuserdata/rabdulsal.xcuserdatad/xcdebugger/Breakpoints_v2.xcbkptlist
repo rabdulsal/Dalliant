@@ -38,11 +38,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "speeddate/ViewControllers/ChatMessageViewController.m"
-            timestampString = "452366283.178379"
+            timestampString = "452380293.994132"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1197"
-            endingLineNumber = "1197"
+            startingLineNumber = "1220"
+            endingLineNumber = "1220"
             landmarkName = "-prepareForSegue:sender:"
             landmarkType = "5">
          </BreakpointContent>

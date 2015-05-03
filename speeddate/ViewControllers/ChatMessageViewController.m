@@ -117,7 +117,10 @@
     if (!status) {
         [self blurImages:_titleImage];
         _titleText.text = title;
-    } else _titleText.text = _toUserParse.nickname;
+    } else {
+        [_visualEffectView removeFromSuperview];
+        _titleText.text = _toUserParse.nickname;
+    }
     
     [self.navigationItem setTitleView:_chatTitle];
 }
@@ -293,7 +296,20 @@
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if ([objects count] > 0) {
-            [self processMessages:objects];
+            
+            /**
+             *  Show the typing indicator to be shown
+             */
+            self.showTypingIndicator = !self.showTypingIndicator;
+            
+            /**
+             *  Scroll to actually view the indicator
+             */
+            [self scrollToBottomAnimated:YES];
+
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self processMessages:objects];
+            });
         }
         
     }];
@@ -309,6 +325,7 @@
                    return [a.createdAt compare:b.createdAt];
                }];
     */
+        
     for (MessageParse *message in messages) {
         NSLog(@"Chat Message START Created at: %@", message.createdAt);
         message.read = YES;
@@ -897,7 +914,7 @@
 - (void)usersRevealed
 {
     CGFloat chatCam = self.inputToolbar.contentView.frame.origin.y + 5;
-    [self configureNavigationTitleView:_toUserParse.nickname ifRevealed:NO];
+    [self configureNavigationTitleView:_toUserParse.nickname ifRevealed:YES];
     self.inputToolbar.contentView.leftBarButtonItem.enabled = YES;
     //[_blurImageView removeFromSuperview];
     UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(self.inputToolbar.contentView.leftBarButtonItem.frame.origin.x, chatCam, 30, 23)];
@@ -923,10 +940,16 @@
 
 - (void)showCameraTooltip
 {
+    if(![[NSUserDefaults standardUserDefaults] objectForKey:@"firstTimeRevealed"]) {
+        [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"firstTimeRevealed"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
     [[AMPopTip appearance] setPopoverColor:[UIColor blueColor]];
     AMPopTip *popTip = [AMPopTip popTip];
     CGRect chatCam = CGRectMake(self.inputToolbar.contentView.leftBarButtonItem.frame.origin.x+5, self.inputToolbar.contentView.leftBarButtonItem.frame.origin.y, self.inputToolbar.contentView.leftBarButtonItem.frame.size.width, self.inputToolbar.contentView.leftBarButtonItem.frame.size.height);
-    [popTip showText:@"You unlocked the camera and can now send photos!" direction:AMPopTipDirectionUp maxWidth:200 inView:self.inputToolbar.contentView fromFrame:chatCam duration:5];
+    [popTip showText:@"Awesome sauce! You unlocked the camera and can now send photos!" direction:AMPopTipDirectionUp maxWidth:250 inView:self.inputToolbar.contentView fromFrame:chatCam duration:5];
+        
+    }
 }
 
 #pragma mark - ImagePickerControllerDelegate
