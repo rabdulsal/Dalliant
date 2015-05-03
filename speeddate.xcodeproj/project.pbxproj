@@ -62,6 +62,7 @@
 		4C475FE21A7C9C8D00CB9283 /* more.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C475FE11A7C9C8D00CB9283 /* more.png */; };
 		4C4D71DB1AE5D33E000FE139 /* UserRatingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4D71DA1AE5D33E000FE139 /* UserRatingViewController.m */; };
 		4C4D71DE1AE6F458000FE139 /* UserRating2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4D71DD1AE6F458000FE139 /* UserRating2ViewController.m */; };
+		4C4D71E11AEB44D8000FE139 /* BebasNeue.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4C4D71E01AEB44D8000FE139 /* BebasNeue.otf */; };
 		4C4E033F1AC6301800597EB9 /* Animals & Pets.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03361AC6301800597EB9 /* Animals & Pets.png */; };
 		4C4E03401AC6301800597EB9 /* Cooking.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03371AC6301800597EB9 /* Cooking.png */; };
 		4C4E03411AC6301800597EB9 /* Dining-out.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03381AC6301800597EB9 /* Dining-out.png */; };
@@ -309,6 +310,7 @@
 		4C4D71DA1AE5D33E000FE139 /* UserRatingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserRatingViewController.m; sourceTree = "<group>"; };
 		4C4D71DC1AE6F458000FE139 /* UserRating2ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserRating2ViewController.h; sourceTree = "<group>"; };
 		4C4D71DD1AE6F458000FE139 /* UserRating2ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserRating2ViewController.m; sourceTree = "<group>"; };
+		4C4D71E01AEB44D8000FE139 /* BebasNeue.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = BebasNeue.otf; sourceTree = "<group>"; };
 		4C4E03361AC6301800597EB9 /* Animals & Pets.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Animals & Pets.png"; sourceTree = "<group>"; };
 		4C4E03371AC6301800597EB9 /* Cooking.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Cooking.png; sourceTree = "<group>"; };
 		4C4E03381AC6301800597EB9 /* Dining-out.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dining-out.png"; sourceTree = "<group>"; };
@@ -695,6 +697,7 @@
 		42DBCC3119AC20BB00CE6C93 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				4C4D71DF1AEB44B7000FE139 /* Fonts */,
 				C20F0B1719D7CE72005958C0 /* Images */,
 				42DBCC3919AC20BB00CE6C93 /* AppDelegate.h */,
 				42DBCC3A19AC20BB00CE6C93 /* AppDelegate.m */,
@@ -896,6 +899,14 @@
 				426107E219B4AA700000536C /* V8HorizontalPickerViewProtocol.h */,
 			);
 			name = V8HorizontalPickerView;
+			sourceTree = "<group>";
+		};
+		4C4D71DF1AEB44B7000FE139 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				4C4D71E01AEB44D8000FE139 /* BebasNeue.otf */,
+			);
+			name = Fonts;
 			sourceTree = "<group>";
 		};
 		C20F0B1719D7CE72005958C0 /* Images */ = {
@@ -1261,6 +1272,7 @@
 				C25E765E19EF81D500779C23 /* nouserphoto.jpg in Resources */,
 				C237015B19D974260024F856 /* ProgressHUD.bundle in Resources */,
 				C25E748219EC02F900779C23 /* share_menu@2x.png in Resources */,
+				4C4D71E11AEB44D8000FE139 /* BebasNeue.otf in Resources */,
 				C20F0B1919D7CE85005958C0 /* sdlogo.png in Resources */,
 				4C4E03461AC6301800597EB9 /* Volunteering, Social-activism, Politics.png in Resources */,
 				4C475FE21A7C9C8D00CB9283 /* more.png in Resources */,

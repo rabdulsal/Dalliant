@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Pods-AMPopTip.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-ActionSheetPicker-3.0.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -57,52 +62,57 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>109519416FEBE0EB45A87EC6</key>
+		<key>03EC9F6F99CAC6B705EB0D6D</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>19632CE4554359E6E1A37BCB</key>
+		<key>119CFC42A332BA258A146748</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>4A2B18067D2E461D323A6487</key>
+		<key>1887EF1032A11BF5DEC6E2F3</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>4F21A9AE6DA3E6EFD94AE216</key>
+		<key>379D7325E3D849F55198F31B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>54627FD878CAC6ED1222529E</key>
+		<key>3E3AB8595CB45EECEEACEAEE</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>925E8F6528181CC5D396A50C</key>
+		<key>5BFB2BBFF8E36157DEB66EBF</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A718A61BD59E13481E24FAF1</key>
+		<key>738B1CA2202C4296EA5EE42A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>B1E44CDCC1BF430E85CF1D2C</key>
+		<key>844204840C0021D75093F6C9</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>EA913D9CAB9C1D9498679FCC</key>
+		<key>ABC033186796C9B8369F699C</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>EB3F7BCA90C54C1702B4DFEA</key>
+		<key>B36709D49799BD33180FEB57</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C2C2D5F8FD945AD52990566C</key>
 		<dict>
 			<key>primary</key>
 			<true/>

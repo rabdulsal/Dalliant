@@ -35,6 +35,7 @@
 #import "UserTableViewCell.h"
 #import "MatchViewController.h"
 #import "User.h"
+#import <AMPopTip.h>
 
 #define IS_IPHONE_5 ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )568 ) < DBL_EPSILON )
 #define labelHeight 20
@@ -234,6 +235,10 @@
     
     [self customizeApp];
     
+    [[AMPopTip appearance] setPopoverColor:[UIColor blueColor]];
+    AMPopTip *popTip = [AMPopTip popTip];
+    [popTip showText:@"Press to find matches. Press again to stop." direction:AMPopTipDirectionRight maxWidth:200 inView:self.view fromFrame:_baedarLabel.frame duration:5];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:receivedMessage object:nil];
 
     //self.restorationIdentifier = @"MainViewController";
@@ -325,11 +330,18 @@
 
 - (void)checkFirstTime
 {
-    if(![[NSUserDefaults standardUserDefaults] objectForKey:@"first"]) {
-        [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"first"];
+    if(![[NSUserDefaults standardUserDefaults] objectForKey:@"firstTimeBaedar"]) {
+        [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"firstTimeBaedar"];
         [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        //Tour
+        [[AMPopTip appearance] setPopoverColor:[UIColor blueColor]];
+        AMPopTip *popTip = [AMPopTip popTip];
+        [popTip showText:@"Press to go 'Active' and find matches. Press again to stop." direction:AMPopTipDirectionRight maxWidth:200 inView:self.view fromFrame:_baedarLabel.frame duration:5];
+        /*
         UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Edit profile" message:@"Please edit your profile before matching" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Edit", nil];
         [av show];
+         */
     }
 }
 
@@ -347,7 +359,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    //[self checkFirstTime];
+    [self checkFirstTime];
     if (userSingleton.baedarIsRunning) {
         NSLog(@"Baedar is ON");
         [self baedarOn];

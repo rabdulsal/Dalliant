@@ -286,7 +286,7 @@
             badgeSize = [self.badgeString sizeWithFont:font];
         }
         
-		CGRect badgeframe = CGRectMake(self.contentView.frame.size.width - (badgeSize.width + 150 + self.badgeRightOffset),
+		CGRect badgeframe = CGRectMake(self.contentView.frame.size.width - (badgeSize.width + 13 + self.badgeRightOffset),
 									   (CGFloat)round((self.contentView.frame.size.height - (badgeSize.height + (50/badgeSize.height))) / 2),
 									   badgeSize.width + 13, badgeSize.height + (50/badgeSize.height));
 		

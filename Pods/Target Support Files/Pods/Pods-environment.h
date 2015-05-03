@@ -6,6 +6,12 @@
 // project.
 
 
+// AMPopTip
+#define COCOAPODS_POD_AVAILABLE_AMPopTip
+#define COCOAPODS_VERSION_MAJOR_AMPopTip 0
+#define COCOAPODS_VERSION_MINOR_AMPopTip 7
+#define COCOAPODS_VERSION_PATCH_AMPopTip 1
+
 // ActionSheetPicker-3.0
 #define COCOAPODS_POD_AVAILABLE_ActionSheetPicker_3_0
 #define COCOAPODS_VERSION_MAJOR_ActionSheetPicker_3_0 1

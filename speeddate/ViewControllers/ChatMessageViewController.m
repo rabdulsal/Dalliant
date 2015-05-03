@@ -11,6 +11,7 @@
 #import "ImageVC.h"
 #import "Report.h"
 #import "RevealRequest.h"
+#import <AMPopTip.h>
 
 
 @interface ChatMessageViewController ()
@@ -25,8 +26,12 @@
 @property UIImage *toPhoto;
 @property UIImage *fromPhoto;
 @property (strong, nonatomic) RevealRequest *receivedRequest;
+@property (weak, nonatomic) IBOutlet UIView *chatTitle;
+@property (weak, nonatomic) IBOutlet UILabel *titleText;
+@property (weak, nonatomic) IBOutlet UIImageView *titleImage;
 @property (strong, nonatomic) RevealRequest *receivedReply;
 @property (weak, nonatomic) IBOutlet UIView *unMatchedBlocker;
+@property UIVisualEffectView *visualEffectView;
 - (IBAction)popFromChat:(id)sender;
 
 
@@ -39,8 +44,8 @@
     
     // Do any additional setup after loading the view.
    
-    // Configure ChatUI NOTE: must set custom image dimensions via CGRectMake
-    self.title = @"Chat";
+    [self configureNavigationTitleView:@"Match" ifRevealed:NO];
+    
     UIImage *btnImage = [UIImage imageNamed:@"reveal"];
     CGRect btnImageFrame = CGRectMake(self.inputToolbar.contentView.leftBarButtonItem.frame.origin.x, self.inputToolbar.contentView.leftBarButtonItem.frame.origin.y, 27, 27);
     [self.inputToolbar.contentView.leftBarButtonItem setFrame:btnImageFrame];
@@ -60,6 +65,7 @@
     //[self getAvatarPhotos];
     
     self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
+    self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
     
     self.messages       = [NSMutableArray new];
     self.sortedMessages = [NSArray new];
@@ -96,6 +102,35 @@
     
 }
 
+- (void)configureNavigationTitleView: (NSString *)title ifRevealed: (BOOL)status {
+    // Configure ChatUI NOTE: must set custom image dimensions via CGRectMake
+    
+    _titleImage.layer.borderWidth = 2;
+    _titleImage.layer.borderColor = WHITE_COLOR.CGColor;
+    _titleImage.layer.cornerRadius =_titleImage.frame.size.width/2;
+    _titleImage.clipsToBounds = YES;
+    
+    [_toUserParse.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+        _titleImage.image = [UIImage imageWithData:data];
+    }];
+    
+    if (!status) {
+        [self blurImages:_titleImage];
+        _titleText.text = title;
+    } else _titleText.text = _toUserParse.nickname;
+    
+    [self.navigationItem setTitleView:_chatTitle];
+}
+
+- (void)blurImages:(UIImageView *)imageView
+{
+    UIVisualEffect *blurEffect;
+    blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+    _visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+    _visualEffectView.frame = imageView.bounds;
+    [imageView addSubview:_visualEffectView];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -104,6 +139,8 @@
 //    matchAvatar = nil;
     [self checkIncomingShareRequestsAndReplies];
 }
+
+
 
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -581,7 +618,7 @@
      *
      *  Override the defaults in `viewDidLoad`
      */
-    
+    /*
     JSQMessage *message = [self.messages objectAtIndex:indexPath.item];
     
     if ([message.senderId isEqualToString:_toUserParse.objectId]) {
@@ -589,8 +626,9 @@
         return matchAvatar;
         
     } else return nil;
-
+*/
     //return [self.demoData.avatars objectForKey:message.senderId];
+    return nil;
 }
 
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
@@ -859,14 +897,15 @@
 - (void)usersRevealed
 {
     CGFloat chatCam = self.inputToolbar.contentView.frame.origin.y + 5;
-    self.title = self.toUserParse.nickname;
+    [self configureNavigationTitleView:_toUserParse.nickname ifRevealed:NO];
     self.inputToolbar.contentView.leftBarButtonItem.enabled = YES;
     //[_blurImageView removeFromSuperview];
     UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(self.inputToolbar.contentView.leftBarButtonItem.frame.origin.x, chatCam, 30, 23)];
     UIImage *btnImage = [UIImage imageNamed:@"camera"];
     [button setImage:btnImage forState:UIControlStateNormal];
     self.inputToolbar.contentView.leftBarButtonItem = button;
-    [self getAvatarPhotos];
+    [self showCameraTooltip];
+    //[self getAvatarPhotos];
 }
 
 - (void)shareRequestRejected
@@ -880,6 +919,14 @@
     //No Avatar photo
     self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
     matchAvatar = nil;
+}
+
+- (void)showCameraTooltip
+{
+    [[AMPopTip appearance] setPopoverColor:[UIColor blueColor]];
+    AMPopTip *popTip = [AMPopTip popTip];
+    CGRect chatCam = CGRectMake(self.inputToolbar.contentView.leftBarButtonItem.frame.origin.x+5, self.inputToolbar.contentView.leftBarButtonItem.frame.origin.y, self.inputToolbar.contentView.leftBarButtonItem.frame.size.width, self.inputToolbar.contentView.leftBarButtonItem.frame.size.height);
+    [popTip showText:@"You unlocked the camera and can now send photos!" direction:AMPopTipDirectionUp maxWidth:200 inView:self.inputToolbar.contentView fromFrame:chatCam duration:5];
 }
 
 #pragma mark - ImagePickerControllerDelegate
