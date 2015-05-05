@@ -176,5 +176,14 @@
         locationLabel.text = [NSString stringWithFormat:@"%@, %@", placemark.locality, placemark.administrativeArea];
     }];
 }
-
+/*
+- (void)calculateDistanceBetweenUser:(UserParseHelper *)currentUser andMatch:(UserParseHelper *)match
+{
+     double distanceDouble   = [match.geoPoint distanceInMilesTo:currentUser.geoPoint];
+     //_userDistance.text      = [[NSString alloc]initWithFormat:@"%@", [NSNumber numberWithDouble:distanceDouble]];
+     _userDistance.text    = [[NSString alloc] initWithFormat:@"%f", distanceDouble];
+     NSLog(@"%@ GeoPoint: %@ | %@ GeoPoint: %@",_matchUser.nickname, _matchUser.geoPoint, _curUser.nickname, _curUser.geoPoint);
+     
+}
+*/
 @end

@@ -1284,7 +1284,7 @@
             cell.userImageView.hidden = YES;
             //[self configureRadialView:cell forConnection:matchedConnection];
             //CGRect frame = CGRectMake(190, 8, 45, 45);
-            CGRect frame = CGRectMake(20, 8, 50, 50);
+            CGRect frame = CGRectMake(15, 30, 50, 50);
             [matchedConnection configureRadialViewForView:cell.contentView withFrame:frame];
             if (![matchedConnection.usersRevealed isEqualToNumber:yep]) { // <-- Test purposes - change to check isRevealed on Matched User - NOT WORKING
                 [self blurImages:cell.userImageView];
@@ -1308,7 +1308,7 @@
     
     
     // Revealed conditional -----------------------------------------------------
-    
+    cell.matchDistance.text = [matchedConnection calculateUserDistance];
     
     
     // ----------------------------------------------------------------------------
