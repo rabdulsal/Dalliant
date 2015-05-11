@@ -7,6 +7,7 @@
 //
 
 #import "PossibleMatchHelper.h"
+#import "UserParseHelper.h"
 #import <MDRadialProgressLabel.h>
 #import <MDRadialProgressTheme.h>
 #import <MDRadialProgressView.h>
@@ -26,6 +27,8 @@
 @dynamic messagesCount;
 @dynamic toUserRating;
 @dynamic fromUserRating;
+@dynamic toUserRedeem;
+@dynamic fromUserRedeem;
 
 + (void)load {
     [self registerSubclass];

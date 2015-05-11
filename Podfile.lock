@@ -9,6 +9,7 @@ PODS:
   - KIImagePager (2.1.0)
   - MDRadialProgress (1.3.1)
   - NMRangeSlider (1.2.1)
+  - SCLAlertView-Objective-C (0.7.1)
   - TDBadgedCell (2.6)
 
 DEPENDENCIES:
@@ -20,6 +21,7 @@ DEPENDENCIES:
   - KIImagePager (~> 2.1)
   - MDRadialProgress
   - NMRangeSlider (~> 1.2)
+  - SCLAlertView-Objective-C
   - TDBadgedCell
 
 SPEC CHECKSUMS:
@@ -32,6 +34,7 @@ SPEC CHECKSUMS:
   KIImagePager: aea488f00879fda4a4b81e2b83187da070907c85
   MDRadialProgress: 6af31db0315f1b687df825a73481a2a443182402
   NMRangeSlider: 317ded652431eb90501c8421d9cddc3930d891e6
+  SCLAlertView-Objective-C: 19edce0d6f9de55316d8b9fe49a9953173a457f7
   TDBadgedCell: 522ef0fe70221a031eff8d424f5d57379f652088
 
 COCOAPODS: 0.35.0

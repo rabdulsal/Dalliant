@@ -24,6 +24,8 @@
 @property NSNumber *messagesCount;
 @property NSString *toUserRating;
 @property NSString *fromUserRating;
+@property NSNumber *toUserRedeem;
+@property NSNumber *fromUserRedeem;
 
 - (void)calculateCompatibility:(double)prefCounter with:(double)totalPreferences;
 - (void)configureRadialViewForView:(UIView *)view withFrame:(CGRect)frame;

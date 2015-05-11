@@ -63,6 +63,7 @@
 		4C4D71DB1AE5D33E000FE139 /* UserRatingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4D71DA1AE5D33E000FE139 /* UserRatingViewController.m */; };
 		4C4D71DE1AE6F458000FE139 /* UserRating2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4D71DD1AE6F458000FE139 /* UserRating2ViewController.m */; };
 		4C4D71E11AEB44D8000FE139 /* BebasNeue.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4C4D71E01AEB44D8000FE139 /* BebasNeue.otf */; };
+		4C4D71E41AF91C0A000FE139 /* RedeemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4D71E31AF91C0A000FE139 /* RedeemViewController.m */; };
 		4C4E033F1AC6301800597EB9 /* Animals & Pets.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03361AC6301800597EB9 /* Animals & Pets.png */; };
 		4C4E03401AC6301800597EB9 /* Cooking.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03371AC6301800597EB9 /* Cooking.png */; };
 		4C4E03411AC6301800597EB9 /* Dining-out.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03381AC6301800597EB9 /* Dining-out.png */; };
@@ -311,6 +312,8 @@
 		4C4D71DC1AE6F458000FE139 /* UserRating2ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserRating2ViewController.h; sourceTree = "<group>"; };
 		4C4D71DD1AE6F458000FE139 /* UserRating2ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserRating2ViewController.m; sourceTree = "<group>"; };
 		4C4D71E01AEB44D8000FE139 /* BebasNeue.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = BebasNeue.otf; sourceTree = "<group>"; };
+		4C4D71E21AF91C0A000FE139 /* RedeemViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RedeemViewController.h; sourceTree = "<group>"; };
+		4C4D71E31AF91C0A000FE139 /* RedeemViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RedeemViewController.m; sourceTree = "<group>"; };
 		4C4E03361AC6301800597EB9 /* Animals & Pets.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Animals & Pets.png"; sourceTree = "<group>"; };
 		4C4E03371AC6301800597EB9 /* Cooking.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Cooking.png; sourceTree = "<group>"; };
 		4C4E03381AC6301800597EB9 /* Dining-out.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dining-out.png"; sourceTree = "<group>"; };
@@ -840,6 +843,8 @@
 				4281F25519B22D0D007724C6 /* UserMessagesViewController.m */,
 				426107EA19B4E0B60000536C /* ImageViewController.h */,
 				426107EB19B4E0B60000536C /* ImageViewController.m */,
+				4C4D71E21AF91C0A000FE139 /* RedeemViewController.h */,
+				4C4D71E31AF91C0A000FE139 /* RedeemViewController.m */,
 			);
 			name = Messages;
 			sourceTree = "<group>";
@@ -1397,6 +1402,7 @@
 				4C03549B1A7D7AD800658BE9 /* TutorialViewController.m in Sources */,
 				C237019119D974390024F856 /* UIWebView+AFNetworking.m in Sources */,
 				C25E764819EF5C4000779C23 /* CJSONDeserializer.m in Sources */,
+				4C4D71E41AF91C0A000FE139 /* RedeemViewController.m in Sources */,
 				C237019019D974390024F856 /* UIRefreshControl+AFNetworking.m in Sources */,
 				C2A90EC619F423E500FC0D04 /* CollectionCell.m in Sources */,
 				C237018419D974390024F856 /* AFNetworkReachabilityManager.m in Sources */,
@@ -1579,7 +1585,7 @@
 					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/tools/lib",
 				);
 				PRODUCT_NAME = Dalliant;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "204b1525-e9e3-453d-ae72-ea5b54043bd0";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1611,7 +1617,7 @@
 					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/tools/lib",
 				);
 				PRODUCT_NAME = Dalliant;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "204b1525-e9e3-453d-ae72-ea5b54043bd0";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

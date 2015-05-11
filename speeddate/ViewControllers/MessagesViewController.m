@@ -422,6 +422,7 @@
         ChatMessageViewController *vc = segue.destinationViewController;
         vc.toUserParse      = [self.usersArray objectAtIndex:self.tableView.indexPathForSelectedRow.row];
         vc.curUser          = [UserParseHelper currentUser];
+        vc.matchedUsers     = _matchUser;
         vc.fromConversation = true;
         /*
         UserMessagesViewController *vc = segue.destinationViewController;

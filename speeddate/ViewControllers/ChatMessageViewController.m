@@ -12,7 +12,8 @@
 #import "Report.h"
 #import "RevealRequest.h"
 #import <AMPopTip.h>
-
+#import <SCLAlertView.h>
+#import "RedeemViewController.h"
 
 @interface ChatMessageViewController ()
 {
@@ -25,6 +26,7 @@
 @property NSArray *sortedMessages;
 @property UIImage *toPhoto;
 @property UIImage *fromPhoto;
+@property (weak, nonatomic) IBOutlet UILabel *prizeIndicator;
 @property (strong, nonatomic) RevealRequest *receivedRequest;
 @property (weak, nonatomic) IBOutlet UIView *chatTitle;
 @property (weak, nonatomic) IBOutlet UILabel *titleText;
@@ -32,7 +34,9 @@
 @property (strong, nonatomic) RevealRequest *receivedReply;
 @property (weak, nonatomic) IBOutlet UIView *unMatchedBlocker;
 @property UIVisualEffectView *visualEffectView;
+@property (weak, nonatomic) IBOutlet UIButton *rewardButton;
 - (IBAction)popFromChat:(id)sender;
+- (IBAction)rewardButtonPressed:(id)sender;
 
 
 @end
@@ -71,7 +75,7 @@
     self.sortedMessages = [NSArray new];
     
     [self getMessages];
-    [self fetchCompatibleMatch];
+    //[self fetchCompatibleMatch];
     
     JSQMessagesBubbleImageFactory *bubbleFactory = [[JSQMessagesBubbleImageFactory alloc] init];
     bubbleImageOutgoing = [bubbleFactory outgoingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
@@ -95,8 +99,10 @@
 - (void)customizeVC
 {
     //BubbleView
-    self.collectionView.collectionViewLayout.messageBubbleFont = [UIFont fontWithName:@"Helvetica" size:14];
-    self.unMatchedBlocker.frame = CGRectMake(0, self.view.frame.size.height, self.unMatchedBlocker.frame.size.width, self.unMatchedBlocker.frame.size.height);
+    _rewardButton.hidden                                        = YES;
+    _prizeIndicator.hidden                                      = YES;
+    self.collectionView.collectionViewLayout.messageBubbleFont  = [UIFont fontWithName:@"Helvetica" size:14];
+    self.unMatchedBlocker.frame                                 = CGRectMake(0, self.view.frame.size.height, self.unMatchedBlocker.frame.size.width, self.unMatchedBlocker.frame.size.height);
     
     [self.view addSubview:_unMatchedBlocker];
     
@@ -141,6 +147,8 @@
 //    self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
 //    matchAvatar = nil;
     [self checkIncomingShareRequestsAndReplies];
+    
+    // If Matches have both Shared Profile, show Prize Indicator
 }
 
 
@@ -154,7 +162,7 @@
      *  You must set this from `viewDidAppear:`
      *  Note: this feature is mostly stable, but still experimental
      */
-    self.collectionView.collectionViewLayout.springinessEnabled = YES;
+    //self.collectionView.collectionViewLayout.springinessEnabled = YES;
 }
 
 - (void)popVC
@@ -810,7 +818,9 @@
         
         [self performSegueWithIdentifier:@"chatImage" sender:imageMessage];
     } else {
-        NSLog(@"Text bubble.");
+        
+        
+        
     }
     
     
@@ -922,6 +932,9 @@
     [button setImage:btnImage forState:UIControlStateNormal];
     self.inputToolbar.contentView.leftBarButtonItem = button;
     [self showCameraTooltip];
+    
+    [self showPrizeIndicator];
+    
     //[self getAvatarPhotos];
 }
 
@@ -950,6 +963,37 @@
     [popTip showText:@"Awesome sauce! You unlocked the camera and can now send photos!" direction:AMPopTipDirectionUp maxWidth:250 inView:self.inputToolbar.contentView fromFrame:chatCam duration:5];
         
     }
+}
+
+- (void)showPrizeIndicator
+{
+    // Logic will eventually be moved to last part of usersRevealed
+    if ([_matchedUsers.toUser isEqual:_curUser] && ![self.matchedUsers.toUserRedeem isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+        NSLog(@"Current User is ToUser");
+        [self configurePrizeIndicator];
+        
+    } else if ([self.matchedUsers.fromUser isEqual:_curUser] && ![self.matchedUsers.fromUserRedeem isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+        NSLog(@"Current User is FromUser");
+        [self configurePrizeIndicator];
+        
+    } else NSLog(@"User Redeemed Prize.");
+}
+
+- (void)configurePrizeIndicator
+{
+    // If
+    _prizeIndicator.frame               = CGRectMake(_titleText.bounds.origin.x+_titleText.frame.size.width+5, _chatTitle.bounds.origin.y, 20, 20);
+    _prizeIndicator.backgroundColor     = [UIColor purpleColor];
+    _prizeIndicator.layer.cornerRadius  = _prizeIndicator.frame.size.width/2;
+    _prizeIndicator.clipsToBounds       = YES;
+    _prizeIndicator.hidden              = NO;
+    _rewardButton.hidden                = NO;
+    
+    // Should only be shown once
+    [[AMPopTip appearance] setPopoverColor:[UIColor blueColor]];
+    AMPopTip *popTip = [AMPopTip popTip];
+    CGRect titleFrame = CGRectMake(self.chatTitle.frame.origin.x, self.chatTitle.frame.origin.y+7, self.chatTitle.frame.size.width, self.chatTitle.frame.size.height);
+    [popTip showText:@"Unlocked a prize! Press here!" direction:AMPopTipDirectionDown maxWidth:100 inView:self.navigationController.view fromFrame:titleFrame duration:5];
 }
 
 #pragma mark - ImagePickerControllerDelegate
@@ -1222,9 +1266,17 @@
         //UIImageView *imageView = (UIImageView *)sender;
         vc.user                    = _curUser;
         vc.matchUser               = _toUserParse;
-        vc.image                = (UIImage *)sender;
+        vc.image                   = (UIImage *)sender;
         //vc.imageFrame.image     = vc.image;
          
+    } else if ([segue.identifier isEqualToString:@"redeemView"]) {
+        
+        RedeemViewController *redeemVC  = segue.destinationViewController;
+        redeemVC.prizeID                = _matchedUsers.objectId;
+        redeemVC.currentUser            = self.curUser;
+        redeemVC.matchRedmption         = self.matchedUsers;
+        _rewardButton.hidden            = YES;
+        _prizeIndicator.hidden          = YES;
     }
 }
 
@@ -1487,5 +1539,17 @@
 
 - (IBAction)popFromChat:(id)sender {
     [self popVC];
+}
+
+- (IBAction)rewardButtonPressed:(id)sender {
+    
+    SCLAlertView *alert = [[SCLAlertView alloc] init];
+    
+    [alert addButton:@"OK" actionBlock:^(void) {
+        [self performSegueWithIdentifier:@"redeemView" sender:nil];
+    }];
+    
+    NSString *alertText = [NSString stringWithFormat:@"When ready with %@ press 'OK' to show your Redemption Code to your Dalliant Host. The Redemption code is only shown ONCE.", self.toUserParse.nickname];
+    [alert showSuccess:self title:@"Drink Prize Unlocked!" subTitle:alertText closeButtonTitle:@"Cancel" duration:0.0f];
 }
 @end

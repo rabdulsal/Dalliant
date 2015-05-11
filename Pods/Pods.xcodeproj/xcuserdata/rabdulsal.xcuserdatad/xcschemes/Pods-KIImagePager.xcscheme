@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B36709D49799BD33180FEB57"
+               BlueprintIdentifier = "11C4F34B5D287B5F83A087C8"
                BuildableName = "libPods-KIImagePager.a"
                BlueprintName = "Pods-KIImagePager"
                ReferencedContainer = "container:Pods.xcodeproj">
