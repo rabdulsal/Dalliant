@@ -67,13 +67,18 @@
                 
                 MessageParse *message                   = (MessageParse *)object;
                 // Instantiate ViewController, set values and push
-                UINavigationController *navController   = (UINavigationController *)self.window.rootViewController;
-                ChatMessageViewController *chatVC       = [navController.storyboard instantiateViewControllerWithIdentifier:@"ChatPushNotificationView"];
-                chatVC.toUserParse                      = message.toUserParse;
-                chatVC.curUser                          = message.fromUserParse;
-                chatVC.fromConversation                 = true;
+                //UINavigationController *navController   = (UINavigationController *)self.window.rootViewController;
+                //ChatMessageViewController *chatVC       = [navController.storyboard instantiateViewControllerWithIdentifier:@"ChatPushNotificationView"];
+                SWRevealViewController *navigationController = (SWRevealViewController *)self.window.rootViewController;
+                UIStoryboard *mainStoryboard                 = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
+                UINavigationController *nav                  = (UINavigationController *)navigationController.frontViewController;
+                ChatMessageViewController *chatVC            = (ChatMessageViewController*)[mainStoryboard instantiateViewControllerWithIdentifier: @"ChatMessagesVC"];
+                chatVC.toUserParse                           = message.toUserParse;
+                chatVC.curUser                               = message.fromUserParse;
+                chatVC.fromConversation                      = true;
                 
-                [navController pushViewController:chatVC animated:YES];
+                //[navController.visibleViewController.navigationController pushViewController:chatVC animated:YES];
+                [nav pushViewController:chatVC animated:YES];
             }
         }];
          

@@ -137,7 +137,7 @@
 {
     PFQuery *messageQueryTo = [MessageParse query];
     [messageQueryTo whereKey:@"toUserParse" equalTo:[UserParseHelper currentUser]];
-    [messageQueryTo whereKey:@"read" equalTo:[NSNumber numberWithBool:NO]];
+    [messageQueryTo whereKey:@"read" notEqualTo:[NSNumber numberWithBool:YES]];
     
     [messageQueryTo findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         
@@ -173,26 +173,26 @@
     NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
     
     if (indexPath.row == 1) { // <-- Should be 1st
-        self.profileCell.backgroundColor = RED_LIGHT;
-        self.cellMatch.backgroundColor = [UIColor clearColor];
-        self.cellShare.backgroundColor = [UIColor clearColor];
-        self.cellMessage.backgroundColor = [UIColor clearColor];
-        self.cellLocation.backgroundColor = [UIColor clearColor];
-        self.vipMemberCell.backgroundColor = [UIColor clearColor];
-        self.termsCell.backgroundColor = [UIColor clearColor];
-        self.userNearCell.backgroundColor = [UIColor clearColor];
+        self.profileCell.backgroundColor    = RED_LIGHT;
+        self.cellMatch.backgroundColor      = [UIColor clearColor];
+        self.cellShare.backgroundColor      = [UIColor clearColor];
+        self.cellMessage.backgroundColor    = [UIColor clearColor];
+        self.cellLocation.backgroundColor   = [UIColor clearColor];
+        self.vipMemberCell.backgroundColor  = [UIColor clearColor];
+        self.termsCell.backgroundColor      = [UIColor clearColor];
+        self.userNearCell.backgroundColor   = [UIColor clearColor];
     }
     
     if (indexPath.row == 2) {
         
-        self.userNearCell.backgroundColor = RED_LIGHT;
-        self.cellMatch.backgroundColor = [UIColor clearColor];
-        self.cellMessage.backgroundColor = [UIColor clearColor];
-        self.profileCell.backgroundColor = [UIColor clearColor];
-        self.cellShare.backgroundColor = [UIColor clearColor];
-        self.vipMemberCell.backgroundColor = [UIColor clearColor];
-        self.termsCell.backgroundColor = [UIColor clearColor];
-        self.appCell.backgroundColor = [UIColor clearColor];
+        self.userNearCell.backgroundColor   = RED_LIGHT;
+        self.cellMatch.backgroundColor      = [UIColor clearColor];
+        self.cellMessage.backgroundColor    = [UIColor clearColor];
+        self.profileCell.backgroundColor    = [UIColor clearColor];
+        self.cellShare.backgroundColor      = [UIColor clearColor];
+        self.vipMemberCell.backgroundColor  = [UIColor clearColor];
+        self.termsCell.backgroundColor      = [UIColor clearColor];
+        self.appCell.backgroundColor        = [UIColor clearColor];
     }
 
 // ----------------------------------- REMOVE -----------------------------------------
@@ -213,14 +213,14 @@
     
     if (indexPath.row == 3) {
       
-        self.userNearCell.backgroundColor = [UIColor clearColor];
-        self.cellMatch.backgroundColor = [UIColor clearColor];
-        self.cellMessage.backgroundColor = RED_LIGHT;
-        self.profileCell.backgroundColor = [UIColor clearColor];
-        self.cellShare.backgroundColor = [UIColor clearColor];
-        self.vipMemberCell.backgroundColor = [UIColor clearColor];
-        self.termsCell.backgroundColor = [UIColor clearColor];
-        self.appCell.backgroundColor = [UIColor clearColor];
+        self.userNearCell.backgroundColor   = [UIColor clearColor];
+        self.cellMatch.backgroundColor      = [UIColor clearColor];
+        self.cellMessage.backgroundColor    = RED_LIGHT;
+        self.profileCell.backgroundColor    = [UIColor clearColor];
+        self.cellShare.backgroundColor      = [UIColor clearColor];
+        self.vipMemberCell.backgroundColor  = [UIColor clearColor];
+        self.termsCell.backgroundColor      = [UIColor clearColor];
+        self.appCell.backgroundColor        = [UIColor clearColor];
     }
     /*
     if (indexPath.row == 5) {

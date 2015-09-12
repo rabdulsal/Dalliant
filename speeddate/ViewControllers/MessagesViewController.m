@@ -257,33 +257,35 @@
             
             cell.userImageView.image = [UIImage imageWithData:data];
             
+            [self blurImages:cell.userImageView];
+            
+            if ([user.isMale isEqualToString:@"true"]) {
+                NSString *matchGender = @"Male";
+                cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
+            } else {
+                NSString *matchGender = @"Female";
+                cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
+            }
+            
+            if ((_receivedReply && _receivedRequest) || _receivedRequest) {
+                if ([_receivedRequest.requestReply isEqualToString:@"Yes"] && [_receivedRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_receivedRequest.requestFromUser isEqual:user]) {
+                    cell.nameTextLabel.text = user.nickname;
+                    [_visualEffectView removeFromSuperview];
+                    NSLog(@"%@ revealed!", user.nickname);
+                }
+            }
+            
+            if ((_receivedRequest && _receivedReply) || _receivedReply) {
+                if ([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_receivedReply.requestToUser isEqual:user]) {
+                    cell.nameTextLabel.text = user.nickname;
+                    [_visualEffectView removeFromSuperview];
+                    NSLog(@"%@ revealed!", user.nickname);
+                }
+            }
+            
         }];
             
-        [self blurImages:cell.userImageView];
-            
-        if ([user.isMale isEqualToString:@"true"]) {
-            NSString *matchGender = @"Male";
-            cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
-        } else {
-            NSString *matchGender = @"Female";
-            cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
-        }
         
-        if ((_receivedReply && _receivedRequest) || _receivedRequest) {
-            if ([_receivedRequest.requestReply isEqualToString:@"Yes"] && [_receivedRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_receivedRequest.requestFromUser isEqual:user]) {
-                cell.nameTextLabel.text = user.nickname;
-                [_visualEffectView removeFromSuperview];
-                NSLog(@"%@ revealed!", user.nickname);
-            }
-        }
-        
-        if ((_receivedRequest && _receivedReply) || _receivedReply) {
-            if ([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_receivedReply.requestToUser isEqual:user]) {
-                cell.nameTextLabel.text = user.nickname;
-                [_visualEffectView removeFromSuperview];
-                NSLog(@"%@ revealed!", user.nickname);
-            }
-        }
         
     }];
     

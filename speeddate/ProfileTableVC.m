@@ -191,6 +191,7 @@
 {
     NSLog(@"Clicked 'Okay' AlertView Error");
     
+    if _mainUser.userHeightFeet
     self.minHeightFeet.text     = @"0";
     self.minHeightInches.text   = @"0";
 }

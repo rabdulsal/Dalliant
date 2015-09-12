@@ -60,6 +60,9 @@
 @property NSString *relationshipType;
 @property NSString *relationshipStatus;
 @property NSArray *interests;
+@property NSArray *allConnections;
+@property NSArray *allMessages;
+@property NSArray *allRevealRequests;
 
 // Filter
 @property NSString *genderPref;
@@ -103,5 +106,6 @@
 - (void)decreaseCreditsBy:(int)points;
 - (void)blockUser:(NSString *)matchUser;
 - (void)userGeolocationOutput:(UILabel *)locationLabel;
+- (void)deleteAllUserData;
 
 @end
