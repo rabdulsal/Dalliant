@@ -10,6 +10,8 @@
 @dynamic image;
 @dynamic createdAt;
 @dynamic read;
+@dynamic isRevealed;
+@dynamic conversationId;
 @synthesize sendImage;
 
 + (void)load {

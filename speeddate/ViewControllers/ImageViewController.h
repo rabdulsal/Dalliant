@@ -11,5 +11,6 @@
 @interface ImageViewController : UIViewController
 
 @property UIImage *image;
+@property (weak, nonatomic) IBOutlet UIImageView *imageFrame;
 
 @end

@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PreferencesTableViewController : UITableViewController
+@interface PreferencesTableViewController : UITableViewController <UITextFieldDelegate>
 
 
 // Preferences Arrays
@@ -24,6 +24,10 @@
 // TextFields
 @property (weak, nonatomic) IBOutlet UITextField *minAgeField;
 @property (weak, nonatomic) IBOutlet UITextField *maxAgeField;
+
+// UILabels
+@property (weak, nonatomic) IBOutlet UILabel *employment;
+@property (weak, nonatomic) IBOutlet UILabel *education;
 
 // Actions - Segmented Controls
 - (IBAction)genderOptions:(id)sender;

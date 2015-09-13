@@ -22,6 +22,7 @@
 #import "config.h"
 #import "UserParseHelper.h"
 #import "User.h"
+#import "MessageParse.h"
 #import <TDBadgedCell.h>
 
 #define DOCUMENTS [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject]
@@ -103,12 +104,7 @@
 {
     // ------------ MESSAGES BADGE -------------------
     
-    if (user.numberOfConvos) {
-        _cellMessage.badgeString = user.numberOfConvos;
-        _cellMessage.badge.radius = 5;
-        _cellMessage.badge.fontSize = 15;
-        _cellMessage.badgeColor = [UIColor whiteColor];
-    }
+    [self getUnreadMessages];
     
     // ------------------------------------------------
     
@@ -137,6 +133,24 @@
     }
 }
 
+- (void)getUnreadMessages
+{
+    PFQuery *messageQueryTo = [MessageParse query];
+    [messageQueryTo whereKey:@"toUserParse" equalTo:[UserParseHelper currentUser]];
+    [messageQueryTo whereKey:@"read" notEqualTo:[NSNumber numberWithBool:YES]];
+    
+    [messageQueryTo findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        
+        if ([objects count] != 0) {
+            int numberMessagesUnread = (int)[objects count];
+            _cellMessage.badgeString = [[NSString alloc] initWithFormat:@"%d", numberMessagesUnread];
+            _cellMessage.badge.radius = 5;
+            _cellMessage.badge.fontSize = 15;
+            _cellMessage.badgeColor = [UIColor whiteColor];
+        }
+    }];
+}
+
 #pragma mark - TABLEVIEW SEGUES
 
 /* ----------------------------------------------------------------------------------------------
@@ -159,31 +173,31 @@
     NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
     
     if (indexPath.row == 1) { // <-- Should be 1st
-        self.profileCell.backgroundColor = RED_LIGHT;
-        self.cellMatch.backgroundColor = [UIColor clearColor];
-        self.cellShare.backgroundColor = [UIColor clearColor];
-        self.cellMessage.backgroundColor = [UIColor clearColor];
-        self.cellLocation.backgroundColor = [UIColor clearColor];
-        self.vipMemberCell.backgroundColor = [UIColor clearColor];
-        self.termsCell.backgroundColor = [UIColor clearColor];
-        self.userNearCell.backgroundColor = [UIColor clearColor];
+        self.profileCell.backgroundColor    = RED_LIGHT;
+        self.cellMatch.backgroundColor      = [UIColor clearColor];
+        self.cellShare.backgroundColor      = [UIColor clearColor];
+        self.cellMessage.backgroundColor    = [UIColor clearColor];
+        self.cellLocation.backgroundColor   = [UIColor clearColor];
+        self.vipMemberCell.backgroundColor  = [UIColor clearColor];
+        self.termsCell.backgroundColor      = [UIColor clearColor];
+        self.userNearCell.backgroundColor   = [UIColor clearColor];
     }
     
-    if (indexPath.row == 3) {
+    if (indexPath.row == 2) {
         
-        self.userNearCell.backgroundColor = RED_LIGHT;
-        self.cellMatch.backgroundColor = [UIColor clearColor];
-        self.cellMessage.backgroundColor = [UIColor clearColor];
-        self.profileCell.backgroundColor = [UIColor clearColor];
-        self.cellShare.backgroundColor = [UIColor clearColor];
-        self.vipMemberCell.backgroundColor = [UIColor clearColor];
-        self.termsCell.backgroundColor = [UIColor clearColor];
-        self.appCell.backgroundColor = [UIColor clearColor];
+        self.userNearCell.backgroundColor   = RED_LIGHT;
+        self.cellMatch.backgroundColor      = [UIColor clearColor];
+        self.cellMessage.backgroundColor    = [UIColor clearColor];
+        self.profileCell.backgroundColor    = [UIColor clearColor];
+        self.cellShare.backgroundColor      = [UIColor clearColor];
+        self.vipMemberCell.backgroundColor  = [UIColor clearColor];
+        self.termsCell.backgroundColor      = [UIColor clearColor];
+        self.appCell.backgroundColor        = [UIColor clearColor];
     }
 
 // ----------------------------------- REMOVE -----------------------------------------
-    
-    if (indexPath.row == 2) {
+    /*
+    if (indexPath.row == 4) {
       
         self.userNearCell.backgroundColor = [UIColor clearColor];
         self.cellMatch.backgroundColor = RED_LIGHT;
@@ -194,21 +208,21 @@
         self.termsCell.backgroundColor = [UIColor clearColor];
         self.appCell.backgroundColor = [UIColor clearColor];
     }
-
+*/
 // ------------------------------------------------------------------------------------
     
-    if (indexPath.row == 4) {
+    if (indexPath.row == 3) {
       
-        self.userNearCell.backgroundColor = [UIColor clearColor];
-        self.cellMatch.backgroundColor = [UIColor clearColor];
-        self.cellMessage.backgroundColor = RED_LIGHT;
-        self.profileCell.backgroundColor = [UIColor clearColor];
-        self.cellShare.backgroundColor = [UIColor clearColor];
-        self.vipMemberCell.backgroundColor = [UIColor clearColor];
-        self.termsCell.backgroundColor = [UIColor clearColor];
-        self.appCell.backgroundColor = [UIColor clearColor];
+        self.userNearCell.backgroundColor   = [UIColor clearColor];
+        self.cellMatch.backgroundColor      = [UIColor clearColor];
+        self.cellMessage.backgroundColor    = RED_LIGHT;
+        self.profileCell.backgroundColor    = [UIColor clearColor];
+        self.cellShare.backgroundColor      = [UIColor clearColor];
+        self.vipMemberCell.backgroundColor  = [UIColor clearColor];
+        self.termsCell.backgroundColor      = [UIColor clearColor];
+        self.appCell.backgroundColor        = [UIColor clearColor];
     }
-    
+    /*
     if (indexPath.row == 5) {
         
         self.cellShare.backgroundColor = RED_LIGHT;
@@ -264,7 +278,7 @@
         self.cellMessage.backgroundColor = [UIColor clearColor];
         self.cellLocation.backgroundColor = [UIColor clearColor];
         self.userNearCell.backgroundColor = [UIColor clearColor];
-    }
+    }*/
 
 // ------------------------------------------------------------------------------------
     
@@ -311,7 +325,7 @@
 }
 
 #pragma mark - SHARE BUTTONS
-
+/*
 - (IBAction)shareButton:(id)sender
 {
     CHTumblrMenuView *menuShare = [[CHTumblrMenuView alloc] init];
@@ -457,7 +471,7 @@
     
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
-
+*/
 /* ----------------------------------------------------------------------------------------------
  -------------------------------------------------------------------------------------------------
  

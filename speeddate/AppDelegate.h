@@ -20,5 +20,6 @@
 
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic,strong)  UserParseHelper *userStart;
+@property UINavigationController *navController;
 
 @end

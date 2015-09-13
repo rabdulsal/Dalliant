@@ -59,8 +59,7 @@
 
         // Set profileImage - Fbook photo blurry
         [mainUser.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-            UIImage *userImage = [[UIImage alloc] initWithData:data];
-            profileImage.image = userImage;
+            profileImage.image = [[UIImage alloc] initWithData:data];
         }];
         
         if ([self.status isEqualToString:@"yes"]) {

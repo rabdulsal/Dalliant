@@ -12,6 +12,7 @@
 #import "GADAdNetworkExtras.h"
 #import "config.h"
 #import "User.h"
+#import "UserParseHelper.h"
 
 @class GADBannerView;
 @class GADRequest;
@@ -24,6 +25,10 @@
     
 }
 
+@property NSMutableArray *usersArray;
+
 @property(nonatomic, strong)  GADBannerView *adBanner;
+@property NSNumber *prefCounter;
+@property NSNumber *totalPrefs;
 
 @end

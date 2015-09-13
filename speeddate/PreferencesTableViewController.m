@@ -8,13 +8,21 @@
 
 #import "PreferencesTableViewController.h"
 #import "User.h"
+#import "UserParseHelper.h"
+#import "NMRangeSlider.h"
 
 @interface PreferencesTableViewController ()
 {
     BOOL *buttonsDisabled;
     User *user;
+    NSNumber *yup;
+    NSNumber *nope;
 }
+@property UserParseHelper *mainUser;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *sidebarButton;
+@property (weak, nonatomic) IBOutlet NMRangeSlider *labelSlider;
+@property (weak, nonatomic) IBOutlet UILabel *lowerLabel;
+@property (weak, nonatomic) IBOutlet UILabel *upperLabel;
 
 @end
 
@@ -23,13 +31,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    user = [User singleObj];
+    
     _sidebarButton.target = self.revealViewController;
     _sidebarButton.action = @selector(revealToggle:);
     //[self.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];
 
-    user = [User singleObj];
+    _maxAgeField.delegate = self;
+    _minAgeField.delegate = self;
     
     // Will have to do a check on the User to pre-load Preferences into appropriate Arrays
+    
+    yup = [NSNumber numberWithBool:YES];
+    nope = [NSNumber numberWithBool:NO];
     
     _allPrefs = [[NSMutableArray alloc] initWithObjects:_animalLabel,
                  _artsLabel,
@@ -52,6 +66,8 @@
                  nil];
     _userPrefs = [[NSMutableArray alloc] init];
     
+    [self configureLabelSlider];
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -63,12 +79,64 @@
 {
     [super viewWillAppear:animated];
     
-    [self checkAndSetPreferenceValues];
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
+    
+    PFQuery *query = [UserParseHelper query];
+    [query getObjectInBackgroundWithId:[UserParseHelper currentUser].objectId
+                                 block:^(PFObject *object, NSError *error)
+     {
+         self.mainUser = (UserParseHelper *)object;
+         
+         [self checkAndSetPreferenceValues];
+         
+     }];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void) configureLabelSlider
+{
+    self.labelSlider.maximumValue = 55;
+    self.labelSlider.minimumValue = 18;
+    
+    // Store these values to database, then CheckAndSet based on database values
+    if (_mainUser.maxAgePref) {
+        self.labelSlider.upperValue = [_mainUser.maxAgePref floatValue];
+    } else self.labelSlider.upperValue =55;
+    
+    if (_mainUser.minAgePref) {
+        self.labelSlider.lowerValue = [_mainUser.minAgePref floatValue];
+    } self.labelSlider.lowerValue = 18;
+    
+    self.labelSlider.minimumRange = 10;
+}
+
+- (void) updateSliderLabels
+{
+    // You get get the center point of the slider handles and use this to arrange other subviews
+    
+    /*CGPoint lowerCenter;
+    lowerCenter.x = (self.labelSlider.lowerCenter.x + self.labelSlider.frame.origin.x);
+    lowerCenter.y = (self.labelSlider.center.y - 30.0f);
+    self.lowerLabel.center = lowerCenter;*/
+    self.lowerLabel.text = [NSString stringWithFormat:@"%d", (int)self.labelSlider.lowerValue];
+    _mainUser.minAgePref = [NSNumber numberWithFloat:_labelSlider.lowerValue ];
+    
+    /*CGPoint upperCenter;
+    upperCenter.x = (self.labelSlider.upperCenter.x + self.labelSlider.frame.origin.x);
+    upperCenter.y = (self.labelSlider.center.y - 30.0f);
+    self.upperLabel.center = upperCenter;*/
+    self.upperLabel.text = [NSString stringWithFormat:@"%d", (int)self.labelSlider.upperValue];
+    _mainUser.maxAgePref = [NSNumber numberWithFloat:_labelSlider.upperValue ];
+}
+
+// Handle control value changed events just like a normal slider
+- (IBAction)labelSliderChanged:(NMRangeSlider*)sender
+{
+    [self updateSliderLabels];
 }
 
 /*
@@ -90,189 +158,203 @@
      AND TAG NUMERICAL TAGS FOR BUTTONS & LABELS TO UTILIZE LOOPS
      
      ------------------------------------------------*/
-    if (user.genderPref) {
-        if ([user.genderPref isEqualToString:@"Male"]) {
+    if (_mainUser.genderPref) {
+        if ([_mainUser.genderPref isEqualToString:@"Male"]) {
             [_genderControl setSelectedSegmentIndex:0];
-        } else if ([user.genderPref isEqualToString:@"Female"]) {
+        } else if ([_mainUser.genderPref isEqualToString:@"Female"]) {
             [_genderControl setSelectedSegmentIndex:1];
-        } else if ([user.genderPref isEqualToString:@"Both"]){
+        } else if ([_mainUser.genderPref isEqualToString:@"Both"]){
             [_genderControl setSelectedSegmentIndex:2];
         }
     }
-    
-    if (user.minAgePref) {
-        _minAgeField.text = user.minAgePref;
+    /*
+    if (_mainUser.minAgePref) {
+        _minAgeField.text = [[NSString alloc] initWithFormat:@"%@", _mainUser.minAgePref];
     }
     
-    if (user.maxAgePref) {
-        _maxAgeField.text = user.maxAgePref;
+    if (_mainUser.maxAgePref) {
+        _maxAgeField.text = [[NSString alloc] initWithFormat:@"%@", _mainUser.maxAgePref];
+    }
+    */
+    self.labelSlider.upperValue = [_mainUser.maxAgePref floatValue];
+    self.labelSlider.lowerValue = [_mainUser.minAgePref floatValue];
+    [self updateSliderLabels];
+    
+    if([self.view respondsToSelector:@selector(setTintColor:)])
+    {
+        self.view.tintColor = RED_DEEP;
     }
     
-    if (user.bodyTypePref) {
-        if ([user.bodyTypePref isEqualToString:@"Skinny"]) {
+    if (_mainUser.bodyTypePref) {
+        if ([_mainUser.bodyTypePref isEqualToString:@"Skinny"]) {
             [_bodyTypeControl setSelectedSegmentIndex:0];
-        } else if ([user.bodyTypePref isEqualToString:@"Average"]) {
+        } else if ([_mainUser.bodyTypePref isEqualToString:@"Average"]) {
             [_bodyTypeControl setSelectedSegmentIndex:1];
-        } else if ([user.bodyTypePref isEqualToString:@"Fit"]) {
+        } else if ([_mainUser.bodyTypePref isEqualToString:@"Fit"]) {
             [_bodyTypeControl setSelectedSegmentIndex:2];
-        } else if ([user.bodyTypePref isEqualToString:@"XL"]) {
+        } else if ([_mainUser.bodyTypePref isEqualToString:@"XL"]) {
             [_bodyTypeControl setSelectedSegmentIndex:3];
         }
     }
     
-    if (user.relationshipStatusPref) {
-        if ([user.relationshipStatusPref isEqualToString:@"Single"]) {
+    if (_mainUser.relationshipStatusPref) {
+        if ([_mainUser.relationshipStatusPref isEqualToString:@"Single"]) {
             [_relationshipStatusControl setSelectedSegmentIndex:0];
-        } else if ([user.relationshipStatusPref isEqualToString:@"Dating"]) {
+        } else if ([_mainUser.relationshipStatusPref isEqualToString:@"Dating"]) {
             [_relationshipStatusControl setSelectedSegmentIndex:1];
-        } else if ([user.relationshipStatusPref isEqualToString:@"Married"]) {
+        } else if ([_mainUser.relationshipStatusPref isEqualToString:@"Divorced"]) {
             [_relationshipStatusControl setSelectedSegmentIndex:2];
-        } else if ([user.relationshipStatusPref isEqualToString:@"Divorced"]){
-            [_relationshipStatusControl setSelectedSegmentIndex:3];
         }
     }
     
-    if (user.romanticPreference) {
-        if ([user.romanticPreference isEqualToString:@"Fun"]) {
+    if (_mainUser.romanticPreference) {
+        if ([_mainUser.romanticPreference isEqualToString:@"Company"]) {
             [_relationshipTypeControl setSelectedSegmentIndex:0];
-        } else if ([user.romanticPreference isEqualToString:@"Friend"]) {
+        } else if ([_mainUser.romanticPreference isEqualToString:@"Friend"]) {
             [_relationshipTypeControl setSelectedSegmentIndex:1];
-        } else if ([user.romanticPreference isEqualToString:@"Relationship"]) {
+        } else if ([_mainUser.romanticPreference isEqualToString:@"Relationship"]) {
             [_relationshipTypeControl setSelectedSegmentIndex:2];
         }
     }
     
-    if (user.kidsOkay) {
+    NSNumber *yeah = [[NSNumber alloc] initWithBool:true];
+    
+    if ([_mainUser.kidsOkay isEqualToNumber:yeah]) {
         [_hasKidsFilter setOn:YES];
     } else {
         [_hasKidsFilter setOn:NO];
     }
     
-    if (user.drinkingOkay) {
+    if ([_mainUser.drinkingOkay isEqualToNumber:yeah]) {
         [_drinksFilter setOn:YES];
     } else {
         [_drinksFilter setOn:NO];
     }
     
-    if (user.smokingOkay) {
+    if ([_mainUser.smokingOkay isEqualToNumber:yeah]) {
         [_smokesCigsFilter setOn:YES];
     } else {
         [_smokesCigsFilter setOn:NO];
     }
     
-    if (user.drugsOkay) {
+    if ([_mainUser.drugsOkay isEqualToNumber:yeah]) {
         [_takesDrugsFilter setOn:YES];
     } else {
         [_takesDrugsFilter setOn:NO];
     }
     
-    if (user.bodyArtOkay) {
+    if ([_mainUser.bodyArtOkay isEqualToNumber:yeah]) {
         [_hasBodyArtFilter setOn:YES];
     } else {
         [_hasBodyArtFilter setOn:NO];
     }
     
-    // Pref Buttons
-    
-    if (user.animalsPref) {
+    // Pref Buttons <-- May Not Need
+    /*
+    if (_mainUser.animalsPref) {
         [self buttonSelected:_animalLabel];
     }
     
-    if (user.artsPref) {
+    if (_mainUser.artsPref) {
         [self buttonSelected:_artsLabel];
     }
     
-    if (user.beerPref) {
+    if (_mainUser.beerPref) {
         [self buttonSelected:_beerLabel];
     }
     
-    if (user.bookClubPref) {
+    if (_mainUser.bookClubPref) {
         [self buttonSelected:_bookClubLabel];
     }
     
-    if (user.cookingPref) {
+    if (_mainUser.cookingPref) {
         [self buttonSelected:_cookingLabel];
     }
     
-    if (user.dancingPref) {
+    if (_mainUser.dancingPref) {
         [self buttonSelected:_dancingLabel];
     }
     
-    if (user.diningOutPref) {
+    if (_mainUser.diningOutPref) {
         [self buttonSelected:_diningOutLabel];
     }
     
-    if (user.hikingPref) {
+    if (_mainUser.hikingPref) {
         [self buttonSelected:_hikingOutdoorsLabel];
     }
     
-    if (user.lecturesPref) {
+    if (_mainUser.lecturesPref) {
         [self buttonSelected:_lecturesTalksLabel];
     }
     
-    if (user.moviesPref) {
+    if (_mainUser.moviesPref) {
         [self buttonSelected:_moviesLabel];
     }
     
-    if (user.musicConcertsPref) {
+    if (_mainUser.musicConcertsPref) {
         [self buttonSelected:_musicConcertLabel];
     }
     
-    if (user.operaPref) {
+    if (_mainUser.operaPref) {
         [self buttonSelected:_operaTheatreLabel];
     }
     
-    if (user.religiousPref) {
+    if (_mainUser.religiousPref) {
         [self buttonSelected:_spiritualLabel];
     }
     
-    if (user.sportsPref) {
+    if (_mainUser.sportsPref) {
         [self buttonSelected:_sportsLabel];
     }
     
-    if (user.techPref) {
+    if (_mainUser.techPref) {
         [self buttonSelected:_techGadgetsLabel];
     }
     
-    if (user.travelPref) {
+    if (_mainUser.travelPref) {
         [self buttonSelected:_travelLabel];
     }
     
-    if (user.volunteerPref) {
+    if (_mainUser.volunteerPref) {
         [self buttonSelected:_volunteeringLabel];
     }
     
-    if (user.workoutPref) {
+    if (_mainUser.workoutPref) {
         [self buttonSelected:_workoutLabel];
-    }
+    }*/
 }
 
 #pragma mark - Segmented Controls - Actions
 
 - (IBAction)genderOptions:(id)sender {
     if (_genderControl.selectedSegmentIndex == 0) {
-        user.genderPref = @"Male";
+        _mainUser.genderPref = @"Male";
     } else if (_genderControl.selectedSegmentIndex == 1) {
-        user.genderPref = @"Female";
+        _mainUser.genderPref = @"Female";
     } else {
-        user.genderPref = @"Both";
+        _mainUser.genderPref = @"Both";
     }
+    [_mainUser saveInBackground];
 }
 
 - (IBAction)bodyType:(id)sender {
     NSLog(@"Button index: %lu", _bodyTypeControl.selectedSegmentIndex);
     switch (_bodyTypeControl.selectedSegmentIndex) {
         case 0:
-            user.bodyTypePref = @"Skinny";
+            _mainUser.bodyTypePref = @"Skinny";
+            [_mainUser saveInBackground];
             break;
         case 1:
-            user.bodyTypePref = @"Average";
+            _mainUser.bodyTypePref = @"Average";
+            [_mainUser saveInBackground];
             break;
         case 2:
-            user.bodyTypePref = @"Fit";
+            _mainUser.bodyTypePref = @"Fit";
+            [_mainUser saveInBackground];
             break;
         case 3:
-            user.bodyTypePref = @"XL";
+            _mainUser.bodyTypePref = @"XL";
+            [_mainUser saveInBackground];
             break;
     }
 }
@@ -280,16 +362,16 @@
 - (IBAction)relationshipStatus:(id)sender {
     switch (_relationshipStatusControl.selectedSegmentIndex) {
         case 0:
-            user.relationshipStatusPref = @"Single";
+            _mainUser.relationshipStatusPref = @"Single";
+            [_mainUser saveInBackground];
             break;
         case 1:
-            user.relationshipStatusPref= @"Dating";
+            _mainUser.relationshipStatusPref= @"Dating";
+            [_mainUser saveInBackground];
             break;
         case 2:
-            user.relationshipStatusPref = @"Married";
-            break;
-        case 3:
-            user.relationshipStatusPref = @"Divorced";
+            _mainUser.relationshipStatusPref = @"Divorced";
+            [_mainUser saveInBackground];
             break;
     }
 }
@@ -297,13 +379,16 @@
 - (IBAction)relationshipType:(id)sender {
     switch (_relationshipTypeControl.selectedSegmentIndex) {
         case 0:
-            user.romanticPreference = @"Fun";
+            _mainUser.romanticPreference = @"Company";
+            [_mainUser saveInBackground];
             break;
         case 1:
-            user.romanticPreference = @"Friend";
+            _mainUser.romanticPreference = @"Friend";
+            [_mainUser saveInBackground];
             break;
         case 2:
-            user.romanticPreference = @"Relationship";
+            _mainUser.romanticPreference = @"Relationship";
+            [_mainUser saveInBackground];
             break;
     }
 }
@@ -312,42 +397,49 @@
 
 - (IBAction)kidStatusToggle:(id)sender {
     if (_hasKidsFilter.on) {
-        user.kidsOkay = true;
-    } else user.kidsOkay = false;
+        _mainUser.kidsOkay = yup;
+    } else _mainUser.kidsOkay = nope;
+    [_mainUser saveInBackground];
+
 }
 
 - (IBAction)drinkPreferenceToggle:(id)sender {
     if (_drinksFilter.on) {
-        user.drinkingOkay = true;
-    } else  user.drinkingOkay = false;
+        _mainUser.drinkingOkay = yup;
+    } else  _mainUser.drinkingOkay = nope;
+    [_mainUser saveInBackground];
 }
 
 - (IBAction)smokesPreferenceToggle:(id)sender {
     if (_smokesCigsFilter.on) {
-        user.smokingOkay = true;
-    } else  user.smokingOkay = false;
+        _mainUser.smokingOkay = yup;
+    } else  _mainUser.smokingOkay = nope;
+    [_mainUser saveInBackground];
 }
 
 - (IBAction)drugPreferenceToggle:(id)sender {
     if (_takesDrugsFilter.on) {
-        user.drugsOkay = true;
-    } else  user.drugsOkay = false;
+        _mainUser.drugsOkay = yup;
+    } else  _mainUser.drugsOkay = nope;
+    [_mainUser saveInBackground];
 }
 
 - (IBAction)tatooPreferenceToggle:(id)sender {
     if (_hasBodyArtFilter.on) {
-        user.bodyArtOkay = true;
-    } else  user.bodyArtOkay = false;
+        _mainUser.bodyArtOkay = yup;
+    } else  _mainUser.bodyArtOkay = nope;
+    [_mainUser saveInBackground];
 }
 
+/*
 #pragma mark - Interests & Hobbies
 
 - (IBAction)animalsToggle:(id)sender {
     if (_animalLabel.isSelected) {
-        user.animalsPref = false;
+        _mainUser.animalsPref = false;
         [self buttonDeSelected:_animalLabel];
     } else {
-        user.animalsPref = true;
+        _mainUser.animalsPref = true;
         [self buttonSelected:_animalLabel];
     }
 }
@@ -355,173 +447,173 @@
 - (IBAction)artsToggle:(id)sender {
     if (_artsLabel.isSelected) {
         [self buttonDeSelected:_artsLabel];
-        user.artsPref = false;
+        _mainUser.artsPref = false;
     } else {
         [self buttonSelected:_artsLabel];
-        user.artsPref = true;
+        _mainUser.artsPref = true;
     }
 }
 
 - (IBAction)beerToggle:(id)sender {
     if (_beerLabel.isSelected) {
-        user.beerPref = false;
+        _mainUser.beerPref = false;
         [self buttonDeSelected:_beerLabel];
     } else {
-        user.beerPref = true;
+        _mainUser.beerPref = true;
         [self buttonSelected:_beerLabel];
     }
 }
 
 - (IBAction)bookClubToggle:(id)sender {
     if (_bookClubLabel.isSelected) {
-        user.bookClubPref = false;
+        _mainUser.bookClubPref = false;
         [self buttonDeSelected:_bookClubLabel];
     } else {
-        user.bookClubPref = true;
+        _mainUser.bookClubPref = true;
         [self buttonSelected:_bookClubLabel];
     }
 }
 
 - (IBAction)cookingToggle:(id)sender {
     if (_cookingLabel.isSelected) {
-        user.cookingPref = false;
+        _mainUser.cookingPref = false;
         [self buttonDeSelected:_cookingLabel];
     } else {
-        user.cookingPref = true;
+        _mainUser.cookingPref = true;
         [self buttonSelected:_cookingLabel];
     }
 }
 
 - (IBAction)dancingToggle:(id)sender {
     if (_dancingLabel.isSelected) {
-        user.dancingPref = false;
+        _mainUser.dancingPref = false;
         [self buttonDeSelected:_dancingLabel];
     } else {
-        user.dancingPref = true;
+        _mainUser.dancingPref = true;
         [self buttonSelected:_dancingLabel];
     }
 }
 
 - (IBAction)diningClubToggle:(id)sender {
     if (_diningOutLabel.isSelected) {
-        user.diningOutPref = false;
+        _mainUser.diningOutPref = false;
         [self buttonDeSelected:_diningOutLabel];
     } else {
-        user.diningOutPref = true;
+        _mainUser.diningOutPref = true;
         [self buttonSelected:_diningOutLabel];
     }
 }
 
 - (IBAction)hikingToggle:(id)sender {
     if (_hikingOutdoorsLabel.isSelected) {
-        user.hikingPref = false;
+        _mainUser.hikingPref = false;
         [self buttonDeSelected:_hikingOutdoorsLabel];
     } else {
-        user.hikingPref = true;
+        _mainUser.hikingPref = true;
         [self buttonSelected:_hikingOutdoorsLabel];
     }
 }
 
 - (IBAction)lecturesToggle:(id)sender {
     if (_lecturesTalksLabel.isSelected) {
-        user.lecturesPref = false;
+        _mainUser.lecturesPref = false;
         [self buttonDeSelected:_lecturesTalksLabel];
     } else {
-        user.lecturesPref = true;
+        _mainUser.lecturesPref = true;
         [self buttonSelected:_lecturesTalksLabel];
     }
 }
 
 - (IBAction)musicToggle:(id)sender {
     if (_musicConcertLabel.isSelected) {
-        user.musicConcertsPref = false;
+        _mainUser.musicConcertsPref = false;
         [self buttonDeSelected:_musicConcertLabel];
     } else {
-        user.musicConcertsPref = true;
+        _mainUser.musicConcertsPref = true;
         [self buttonSelected:_musicConcertLabel];
     }
 }
 
 - (IBAction)operaToggle:(id)sender {
     if (_operaTheatreLabel.isSelected) {
-        user.operaPref = false;
+        _mainUser.operaPref = false;
         [self buttonDeSelected:_operaTheatreLabel];
     } else {
-        user.operaPref = true;
+        _mainUser.operaPref = true;
         [self buttonSelected:_operaTheatreLabel];
     }
 }
 
 - (IBAction)religiousToggle:(id)sender {
     if (_spiritualLabel.isSelected) {
-        user.religiousPref = false;
+        _mainUser.religiousPref = false;
         [self buttonDeSelected:_spiritualLabel];
     } else {
-        user.religiousPref = true;
+        _mainUser.religiousPref = true;
         [self buttonSelected:_spiritualLabel];
     }
 }
 
 - (IBAction)sportsToggle:(id)sender {
     if (_sportsLabel.isSelected) {
-        user.sportsPref = false;
+        _mainUser.sportsPref = false;
         [self buttonDeSelected:_sportsLabel];
     } else {
-        user.sportsPref = true;
+        _mainUser.sportsPref = true;
         [self buttonSelected:_sportsLabel];
     }
 }
 
 - (IBAction)techToggle:(id)sender {
     if (_techGadgetsLabel.isSelected) {
-        user.techPref = false;
+        _mainUser.techPref = false;
         [self buttonDeSelected:_techGadgetsLabel];
     } else {
-        user.techPref = true;
+        _mainUser.techPref = true;
         [self buttonSelected:_techGadgetsLabel];
     }
 }
 
 - (IBAction)travelToggle:(id)sender {
     if (_travelLabel.isSelected) {
-        user.travelPref = false;
+        _mainUser.travelPref = false;
         [self buttonDeSelected:_travelLabel];
     } else {
-        user.travelPref = true;
+        _mainUser.travelPref = true;
         [self buttonSelected:_travelLabel];
     }
 }
 
 - (IBAction)volunteeringToggle:(id)sender {
     if (_volunteeringLabel.isSelected) {
-        user.volunteerPref = false;
+        _mainUser.volunteerPref = false;
         [self buttonDeSelected:_volunteeringLabel];
     } else {
-        user.volunteerPref = true;
+        _mainUser.volunteerPref = true;
         [self buttonSelected:_volunteeringLabel];
     }
 }
 
 - (IBAction)moviesToggle:(id)sender {
     if (_moviesLabel.isSelected) {
-        user.moviesPref = false;
+        _mainUser.moviesPref = false;
         [self buttonDeSelected:_moviesLabel];
     } else {
-        user.moviesPref = true;
+        _mainUser.moviesPref = true;
         [self buttonSelected:_moviesLabel];
     }
 }
 
 - (IBAction)workoutToggle:(id)sender {
     if (_workoutLabel.isSelected) {
-        user.workoutPref = false;
+        _mainUser.workoutPref = false;
         [self buttonDeSelected:_workoutLabel];
     } else {
-        user.workoutPref = true;
+        _mainUser.workoutPref = true;
         [self buttonSelected:_workoutLabel];
     }
 }
-
+*/
 #pragma mark - Check and Set Switches
 
 - (void)checkAndSetSwitchToggle:(UISwitch *)switchToggle andUserPreference:(BOOL *)preference
@@ -529,8 +621,10 @@
     
 }
 
-#pragma mark - Enable and Disable Preference Buttons
+/* Not really needed anymore
 
+#pragma mark - Enable and Disable Preference Buttons
+ 
 - (void)buttonDeSelected:(UIButton *)userPreference
 {
     if (!userPreference.isEnabled) {
@@ -589,19 +683,68 @@
     }
     buttonsDisabled = false;
 }
+*/
 
 #pragma mark - Save and Close
 
-- (IBAction)saveAndClose:(id)sender {
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+/*
     if (_minAgeField.text) {
-        user.minAgePref = _minAgeField.text;
+        _mainUser.minAgePref = [[NSNumberFormatter new] numberFromString:_minAgeField.text];
     }
     
     if (_maxAgeField.text) {
-        user.maxAgePref = _maxAgeField.text;
+        _mainUser.maxAgePref = [[NSNumberFormatter new] numberFromString:_maxAgeField.text];
+    }
+   */ 
+    // Set Segment Controls when left un-pressed
+    
+    if (_genderControl.selectedSegmentIndex == UISegmentedControlNoSegment) {
+        _mainUser.genderPref = @"Male";
+        NSLog(@"No gender set");
+    }
+    if (_bodyTypeControl.selectedSegmentIndex == UISegmentedControlNoSegment) {
+        _mainUser.bodyTypePref = @"Skinny";
+        NSLog(@"No Body Type set");
     }
     
-    [self dismissViewControllerAnimated:YES completion:nil];
+    if (_relationshipStatusControl.selectedSegmentIndex == UISegmentedControlNoSegment) {
+        _mainUser.relationshipStatusPref = @"Single";
+        NSLog(@"No RelatStat set");
+    }
+    
+    if (_relationshipTypeControl.selectedSegmentIndex == UISegmentedControlNoSegment) {
+        _mainUser.romanticPreference = @"Company";
+        NSLog(@"No RomPref set");
+    }
+    
+    // Set Switches when left un-pressed
+    
+    if (!_hasKidsFilter.on && _mainUser.kidsOkay == nil) {
+        _mainUser.kidsOkay = nope;
+    }
+    if (!_drinksFilter.on && _mainUser.drinkingOkay == nil) {
+        _mainUser.drinkingOkay = nope;
+    } 
+    if (!_smokesCigsFilter.on && _mainUser.smokingOkay == nil) {
+        _mainUser.smokingOkay = nope;
+    } 
+    if (!_takesDrugsFilter.on && _mainUser.drugsOkay == nil) {
+        _mainUser.drugsOkay = nope;
+    } 
+    if (!_hasBodyArtFilter.on && _mainUser.bodyArtOkay == nil) {
+        _mainUser.bodyArtOkay = nope;
+    }
+    
+    [_mainUser saveInBackground];
 }
-
+/* If using a TextField
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    [_minAgeField resignFirstResponder];
+    [_maxAgeField resignFirstResponder];
+    return YES;
+}
+*/
 @end
