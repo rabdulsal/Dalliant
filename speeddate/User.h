@@ -19,6 +19,7 @@
 @property (strong, nonatomic) CLLocation *location;
 @property (strong, nonatomic) NSString *numberOfConvos;
 @property (assign, nonatomic) BOOL *isRevealed;
+@property (nonatomic) NSMutableArray *imageAssets;
 
 // Profile -------------------------------------------------
 
@@ -88,6 +89,9 @@
 @property (assign, nonatomic) BOOL *volunteerPref;
 @property (assign, nonatomic) BOOL *moviesPref;
 @property (assign, nonatomic) BOOL *workoutPref;
+
+// Baedar ------------------------------------------------------
+@property (assign, nonatomic) BOOL baedarIsRunning;
 
 +(User *)singleObj;
 

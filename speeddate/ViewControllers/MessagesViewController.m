@@ -8,6 +8,7 @@
 
 #import "MessagesViewController.h"
 #import "UserParseHelper.h"
+#import "PossibleMatchHelper.h"
 #import "MessageParse.h"
 #import "UserTableViewCell.h"
 #import "UserMessagesViewController.h"
@@ -18,6 +19,12 @@
 #import <StoreKit/StoreKit.h>
 #import "IAPHelper.h"
 #import <TDBadgedCell.h>
+#import <MDRadialProgressLabel.h>
+#import <MDRadialProgressTheme.h>
+#import <MDRadialProgressView.h>
+#import "MatchViewController.h"
+#import "RevealRequest.h"
+#import "ChatMessageViewController.h"
 
 #define SECONDS_DAY 24*60*60
 
@@ -26,12 +33,16 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UITextField *searchTextField;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *sidebarButton;
-
-@property NSMutableArray *usersArray;
 @property NSArray *filteredAllUsersArray;
 @property (weak, nonatomic) IBOutlet UIButton *cameraButton;
 @property NSMutableArray *messages;
-
+@property (strong, nonatomic) PossibleMatchHelper *matchUser;
+@property int progressTotal;
+@property int progressCounter;
+@property NSArray *matchedUsers;
+@property RevealRequest *receivedRequest;
+@property RevealRequest *receivedReply;
+@property UIVisualEffectView *visualEffectView;
 
 @end
 
@@ -51,22 +62,61 @@
     self.searchTextField.leftView = paddingView;
     self.searchTextField.leftViewMode = UITextFieldViewModeAlways;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:receivedMessage object:nil];
-    
-    
     [self customizeApp];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:receivedMessage object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHide:) name:UIKeyboardWillHideNotification object:nil];
     
-  }
+}
 
 - (void)customizeApp
 {
-    self.tableView.backgroundColor = RED_LIGHT;
-    self.tableView.separatorColor = RED_DEEP;
-    self.searchTextField.backgroundColor = RED_DEEP;
+    self.tableView.backgroundColor = WHITE_COLOR;
+    self.tableView.separatorColor = [UIColor lightGrayColor];
+    //self.searchTextField.backgroundColor = RED_DEEP;
   
+}
+
+- (void)fetchShareRequestWith:(UserParseHelper *)user
+{
+    NSLog(@"Fetched share request");
+    
+    PFQuery *requestFromQuery = [RevealRequest query];
+    [requestFromQuery whereKey:@"requestFromUser" equalTo:[UserParseHelper currentUser]];
+    [requestFromQuery whereKey:@"requestToUser" equalTo:user];
+    
+    PFQuery *requestToQuery = [RevealRequest query];
+    [requestToQuery whereKey:@"requestToUser" equalTo:[UserParseHelper currentUser]];
+    [requestToQuery whereKey:@"requestFromUser" equalTo:user];
+    
+    PFQuery *orQuery = [PFQuery orQueryWithSubqueries:@[requestFromQuery, requestToQuery]];
+    
+    
+    NSArray *requests = [[NSArray alloc] initWithArray:[orQuery findObjects]];
+    NSLog(@"Requests count: %lu", (unsigned long)[requests count]);
+    
+    for (RevealRequest *request in requests) {
+        UserParseHelper *fromRequestUser = (UserParseHelper *)[request.requestFromUser fetchIfNeeded];
+        
+        UserParseHelper *toRequestUser = (UserParseHelper *)[request.requestToUser fetchIfNeeded];
+        
+        if ([fromRequestUser isEqual:[UserParseHelper currentUser]]) {
+            _receivedReply = request; //Equivalent to receivedReply
+            NSLog(@"Request from Me and to %@", _receivedReply.requestToUser.nickname);
+        } else if ([toRequestUser isEqual:[UserParseHelper currentUser]]) {
+            _receivedRequest = request; //Equivalent to receivedRequest
+            NSLog(@"Request from Other User: %@", _receivedRequest.requestFromUser.nickname);
+        }
+    }
+    
+    
+}
+
+- (void)setPossibleMatchesFromMessages:(NSArray *)matches for:(UserTableViewCell *)cell
+{
+    
+    //PFQuery *both = [PFQuery orQueryWithSubqueries:@[messageQueryFrom, messageQueryTo]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -82,8 +132,24 @@
     [self loadingChat];
 }
 
+- (void)getConversations
+{
+    self.messages = [NSMutableArray new];
+    
+    PFQuery *connections = [PossibleMatchHelper query];
+    [connections whereKey:@"messagesCount" greaterThan:0];
+    [connections orderByDescending:@"updatedAt"];
+    [connections findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            _messages = [[NSMutableArray alloc] initWithArray:objects];
+        }
+        
+    }];
+}
+
 - (void)loadingChat
 {
+    NSLog(@"Loading chat run");
     self.usersArray = [NSMutableArray new];
     self.messages = [NSMutableArray new];
     self.filteredAllUsersArray = [NSArray new];
@@ -94,15 +160,37 @@
     [messageQueryTo whereKey:@"toUserParse" equalTo:[UserParseHelper currentUser]];
     PFQuery *both = [PFQuery orQueryWithSubqueries:@[messageQueryFrom, messageQueryTo]];
     [both orderByDescending:@"createdAt"];
+    //[both orderByDescending:@"compatibilityIndex"]; // <-- Won't work for now, need a compatibility attribute on messages somehow
     
     [both findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         NSMutableSet *users = [NSMutableSet new];
+        
+        //Order Messages
+        /*
+         NSArray *messages = [NSArray new];
+         messages = [objects sortedArrayUsingComparator:^NSComparisonResult(PFObject *a, PFObject *b)
+         {
+         return [b.createdAt compare:a.createdAt];
+         }];
+        */
         for (MessageParse *message in objects) {
+            
+            // Erase old Messages Conditional below
+            
+//            if ([[message createdAt] timeIntervalSinceNow] * -1 > SECONDS_DAY) {
+                
+                //[message deleteInBackground];
+                
+//            } else {
+                
+            // Display message
+                
             if(![message.fromUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
                 NSUInteger count = users.count;
                 [users addObject:message.fromUserParse];
                 if (users.count > count) {
                     [message.fromUserParse fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                        
                         [self.messages addObject:message];
                         [self.usersArray addObject:message.fromUserParse];
                         NSInteger position = [self.usersArray indexOfObject:message.fromUserParse];
@@ -116,16 +204,19 @@
                 [users addObject:message.toUserParse];
                 if (users.count > count) {
                     [message.toUserParse fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                        
                         [self.messages addObject:message];
                         [self.usersArray addObject:message.toUserParse];
-                        
                         NSInteger position = [self.usersArray indexOfObject:message.toUserParse];
                         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:position inSection:0];
                         [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
                     }];
                 }
             }
+//            }// End Chat erase conditional
+            NSLog(@"Message Created at: %@", message.createdAt);
         }
+        
         [self.tableView reloadData];
     }];
 }
@@ -136,6 +227,9 @@
 {
     UserTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.indicatorLabel.hidden = YES;
+    cell.indicatorLabel.layer.cornerRadius = cell.indicatorLabel.frame.size.width/2;
+    cell.indicatorLabel.layer.masksToBounds = YES;
     
     UserParseHelper *user;
     if (self.filteredAllUsersArray.count) {
@@ -144,9 +238,29 @@
         user = [self.usersArray objectAtIndex:indexPath.row];
     }
     
-    // Revealed conditional -----------------------------------------------------
-    
-    if (!mainUser.isRevealed) { // <-- Test purposes, change to test isRevealed on Matched User
+    [self fetchShareRequestWith:user];
+    // Get Possible Matches
+    _matchedUsers = [[NSArray alloc] initWithObjects:[UserParseHelper currentUser], user, nil];
+    PFQuery *possMatch1 = [PossibleMatchHelper query];
+    [possMatch1 whereKey:@"matches" containsAllObjectsInArray:_matchedUsers];
+    //[possMatch1 findObjects];
+    [possMatch1 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        //for (PossibleMatchHelper *match in objects) {
+        _matchUser = [objects objectAtIndex:0];
+        
+        CGRect frame = CGRectMake(190, 8, 45, 45);
+        [_matchUser configureRadialViewForView:cell.contentView withFrame:frame];
+        //[self configureRadialView:cell];
+        //}
+        
+        [user.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+            
+            cell.userImageView.image = [UIImage imageWithData:data];
+            
+        }];
+            
+        [self blurImages:cell.userImageView];
+            
         if ([user.isMale isEqualToString:@"true"]) {
             NSString *matchGender = @"Male";
             cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
@@ -155,16 +269,40 @@
             cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
         }
         
-    } else cell.nameTextLabel.text = user.nickname;
+        if ((_receivedReply && _receivedRequest) || _receivedRequest) {
+            if ([_receivedRequest.requestReply isEqualToString:@"Yes"] && [_receivedRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_receivedRequest.requestFromUser isEqual:user]) {
+                cell.nameTextLabel.text = user.nickname;
+                [_visualEffectView removeFromSuperview];
+                NSLog(@"%@ revealed!", user.nickname);
+            }
+        }
+        
+        if ((_receivedRequest && _receivedReply) || _receivedReply) {
+            if ([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_receivedReply.requestToUser isEqual:user]) {
+                cell.nameTextLabel.text = user.nickname;
+                [_visualEffectView removeFromSuperview];
+                NSLog(@"%@ revealed!", user.nickname);
+            }
+        }
+        
+    }];
+    
+    //[self setPossibleMatchesFromMessages:_matchedUsers for:cell];
+    
+    
+    // Revealed conditional -----------------------------------------------------
+    
+    
     
     // ----------------------------------------------------------------------------
     
-    cell.nameTextLabel.textColor = WHITE_COLOR;
-    cell.userImageView.layer.cornerRadius = cell.userImageView.frame.size.width / 2;
-    cell.userImageView.clipsToBounds = YES;
+    //cell.nameTextLabel.textColor = WHITE_COLOR;
+    cell.userImageView.layer.cornerRadius = cell.userImageView.frame.size.height / 2;
+    cell.userImageView.layer.masksToBounds = YES;
+    /*
     cell.userImageView.layer.borderWidth = 1.0,
     cell.userImageView.layer.borderColor = WHITE_COLOR.CGColor;
-    
+    */
     UIImageView *accesory = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"accesory"]];
     accesory.frame = CGRectMake(15, 0, 15, 15);
     accesory.contentMode = UIViewContentModeScaleAspectFit;
@@ -176,11 +314,17 @@
         cell.lastMessageLabel.text = @"Image";
     }
     if (!message.read && [message.toUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
-        cell.lastMessageLabel.textColor = WHITE_COLOR;
+        cell.nameTextLabel.textColor = RED_LIGHT;
+        [cell.lastMessageLabel setFont:[UIFont boldSystemFontOfSize:13]];
+        cell.lastMessageLabel.textColor = RED_LIGHT;
+        cell.dateLabel.textColor = RED_LIGHT;
     } else {
-        cell.lastMessageLabel.textColor = WHITE_COLOR;
+        //cell.lastMessageLabel.textColor = WHITE_COLOR;
+        cell.nameTextLabel.textColor = [UIColor lightGrayColor];
+        cell.lastMessageLabel.textColor = [UIColor lightGrayColor];
+        cell.dateLabel.textColor = [UIColor lightGrayColor];
     }
-    cell.dateLabel.textColor = WHITE_COLOR;
+    //cell.dateLabel.textColor = WHITE_COLOR;
     NSDateFormatter *dateFormatter = [NSDateFormatter new];
     [dateFormatter setDoesRelativeDateFormatting:YES];
     if ([[message createdAt] timeIntervalSinceNow] * -1 < SECONDS_DAY) {
@@ -191,20 +335,26 @@
     
     cell.dateLabel.text = [dateFormatter stringFromDate:[message createdAt]];
     UIView *bgColorView = [[UIView alloc] init];
-    bgColorView.backgroundColor = RED_COLOR;
+    //bgColorView.backgroundColor = RED_COLOR;
+    bgColorView.backgroundColor = WHITE_COLOR;
     [cell setSelectedBackgroundView:bgColorView];
-    [user.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+    
+    // Indicator Label logic
+    if ([_receivedRequest.requestFromUser isEqual:user]) {
         
-        cell.userImageView.image = [UIImage imageWithData:data];
-        
-        // Configure Blur ---------------------------------------------------------------
-        
-        if (!mainUser.isRevealed) { // <-- Test purposes - change to check isRevealed on Matched User - NOT WORKING
-            [self blurImages:cell.userImageView];
-            NSLog(@"Blur code run b/c User not revealed");
+        if (![_receivedRequest.requestReply isEqualToString:@"No"] && ![_receivedRequest.requestReply isEqualToString:@"Yes"]) {
+            cell.indicatorLabel.hidden = NO;
+            cell.indicatorLabel.backgroundColor = [UIColor purpleColor];
         }
+    }
+    
+    if ([_receivedReply.requestToUser isEqual:user]) {
         
-    }];
+        if (([_receivedReply.requestReply isEqualToString:@"Yes"] && ![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || ([_receivedReply.requestReply isEqualToString:@"No"] && ![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
+            cell.indicatorLabel.hidden = NO;
+            cell.indicatorLabel.backgroundColor = RED_LIGHT;
+        }
+    }
     
     return cell;
 }
@@ -215,12 +365,9 @@
 {
     UIVisualEffect *blurEffect;
     blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
-    
-    UIVisualEffectView *visualEffectView;
-    visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-    
-    visualEffectView.frame = imageView.bounds;
-    [imageView addSubview:visualEffectView];
+    _visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+    _visualEffectView.frame = imageView.bounds;
+    [imageView addSubview:_visualEffectView];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -236,6 +383,31 @@
     return self.usersArray.count;
 }
 
+#pragma marks - Swipe to Delete Delegates
+
+ // Override to support conditional editing of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+    {
+        // Return NO if you do not want the specified item to be editable.
+        return YES;
+    }
+
+ // Override to support editing the table view.
+ - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+    {
+        if (editingStyle == UITableViewCellEditingStyleDelete) {
+            // Delete the row from the data source
+            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        } else if (editingStyle == UITableViewCellEditingStyleInsert) {
+            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+        }
+ }
+
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
+    {
+        return @"Un-Match";
+    }
+
 #pragma mark - TAP TABLEVIEWCELL SEGUE TO CHAT
 /*
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -245,13 +417,39 @@
 */
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    // Try to use this code in AppDelegate for Chat Notification
     if ([segue.identifier isEqualToString:@"chat"]) {
+        ChatMessageViewController *vc = segue.destinationViewController;
+        vc.toUserParse      = [self.usersArray objectAtIndex:self.tableView.indexPathForSelectedRow.row];
+        vc.curUser          = [UserParseHelper currentUser];
+        vc.fromConversation = true;
+        /*
         UserMessagesViewController *vc = segue.destinationViewController;
+        //vc.matchedUsers = _matchUser;
+        
         if (self.filteredAllUsersArray.count) {
             vc.toUserParse = [self.filteredAllUsersArray objectAtIndex:self.tableView.indexPathForSelectedRow.row];
+            vc.curUser = [UserParseHelper currentUser];
+            vc.fromConversation = true;
         } else {
             vc.toUserParse = [self.usersArray objectAtIndex:self.tableView.indexPathForSelectedRow.row];
+            vc.curUser = [UserParseHelper currentUser];
+            vc.fromConversation = true;
         }
+         */
+        /*
+        MatchViewController *matchVC = [[MatchViewController alloc]init];
+        matchVC = segue.destinationViewController;
+        //PossibleMatchHelper *matchRelationship = [self.matchRelationships objectAtIndex:self.tableView.indexPathForSelectedRow.row];
+        //matchVC.userFBPic.image             = _toUserParse.photo;
+        UserParseHelper *match  = _matchUser.toUser;
+        matchVC.matchUser       = (UserParseHelper *)[match fetchIfNeeded];
+        matchVC.possibleMatch   = _matchUser;
+        matchVC.getPhotoArray   = [NSMutableArray new];
+        matchVC.user            = [UserParseHelper currentUser];
+        
+        [matchVC setUserPhotosArray:matchVC.matchUser];
+         */
     }
 }
 
@@ -339,6 +537,14 @@
         }
     }];
     
+}
+
+- (void)reloadView
+{
+    UIView *parent = self.view.superview;
+    [self.view removeFromSuperview];
+    self.view = nil; // unloads the view
+    [parent addSubview:self.view]; //reloads the view from the nib
 }
 
 #pragma mark GADRequest generation

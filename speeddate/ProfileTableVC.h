@@ -25,13 +25,9 @@
 @property (strong, nonatomic) NSMutableArray *allPrefs;
 @property (strong, nonatomic) NSMutableArray *userPrefs;
 
-// Outlets - Segmented Controls
-@property (weak, nonatomic) IBOutlet UISegmentedControl *bodyTypeControl;
-@property (weak, nonatomic) IBOutlet UISegmentedControl *relationshipStatusControl;
-@property (weak, nonatomic) IBOutlet UISegmentedControl *relationshipTypeControl;
-
 // Actions - Segmented Controls
 - (IBAction)bodyType:(id)sender;
+
 - (IBAction)relationshipStatus:(id)sender;
 - (IBAction)relationshipType:(id)sender;
 
@@ -96,5 +92,6 @@
 - (IBAction)userEducation:(id)sender;
 
 - (void)checkAndSetUserEnteredData;
+- (IBAction)saveProfilePressed:(id)sender;
 
 @end

@@ -58,7 +58,50 @@
 		42DBCCDD19ACDD9C00CE6C93 /* MessageParse.m in Sources */ = {isa = PBXBuildFile; fileRef = 42DBCCDC19ACDD9C00CE6C93 /* MessageParse.m */; };
 		42DBCCE019ACDF7000CE6C93 /* UserParseHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 42DBCCDF19ACDF7000CE6C93 /* UserParseHelper.m */; };
 		42F5B28619B0C4CB0036938B /* Chat.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42F5B28519B0C4CB0036938B /* Chat.xcassets */; };
+		4C03549B1A7D7AD800658BE9 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C03549A1A7D7AD800658BE9 /* TutorialViewController.m */; };
+		4C475FE21A7C9C8D00CB9283 /* more.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C475FE11A7C9C8D00CB9283 /* more.png */; };
+		4C4D71DB1AE5D33E000FE139 /* UserRatingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4D71DA1AE5D33E000FE139 /* UserRatingViewController.m */; };
+		4C4D71DE1AE6F458000FE139 /* UserRating2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4D71DD1AE6F458000FE139 /* UserRating2ViewController.m */; };
+		4C4D71E11AEB44D8000FE139 /* BebasNeue.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4C4D71E01AEB44D8000FE139 /* BebasNeue.otf */; };
+		4C4E033F1AC6301800597EB9 /* Animals & Pets.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03361AC6301800597EB9 /* Animals & Pets.png */; };
+		4C4E03401AC6301800597EB9 /* Cooking.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03371AC6301800597EB9 /* Cooking.png */; };
+		4C4E03411AC6301800597EB9 /* Dining-out.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03381AC6301800597EB9 /* Dining-out.png */; };
+		4C4E03421AC6301800597EB9 /* Hiking, Camping, Nature-walks.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03391AC6301800597EB9 /* Hiking, Camping, Nature-walks.png */; };
+		4C4E03431AC6301800597EB9 /* Opera & Theatre.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E033A1AC6301800597EB9 /* Opera & Theatre.png */; };
+		4C4E03441AC6301800597EB9 /* Religion & Spirituality.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E033B1AC6301800597EB9 /* Religion & Spirituality.png */; };
+		4C4E03451AC6301800597EB9 /* Tech, Gadgets, Science.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E033C1AC6301800597EB9 /* Tech, Gadgets, Science.png */; };
+		4C4E03461AC6301800597EB9 /* Volunteering, Social-activism, Politics.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E033D1AC6301800597EB9 /* Volunteering, Social-activism, Politics.png */; };
+		4C4E03471AC6301800597EB9 /* Working-out & Exercise.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E033E1AC6301800597EB9 /* Working-out & Exercise.png */; };
+		4C4E034D1AC63D6300597EB9 /* Dancing.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03481AC63D6300597EB9 /* Dancing.png */; };
+		4C4E034E1AC63D6400597EB9 /* Lectures & Conferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03491AC63D6300597EB9 /* Lectures & Conferences.png */; };
+		4C4E034F1AC63D6400597EB9 /* Sports.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E034A1AC63D6300597EB9 /* Sports.png */; };
+		4C4E03501AC63D6400597EB9 /* Travel.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E034B1AC63D6300597EB9 /* Travel.png */; };
+		4C4E03511AC63D6400597EB9 /* TV & Movies.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E034C1AC63D6300597EB9 /* TV & Movies.png */; };
+		4C4E03531AC63DFA00597EB9 /* Music Concerts.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03521AC63DFA00597EB9 /* Music Concerts.png */; };
+		4C4E03561AC63EF100597EB9 /* Beer & Wine-tasting.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03541AC63EF100597EB9 /* Beer & Wine-tasting.png */; };
+		4C4E03571AC63EF100597EB9 /* Book Club & Reading.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03551AC63EF100597EB9 /* Book Club & Reading.png */; };
+		4C4E03591ACE2BBE00597EB9 /* Dalliant-Logo-White.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E03581ACE2BBE00597EB9 /* Dalliant-Logo-White.png */; };
+		4C4F7B581AD07E1A0014C737 /* Art Galleries & Photography.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4F7B571AD07E190014C737 /* Art Galleries & Photography.png */; };
+		4C4F7B5B1AE429CC0014C737 /* UserRating.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4F7B5A1AE429CC0014C737 /* UserRating.m */; };
+		4C4F7B5E1AE451AE0014C737 /* ReportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4F7B5D1AE451AE0014C737 /* ReportViewController.m */; };
+		4C8F7C441A75F84200CCBDE8 /* tutorial_background_00@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C3F1A75F84200CCBDE8 /* tutorial_background_00@2x.jpg */; };
+		4C8F7C451A75F84200CCBDE8 /* tutorial_background_01@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C401A75F84200CCBDE8 /* tutorial_background_01@2x.jpg */; };
+		4C8F7C461A75F84200CCBDE8 /* tutorial_background_02@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C411A75F84200CCBDE8 /* tutorial_background_02@2x.jpg */; };
+		4C8F7C471A75F84200CCBDE8 /* tutorial_background_03@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C421A75F84200CCBDE8 /* tutorial_background_03@2x.jpg */; };
+		4C8F7C481A75F84200CCBDE8 /* tutorial_background_04@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C431A75F84200CCBDE8 /* tutorial_background_04@2x.jpg */; };
+		4C8F7C4A1A79327A00CCBDE8 /* Dalliant_Logo_XL.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F7C491A79327A00CCBDE8 /* Dalliant_Logo_XL.gif */; };
+		4C9452AA1ABE63BD0053A951 /* Baedar.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C9452A51ABE63BD0053A951 /* Baedar.png */; };
+		4C9452AB1ABE63BD0053A951 /* Filters_Preferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C9452A61ABE63BD0053A951 /* Filters_Preferences.png */; };
+		4C9452AC1ABE63BD0053A951 /* Match_Meetup.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C9452A71ABE63BD0053A951 /* Match_Meetup.png */; };
+		4C9452AD1ABE63BD0053A951 /* Match_Profile.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C9452A81ABE63BD0053A951 /* Match_Profile.png */; };
+		4C9452AE1ABE63BD0053A951 /* Share_Request.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C9452A91ABE63BD0053A951 /* Share_Request.png */; };
+		4CBACD931AAE4F9F007DBC9B /* ImageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBACD921AAE4F9F007DBC9B /* ImageVC.m */; };
 		4CBDB1941A3CDD3C006A9F1F /* ProfileTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBDB1931A3CDD3C006A9F1F /* ProfileTableVC.m */; };
+		4CBDB1971A427A11006A9F1F /* RevealRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBDB1961A427A11006A9F1F /* RevealRequest.m */; };
+		4CC7B8991A4B3EBE000982EA /* MatchProfileTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC7B8981A4B3EBE000982EA /* MatchProfileTVC.m */; };
+		4CC7B8BE1A60FFBD000982EA /* dalliant_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CC7B8BD1A60FFBD000982EA /* dalliant_logo.png */; };
+		4CC7B8C01A61083E000982EA /* dalliant_logo_med.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CC7B8BF1A61083E000982EA /* dalliant_logo_med.png */; };
+		4CCED3131A92DCD800069EAD /* ChatMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCED3121A92DCD800069EAD /* ChatMessageViewController.m */; };
 		4CF56F751A2301CF008E861D /* PreferencesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF56F741A2301CF008E861D /* PreferencesTableViewController.m */; };
 		4CF56F781A23D0A8008E861D /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF56F771A23D0A8008E861D /* User.m */; };
 		92E8E32284B3758EB4DC35B8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BA0CC71950E48F220C437C5 /* libPods.a */; };
@@ -220,7 +263,7 @@
 		4283BD8519BCB83A00AD1F63 /* Report.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Report.m; path = Model/Report.m; sourceTree = "<group>"; };
 		42BD2AFC19AE5A1B00FCC817 /* UserTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserTableViewCell.h; path = View/UserTableViewCell.h; sourceTree = "<group>"; };
 		42BD2AFD19AE5A1B00FCC817 /* UserTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserTableViewCell.m; path = View/UserTableViewCell.m; sourceTree = "<group>"; };
-		42DBCC2719AC20BB00CE6C93 /* speeddate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = speeddate.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		42DBCC2719AC20BB00CE6C93 /* Dalliant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dalliant.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		42DBCC2A19AC20BB00CE6C93 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		42DBCC2C19AC20BB00CE6C93 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		42DBCC2E19AC20BB00CE6C93 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -260,9 +303,61 @@
 		42DBCCDE19ACDF7000CE6C93 /* UserParseHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserParseHelper.h; path = Model/UserParseHelper.h; sourceTree = "<group>"; };
 		42DBCCDF19ACDF7000CE6C93 /* UserParseHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserParseHelper.m; path = Model/UserParseHelper.m; sourceTree = "<group>"; };
 		42F5B28519B0C4CB0036938B /* Chat.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Chat.xcassets; sourceTree = "<group>"; };
+		4C0354991A7D7AD800658BE9 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
+		4C03549A1A7D7AD800658BE9 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
+		4C475FE11A7C9C8D00CB9283 /* more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = more.png; sourceTree = "<group>"; };
+		4C4D71D91AE5D33E000FE139 /* UserRatingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserRatingViewController.h; sourceTree = "<group>"; };
+		4C4D71DA1AE5D33E000FE139 /* UserRatingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserRatingViewController.m; sourceTree = "<group>"; };
+		4C4D71DC1AE6F458000FE139 /* UserRating2ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserRating2ViewController.h; sourceTree = "<group>"; };
+		4C4D71DD1AE6F458000FE139 /* UserRating2ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserRating2ViewController.m; sourceTree = "<group>"; };
+		4C4D71E01AEB44D8000FE139 /* BebasNeue.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = BebasNeue.otf; sourceTree = "<group>"; };
+		4C4E03361AC6301800597EB9 /* Animals & Pets.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Animals & Pets.png"; sourceTree = "<group>"; };
+		4C4E03371AC6301800597EB9 /* Cooking.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Cooking.png; sourceTree = "<group>"; };
+		4C4E03381AC6301800597EB9 /* Dining-out.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dining-out.png"; sourceTree = "<group>"; };
+		4C4E03391AC6301800597EB9 /* Hiking, Camping, Nature-walks.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Hiking, Camping, Nature-walks.png"; sourceTree = "<group>"; };
+		4C4E033A1AC6301800597EB9 /* Opera & Theatre.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Opera & Theatre.png"; sourceTree = "<group>"; };
+		4C4E033B1AC6301800597EB9 /* Religion & Spirituality.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Religion & Spirituality.png"; sourceTree = "<group>"; };
+		4C4E033C1AC6301800597EB9 /* Tech, Gadgets, Science.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Tech, Gadgets, Science.png"; sourceTree = "<group>"; };
+		4C4E033D1AC6301800597EB9 /* Volunteering, Social-activism, Politics.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Volunteering, Social-activism, Politics.png"; sourceTree = "<group>"; };
+		4C4E033E1AC6301800597EB9 /* Working-out & Exercise.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Working-out & Exercise.png"; sourceTree = "<group>"; };
+		4C4E03481AC63D6300597EB9 /* Dancing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Dancing.png; sourceTree = "<group>"; };
+		4C4E03491AC63D6300597EB9 /* Lectures & Conferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Lectures & Conferences.png"; sourceTree = "<group>"; };
+		4C4E034A1AC63D6300597EB9 /* Sports.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Sports.png; sourceTree = "<group>"; };
+		4C4E034B1AC63D6300597EB9 /* Travel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Travel.png; sourceTree = "<group>"; };
+		4C4E034C1AC63D6300597EB9 /* TV & Movies.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TV & Movies.png"; sourceTree = "<group>"; };
+		4C4E03521AC63DFA00597EB9 /* Music Concerts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Music Concerts.png"; sourceTree = "<group>"; };
+		4C4E03541AC63EF100597EB9 /* Beer & Wine-tasting.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Beer & Wine-tasting.png"; sourceTree = "<group>"; };
+		4C4E03551AC63EF100597EB9 /* Book Club & Reading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Book Club & Reading.png"; sourceTree = "<group>"; };
+		4C4E03581ACE2BBE00597EB9 /* Dalliant-Logo-White.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dalliant-Logo-White.png"; sourceTree = "<group>"; };
+		4C4F7B571AD07E190014C737 /* Art Galleries & Photography.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Art Galleries & Photography.png"; sourceTree = "<group>"; };
+		4C4F7B591AE429CC0014C737 /* UserRating.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserRating.h; sourceTree = "<group>"; };
+		4C4F7B5A1AE429CC0014C737 /* UserRating.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserRating.m; sourceTree = "<group>"; };
+		4C4F7B5C1AE451AE0014C737 /* ReportViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReportViewController.h; sourceTree = "<group>"; };
+		4C4F7B5D1AE451AE0014C737 /* ReportViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReportViewController.m; sourceTree = "<group>"; };
+		4C8F7C3F1A75F84200CCBDE8 /* tutorial_background_00@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_00@2x.jpg"; sourceTree = "<group>"; };
+		4C8F7C401A75F84200CCBDE8 /* tutorial_background_01@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_01@2x.jpg"; sourceTree = "<group>"; };
+		4C8F7C411A75F84200CCBDE8 /* tutorial_background_02@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_02@2x.jpg"; sourceTree = "<group>"; };
+		4C8F7C421A75F84200CCBDE8 /* tutorial_background_03@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_03@2x.jpg"; sourceTree = "<group>"; };
+		4C8F7C431A75F84200CCBDE8 /* tutorial_background_04@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "tutorial_background_04@2x.jpg"; sourceTree = "<group>"; };
+		4C8F7C491A79327A00CCBDE8 /* Dalliant_Logo_XL.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Dalliant_Logo_XL.gif; sourceTree = "<group>"; };
+		4C9452A51ABE63BD0053A951 /* Baedar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Baedar.png; sourceTree = "<group>"; };
+		4C9452A61ABE63BD0053A951 /* Filters_Preferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Filters_Preferences.png; sourceTree = "<group>"; };
+		4C9452A71ABE63BD0053A951 /* Match_Meetup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Match_Meetup.png; sourceTree = "<group>"; };
+		4C9452A81ABE63BD0053A951 /* Match_Profile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Match_Profile.png; sourceTree = "<group>"; };
+		4C9452A91ABE63BD0053A951 /* Share_Request.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Share_Request.png; sourceTree = "<group>"; };
+		4CBACD911AAE4F9F007DBC9B /* ImageVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageVC.h; path = ../ImageVC.h; sourceTree = "<group>"; };
+		4CBACD921AAE4F9F007DBC9B /* ImageVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImageVC.m; path = ../ImageVC.m; sourceTree = "<group>"; };
 		4CBDB1921A3CDD3C006A9F1F /* ProfileTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileTableVC.h; sourceTree = "<group>"; };
 		4CBDB1931A3CDD3C006A9F1F /* ProfileTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileTableVC.m; sourceTree = "<group>"; };
-		4CDD63D01A30A20E00AE9679 /* PodFile */ = {isa = PBXFileReference; lastKnownFileType = text; path = PodFile; sourceTree = "<group>"; };
+		4CBDB1951A427A11006A9F1F /* RevealRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RevealRequest.h; sourceTree = "<group>"; };
+		4CBDB1961A427A11006A9F1F /* RevealRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RevealRequest.m; sourceTree = "<group>"; };
+		4CC7B8971A4B3EBE000982EA /* MatchProfileTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MatchProfileTVC.h; sourceTree = "<group>"; };
+		4CC7B8981A4B3EBE000982EA /* MatchProfileTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MatchProfileTVC.m; sourceTree = "<group>"; };
+		4CC7B8BD1A60FFBD000982EA /* dalliant_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dalliant_logo.png; sourceTree = "<group>"; };
+		4CC7B8BF1A61083E000982EA /* dalliant_logo_med.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dalliant_logo_med.png; sourceTree = "<group>"; };
+		4CCED3111A92DCD800069EAD /* ChatMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChatMessageViewController.h; path = ViewControllers/ChatMessageViewController.h; sourceTree = "<group>"; };
+		4CCED3121A92DCD800069EAD /* ChatMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChatMessageViewController.m; path = ViewControllers/ChatMessageViewController.m; sourceTree = "<group>"; };
+		4CDD63D01A30A20E00AE9679 /* PodFile */ = {isa = PBXFileReference; lastKnownFileType = text; path = PodFile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		4CF56F731A2301CE008E861D /* PreferencesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesTableViewController.h; sourceTree = "<group>"; };
 		4CF56F741A2301CF008E861D /* PreferencesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesTableViewController.m; sourceTree = "<group>"; };
 		4CF56F761A23D0A8008E861D /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
@@ -543,7 +638,7 @@
 		42DBCC2819AC20BB00CE6C93 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				42DBCC2719AC20BB00CE6C93 /* speeddate.app */,
+				42DBCC2719AC20BB00CE6C93 /* Dalliant.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -602,6 +697,7 @@
 		42DBCC3119AC20BB00CE6C93 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				4C4D71DF1AEB44B7000FE139 /* Fonts */,
 				C20F0B1719D7CE72005958C0 /* Images */,
 				42DBCC3919AC20BB00CE6C93 /* AppDelegate.h */,
 				42DBCC3A19AC20BB00CE6C93 /* AppDelegate.m */,
@@ -665,6 +761,8 @@
 				0BA4ECB119AE1EE200302E92 /* SidebarTableViewController.m */,
 				42DBCCC619AC4E4B00CE6C93 /* MainViewController.h */,
 				42DBCCC719AC4E4B00CE6C93 /* MainViewController.m */,
+				4CC7B8971A4B3EBE000982EA /* MatchProfileTVC.h */,
+				4CC7B8981A4B3EBE000982EA /* MatchProfileTVC.m */,
 				42DBCCD019ACCD9A00CE6C93 /* ProfileViewController.h */,
 				42DBCCD119ACCD9A00CE6C93 /* ProfileViewController.m */,
 				4283BD8119B9584300AD1F63 /* MatchViewController.h */,
@@ -687,6 +785,14 @@
 				C2A90ED619F49CE900FC0D04 /* UserProfileViewController.m */,
 				C254F8A119F6C4B000473836 /* WhoSeeViewController.h */,
 				C254F8A219F6C4B000473836 /* WhoSeeViewController.m */,
+				4C0354991A7D7AD800658BE9 /* TutorialViewController.h */,
+				4C03549A1A7D7AD800658BE9 /* TutorialViewController.m */,
+				4C4F7B5C1AE451AE0014C737 /* ReportViewController.h */,
+				4C4F7B5D1AE451AE0014C737 /* ReportViewController.m */,
+				4C4D71D91AE5D33E000FE139 /* UserRatingViewController.h */,
+				4C4D71DA1AE5D33E000FE139 /* UserRatingViewController.m */,
+				4C4D71DC1AE6F458000FE139 /* UserRating2ViewController.h */,
+				4C4D71DD1AE6F458000FE139 /* UserRating2ViewController.m */,
 			);
 			name = Application;
 			sourceTree = "<group>";
@@ -724,6 +830,10 @@
 		42DBCCD319ACD85600CE6C93 /* Messages */ = {
 			isa = PBXGroup;
 			children = (
+				4CCED3111A92DCD800069EAD /* ChatMessageViewController.h */,
+				4CCED3121A92DCD800069EAD /* ChatMessageViewController.m */,
+				4CBACD911AAE4F9F007DBC9B /* ImageVC.h */,
+				4CBACD921AAE4F9F007DBC9B /* ImageVC.m */,
 				42DBCCD419ACD87000CE6C93 /* MessagesViewController.h */,
 				42DBCCD519ACD87000CE6C93 /* MessagesViewController.m */,
 				4281F25419B22D0D007724C6 /* UserMessagesViewController.h */,
@@ -747,6 +857,8 @@
 				42DBCCDF19ACDF7000CE6C93 /* UserParseHelper.m */,
 				4283BD8419BCB83A00AD1F63 /* Report.h */,
 				4283BD8519BCB83A00AD1F63 /* Report.m */,
+				4CBDB1951A427A11006A9F1F /* RevealRequest.h */,
+				4CBDB1961A427A11006A9F1F /* RevealRequest.m */,
 				C2300FA419E1C93A0044A4E5 /* IAPHelper.h */,
 				C2300FA519E1C93A0044A4E5 /* IAPHelper.m */,
 				C2300FA619E1C93A0044A4E5 /* RageIAPHelper.h */,
@@ -755,6 +867,8 @@
 				C25E747919EAEF4200779C23 /* PurchaseHelper.m */,
 				C254F89E19F6C28F00473836 /* WhoSeeMeHelper.h */,
 				C254F89F19F6C28F00473836 /* WhoSeeMeHelper.m */,
+				4C4F7B591AE429CC0014C737 /* UserRating.h */,
+				4C4F7B5A1AE429CC0014C737 /* UserRating.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -787,9 +901,50 @@
 			name = V8HorizontalPickerView;
 			sourceTree = "<group>";
 		};
+		4C4D71DF1AEB44B7000FE139 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				4C4D71E01AEB44D8000FE139 /* BebasNeue.otf */,
+			);
+			name = Fonts;
+			sourceTree = "<group>";
+		};
 		C20F0B1719D7CE72005958C0 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				4C4F7B571AD07E190014C737 /* Art Galleries & Photography.png */,
+				4C4E03581ACE2BBE00597EB9 /* Dalliant-Logo-White.png */,
+				4C4E03541AC63EF100597EB9 /* Beer & Wine-tasting.png */,
+				4C4E03551AC63EF100597EB9 /* Book Club & Reading.png */,
+				4C4E03521AC63DFA00597EB9 /* Music Concerts.png */,
+				4C4E03481AC63D6300597EB9 /* Dancing.png */,
+				4C4E03491AC63D6300597EB9 /* Lectures & Conferences.png */,
+				4C4E034A1AC63D6300597EB9 /* Sports.png */,
+				4C4E034B1AC63D6300597EB9 /* Travel.png */,
+				4C4E034C1AC63D6300597EB9 /* TV & Movies.png */,
+				4C4E03361AC6301800597EB9 /* Animals & Pets.png */,
+				4C4E03371AC6301800597EB9 /* Cooking.png */,
+				4C4E03381AC6301800597EB9 /* Dining-out.png */,
+				4C4E03391AC6301800597EB9 /* Hiking, Camping, Nature-walks.png */,
+				4C4E033A1AC6301800597EB9 /* Opera & Theatre.png */,
+				4C4E033B1AC6301800597EB9 /* Religion & Spirituality.png */,
+				4C4E033C1AC6301800597EB9 /* Tech, Gadgets, Science.png */,
+				4C4E033D1AC6301800597EB9 /* Volunteering, Social-activism, Politics.png */,
+				4C4E033E1AC6301800597EB9 /* Working-out & Exercise.png */,
+				4C9452A51ABE63BD0053A951 /* Baedar.png */,
+				4C9452A61ABE63BD0053A951 /* Filters_Preferences.png */,
+				4C9452A71ABE63BD0053A951 /* Match_Meetup.png */,
+				4C9452A81ABE63BD0053A951 /* Match_Profile.png */,
+				4C9452A91ABE63BD0053A951 /* Share_Request.png */,
+				4C475FE11A7C9C8D00CB9283 /* more.png */,
+				4C8F7C491A79327A00CCBDE8 /* Dalliant_Logo_XL.gif */,
+				4C8F7C3F1A75F84200CCBDE8 /* tutorial_background_00@2x.jpg */,
+				4C8F7C401A75F84200CCBDE8 /* tutorial_background_01@2x.jpg */,
+				4C8F7C411A75F84200CCBDE8 /* tutorial_background_02@2x.jpg */,
+				4C8F7C421A75F84200CCBDE8 /* tutorial_background_03@2x.jpg */,
+				4C8F7C431A75F84200CCBDE8 /* tutorial_background_04@2x.jpg */,
+				4CC7B8BF1A61083E000982EA /* dalliant_logo_med.png */,
+				4CC7B8BD1A60FFBD000982EA /* dalliant_logo.png */,
 				C28D423119E738F500C00ACA /* Ache.caf */,
 				C25E747419EAD3F000779C23 /* birthday2@2x.png */,
 				C25E765B19EF767B00779C23 /* fastd.jpg */,
@@ -1038,7 +1193,7 @@
 			);
 			name = speeddate;
 			productName = Tinder;
-			productReference = 42DBCC2719AC20BB00CE6C93 /* speeddate.app */;
+			productReference = 42DBCC2719AC20BB00CE6C93 /* Dalliant.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1078,48 +1233,82 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C4E034F1AC63D6400597EB9 /* Sports.png in Resources */,
+				4C4E03591ACE2BBE00597EB9 /* Dalliant-Logo-White.png in Resources */,
 				42DBCC4319AC20BB00CE6C93 /* Images.xcassets in Resources */,
 				C22D0E3F19DBEB4200EF18C4 /* food.png in Resources */,
 				C25E747519EAD3F000779C23 /* birthday2@2x.png in Resources */,
 				C25E748019EC01F400779C23 /* profile_menu@2x.png in Resources */,
+				4C4E03431AC6301800597EB9 /* Opera & Theatre.png in Resources */,
 				C25E765319EF754600779C23 /* fbshare.png in Resources */,
 				C25E765A19EF759700779C23 /* 1024_gm.png in Resources */,
+				4C9452AB1ABE63BD0053A951 /* Filters_Preferences.png in Resources */,
 				42DBCC3519AC20BB00CE6C93 /* InfoPlist.strings in Resources */,
 				C25E748419EC03AD00779C23 /* logout_menu@2x.png in Resources */,
+				4C9452AE1ABE63BD0053A951 /* Share_Request.png in Resources */,
+				4C8F7C4A1A79327A00CCBDE8 /* Dalliant_Logo_XL.gif in Resources */,
 				426107DF19B42D930000536C /* buttonbar.xcassets in Resources */,
+				4C4E03471AC6301800597EB9 /* Working-out & Exercise.png in Resources */,
+				4C8F7C451A75F84200CCBDE8 /* tutorial_background_01@2x.jpg in Resources */,
 				C25E747119E8981200779C23 /* about@2x.png in Resources */,
 				C25E747319E898D600779C23 /* genderz@2x.png in Resources */,
+				4C9452AA1ABE63BD0053A951 /* Baedar.png in Resources */,
 				C20F0B1B19D7E982005958C0 /* Main.storyboard in Resources */,
 				C2CC355A19F58ACD00AC86D1 /* mask_profile.png in Resources */,
 				42F5B28619B0C4CB0036938B /* Chat.xcassets in Resources */,
 				C2A90EBC19F41C1E00FC0D04 /* down2@2x.png in Resources */,
+				4C4E033F1AC6301800597EB9 /* Animals & Pets.png in Resources */,
 				C25E765619EF754600779C23 /* maiz.png in Resources */,
 				C25E760219EF485200779C23 /* terms_menu@2x.png in Resources */,
+				4C4E03511AC63D6400597EB9 /* TV & Movies.png in Resources */,
+				4C4E03411AC6301800597EB9 /* Dining-out.png in Resources */,
+				4C4E03531AC63DFA00597EB9 /* Music Concerts.png in Resources */,
 				C25E747719EAD54F00779C23 /* location2@2x.png in Resources */,
+				4C4E03421AC6301800597EB9 /* Hiking, Camping, Nature-walks.png in Resources */,
+				4C8F7C471A75F84200CCBDE8 /* tutorial_background_03@2x.jpg in Resources */,
 				C2A90EBA19F41BBD00FC0D04 /* up2@2x.png in Resources */,
+				4C4E034D1AC63D6300597EB9 /* Dancing.png in Resources */,
+				4C4E03441AC6301800597EB9 /* Religion & Spirituality.png in Resources */,
 				C25E765E19EF81D500779C23 /* nouserphoto.jpg in Resources */,
 				C237015B19D974260024F856 /* ProgressHUD.bundle in Resources */,
 				C25E748219EC02F900779C23 /* share_menu@2x.png in Resources */,
+				4C4D71E11AEB44D8000FE139 /* BebasNeue.otf in Resources */,
 				C20F0B1919D7CE85005958C0 /* sdlogo.png in Resources */,
+				4C4E03461AC6301800597EB9 /* Volunteering, Social-activism, Politics.png in Resources */,
+				4C475FE21A7C9C8D00CB9283 /* more.png in Resources */,
 				C25E760719EF5A3A00779C23 /* MyappTableViewCell.xib in Resources */,
 				C25E765719EF754600779C23 /* washare.png in Resources */,
 				C25E766B19EF9C0C00779C23 /* Localizable.strings in Resources */,
+				4C4E03571AC63EF100597EB9 /* Book Club & Reading.png in Resources */,
 				C25E764C19EF6E9300779C23 /* app_menu@2x.png in Resources */,
+				4C4E03401AC6301800597EB9 /* Cooking.png in Resources */,
+				4CC7B8C01A61083E000982EA /* dalliant_logo_med.png in Resources */,
 				C25E765819EF754600779C23 /* share_i.png in Resources */,
 				4281F25319B11CF7007724C6 /* Menu.xcassets in Resources */,
 				C25E765419EF754600779C23 /* twshare.png in Resources */,
 				C25E747E19EC013A00779C23 /* message_menu@2x.png in Resources */,
 				C25E765519EF754600779C23 /* instagram-share.png in Resources */,
 				C2A90EB819F4186B00FC0D04 /* sativa.png in Resources */,
+				4CC7B8BE1A60FFBD000982EA /* dalliant_logo.png in Resources */,
+				4C4E034E1AC63D6400597EB9 /* Lectures & Conferences.png in Resources */,
+				4C9452AD1ABE63BD0053A951 /* Match_Profile.png in Resources */,
+				4C4E03561AC63EF100597EB9 /* Beer & Wine-tasting.png in Resources */,
+				4C8F7C461A75F84200CCBDE8 /* tutorial_background_02@2x.jpg in Resources */,
+				4C4E03501AC63D6400597EB9 /* Travel.png in Resources */,
+				4C8F7C481A75F84200CCBDE8 /* tutorial_background_04@2x.jpg in Resources */,
 				C25E746F19E8816D00779C23 /* back-m.png in Resources */,
 				C25E748619EC0ADD00779C23 /* vip_menu@2x.png in Resources */,
 				C206B02619E28D91001A4D0C /* mvip.png in Resources */,
 				C25E766019EF8D2100779C23 /* lock3@2x.png in Resources */,
 				C25E765C19EF767B00779C23 /* fastd.jpg in Resources */,
 				C2300F8619E18E310044A4E5 /* chekBtn.png in Resources */,
+				4C8F7C441A75F84200CCBDE8 /* tutorial_background_00@2x.jpg in Resources */,
 				C206B02519E28D91001A4D0C /* mnvip.png in Resources */,
 				426107DD19B3ABD80000536C /* Profile.xcassets in Resources */,
+				4C4E03451AC6301800597EB9 /* Tech, Gadgets, Science.png in Resources */,
+				4C4F7B581AD07E1A0014C737 /* Art Galleries & Photography.png in Resources */,
 				C25E747C19EBFF6800779C23 /* heart_menu@2x.png in Resources */,
+				4C9452AC1ABE63BD0053A951 /* Match_Meetup.png in Resources */,
 				C2300F8419E18E030044A4E5 /* normBtn.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1164,8 +1353,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C4F7B5E1AE451AE0014C737 /* ReportViewController.m in Sources */,
+				4C4D71DE1AE6F458000FE139 /* UserRating2ViewController.m in Sources */,
 				C237018A19D974390024F856 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				4CBDB1941A3CDD3C006A9F1F /* ProfileTableVC.m in Sources */,
+				4CCED3131A92DCD800069EAD /* ChatMessageViewController.m in Sources */,
 				42236F2B19B7DEEE00539466 /* Interpolator.cpp in Sources */,
 				4283BD8319B9584300AD1F63 /* MatchViewController.m in Sources */,
 				C2300FA919E1C93A0044A4E5 /* RageIAPHelper.m in Sources */,
@@ -1202,6 +1394,7 @@
 				C25E75F119EF29D500779C23 /* UIImage+AlphaAdditions.m in Sources */,
 				C2A90ED719F49CE900FC0D04 /* UserProfileViewController.m in Sources */,
 				C25E763719EF5C1200779C23 /* UIImage+GIF.m in Sources */,
+				4C03549B1A7D7AD800658BE9 /* TutorialViewController.m in Sources */,
 				C237019119D974390024F856 /* UIWebView+AFNetworking.m in Sources */,
 				C25E764819EF5C4000779C23 /* CJSONDeserializer.m in Sources */,
 				C237019019D974390024F856 /* UIRefreshControl+AFNetworking.m in Sources */,
@@ -1230,6 +1423,7 @@
 				4CF56F751A2301CF008E861D /* PreferencesTableViewController.m in Sources */,
 				4281F25619B22D0D007724C6 /* UserMessagesViewController.m in Sources */,
 				C25E760619EF5A3A00779C23 /* MyappTableViewCell.m in Sources */,
+				4CBDB1971A427A11006A9F1F /* RevealRequest.m in Sources */,
 				C25E75F219EF29D500779C23 /* UIImage+RoundedCornerAdditions.m in Sources */,
 				42BD2AFE19AE5A1B00FCC817 /* UserTableViewCell.m in Sources */,
 				422370E519B7FB8B00539466 /* CCoverflowCollectionViewLayout.m in Sources */,
@@ -1248,14 +1442,18 @@
 				C237018C19D974390024F856 /* UIAlertView+AFNetworking.m in Sources */,
 				C237018719D974390024F856 /* AFURLRequestSerialization.m in Sources */,
 				C25E763919EF5C1200779C23 /* UIImage+WebP.m in Sources */,
+				4CC7B8991A4B3EBE000982EA /* MatchProfileTVC.m in Sources */,
 				C25E763619EF5C1200779C23 /* UIButton+WebCache.m in Sources */,
 				0BA4ECBB19AE232600302E92 /* CustomSignInViewController.m in Sources */,
 				C254F8A319F6C4B000473836 /* WhoSeeViewController.m in Sources */,
 				C237018D19D974390024F856 /* UIButton+AFNetworking.m in Sources */,
 				42236F2A19B7DEEE00539466 /* CReflectionView.m in Sources */,
 				42DBCCC519AC4E4200CE6C93 /* StarterViewController.m in Sources */,
+				4CBACD931AAE4F9F007DBC9B /* ImageVC.m in Sources */,
 				42236F3119B7F30000539466 /* CDemoCollectionViewController.m in Sources */,
+				4C4F7B5B1AE429CC0014C737 /* UserRating.m in Sources */,
 				42236F2619B7DEEE00539466 /* CBetterCollectionViewCell.m in Sources */,
+				4C4D71DB1AE5D33E000FE139 /* UserRatingViewController.m in Sources */,
 				4281F25C19B22F72007724C6 /* UserCollectionViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1360,8 +1558,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1373,8 +1571,14 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/speeddate",
+					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/build-tools/android-4.4.2",
+					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/build-tools/android-4.4.2/renderscript/lib/intermediates/armeabi-v7a",
+					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/build-tools/android-4.4.2/renderscript/lib/intermediates/mips",
+					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/build-tools/android-4.4.2/renderscript/lib/intermediates/x86",
+					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/tools/Jet/JetCreator",
+					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/tools/lib",
 				);
-				PRODUCT_NAME = speeddate;
+				PRODUCT_NAME = Dalliant;
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1386,8 +1590,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1399,8 +1603,14 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/speeddate",
+					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/build-tools/android-4.4.2",
+					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/build-tools/android-4.4.2/renderscript/lib/intermediates/armeabi-v7a",
+					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/build-tools/android-4.4.2/renderscript/lib/intermediates/mips",
+					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/build-tools/android-4.4.2/renderscript/lib/intermediates/x86",
+					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/tools/Jet/JetCreator",
+					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/tools/lib",
 				);
-				PRODUCT_NAME = speeddate;
+				PRODUCT_NAME = Dalliant;
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};

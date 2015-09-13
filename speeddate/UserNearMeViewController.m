@@ -39,7 +39,7 @@
 
 @property CLLocationManager* locationManager;
 @property CLLocation* currentLocation;
-@property NSNumber* milesAway;
+@property NSNumber* milesAway; 
 
 @end
 

@@ -31,4 +31,36 @@
     
 }
 
+- (void)setInterests:(NSArray *)userInterests
+{
+    NSString *interest;
+    for (int i = 0; i < [userInterests count]; i++) {
+        interest = [userInterests objectAtIndex:i];
+        NSLog(@"Interest count: %lu", (unsigned long)[userInterests count]);
+        switch (i) {
+            case 0:
+                self.image1.image = [UIImage imageNamed:interest];
+                NSLog(@"Interest1: %@", interest);
+                break;
+            case 1:
+                self.image2.image = [UIImage imageNamed:interest];
+                NSLog(@"Interest2: %@", interest);
+                break;
+            case 2:
+                self.image3.image = [UIImage imageNamed:interest];
+                NSLog(@"Interest3: %@", interest);
+                break;
+            case 3:
+                self.image4.image = [UIImage imageNamed:interest];
+                NSLog(@"Interest4: %@", interest);
+                break;
+            case 4:
+                self.image5.image = [UIImage imageNamed:interest];
+                NSLog(@"Interest5: %@", interest);
+                break;
+        }
+    
+    }
+}
+
 @end

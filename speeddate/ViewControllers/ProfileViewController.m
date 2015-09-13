@@ -15,6 +15,9 @@
 #import "config.h"
 #import "RageIAPHelper.h"
 #import "User.h"
+#import "UserRatingViewController.h"
+#import "UserRating2ViewController.h"
+#import "PossibleMatchHelper.h"
 #import <StoreKit/StoreKit.h>
 
 #define DEFAULT_DESCRIPTION  @"Please fill information about you"
@@ -65,13 +68,12 @@
 @property (nonatomic,retain)  IBOutlet UISwitch *switchTouchId;
 
 @property UserParseHelper *user;
+@property PossibleMatchHelper *connection;
 
 ////who?
 
 @property (nonatomic,retain) IBOutlet UIButton *whosee;
 @property (nonatomic,retain) IBOutlet UIButton *whoseeVip;
-
-
 
 @end
 
@@ -89,9 +91,11 @@
 {
     [super viewDidLoad];
     //[self checkPurchase];
-    [_scroller setScrollEnabled:YES];
+    
     //[_scroller setContentSize:CGSizeMake(320, 1555)];
-    [_scroller setContentSize:CGSizeMake(self.view.frame.size.width, 1550)];
+    [_scroller setContentSize:CGSizeMake(self.view.frame.size.width, 1466)];
+    [_scroller setScrollEnabled:YES];
+    
     mainUser = [User singleObj];
     mainUser.isRevealed = false;
     _sidebarButton.target = self.revealViewController;
@@ -114,16 +118,21 @@
         [self.bannerView addSubview:bannerView_];
         
     
-    
-    CLGeocoder* geocoder = [CLGeocoder new];
-    CLLocation* locationz = [[CLLocation alloc]initWithLatitude:[UserParseHelper currentUser].geoPoint.latitude longitude:[UserParseHelper currentUser].geoPoint.longitude];
-    [geocoder reverseGeocodeLocation:locationz completionHandler:^(NSArray *placemarks, NSError *error) {
-        CLPlacemark* placemark = placemarks.firstObject;
+    if (![UserParseHelper currentUser].geoPoint) {
+        self.cityLable.text = @"No Location";
+    } else {
+        [[UserParseHelper currentUser] userGeolocationOutput:self.cityLable];
+        /*
+        CLGeocoder* geocoder = [CLGeocoder new];
+        CLLocation* locationz = [[CLLocation alloc]initWithLatitude:[UserParseHelper currentUser].geoPoint.latitude longitude:[UserParseHelper currentUser].geoPoint.longitude];
+        [geocoder reverseGeocodeLocation:locationz completionHandler:^(NSArray *placemarks, NSError *error) {
+            CLPlacemark* placemark = placemarks.firstObject;
         
-        self.cityLable.text = [NSString stringWithFormat:@"%@, %@", placemark.locality, placemark.administrativeArea];
-        
-    }];
+            self.cityLable.text = [NSString stringWithFormat:@"%@, %@", placemark.locality, placemark.administrativeArea];
 
+        }];
+         */
+    }
    
     NSUserDefaults *touchFbP = [NSUserDefaults standardUserDefaults];
    NSString *touch = [touchFbP objectForKey:@"touchId"];
@@ -136,13 +145,19 @@
         self.switchTouchId.on = NO;
     }
 
-
+    [UserParseHelper currentUser].credits = @5;
+    
+    
+    //[self findUnratedMatches];
+    
+    self.restorationIdentifier = @"ProfileViewController";
+    
 }
 
 
 
 - (void)checkPurchase {
-       
+    
     PFUser *chekUser = [PFUser currentUser];
     NSString *vip = chekUser[@"membervip"];
     if ([vip isEqualToString:@"vip"]) {
@@ -161,14 +176,12 @@
         self.whoseeVip.hidden = NO;
         
     }
-
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navigationItem.title = [UserParseHelper currentUser].nickname;
+    //self.navigationItem.title = [UserParseHelper currentUser].nickname;
     
     // My Edits -------------------------------------
     self.bannerView.hidden = YES;
@@ -179,6 +192,53 @@
     
     //[self checkPurchase];
     //------------------------------------------------
+}
+
+- (void)findUnratedMatches
+{
+    NSLog(@"Connection query started");
+    PFQuery *unRatedConnectionsFromMe = [PossibleMatchHelper query];
+    [unRatedConnectionsFromMe whereKey:@"fromUser" equalTo:[UserParseHelper currentUser]];
+    PFQuery *unRatedConnectionsToMe = [PossibleMatchHelper query];
+    [unRatedConnectionsToMe whereKey:@"toUser" equalTo:[UserParseHelper currentUser]];
+    PFQuery *both = [PFQuery orQueryWithSubqueries:@[unRatedConnectionsFromMe, unRatedConnectionsToMe]];
+    [both findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        NSLog(@"Connections found: %lu", (unsigned long)[objects count]);
+
+        if ([objects count] > 0) {
+            
+            for (int i=0; i < [objects count]; i++) {
+                
+                _connection = (PossibleMatchHelper *)[objects objectAtIndex:i];
+                if ([_connection.toUser isEqual:[UserParseHelper currentUser]]) {
+                    _connection.fromUser = (UserParseHelper *)[_connection.fromUser fetchIfNeeded];
+                    
+                    [self performSegueWithIdentifier:@"userRating2" sender:_connection.fromUser];
+                    
+                } else {
+                    _connection.toUser = (UserParseHelper *)[_connection.toUser fetchIfNeeded];
+                    
+                    [self performSegueWithIdentifier:@"userRating" sender:_connection.toUser];
+                    
+                }
+            }
+            
+            /*
+                        for (PossibleMatchHelper *connection in objects) {
+                            
+                            if ([connection.toUser isEqual:[UserParseHelper currentUser]]) {
+                                connection.fromUser = (UserParseHelper *)[connection.fromUser fetchIfNeeded];
+                                //[self performSegueWithIdentifier:@"userRating" sender:connection.fromUser];
+                                NSLog(@"Connection: %@", connection.fromUser.nickname);
+                            } else {
+                                connection.toUser = (UserParseHelper *)[connection.toUser fetchIfNeeded];
+                                //[self performSegueWithIdentifier:@"userRating" sender:connection.toUser];
+                                NSLog(@"Connection: %@", connection.toUser.nickname);
+                            }
+            }
+             */
+        }
+    }];
 }
 
 - (void)createAgePickerView
@@ -220,8 +280,7 @@
                                  block:^(PFObject *object, NSError *error)
      {
          self.user = (UserParseHelper *)object;
-
-
+         self.user.installation = [PFInstallation currentInstallation];
          self.charactersLabel.text = [NSString stringWithFormat:@"%lu/%d",(unsigned long)self.user.desc.length,MAXLENGTH];
          
          
@@ -254,7 +313,7 @@
              [self bothLikeSelect:nil];
          }
          [self.agePickerView scrollToElement:[NSNumber numberWithInt:self.user.age.intValue-18].intValue animated:YES];
-
+         
      }];
 }
 
@@ -407,35 +466,59 @@
     [self presentViewController:imagePickerController animated:YES completion:nil];
 }
 
-#pragma mark - EDIT ACTIONSHEET
+#pragma mark - DELETE ACTION
 
-- (IBAction)editProfile:(id)sender
+- (IBAction)deleteButtonPressed:(id)sender // Delete Profile via Parse
 {
-    if (!self.editing) {
-        [self.editButton setTitle:@"Done"];
-    } else {
-        [self.editButton setTitle:@"Edit"];
-    }
-    self.editing = !self.editing;
-    if (self.editing) {
-        [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0.2 options:UIViewAnimationOptionCurveEaseIn animations:^{
-            self.editView.frame = CGRectMake(0, self.view.frame.size.height-self.editView.frame.size.height, self.editView.frame.size.width, self.editView.frame.size.height);
-        } completion:^(BOOL finished) {
+    [self performSegueWithIdentifier:@"userRating" sender:nil];
+    /*
+    UIAlertView *deleteAlert = [[UIAlertView alloc] initWithTitle:@"Delete Profile"
+                                                          message:@"Are you sure you want to permanently Delete your Dalliant Profile? This cannot be un-done."
+                                                         delegate:self
+                                                cancelButtonTitle:@"Cancel"
+                                                otherButtonTitles:@"Delete",nil];
+    deleteAlert.tag = 1;
+    [deleteAlert show];
+     */
+}
 
-        }];
-    } else {
-        [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0.2 options:UIViewAnimationOptionCurveEaseIn animations:^{
-            self.editView.frame = CGRectMake(0, self.view.frame.size.height, self.editView.frame.size.width, self.editView.frame.size.height);
-        } completion:^(BOOL finished) {
-            
-        }];
+// Alertview handler
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == 1 && buttonIndex == 1) {
         
+        [self.user deleteInBackground];
+        if ([PFUser currentUser]) {
+            [[PFUser currentUser] deleteInBackground];
+        }
+        [self performSegueWithIdentifier:@"backToLogin" sender:nil];
+        
+        //[self.navigationController popToRootViewControllerAnimated:YES];
     }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    self.navigationItem.title = @"Profile";
+    if ([segue.identifier isEqualToString:@"userRating"]) {
+        
+        UserRatingViewController *vc = segue.destinationViewController;
+        vc.relationship = _connection;
+        vc.matchUser = (UserParseHelper *)sender; // Will be Match returned in PossMatch Query
+        vc.user = [UserParseHelper currentUser];
+        vc.matchUserImage = [UIImage imageWithData:[vc.matchUser.photo getData]];
+        [vc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
+        
+    } else if ([segue.identifier isEqualToString:@"userRating2"]) {
+        
+        UserRating2ViewController *rateVC = segue.destinationViewController;
+        rateVC.relationship = _connection;
+        rateVC.matchUser = (UserParseHelper *)sender; // Will be Match returned in PossMatch Query
+        rateVC.user = [UserParseHelper currentUser];
+        rateVC.matchUserImage = [UIImage imageWithData:[rateVC.matchUser.photo getData]];
+        /*
+        [rateVC setModalPresentationStyle:UIModalPresentationOverCurrentContext];
+         */
+    } else self.navigationItem.title = @"Profile";
 }
 
 -(IBAction)buyMemberPro:(id)sender{
@@ -482,9 +565,35 @@
     
 }
 
+- (void)editProfile // Will eventually delete
+{
+    if (!self.editing) {
+        [self.editButton setTitle:@"Done"];
+    } else {
+        [self.editButton setTitle:@"Edit"];
+    }
+    self.editing = !self.editing;
+    if (self.editing) {
+        [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0.2 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            self.editView.frame = CGRectMake(0, self.view.frame.size.height-self.editView.frame.size.height, self.editView.frame.size.width, self.editView.frame.size.height);
+        } completion:^(BOOL finished) {
+            
+        }];
+    } else {
+        [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0.2 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            self.editView.frame = CGRectMake(0, self.view.frame.size.height, self.editView.frame.size.width, self.editView.frame.size.height);
+        } completion:^(BOOL finished) {
+            
+        }];
+        
+    }
+}
+
 -(IBAction)explorelocation:(id)sender{
     
+    [self performSegueWithIdentifier:@"locationMap" sender:nil];
     
+    /*
     PFUser *chekUser = [PFUser currentUser];
     NSString *vip = chekUser[@"membervip"];
     if ([vip isEqualToString:@"novip"]) {
@@ -495,7 +604,8 @@
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil];
         [alert show];
-    }
+    }*/
+    
 }
 
 -(IBAction)whooseevips:(id)sender{
@@ -513,6 +623,4 @@
         [alert show];
     }
 }
-
-
 @end

@@ -10,16 +10,25 @@
 #import <ParseFacebookUtils/PFFacebookUtils.h>
 #import "RageIAPHelper.h"
 #import "UserParseHelper.h"
+#import "PossibleMatchHelper.h"
+#import "MessageParse.h"
+#import "ChatMessageViewController.h"
 #import "config.h"
 
 @implementation AppDelegate
 @synthesize userStart;
 
+// Disable Custom Keyboards
+- (BOOL)application:(UIApplication *)application shouldAllowExtensionPointIdentifier:(NSString *)extensionPointIdentifier {
+    if ([extensionPointIdentifier isEqualToString: UIApplicationKeyboardExtensionPointIdentifier]) {
+        return NO;
+    }
+    return YES;
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
-    
-
     [Parse setApplicationId:appIdparse
                   clientKey:appKeyparse];
     [PFFacebookUtils initializeFacebook];
@@ -43,9 +52,39 @@
                                                          UIRemoteNotificationTypeSound)];
     }
     
-   
-    [[UINavigationBar appearance] setBarTintColor:BLUE_COLOR];
+    NSDictionary *notificationPayload = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
+    
+    if (notificationPayload) {
+        NSLog(@"Notification in AppDelegate: %@", [notificationPayload objectForKey:@"messageId"]);
+        //Query if NotificationPayload is from Chat or ShareRequest based on string
+        
+        // Create Message from MessageId
+        NSString *messageId   = [notificationPayload objectForKey:@"messageId"];
+        PFQuery *messageQuery = [MessageParse query];
+        
+        [messageQuery getObjectInBackgroundWithId:messageId block:^(PFObject *object, NSError *error) {
+            if (!error) {
+                
+                MessageParse *message                   = (MessageParse *)object;
+                // Instantiate ViewController, set values and push
+                UINavigationController *navController   = (UINavigationController *)self.window.rootViewController;
+                ChatMessageViewController *chatVC       = [navController.storyboard instantiateViewControllerWithIdentifier:@"ChatPushNotificationView"];
+                chatVC.toUserParse                      = message.toUserParse;
+                chatVC.curUser                          = message.fromUserParse;
+                chatVC.fromConversation                 = true;
+                
+                [navController pushViewController:chatVC animated:YES];
+            }
+        }];
+         
+        
+        //PossibleMatchHelper *relationship = [notificationPayload objectForKey:@"relationship"];
+        
+    }
+    
+    //[[UINavigationBar appearance] setBarTintColor:BLUE_COLOR];
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
+    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
     [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil]
      setTitleTextAttributes:[NSDictionary
                              dictionaryWithObjectsAndKeys:[UIColor whiteColor], NSForegroundColorAttributeName,nil]
@@ -92,32 +131,85 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     [FBAppCall handleDidBecomeActiveWithSession:[PFFacebookUtils session]];
+    
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    if (currentInstallation.badge != 0) {
+        currentInstallation.badge = 0;
+        [currentInstallation saveEventually];
+    }
 }
 
 - (void)application:(UIApplication *)application
 didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
 
-#if (TARGET_IPHONE_SIMULATOR)
+//#if (TARGET_IPHONE_SIMULATOR)
 
-#else
+//#else
     NSLog(@"updating pf installation");
+    
     // Store the deviceToken in the current installation and save it to Parse.
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     [currentInstallation setDeviceTokenFromData:newDeviceToken];
+    //currentInstallation[@"user"] = [UserParseHelper currentUser].objectId;
     currentInstallation.channels = @[@"global"];
     [currentInstallation saveInBackground];
     NSLog(@"finish");
-#endif
+//#endif
 
 
 
 }
 
-- (void)application:(UIApplication *)application
-didReceiveRemoteNotification:(NSNotification *)userInfo {
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    
+    NSDictionary *userInfoAlert = [userInfo objectForKey:@"aps"];
+    NSString *alertMessage = [userInfoAlert objectForKey:@"alert"];
+    
+    if ([alertMessage isEqualToString:@"Request to Share Identities"]) {
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"FetchRevealRequest" object:self];
+            /*
+             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"In-app Reveal Request" message:@"Request received in app" delegate:self cancelButtonTitle:@"Done" otherButtonTitles: @"Anzeigen", nil];
+             [alert setTag: 2];
+             [alert show];
+        */
+    } else if ([alertMessage isEqualToString:@"Identity Share Reply"]) {
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"FetchRevealReply" object:self];
+        
+    } else if ([alertMessage isEqualToString:@"Match Ended Chat"]) {
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"chatEnded" object:self];
+        
+    } else {
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:receivedMessage object:userInfo];
+        
+    }
+}
+/*
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler
+{
     [[NSNotificationCenter defaultCenter] postNotificationName:receivedMessage object:userInfo];
     //[PFPush handlePush:userInfo];
+
+ 
+ 
+    }
+     else {
+     // Push Notification received in the background
+     
+     }
+    
+} else {
+    
+    
 }
+
+
+     
+    handler(UIBackgroundFetchResultNewData);
+}*/
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
@@ -203,6 +295,16 @@ didReceiveRemoteNotification:(NSNotification *)userInfo {
         }];
     } */
 
+}
+
+#pragma mark - State Resoration Opt-In
+- (BOOL)application:(UIApplication *)application shouldSaveApplicationState:(NSCoder *)coder;
+{
+    return YES;
+}
+- (BOOL)application:(UIApplication *)application shouldRestoreApplicationState:(NSCoder *)coder;
+{
+    return YES;
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

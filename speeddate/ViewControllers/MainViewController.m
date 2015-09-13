@@ -21,9 +21,10 @@
 #import "UserParseHelper.h"
 #import "PossibleMatchHelper.h"
 #import "MessageParse.h"
+#import "ProgressHUD.h"
 #import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKit.h>
-#import "MatchViewController.h"
+#import "MessagesViewController.h"
 #import "GADBannerView.h"
 #import "GADRequest.h"
 #import "GADInterstitial.h"
@@ -31,7 +32,10 @@
 #import "IAPHelper.h"
 #import <StoreKit/StoreKit.h>
 #import "RageIAPHelper.h"
+#import "UserTableViewCell.h"
+#import "MatchViewController.h"
 #import "User.h"
+#import <AMPopTip.h>
 
 #define IS_IPHONE_5 ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )568 ) < DBL_EPSILON )
 #define labelHeight 20
@@ -52,14 +56,17 @@
 #define dislikeViewTag 1
 #define topMarginView 60
 #define cornRadius 0
+#define SECONDS_DAY 24*60*60
 
-@interface MainViewController () <UIGestureRecognizerDelegate, CLLocationManagerDelegate, UIAlertViewDelegate>{
+@interface MainViewController () <UIGestureRecognizerDelegate, CLLocationManagerDelegate, UIAlertViewDelegate, UITableViewDataSource, UITableViewDelegate>{
     
     BOOL inAnimation;
     CALayer *waveLayer;
     NSTimer *animateTimer;
-    User *user;
+    User *userSingleton;
+    NSTimer *baedarTimer;
 }
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *sidebarButton;
 @property (strong, nonatomic) UIView *profileView;
 @property (strong, nonatomic) UIView* backgroundView;
@@ -67,8 +74,13 @@
 @property (strong, nonatomic) UIView* secondBox;
 @property UserParseHelper* currShowingProfile;
 @property UserParseHelper* backgroundUserProfile;
+
+// Matches Arrays -----------------------------------------
+
 @property NSMutableArray *posibleMatchesArray;
 @property NSMutableArray* willBeMatches;
+
+// --------------------------------------------------------
 @property (strong, nonatomic) UIImageView* profileImage;
 @property (strong, nonatomic) UIImageView* profileImageAge;
 @property (strong, nonatomic) UIImageView* profileImageLocation;
@@ -95,20 +107,41 @@
 @property (weak, nonatomic) IBOutlet UIButton *dislikeButton;
 @property (weak, nonatomic) IBOutlet UIButton *cyclePhotosButton;
 @property (weak, nonatomic) IBOutlet UIButton *likeButton;
-@property UserParseHelper* curUser;
+@property (nonatomic) UserParseHelper* curUser;
+@property (nonatomic) UserParseHelper *matchUser;
 @property UIImage *userPhoto;
 @property UIImage *matchPhoto;
 @property (weak, nonatomic) IBOutlet UITextView *activityLabel;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property UILabel* imageCountLabel;
-@property UserParseHelper *otherUser;
+@property NSArray *filteredAllUsersArray;
+@property NSMutableArray *messages;
+@property NSMutableArray *usersArray;
+@property NSArray *matchedUsers;
+@property NSMutableArray *matchesFoundMe;
+@property NSMutableArray *connections;
+@property NSMutableArray *oldConnections;
+@property NSMutableArray *matchesIFound;
+@property PossibleMatchHelper *otherUser;
+@property PossibleMatchHelper *possibleMatch;
+@property double prefCounter;
+@property double totalPrefs; //<-- should be attribute on UserParseHelper
+@property (weak, nonatomic) IBOutlet UILabel *matchedLabel;
 
+@property (weak, nonatomic) IBOutlet UIButton *baedarLabel;
+- (IBAction)toggleBaedar:(id)sender;
 
+@property (weak, nonatomic) IBOutlet UIButton *matchButtonLabel;
+- (IBAction)pressedMatchButton:(id)sender;
 
 @property (nonatomic,retain) UIView *bannerView;
 
 @property (strong) NSDictionary *match;
-@property (strong) NSMutableArray *noMatch;
+@property (strong) NSMutableArray *sharedPrefs;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *filtersButton;
+@property NSArray *blockedUsers;
+
+- (IBAction)pushToBaedar:(id)sender;
 
 @end
 
@@ -127,33 +160,39 @@
 #if (TARGET_IPHONE_SIMULATOR)
 
 #else
-    [UserParseHelper currentUser].installation = [PFInstallation currentInstallation];
-    [[UserParseHelper currentUser] saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+    _curUser.installation = [PFInstallation currentInstallation];
+    [_curUser saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
        
     }];
 
 #endif
-    user = [User singleObj];
+    userSingleton = [User singleObj];
     
     _matched = false;
+    
+    UIImageView *iv = [[UIImageView alloc] initWithFrame:self.view.frame];
+    iv.image = [UIImage imageNamed:@"match"];
     
     [self.activityIndicator startAnimating];
     PFQuery* curQuery = [UserParseHelper query];
     [curQuery whereKey:@"username" equalTo:[UserParseHelper currentUser].username];
     [curQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         self.curUser = objects.firstObject;
+        NSLog(@"Current User: %@", _curUser.nickname);
+        NSLog(@"Blocked Users MainVC: %lu", (unsigned long) [_curUser.blockedUsers count]);
         [self.curUser.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
             self.userPhoto = [UIImage imageWithData:data];
         }];
-        if (self.curUser.geoPoint != nil) {
-            //[self getMatches];
-            [self performSegueWithIdentifier:@"viewMatches" sender:nil];
-        } else {
+        
+        [self currentLocationIdentifier];
+        /*
+        if (!self.curUser.geoPoint) {
+            NSLog(@"No User Geolocation");
             [self currentLocationIdentifier];
         }
+        */
     }];
-
-
+    
     _sidebarButton.target = self.revealViewController;
     _sidebarButton.action = @selector(revealToggle:);
     self.posibleMatchesArray = [NSMutableArray new];
@@ -161,26 +200,59 @@
     self.photoArrayIndex = 1;
     self.firstTime = YES;
     self.isRotating = YES;
-    self.view.backgroundColor = RED_LIGHT;
-  
+    //self.view.backgroundColor = RED_LIGHT;
+    self.view.backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"match"]];
+    
+    [self configureButton:_matchButtonLabel];
+    [_matchButtonLabel setHidden:YES];
+    [_activityLabel setHidden:YES];
+    [_likeButton setHidden:YES];
+    [_dislikeButton setHidden:YES];
+    [_matchedLabel setHidden:YES];
     
     self.navigationController.navigationBar.barTintColor = RED_LIGHT;
-    self.navigationItem.title = @"Speed Dating";
+    
     inAnimation = NO;
+    
+    // Circle Animation <-- wrap in Toggle Button
     waveLayer=[CALayer layer];
     if (IS_IPHONE_5) {
-        waveLayer.frame = CGRectMake(155, 220, 10, 10);
+        waveLayer.frame = CGRectMake(155, 105, 10, 10);
     }else{
-        waveLayer.frame = CGRectMake(155, 180, 10, 10);
+        waveLayer.frame = CGRectMake(155, 105, 10, 10);
     }
     waveLayer.borderWidth =0.2;
     waveLayer.cornerRadius =5.0;
     [self.view.layer addSublayer:waveLayer];
    
-    [waveLayer setHidden:NO];
+    [waveLayer setHidden:YES];
     
+    self.usersArray     = [NSMutableArray new];
+    self.connections    = [NSMutableArray new];
+    self.oldConnections = [NSMutableArray new];
+    _matchesIFound      = [NSMutableArray new];
+    _matchesFoundMe     = [NSMutableArray new];
+    
+    [self customizeApp];
+    
+    [[AMPopTip appearance] setPopoverColor:[UIColor blueColor]];
+    AMPopTip *popTip = [AMPopTip popTip];
+    [popTip showText:@"Press to find matches. Press again to stop." direction:AMPopTipDirectionRight maxWidth:200 inView:self.view fromFrame:_baedarLabel.frame duration:5];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:receivedMessage object:nil];
+
+    //self.restorationIdentifier = @"MainViewController";
+    //[self currentLocationIdentifier];
     //[self performSegueWithIdentifier:@"test_match" sender:nil];
 
+}
+
+- (void)customizeApp
+{
+    self.tableView.backgroundColor = WHITE_COLOR;
+    self.tableView.separatorColor = [UIColor lightGrayColor];
+    //self.searchTextField.backgroundColor = RED_DEEP;
+    
 }
 
 - (void)adViewDidReceiveAd:(GADBannerView *)bannerView {
@@ -191,27 +263,109 @@
     NSLog(@"Interstitial adapter class name: %@", interstitial.adNetworkClassName);
 }
 
+#pragma mark - Baedar Toggle
+
+// Turn on Baedar
+- (IBAction)toggleBaedar:(id)sender {
+    if (_baedarLabel.isSelected) {
+        [self baedarOff];
+    } else {
+        [self baedarOn];
+    }
+}
+
+- (void)baedarOn
+{
+    //[self.locationManager startUpdatingLocation];
+    [ProgressHUD show:@"Finding Matches...." Interaction:NO];
+    _filtersButton.enabled = false;
+    _filtersButton.title = @"";
+    self.navigationItem.title = @"Active";
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor greenColor]};
+    [self currentLocationIdentifier];
+    _curUser.online = @"yes";
+    [_curUser saveInBackground];
+    [self.view.layer addSublayer:waveLayer];
+    [waveLayer setHidden:NO];
+    [self startAnimation];
+    //[self startBaedarTimer];
+    //_baedarLabel.transform = CGAffineTransformMakeScale(1.1,1.1); // <-- Increase button size on press
+    [_baedarLabel setSelected:YES];
+    userSingleton.baedarIsRunning = YES;
+    NSLog(@"Block User count2: %lu", (unsigned long)[_curUser.blockedUsers count]);
+    [self getMatches];
+}
+
+- (void)baedarOff
+{
+    //_baedarLabel.transform = CGAffineTransformMakeScale(1.1,1.1); // <-- Increase button size on press
+    [ProgressHUD dismiss];
+    _curUser.online = @"no";
+    [_curUser saveInBackground];
+    _filtersButton.enabled = true;
+    _filtersButton.title = @"Filters";
+    self.navigationItem.title = @"Offline";
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor darkGrayColor]};
+    [_baedarLabel setSelected:NO];
+    inAnimation = NO;
+    [waveLayer removeFromSuperlayer];
+    [waveLayer setHidden:YES];
+    [baedarTimer invalidate];
+    userSingleton.baedarIsRunning = NO;
+}
+
+- (IBAction)pressedMatchButton:(id)sender {
+    
+    //[self performSegueWithIdentifier:@"viewMatches" sender:nil];
+    [self performSegueWithIdentifier:@"newViewMatches" sender:nil];
+    
+}
+
+- (void)configureButton:(UIButton *)button
+{
+    button.layer.cornerRadius = 3;
+    button.layer.borderWidth = 1.0;
+    button.layer.borderColor = [UIColor whiteColor].CGColor;
+}
+
 - (void)checkFirstTime
 {
-    if(![[NSUserDefaults standardUserDefaults] objectForKey:@"first"]) {
-        [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"first"];
+    if(![[NSUserDefaults standardUserDefaults] objectForKey:@"firstTimeBaedar"]) {
+        [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"firstTimeBaedar"];
         [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        //Tour
+        [[AMPopTip appearance] setPopoverColor:[UIColor blueColor]];
+        AMPopTip *popTip = [AMPopTip popTip];
+        [popTip showText:@"Press to go 'Active' and find matches. Press again to stop." direction:AMPopTipDirectionRight maxWidth:200 inView:self.view fromFrame:_baedarLabel.frame duration:5];
+        /*
         UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Edit profile" message:@"Please edit your profile before matching" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Edit", nil];
         [av show];
+         */
     }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [self checkIncomingViewController];
+    // Listen for TableView changes
+    //[self checkIncomingViewController];
+    //[self currentLocationIdentifier];
+    //[self loadingChat];
+    self.navigationItem.title = @"Offline";
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor darkGrayColor]};
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     [self checkFirstTime];
+    if (userSingleton.baedarIsRunning) {
+        NSLog(@"Baedar is ON");
+        [self baedarOn];
+    }
     [self performSelector:@selector(startAnimation) withObject:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTableView) name:@"TableUpdated" object:nil];
 }
 
 - (void)checkIncomingViewController
@@ -224,49 +378,94 @@
     }
 }
 
+#pragma mark - TIMER
+- (void)startBaedarTimer
+{
+    baedarTimer = [NSTimer scheduledTimerWithTimeInterval:5.0
+                                                   target:self
+                                                 selector:@selector(comebackAlert)
+                                                 userInfo:nil
+                                                  repeats:NO];
+}
+
 #pragma mark - LOCATION IDENTIFIER
 
+-(void)comebackAlert
+{
+    UIAlertView *comebackAlert = [[UIAlertView alloc] initWithTitle:@"Great job matching!"
+                                                            message:@"Congrats on finding matches. Take some time to chat with them, keep your Baedar running, and come back later to find new matches"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"Okay!"
+                                                  otherButtonTitles:nil];
+    [comebackAlert show];
+}
+
+// Get User Geo
 -(void)currentLocationIdentifier
 {
     self.locationManager = [CLLocationManager new];
     self.locationManager.delegate = self;
     self.locationManager.distanceFilter = kCLDistanceFilterNone;
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    [self.locationManager requestWhenInUseAuthorization];
+    [self.locationManager requestAlwaysAuthorization];
     [self.locationManager startMonitoringSignificantLocationChanges];
     [self.locationManager startUpdatingLocation];
+    
+    /* 
+     Simulated locations:
+     
+     San Fran: 
+     
+     Chicago on Armitage: Lat 41.9179682946223, Long -87.6730694343221
+     */
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
-    self.currentLocation = [locations objectAtIndex:0];
+    self.currentLocation = [locations lastObject];
+    NSLog(@"Current location: %@", self.currentLocation);
+    // Timestamp location capture?
     [self.locationManager stopUpdatingLocation];
     CLGeocoder* geocoder = [CLGeocoder new];
-    [geocoder reverseGeocodeLocation:locations.firstObject completionHandler:^(NSArray *placemarks, NSError *error) {
+    [geocoder reverseGeocodeLocation:locations.lastObject completionHandler:^(NSArray *placemarks, NSError *error) {
         CLPlacemark* placemark = placemarks.firstObject;
+        /* Shows City and State once radar is activitated
         self.activityLabel.text = [NSString stringWithFormat:@"Locating :\n %@, %@", placemark.locality, placemark.administrativeArea];
-        self.activityLabel.textColor = [UIColor whiteColor];
+         */
     }];
-    [UserParseHelper currentUser].geoPoint = [PFGeoPoint geoPointWithLatitude:self.currentLocation.coordinate.latitude longitude:self.currentLocation.coordinate.longitude];
+    _curUser.geoPoint = [PFGeoPoint geoPointWithLatitude:self.currentLocation.coordinate.latitude longitude:self.currentLocation.coordinate.longitude];
     self.curUser.geoPoint = [PFGeoPoint geoPointWithLatitude:self.currentLocation.coordinate.latitude longitude:self.currentLocation.coordinate.longitude];
-    [[UserParseHelper currentUser] saveEventually];
-    //[self getMatches];
-    [self performSegueWithIdentifier:@"viewMatches" sender:nil];
+    [_curUser save];
+    NSLog(@"%@ location: %@", _curUser.nickname, _curUser.geoPoint);
+    //[self performSegueWithIdentifier:@"viewMatches" sender:nil];
+}
+
+-(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+{
+    // Handle error
+    NSLog(@"Location error - %@\n Description: %@", [error userInfo], error.description);
 }
 
 #pragma mark - GET MATCHES
 
 - (void)getMatches
 {
+        NSLog(@"Block User count3: %lu", (unsigned long)[_curUser.blockedUsers count]);
+    /* ---------------- START BLOCK COMMENT
+     
     // Fetch PossibleMatch ------------------------------------------------------------------
     
     PFQuery *query = [PossibleMatchHelper query];
     [query whereKey:@"toUser" equalTo:self.curUser];
     [query whereKey:@"match" equalTo:@"YES"];
-    [query whereKey:@"toUserApproved" equalTo:@"notDone"];
+    [query whereKey:@"toUserApproved" equalTo:@"notDone"]; // May not need this, based on swipe
+    
+    //
     PFQuery *queryInside = [PossibleMatchHelper query];
-    [queryInside whereKey:@"toUser" equalTo:[UserParseHelper currentUser]];
-    [queryInside whereKey:@"toUserApproved" equalTo:@"YES"];
+    [queryInside whereKey:@"toUser" equalTo:_curUser];
+    [queryInside whereKey:@"toUserApproved" equalTo:@"YES"]; // May not need this, based on swipe
+    
+    // Make sure users returned in queries are not the Current User
     PFQuery* checkQuery = [UserParseHelper query];
     [checkQuery whereKey:@"email" matchesKey:@"fromUserEmail" inQuery:queryInside];
     PFQuery* userQuery = [UserParseHelper query];
@@ -274,6 +473,7 @@
    
     // --------------------------------------------------------------------------------------
     
+    // Setting a query distance?
     if (self.curUser.distance.doubleValue == 0.0) {
         self.curUser.distance = [NSNumber numberWithInt:100];
     }
@@ -282,46 +482,59 @@
     [userQuery whereKey:@"geoPoint" nearGeoPoint:self.curUser.geoPoint withinKilometers:self.curUser.distance.doubleValue];
     [userQuery whereKey:@"email" matchesKey:@"fromUserEmail" inQuery:query];
     
-    // If User is Female, look for Male
+    // If User is Female, look for Female
     if (self.curUser.sexuality.integerValue == 0) {
         [userQuery whereKey:@"isMale" equalTo:@"true"];
     }
     
-    // If User is Male, look for Female
+    /* If User is Male, look for Female
     if (self.curUser.sexuality.integerValue == 1) {
         [userQuery whereKey:@"isMale" equalTo:@"false"];
-    }
+    }// end comment here
     NSUserDefaults *mainUser = [NSUserDefaults standardUserDefaults];
     [mainUser setInteger:self.curUser.sexuality.integerValue forKey:@"sex"];
     [mainUser synchronize];
     [userQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [self.posibleMatchesArray addObjectsFromArray:objects];
         [self.willBeMatches addObjectsFromArray:objects];
-      
+        
+        // Query for current User
         PFQuery *query = [PossibleMatchHelper query];
-        [query whereKey:@"fromUser" equalTo:[UserParseHelper currentUser]];
+        [query whereKey:@"fromUser" equalTo:_curUser];
+        
+        // Query for current User was liked (may not need)
         PFQuery *queryTwo = [PossibleMatchHelper query];
-        [queryTwo whereKey:@"toUser" equalTo:[UserParseHelper currentUser]];
+        [queryTwo whereKey:@"toUser" equalTo:_curUser];
         [queryTwo whereKey:@"toUserApproved" equalTo:@"YES"];
+        
+        // Make sure users returned in queries are not the Current User
         PFQuery* userQuery = [UserParseHelper query];
         PFQuery* checkQuery = [UserParseHelper query];
-        [userQuery whereKey:@"objectId" notEqualTo:[UserParseHelper currentUser].objectId];
+        [userQuery whereKey:@"objectId" notEqualTo:_curUser.objectId];
         [userQuery whereKey:@"email" doesNotMatchKey:@"toUserEmail" inQuery:query];
         [checkQuery whereKey:@"email" matchesKey:@"fromUserEmail" inQuery:queryTwo];
+        
+        // Querying on sexuality - If Female show Female
         if (self.curUser.sexuality.integerValue == 0) {
             [userQuery whereKey:@"isMale" equalTo:@"true"];
         }
-    
-        if (self.curUser.sexuality.integerValue == 1) {
+        
+        // If Male show Female
+        /*if (self.curUser.sexuality.integerValue == 1) {
             [userQuery whereKey:@"isMale" equalTo:@"false"];
-        }
-      
+        }// end comment here
+        
+        // Increasing query distance?
         if (self.curUser.distance.doubleValue == 0.0) {
             self.curUser.distance = [NSNumber numberWithInt:10000];
         }
         [userQuery whereKey:@"objectId" doesNotMatchKey:@"objectId" inQuery:checkQuery];
         [userQuery whereKey:@"geoPoint" nearGeoPoint:self.curUser.geoPoint withinKilometers:self.curUser.distance.doubleValue];
         [userQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!objects) {
+                NSLog(@"No Matches found");
+            } else NSLog(@"Matches found: %@ Total: %ld", objects, objects.count);
+            /*
             [self.posibleMatchesArray addObjectsFromArray:objects];
        
             self.activityLabel.text = @"No results found";
@@ -339,107 +552,850 @@
             if (self.firstTime) {
                 [self firstPlacement];
             }
-
+             // end comment here
         }];
+    }]; */
+    
+    // My Queries
+    // Setting a query distance?
+    if (self.curUser.distance.doubleValue == 0.0) {
+        self.curUser.distance = [NSNumber numberWithDouble:1.6];
+    }
+    NSLog(@"Block User count4: %lu", (unsigned long)[_curUser.blockedUsers count]);
+    // Fetch Nearby Users based on distance; while require a time-based While-loop
+    [_connections removeAllObjects];
+    
+    [self fetchAllConnectionsToMe];
+    [self fetchAllConnectionsFromMe];
+    
+    if ([_matchesIFound count] > 0) {
+        for (NSString *matchId in _matchesIFound) {
+            NSLog(@"I found match: %@", matchId);
+        }
+        
+    
+    }
+    
+    if ([_matchesFoundMe count] > 0) {
+        for (NSString *matchId in _matchesFoundMe) {
+            NSLog(@"Match %@ found me", matchId);
+        }
+        
+        
+    }
+    
+    PFQuery *userQuery = [UserParseHelper query];
+    [userQuery whereKey:@"geoPoint" nearGeoPoint:self.curUser.geoPoint withinKilometers:self.curUser.distance.doubleValue];
+    [userQuery whereKey:@"objectId" notEqualTo:_curUser.objectId];          // Don't retrieve current User
+    [userQuery whereKey:@"objectId" notContainedIn:_curUser.blockedUsers];  // Don't retrieve Blocked Users
+    [userQuery whereKey:@"objectId" notContainedIn:_matchesFoundMe];        // Don't retrieve Users who searched me
+    [userQuery whereKey:@"objectId" notContainedIn:_matchesIFound];         // Don't retrieve Users who I searched for
+    [userQuery whereKey:@"online" equalTo:@"yes"];
+    [userQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        
+        if (!objects) {
+            NSLog(@"No Matches found");
+            [ProgressHUD showError:@"Sorry, no Matches found. Please try again later."];
+        } else {
+            //[waveLayer setHidden:YES];
+            [_posibleMatchesArray addObjectsFromArray:objects];
+            NSLog(@"Potential matches found, total: %ld", (unsigned long)objects.count);
+            
+            /*
+            for (UserParseHelper *possMatch in _posibleMatchesArray) {
+                _matchUser = possMatch;
+                [self matchGender];
+            }
+             */
+            
+            [self loopThroughMatches];
+            
+        }
     }];
 }
 
+// Loop Through Matches
+- (void)loopThroughMatches
+{
+    /*
+    int possMatchArrSize = (int)_posibleMatchesArray.count;
+    for (int i = 0; i < possMatchArrSize; i++) {
+        // Push into Array
+        _matchUser = [_posibleMatchesArray objectAtIndex:i];
+        [self matchGender];
+        if (i == possMatchArrSize - 1) {
+            NSLog(@"Last match reached");
+            //[self generateMatchMessage];
+            //[self findMatches:_willBeMatches];
+            
+            // Reload TableView
+            
+            /*[self. tableView beginUpdates];
+                for (PossibleMatchHelper *relationship in _matchRelationships) {
+                    NSLog(@"TableView Reload run");
+                    NSLog(@"Match Relationships Count before table animation: %lu", (unsigned long)[_matchRelationships count]);
+                    NSInteger position = [_matchRelationships indexOfObject:relationship];
+                    NSLog(@"Position: %ld", (long)position);
+                    //NSIndexPath *indexPath = [NSIndexPath indexPathForItem:position inSection:0];
+                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:position inSection:0];
+                    NSLog(@"IndexPath: %@", indexPath);
+                    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                    NSLog(@"TableView insertRow run");
+                    //[self generateMatchMessage]; //<-- Don't need this?
+                }
+            [self.tableView endUpdates];
+             
+        }
+    }*/
+    
+    NSUInteger count = [_connections count];
+    
+    for (UserParseHelper *match in _posibleMatchesArray) {
+            
+        if (![_matchesIFound containsObject:match.objectId] && ![_matchesFoundMe containsObject:match.objectId]) {
+            NSLog(@"Match not a duplicate");
+            _matchUser = match;
+            [self matchGender];
+            
+        } else NSLog(@"Duplicate match found: %@", match.nickname);
+        
+    }
+    
+    //[self fetchAllUserMatchRelationships];
+    [self fetchLatestConnections];
+    
+    if ([_connections count] != 0) {
+        
+        if ([_connections count] == count) {
+            [ProgressHUD dismiss];
+        } else if ([_connections count] > count) {
+            [ProgressHUD showSuccess:@"Found New Matches!"];
+        }
+        
+    } else [ProgressHUD showError:@"Sorry, no Matches found. Please try again later."];
+    
+    [self.tableView reloadData];
+    [self startBaedarTimer];
+    //[self addNewConnection];
+}
+
+- (void)queryForExistingMatch:(UserParseHelper *)match
+{
+     // All old code
+     _matchedUsers = [[NSArray alloc] initWithObjects:_curUser, match, nil];
+     PFQuery *possMatch1 = [PossibleMatchHelper query];
+     [possMatch1 whereKey:@"matches" containsAllObjectsInArray:_matchedUsers];
+     //[possMatch1 findObjects];
+     [possMatch1 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+         
+         if (objects.count == 0) {
+             _matchUser = match;
+             [self matchGender];
+         } else NSLog(@"Duplicate Match found: %@\n Objects:%@", match.nickname, objects);
+     }];
+     
+}
+
+- (void)addNewConnection
+{
+    NSInteger item = [self.tableView numberOfRowsInSection:0];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:0];
+    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+}
+
+- (void)findMatches:(NSMutableArray *)matches
+{
+    [_matchButtonLabel setHidden:NO];
+    [_matchedLabel setHidden:NO];
+    
+    NSString *matchNum = [[NSString alloc] init];
+    if ([matches count] == 1) {
+        matchNum = @"Match";
+    } else matchNum = @"Matches";
+    
+    NSString *matchTitle = [[NSString alloc] initWithFormat:@"You have %lu %@!", (unsigned long)[matches count], matchNum];
+    _matchedLabel.text = matchTitle;
+    _matchedLabel.textColor = [UIColor whiteColor];
+    
+    NSString *buttonTitle = @"Click to View";
+    [_matchButtonLabel setTitle:buttonTitle forState:UIControlStateNormal];
+}
+
+// Save Match Relationship to Database
+- (void) setPossMatchHelper
+{
+    _otherUser                  = [PossibleMatchHelper object];
+    _otherUser.fromUser         = _curUser;
+    _otherUser.toUser           = _matchUser;
+    _otherUser.toUserEmail      = _matchUser.email;
+    _otherUser.fromUserEmail    = _curUser.email;
+    _otherUser.matches          = [[NSArray alloc] initWithObjects:_curUser, _matchUser, nil];
+    NSLog(@"Possible Matches count: %lu", (unsigned long)[_otherUser.matches count]);
+    NSLog(@"Other User: %@", _otherUser.toUserEmail);
+    _otherUser.prefCounter = [NSNumber numberWithDouble:_prefCounter];
+    _otherUser.totalPrefs = [NSNumber numberWithDouble:_totalPrefs];
+    double compatibility = (_prefCounter / _totalPrefs) * 100;
+    _otherUser.compatibilityIndex = [NSNumber numberWithDouble:compatibility];
+    NSLog(@"%@ compatibility: %@", _otherUser.toUserEmail, _otherUser.compatibilityIndex);
+    /*[_otherUser saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        NSLog(@"Before Succeeded Other User: %@", _otherUser.toUserEmail);
+        if (succeeded) {
+            NSLog(@"Before GenMess for %@", _otherUser.toUserEmail);
+            [self generateMatchMessage];
+        }
+    }];*/
+    [_otherUser save];
+    [_connections addObject:_otherUser];
+    [_oldConnections addObject:_otherUser.objectId];
+    
+}
+
 #pragma mark - MATCH FILTER
-/*
+
 - (void)matchGender
 {
-    if ([user.genderPref isEqualToString:_match.gender]) {
-        [self matchBodyType];
-    } else {
-        [_noMatch addObject:_match];
-    }
+    _prefCounter = 0;
+    _totalPrefs = 0;
+    NSString *matchGender;
+    NSString *userGender;
+    
+    if ([_matchUser.isMale isEqualToString:@"true"]) {
+        matchGender = @"Male";
+    } else matchGender = @"Female";
+    
+    if ([_curUser.isMale isEqualToString:@"true"]) {
+        userGender = @"Male";
+    } else userGender = @"Female";
+   
+    if (([_curUser.genderPref isEqualToString:@"Both"] && [_matchUser.genderPref isEqualToString:userGender]) || ([_curUser.genderPref isEqualToString:matchGender] && [_matchUser.genderPref isEqualToString:@"Both"]) || ([_curUser.genderPref isEqualToString:@"Both"] && [_matchUser.genderPref isEqualToString:@"Both"])) {
+        
+        
+        NSLog(@"User gender: %@", _curUser.genderPref);
+        NSLog(@"Match gender: %@", matchGender);
+        _prefCounter++;
+        _totalPrefs++;
+        /*[possMatch saveInBackground];
+        possMatch.prefMatchCounter++;
+        possMatch.totalPrefs++;*/
+        
+        //NSLog(@"Poss Match: %@", _otherUser);
+        //[self matchBodyType:match];
+        //[_otherUser calculateCompatibility:_prefCounter with:_totalPrefs];
+        //NSLog(@"Compatibility: %@%%", _otherUser.compatibilityIndex);
+        //[self setPossMatchHelper];
+        //[self performSegueWithIdentifier:@"viewMatch" sender:nil];
+        
+        // Add to willBeMatches here
+        [_willBeMatches addObject:_matchUser];
+        [self matchAgePreference];
+        //[self matchKids];
+        
+    } else if ([_curUser.genderPref isEqualToString:matchGender] && [_matchUser.genderPref isEqualToString:userGender]) {
+        
+        _prefCounter++;
+        _totalPrefs++;
+        
+        NSLog(@"Just before Save run");
+        //[self setPossMatchHelper];
+        
+        // Add to willBeMatches here
+        [_willBeMatches addObject:_matchUser];
+        [self matchAgePreference];
+        //[self matchKids];
+        //[self performSegueWithIdentifier:@"viewMatch" sender:nil];
+    } else NSLog(@"No match with %@", _matchUser.nickname);
+    
+    //_totalPrefs++;
+    
+    //NSLog(@"Pref Counter: %ld Total Prefs: %ld", (long)_prefMatchCounter, (long)_totalPrefs);
 }
+
+/* ---------------------------------------------------------------------------
+ 
+            MUST SET UP CHECK TO ENSURE BOOLEAN VALUES AREN'T NIL
+ 
+ -------------------------------------------------------------------------- */
 
 - (void)matchBodyType
 {
-    if([user.bodyTypePref isEqualToString:snapshot.value[@"body_type"]]) {
-        
+    NSLog(@"Start MatchBodyType");
+    _totalPrefs++;
+    
+    if([_curUser.bodyTypePref isEqualToString:_matchUser.bodyType]) {
+        _prefCounter++;
+        //[self matchRelationshipStatus];
+        NSLog(@"Equal BodyType Run");
+        [self matchRelationshipStatus];
     } else {
-        [_noMatch addObject:_match];
+        //[self matchRelationshipStatus];
+        NSLog(@"NOT Equal BodyType Run");
+        [self matchRelationshipStatus];
     }
     
 }
 
+- (void)matchAgePreference
+{
+    NSLog(@"MatchAge Run");
+    _totalPrefs++;
+    int minAgeDiff = 0;
+    int maxAgeDiff = 0;
+    
+    minAgeDiff += (int)_matchUser.age - (int)_curUser.minAgePref;
+    maxAgeDiff += (int)_curUser.maxAgePref - (int)_matchUser.age;
+    
+    if (minAgeDiff > 0 || maxAgeDiff > 0) {
+        NSLog(@"MatchAge equal");
+        _prefCounter++;
+        [self matchBodyType];
+    } else {
+        NSLog(@"MatchAge NOT equal");
+        [self matchBodyType];
+    }
+    
+    NSLog(@" %@ minAgePref: %@ | maxAgePref: %@ ; %@'s age: %@", _curUser.nickname, _curUser.minAgePref, _curUser.maxAgePref, _matchUser.nickname, _matchUser.age);
+    NSLog(@"MinAgeDiff: %@, MaxAgeDiff: %@", [NSNumber numberWithInt:minAgeDiff], [NSNumber numberWithInt:maxAgeDiff]);
+}
+
 - (void)matchRelationshipStatus
 {
-    if ([user.relationshipStatusPref isEqualToString:snapshot.value[@"relationship_status"]]) {
-        
+    _totalPrefs++;
+    
+    if ([_curUser.relationshipStatusPref isEqualToString:_matchUser.relationshipStatus]) {
+        _prefCounter++;
+        NSLog(@"MatchRelatStat equal");
+        [self matchRomanticPreference];
     } else {
-        [_noMatch addObject:_match];
+        NSLog(@"MatchRelatStat NOT equal");
+        [self matchRomanticPreference];
     }
 }
 
 - (void)matchRomanticPreference
 {
-    if ([user.romanticPreference isEqualToString:snapshot.value[@"romantic_preference"]]) {
-        
-    } else {
-        [_noMatch addObject:_match];
-    }
+    _totalPrefs++;
     
+    if ([_curUser.romanticPreference isEqualToString:_matchUser.relationshipType]) {
+        _prefCounter++;
+        NSLog(@"MatchRomPref equal");
+        [self matchKids];
+    } else {
+        NSLog(@"MatchRomPref NOT equal");
+        [self matchKids];
+    }
 }
 
 - (void)matchKids
 {
-    if ([user.kidsOkay == snapshot.value[@"kids_okay"]]) {
-        
+    _totalPrefs++;
+    
+    NSLog(@"User KidsPref: %@", _curUser.kidsOkay);
+    NSLog(@"Match HasKids: %@", _matchUser.hasKids);
+    
+    if ([_curUser.kidsOkay isEqualToNumber:_matchUser.hasKids]) {
+        _prefCounter++;
+        NSLog(@"MatchRomPref equal");
+        [self matchDrinking];
     } else {
-        [_noMatch addObject:_match];
+        NSLog(@"MatchRomPref NOT equal");
+        [self matchDrinking];
     }
 }
 
 - (void)matchDrinking
 {
-    if([user.drinkingOkay == snapshot.value[@"drinking_okay"]]) {
-        
+    _totalPrefs++;
+    
+    if([_curUser.drinkingOkay isEqualToNumber:_matchUser.drinks]) {
+        _prefCounter++;
+        NSLog(@"Drink Okay equal");
+        [self matchSmoking];
     } else {
-        [_noMatch addObject:_match];
+        NSLog(@"Drink Okay NOT equal");
+        [self matchSmoking];
     }
 }
 
 - (void)matchSmoking
 {
-    if ([user.smokingOkay == snapshot.value[@"smoking_okay"]]) {
-        
+    _totalPrefs++;
+    
+    if ([_curUser.smokingOkay isEqualToNumber:_matchUser.smokes]) {
+        _prefCounter++;
+        NSLog(@"SMoke Okay equal");
+        [self matchDrugUse];
     } else {
-        [_noMatch addObject:_match];
+        NSLog(@"Smoke Okay NOT equal");
+        [self matchDrugUse];
     }
 }
 
 - (void)matchDrugUse
 {
-    if ([user.drugsOkay == snapshot.value[@"drugs_okay"]]) {
-        
+    _totalPrefs++;
+    
+    if ([_curUser.drugsOkay isEqualToNumber:_matchUser.drugs]) {
+        _prefCounter++;
+        NSLog(@"Drugs Okay equal");
+        [self matchBodyArt];
     } else {
-        [_noMatch addObject:_match];
+        NSLog(@"Drugs Okay NOT equal");
+        [self matchBodyArt];
     }
 }
 
 - (void)matchBodyArt
 {
-    if ([user.bodyArtOkay == snapshot.value[@"bodyart_okay"]]) {
-        
+    _totalPrefs++;
+    
+    if ([_curUser.bodyArtOkay isEqualToNumber:_matchUser.bodyArt]) {
+        _prefCounter++;
+        NSLog(@"BodyArt equal");
+        [self compare:_curUser.interests with:_matchUser.interests];
     } else {
-        [_noMatch addObject:_match];
+        NSLog(@"BodyArt NOT equal");
+        [self compare:_curUser.interests with:_matchUser.interests];
     }
+    
+    NSLog(@"PrefMatchCounter before compare: %ld", (long)_prefCounter);
+   
 }
 
-- (void)compareActivities
+- (void)compare:(NSArray *)userPreferences with:(NSArray *)matchPreferences
 {
-    for (UIButton *userPreference in userPreferences) {
-        for (int i = 0; i < [matchPreferences count]; i++) {
-            if (userPreference == matchPreferences[i]) {
-                [mutualPrefs addObject:matchPreferences[i]];
+    _totalPrefs += [userPreferences count];
+    
+    NSLog(@"Total Preferences: %ld", (long)_totalPrefs);
+    
+    for (NSString *preference in userPreferences) {
+        if (userPreferences.count && matchPreferences.count) {
+            if ([matchPreferences containsObject:preference]) {
+                _prefCounter++;
+                NSLog(@"PrefMatchCounter after compare: %ld", (long)_prefCounter);
+                [_sharedPrefs addObject:preference];
+                NSLog(@"Shared Prefs: %ld", (unsigned long)[_sharedPrefs count]);
             }
         }
     }
+    
+    [self setPossMatchHelper];
+}
+
+#pragma mark - MATCH SEGUE
+
+// ----------------------- MATCHING SEGUE PUSHES TO MATCH_VIEW_CONTROLLER --------------------------
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"viewMatch"]){
+        //if ([[segue identifier] isEqualToString:@"userprofileSee"]) {
+        // Move to ViewDidLoad
+        NSLog(@"View Profile Pressed");
+        MatchViewController *matchVC            = [[MatchViewController alloc]init];
+        matchVC                                 = segue.destinationViewController;
+        PossibleMatchHelper *matchRelationship  = [self.connections objectAtIndex:self.tableView.indexPathForSelectedRow.row];
+        UserParseHelper *match                  = nil;
+        if (![matchRelationship.toUser isEqual:_curUser]) {
+            match = matchRelationship.toUser;
+        } else match = matchRelationship.fromUser;
+        
+        //matchVC.userFBPic.image             = _toUserParse.photo;
+        //matchVC.matchUser                       = (UserParseHelper *)[match fetchIfNeeded];
+        matchVC.matchUser                       = match;
+        matchVC.possibleMatch                   = matchRelationship;
+        matchVC.getPhotoArray                   = [NSMutableArray new];
+        matchVC.user                            = _curUser;
+        NSLog(@"Match User profile: %@", matchVC.matchUser.nickname);
+        if (matchVC.matchUser.photo) {
+            NSLog(@"%@ has profile photo", matchVC.matchUser.nickname);
+        }
+        [matchVC setUserPhotosArray:matchVC.matchUser];
+    }
+}
+
+- (void)generateMatchMessage // Don't Need?
+{
+    // Check if a Message already exists
+    PFQuery* query = [MessageParse query];
+    [query whereKey:@"fromUserParse" equalTo:_matchUser];
+    [query whereKey:@"toUserParse" equalTo:_curUser];
+    
+    PFQuery* query2 = [MessageParse query];
+    [query2 whereKey:@"toUserParse" equalTo:_matchUser];
+    [query2 whereKey:@"fromUserParse" equalTo:_curUser];
+    
+    if ([query findObjects].firstObject || [query2 findObjects].firstObject) {
+        NSLog(@"Message with %@ exists", _matchUser.nickname);
+    } else {
+        //NSLog(@"Compatibility with %@ is: %@%%", match.nickname, [NSNumber numberWithDouble:*(_otherUser.compatibilityIndex)]);
+        
+        MessageParse* message       = [MessageParse object];
+        message.fromUserParse       = _curUser;
+        message.fromUserParseEmail  = _curUser.email;
+        message.toUserParse         = _matchUser;
+        message.toUserParseEmail    = _matchUser.email;
+        message.text                = @"";
+        [message saveInBackground];
+        NSLog(@"Created message for %@", _matchUser.nickname);
+        /*
+        [message saveEventually:^(BOOL succeeded, NSError *error) {
+            if (succeeded) {
+                [self findMatches:_willBeMatches]; //<-- Test before matchBodyType
+                
+                /* // All old Speeddate code below
+                self.currShowingProfile = self.backgroundUserProfile;
+                [self setPanGestureRecognizer];
+                if (self.posibleMatchesArray.firstObject != nil) {
+                    [self placeBackgroundProfile];
+                } else {
+                    [self removeBackgroundMatchCards];
+                    self.activityLabel.hidden = NO;
+                    [self.activityIndicator startAnimating];
+                    [self.view bringSubviewToFront:self.profileView];
+                } // <-- End Comment bracket here
+         
+            }
+        }];*/
+    }
+
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [baedarTimer invalidate];
+    //[self baedarOff];
+}
+
+#pragma mark - TableView Configurations
+
+/*
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:YES];
+    [self loadingChat];
+    [self reloadView];
 }
 */
+- (void)receivedNotification:(NSNotification *)notification
+{
+    [self.usersArray removeAllObjects];
+    [self.messages removeAllObjects];
+    [self loadingChat];
+}
+
+- (void)loadingChat
+{
+    self.messages = [NSMutableArray new];
+    self.filteredAllUsersArray = [NSArray new];
+    
+    // Query for
+    PFQuery *matchQueryFrom = [PossibleMatchHelper query];
+    [matchQueryFrom whereKey:@"fromUser" equalTo:_curUser];
+    PFQuery *matchQueryTo = [PossibleMatchHelper query];
+    [matchQueryTo whereKey:@"toUser" equalTo:_curUser];
+    PFQuery *both = [PFQuery orQueryWithSubqueries:@[matchQueryFrom, matchQueryTo]];
+    [both orderByDescending:@"createdAt"];
+    //[both orderByDescending:@"compatibilityIndex"]; // <-- Won't work for now, need a compatibility attribute on messages somehow
+    
+    [both findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        NSMutableSet *users = [NSMutableSet new];
+        for (MessageParse *message in objects) {
+            if(![message.fromUserParse.objectId isEqualToString:_curUser.objectId]) {
+                NSUInteger count = users.count;
+                [users addObject:message.fromUserParse];
+                if (users.count > count) {
+                    [message.fromUserParse fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                        [self.messages addObject:message];
+                        
+                        // Move usersArray up and populate with _otherUser info
+                        [self.usersArray addObject:message.fromUserParse];
+                        NSInteger position = [self.usersArray indexOfObject:message.fromUserParse];
+                        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:position inSection:0];
+                        [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                    }];
+                }
+            }
+            if(![message.toUserParse.objectId isEqualToString:_curUser.objectId]) {
+                NSUInteger count = users.count;
+                [users addObject:message.toUserParse];
+                if (users.count > count) {
+                    [message.toUserParse fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                        [self.messages addObject:message];
+                        [self.usersArray addObject:message.toUserParse];
+                        
+                        NSInteger position = [self.usersArray indexOfObject:message.toUserParse];
+                        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:position inSection:0];
+                        
+                        [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                    }];
+                }
+            }
+        }
+        [self.tableView reloadData];
+    }];
+}
+
+- (void)fetchAllConnectionsToMe
+{
+    
+    PFQuery *matchQueryTo = [PossibleMatchHelper query];
+    [matchQueryTo whereKey:@"toUser" equalTo:_curUser];
+    //[matchQueryTo whereKey:@"objectId" notContainedIn:_oldConnections];
+    
+    NSArray *fetchedMatches = [[NSArray alloc] initWithArray:[matchQueryTo findObjects]];
+    
+    for (PossibleMatchHelper *connection in fetchedMatches) {
+        
+        //[_oldConnections addObject:connection.objectId];
+        
+        for (UserParseHelper *user in connection.matches) {
+            if (![user isEqual:_curUser]){
+                NSLog(@"Old User found me: %@", user);
+                [_matchesFoundMe addObject:user.objectId];
+            }
+        }
+        
+    }
+    
+    [_connections addObjectsFromArray:fetchedMatches];
+    
+}
+
+- (void)fetchAllConnectionsFromMe
+{
+    
+    
+    PFQuery *matchQueryFrom = [PossibleMatchHelper query];
+    [matchQueryFrom whereKey:@"fromUser" equalTo:_curUser];
+    //[matchQueryFrom whereKey:@"objectId" notContainedIn:_oldConnections];
+    //Contrain query by createdAt = Today
+    
+    NSArray *fetchedMatches = [[NSArray alloc] initWithArray:[matchQueryFrom findObjects]];
+    
+    for (PossibleMatchHelper *connection in fetchedMatches) {
+        
+        //[_oldConnections addObject:connection.objectId];
+        
+        for (UserParseHelper *user in connection.matches) {
+            
+            if (![user isEqual:_curUser]){
+                NSLog(@"Old User I found: %@", user);
+                [_matchesIFound addObject:user.objectId];
+            }
+        }
+        
+    }
+    
+    [_connections addObjectsFromArray:fetchedMatches];
+}
+
+- (void)fetchLatestConnections
+{
+    PossibleMatchHelper *last_connection = [_connections lastObject];
+    PFQuery *matchQueryTo = [PossibleMatchHelper query];
+    [matchQueryTo whereKey:@"toUser" equalTo:_curUser];
+    //[matchQueryTo whereKey:@"fromUser" notContainedIn:_posibleMatchesArray];
+    [matchQueryTo whereKey:@"createdAt" greaterThan:last_connection.createdAt];
+    
+    NSArray *fetchedMatches = [[NSArray alloc] initWithArray:[matchQueryTo findObjects]];
+    if ([fetchedMatches count] != 0) {
+        
+        [_connections addObjectsFromArray:fetchedMatches];
+    }
+    
+}
+
+- (void)fetchAllUserMatchRelationships
+{
+    //PossibleMatchHelper *last_connection = [_matchRelationships lastObject];
+    PFQuery *matchQueryFrom = [PossibleMatchHelper query];
+    [matchQueryFrom whereKey:@"fromUser" equalTo:_curUser];
+    //[matchQueryFrom whereKey:@"toUser" notContainedIn:_posibleMatchesArray];
+    //[matchQueryFrom whereKey:@"createdAt" greaterThan:last_connection.createdAt];
+    
+    PFQuery *matchQueryTo = [PossibleMatchHelper query];
+    [matchQueryTo whereKey:@"toUser" equalTo:_curUser];
+    //[matchQueryTo whereKey:@"fromUser" notContainedIn:_posibleMatchesArray];
+    //[matchQueryTo whereKey:@"createdAt" greaterThan:last_connection.createdAt];
+    
+    PFQuery *both = [PFQuery orQueryWithSubqueries:@[matchQueryFrom, matchQueryTo]];
+    // Exclude duplicate matches and Blockeds
+    
+    [both orderByDescending:@"compatibilityIndex"];
+    
+    
+        NSArray *fetchedMatches = [[NSArray alloc] initWithArray:[both findObjects]];
+        
+        // Add all returned Matches to MatchRelationships
+    for (PossibleMatchHelper *connection in fetchedMatches) {
+        
+        for (UserParseHelper *user in connection.matches) {
+            if (![user isEqual:_curUser]){
+                [_matchesFoundMe addObject:user];
+            }
+        }
+        
+    }
+    
+    NSLog(@"Total Connection: %lu", (unsigned long)[_connections count]);
+}
+
+- (void)updateTableView
+{
+    [_connections removeAllObjects];
+    NSLog(@"UpdateTableView MatchRelationships: %lu", (unsigned long)[_connections count]);
+    [self fetchAllUserMatchRelationships];
+    [self.tableView reloadData];
+}
+
+#pragma mark TableView Delegate - Includes Blurring
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UserTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    UserParseHelper *user;
+    /*
+    if (self.filteredAllUsersArray.count) {
+        user = [self.filteredAllUsersArray objectAtIndex:indexPath.row];
+    } else {
+        user = [self.usersArray objectAtIndex:indexPath.row];
+    }
+    */
+    // Get Possible Matches
+    PossibleMatchHelper *matchedConnection = [_connections objectAtIndex:indexPath.row];
+    UserParseHelper *match = (UserParseHelper *)[matchedConnection.toUser fetchIfNeeded];
+    
+    if ([match.objectId isEqualToString:_curUser.objectId]) {
+        user = (UserParseHelper *)matchedConnection.fromUser;
+    } else user = (UserParseHelper *)matchedConnection.toUser;
+    
+    user = (UserParseHelper *)user.fetchIfNeeded;
+    NSLog(@"Cell User: %@", user.nickname);
+    
+    NSNumber *yep = [NSNumber numberWithBool:YES];
+    [user.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+        
+        if (!error) {
+            
+            cell.userImageView.image = [UIImage imageWithData:data];
+            cell.userImageView.hidden = YES;
+            //[self configureRadialView:cell forConnection:matchedConnection];
+            //CGRect frame = CGRectMake(190, 8, 45, 45);
+            CGRect frame = CGRectMake(15, 30, 50, 50);
+            [matchedConnection configureRadialViewForView:cell.contentView withFrame:frame];
+            if (![matchedConnection.usersRevealed isEqualToNumber:yep]) { // <-- Test purposes - change to check isRevealed on Matched User - NOT WORKING
+                [self blurImages:cell.userImageView];
+        
+                if ([user.isMale isEqualToString:@"true"]) {
+                    NSString *matchGender = @"M";
+                    cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@ - %@ - %@", matchGender, user.age, user.bodyType];
+                } else {
+                    NSString *matchGender = @"F";
+                    cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@ - %@ - %@", matchGender, user.age, user.bodyType];
+                }
+        
+            } else{
+                NSLog(@"User revealed");
+                cell.nameTextLabel.text = user.nickname;
+            }
+        }
+    }];
+    
+    //[self setPossibleMatchesFromMessages:_matchedUsers for:cell];
+    
+    
+    // Revealed conditional -----------------------------------------------------
+    cell.matchDistance.text = [matchedConnection calculateUserDistance];
+    
+    
+    // ----------------------------------------------------------------------------
+    
+    //cell.nameTextLabel.textColor = WHITE_COLOR;
+    cell.nameTextLabel.textColor = RED_LIGHT;
+    cell.userImageView.layer.cornerRadius = cell.userImageView.frame.size.width / 2;
+    cell.userImageView.clipsToBounds = YES;
+    cell.userImageView.layer.borderWidth = 1.0,
+    cell.userImageView.layer.borderColor = WHITE_COLOR.CGColor;
+    
+    /*
+    UIImageView *accesory = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"accesory"]];
+    accesory.frame = CGRectMake(15, 0, 15, 15);
+    accesory.contentMode = UIViewContentModeScaleAspectFit;
+    cell.accessoryView = accesory;
+    
+    MessageParse *message = [self.messages objectAtIndex:indexPath.row];
+    cell.lastMessageLabel.text = message.text;
+    if (!message.text && message.image) {
+        cell.lastMessageLabel.text = @"Image";
+    }
+    if (!message.read && [message.toUserParse.objectId isEqualToString:_curUser.objectId]) {
+        //cell.lastMessageLabel.textColor = WHITE_COLOR;
+        cell.dateLabel.textColor = [UIColor lightGrayColor];
+    } else {
+        //cell.lastMessageLabel.textColor = WHITE_COLOR;
+        cell.dateLabel.textColor = [UIColor lightGrayColor];
+    }
+    //cell.dateLabel.textColor = WHITE_COLOR;
+    cell.dateLabel.textColor = RED_LIGHT;
+    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+    [dateFormatter setDoesRelativeDateFormatting:YES];
+    if ([[message createdAt] timeIntervalSinceNow] * -1 < SECONDS_DAY) {
+        dateFormatter.timeStyle = NSDateFormatterShortStyle;
+    } else {
+        dateFormatter.dateStyle = NSDateFormatterShortStyle;
+    }
+    
+    cell.dateLabel.text = [dateFormatter stringFromDate:[message createdAt]];
+    */
+    
+    UIView *bgColorView = [[UIView alloc] init];
+    //bgColorView.backgroundColor = RED_COLOR;
+    bgColorView.backgroundColor = WHITE_COLOR;
+    [cell setSelectedBackgroundView:bgColorView];
+    
+    cell.lastMessageLabel.text = @"";
+    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+    [dateFormatter setDoesRelativeDateFormatting:YES];
+    dateFormatter.dateStyle = NSDateFormatterShortStyle;
+    cell.dateLabel.text = [dateFormatter stringFromDate:[NSDate date]];
+    [cell setInterests:user.interests];
+    
+    return cell;
+}
+
+#pragma mark - Blur Images
+
+- (void)blurImages:(UIImageView *)imageView
+{
+    UIVisualEffect *blurEffect;
+    blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+    
+    UIVisualEffectView *visualEffectView;
+    visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+    
+    visualEffectView.frame = imageView.bounds;
+    [imageView addSubview:visualEffectView];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    // Search Textfield
+    /*
+    if (self.searchTextField.text.length) {
+        return self.filteredAllUsersArray.count;
+    }
+    */
+    if (_usersArray.count) {
+        userSingleton.numberOfConvos = [[NSString alloc] initWithFormat:@"%lu", (unsigned long)_usersArray.count];
+    }
+    
+    //return [_posibleMatchesArray count];
+    return [_connections count];
+}
+
 - (void) firstPlacement
 {
     UserParseHelper* aUser = self.posibleMatchesArray.firstObject;
@@ -1097,7 +2053,7 @@
     if ([self.willBeMatches containsObject:self.currShowingProfile]) {
         PFQuery* query = [PossibleMatchHelper query];
         [query whereKey:@"fromUser" equalTo:self.currShowingProfile];
-        [query whereKey:@"toUser" equalTo:[UserParseHelper currentUser]];
+        [query whereKey:@"toUser" equalTo:_curUser];
         PossibleMatchHelper* posMatch = [query findObjects].firstObject;
         posMatch.toUserApproved = @"NO";
         [posMatch saveEventually:^(BOOL succeeded, NSError *error) {
@@ -1116,8 +2072,8 @@
         }];
     } else {
         PossibleMatchHelper* possibleMatch = [PossibleMatchHelper object];
-        possibleMatch.fromUser = [UserParseHelper currentUser];
-        possibleMatch.fromUserEmail = [UserParseHelper currentUser].email;
+        possibleMatch.fromUser = _curUser;
+        possibleMatch.fromUserEmail = _curUser.email;
         possibleMatch.toUserEmail = self.currShowingProfile.email;
         possibleMatch.toUser = self.currShowingProfile;
         possibleMatch.match = @"NO";
@@ -1166,12 +2122,12 @@
         MessageParse* message = [MessageParse object];
         message.fromUserParse = self.currShowingProfile;
         message.fromUserParseEmail = self.currShowingProfile.email;
-        message.toUserParse = [UserParseHelper currentUser];
-        message.toUserParseEmail = [UserParseHelper currentUser].email;
+        message.toUserParse = _curUser;
+        message.toUserParseEmail = _curUser.email;
         message.text = @"";
         PFQuery* query = [PossibleMatchHelper query];
         [query whereKey:@"fromUser" equalTo:self.currShowingProfile];
-        [query whereKey:@"toUser" equalTo:[UserParseHelper currentUser]];
+        [query whereKey:@"toUser" equalTo:_curUser];
         PossibleMatchHelper* posMatch = [query findObjects].firstObject;
         posMatch.toUserApproved = @"YES";
         [posMatch saveEventually];
@@ -1191,10 +2147,10 @@
         }];
     } else {
         PossibleMatchHelper* possibleMatch = [PossibleMatchHelper object];
-        possibleMatch.fromUser = [UserParseHelper currentUser];
+        possibleMatch.fromUser = _curUser;
         possibleMatch.toUser = self.currShowingProfile;
         possibleMatch.toUserEmail = self.currShowingProfile.email;
-        possibleMatch.fromUserEmail = [UserParseHelper currentUser].email;
+        possibleMatch.fromUserEmail = _curUser.email;
         possibleMatch.match = @"YES";
         possibleMatch.toUserApproved = @"notDone";
         [possibleMatch saveEventually:^(BOOL succeeded, NSError *error) {
@@ -1306,50 +2262,19 @@
     }
 }
 
-#pragma mark - MATCH SEGUE
 
-// ----------------------- MATCHING SEGUE PUSHES TO MATCH_VIEW_CONTROLLER --------------------------
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([segue.identifier isEqualToString:@"match"]) {
-
-
-        MatchViewController *vc = segue.destinationViewController;
-        vc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-
-        vc.userImage = self.userPhoto;
-        vc.matchImage = self.matchPhoto;
-        vc.matchUser = self.otherUser;
-        vc.user = self.curUser;
-    }else if ([segue.identifier isEqualToString:@"viewMatches"]) {
-        /*
-        _matched = true;
-        
-        MatchViewController *vc = segue.destinationViewController;
-        vc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-        
-        vc.userImage = self.userPhoto;
-        vc.matchImage = self.userPhoto;
-        vc.matchUser = self.otherUser;
-        vc.user = self.curUser;*/
-    }
-}
 
 #pragma mark - AV delegate
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-       if(buttonIndex == 1) {
+    if(buttonIndex == 1) {
         [self performSegueWithIdentifier:@"config" sender:nil];
-
     }
-
 }
 
 - (void)checkPurchase {
     
-      
     PFUser *chekUser = [PFUser currentUser];
     NSString *vip = chekUser[@"membervip"];
     if ([vip isEqualToString:@"vip"]) {
@@ -1368,11 +2293,12 @@
         
         self.bannerView.backgroundColor = [UIColor clearColor];
         
-        
         [self.view addSubview:self.bannerView];
         
     }
 }
+
+#pragma mark - FIND BAEDAR WAVE ANIMATION
 
 -(void)startAnimation
 {
@@ -1383,8 +2309,6 @@
     inAnimation = YES;
     [self waveAnimation:waveLayer];
 }
-
-#pragma mark - FIND BAEDAR WAVE ANIMATION
 
 -(void)waveAnimation:(CALayer*)aLayer
 {
@@ -1434,8 +2358,18 @@
 }
 
 
-
 - (IBAction)backToPreferences:(id)sender {
-    [self.navigationController popViewControllerAnimated:YES];
+    //[self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
+- (IBAction)pushToBaedar:(id)sender {
+    NSLog(@"BlockedUser Array count: %lu", (unsigned long)[_curUser.blockedUsers count]);
+    [_curUser.blockedUsers removeAllObjects];
+    [_curUser saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            NSLog(@"Users unBlocked, BlockedUser Array count: %lu", (unsigned long)[_curUser.blockedUsers count]);
+        }
+    }];
 }
 @end

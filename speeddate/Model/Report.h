@@ -11,6 +11,13 @@
 
 
 @interface Report : PFObject <PFSubclassing>
-@property (nonatomic, strong) UserParseHelper *user;
+@property UserParseHelper *reportingUser;
+@property UserParseHelper *reportedUser;
 @property NSNumber *report;
+@property PFFile *reportedImage;
+@property NSString *reportDescription;
+
+- (PFFile *)convertImageToFile:(UIImage *)image;
+- (void)reportMatch:(UserParseHelper *)match byUser:(UserParseHelper *)user because:(NSString *)description inView:(UIViewController *)view;
+
 @end

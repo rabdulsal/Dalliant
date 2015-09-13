@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Fast dating</string>
+	<string>Dalliant</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIdentifier</key>
@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>1.0.5</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -30,7 +30,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1.0</string>
+	<string>1.0.5</string>
 	<key>FacebookAppID</key>
 	<string>271800779688442</string>
 	<key>FacebookDisplayName</key>
@@ -41,6 +41,10 @@
 	<string>Your location information is necessary for the app to work properly.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Your location information is necessary for the app to work properly.</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>BebasNeue.otf</string>
+	</array>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>
