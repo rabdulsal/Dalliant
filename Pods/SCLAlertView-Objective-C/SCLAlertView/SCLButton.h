@@ -6,7 +6,13 @@
 //  Copyright (c) 2014 AnyKey Entertainment. All rights reserved.
 //
 
+#if defined(__has_feature) && __has_feature(modules)
 @import UIKit;
+#else
+#import <UIKit/UIKit.h>
+#endif
+
+@class SCLTimerDisplay;
 
 @interface SCLButton : UIButton
 
@@ -80,5 +86,11 @@ typedef NS_ENUM(NSInteger, SCLActionType)
  * Set keys : backgroundColor, borderWidth, borderColor, textColor
  */
 - (void)parseConfig:(NSDictionary *)buttonConfig;
+
+/** Set button timer.
+ *
+ * Holds the button timer, if present.
+ */
+@property (nonatomic) SCLTimerDisplay *timer;
 
 @end

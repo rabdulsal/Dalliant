@@ -1,1 +1,0 @@
-PODS_TDBADGEDCELL_OTHER_LDFLAGS = -framework "QuartzCore"
