@@ -18,4 +18,10 @@
 @property PossibleMatchHelper *matchedUsers;
 @property BOOL fromConversation;
 
+/* Convenience Initializer with ConversationID
+ 
+- (id)initWithName:(NSString *)aName
+       description:(NSString *)aDescription;
+*/
+
 @end

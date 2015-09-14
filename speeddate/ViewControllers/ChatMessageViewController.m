@@ -51,7 +51,10 @@
     [self configureNavigationTitleView:@"Match" ifRevealed:NO];
     
     UIImage *btnImage = [UIImage imageNamed:@"reveal"];
-    CGRect btnImageFrame = CGRectMake(self.inputToolbar.contentView.leftBarButtonItem.frame.origin.x, self.inputToolbar.contentView.leftBarButtonItem.frame.origin.y, 27, 27);
+    CGRect btnImageFrame = CGRectMake(
+                                      self.inputToolbar.contentView.leftBarButtonItem.frame.origin.x,
+                                      self.inputToolbar.contentView.leftBarButtonItem.frame.origin.y,
+                                      27, 27);
     [self.inputToolbar.contentView.leftBarButtonItem setFrame:btnImageFrame];
     [self.inputToolbar.contentView.leftBarButtonItem setImage:btnImage forState:UIControlStateNormal];
 
