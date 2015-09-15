@@ -58,7 +58,7 @@
 #define cornRadius 0
 #define SECONDS_DAY 24*60*60
 
-@interface MainViewController () <UIGestureRecognizerDelegate, CLLocationManagerDelegate, UIAlertViewDelegate, UITableViewDataSource, UITableViewDelegate>{
+@interface MainViewController () <UIGestureRecognizerDelegate, CLLocationManagerDelegate, UIAlertViewDelegate, UITableViewDataSource, UITableViewDelegate, UINavigationControllerDelegate>{
     
     BOOL inAnimation;
     CALayer *waveLayer;
@@ -195,6 +195,7 @@
     
     _sidebarButton.target = self.revealViewController;
     _sidebarButton.action = @selector(revealToggle:);
+    
     self.posibleMatchesArray = [NSMutableArray new];
     self.willBeMatches = [NSMutableArray new];
     self.photoArrayIndex = 1;
