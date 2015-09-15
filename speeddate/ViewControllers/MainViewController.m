@@ -36,6 +36,7 @@
 #import "MatchViewController.h"
 #import "User.h"
 #import <AMPopTip.h>
+#import "PreferencesTableViewController.h"
 
 #define IS_IPHONE_5 ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )568 ) < DBL_EPSILON )
 #define labelHeight 20
@@ -236,9 +237,7 @@
     
     [self customizeApp];
     
-    [[AMPopTip appearance] setPopoverColor:[UIColor blueColor]];
-    AMPopTip *popTip = [AMPopTip popTip];
-    [popTip showText:@"Press to find matches. Press again to stop." direction:AMPopTipDirectionRight maxWidth:200 inView:self.view fromFrame:_baedarLabel.frame duration:5];
+    [self checkPriorFilterSet];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:receivedMessage object:nil];
 
@@ -262,6 +261,16 @@
 
 - (void)interstitialDidReceiveAd:(GADInterstitial *)interstitial {
     NSLog(@"Interstitial adapter class name: %@", interstitial.adNetworkClassName);
+}
+
+- (IBAction)filtersButtonPressed:(id)sender {
+    [self performSegueWithIdentifier:@"showFilters" sender:nil];
+}
+
+-(void)checkPriorFilterSet {
+    if(![[NSUserDefaults standardUserDefaults] objectForKey:@"filtersPriorSet"]) {
+        [self performSegueWithIdentifier:@"showFilters" sender:nil];
+    }
 }
 
 #pragma mark - Baedar Toggle
@@ -349,7 +358,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     // Listen for TableView changes
-    //[self checkIncomingViewController];
     //[self currentLocationIdentifier];
     //[self loadingChat];
     self.navigationItem.title = @"Offline";
@@ -367,16 +375,6 @@
     }
     [self performSelector:@selector(startAnimation) withObject:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTableView) name:@"TableUpdated" object:nil];
-}
-
-- (void)checkIncomingViewController
-{
-    NSLog(@"Matched checked");
-    
-    if (_matched) {
-        NSLog(@"Matched run");
-        [self performSegueWithIdentifier:@"viewMatches" sender:nil];
-    }
 }
 
 #pragma mark - TIMER
@@ -1011,6 +1009,9 @@
             NSLog(@"%@ has profile photo", matchVC.matchUser.nickname);
         }
         [matchVC setUserPhotosArray:matchVC.matchUser];
+    } else if ([segue.identifier isEqualToString:@"showFilters"]) {
+        PreferencesTableViewController *filtersVC = [[PreferencesTableViewController alloc] init];
+        filtersVC = segue.destinationViewController;
     }
 }
 

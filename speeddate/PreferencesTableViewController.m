@@ -33,8 +33,6 @@
     
     user = [User singleObj];
     
-    _sidebarButton.target = self.revealViewController;
-    _sidebarButton.action = @selector(revealToggle:);
     //[self.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];
 
     _maxAgeField.delegate = self;
@@ -95,6 +93,17 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+- (IBAction)pressedCloseButton:(id)sender {
+    
+    /* --- Update UserDefaults for 1st Time ---
+    if (![[NSUserDefaults standardUserDefaults] objectForKey:@"filtersPriorSet"]) {
+        [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"filtersPriorSet"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+     */
+    [self savePreferences];
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void) configureLabelSlider
@@ -685,10 +694,9 @@
 }
 */
 
-#pragma mark - Save and Close
+#pragma mark - Save Preferences
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
+- (void)savePreferences {
 /*
     if (_minAgeField.text) {
         _mainUser.minAgePref = [[NSNumberFormatter new] numberFromString:_minAgeField.text];

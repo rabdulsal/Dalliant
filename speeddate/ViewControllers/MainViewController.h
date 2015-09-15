@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "GADBannerView.h"
+#import "PreferencesTableViewController.h"
 
 @class GADBannerView;
 @class GADRequest;
@@ -19,7 +20,5 @@
 
 @property(nonatomic, strong) GADBannerView *adBanner;
 @property (assign, nonatomic) BOOL *matched;
-
-- (IBAction)backToPreferences:(id)sender;
 
 @end
