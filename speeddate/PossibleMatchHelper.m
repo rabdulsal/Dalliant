@@ -7,10 +7,6 @@
 //
 
 #import "PossibleMatchHelper.h"
-#import "UserParseHelper.h"
-#import <MDRadialProgressLabel.h>
-#import <MDRadialProgressTheme.h>
-#import <MDRadialProgressView.h>
 
 @implementation PossibleMatchHelper
 @dynamic fromUser;
@@ -24,6 +20,7 @@
 @dynamic compatibilityIndex;
 @dynamic usersRevealed;
 @dynamic matches;
+@dynamic chatMessages;
 @dynamic messagesCount;
 @dynamic toUserRating;
 @dynamic fromUserRating;
@@ -33,8 +30,6 @@
 + (void)load {
     [self registerSubclass];
 }
-
-
 
 + (NSString *)parseClassName {
     return @"PossibleMatch";
@@ -51,24 +46,24 @@
 
 - (void)setHighCompatibilityColor:(MDRadialProgressTheme *)newTheme
 {
-    newTheme.completedColor     = RED_DEEP;
-    newTheme.incompletedColor   = RED_LIGHT;
-    newTheme.centerColor        = RED_OMNY;
+    newTheme.completedColor   = RED_DEEP;
+    newTheme.incompletedColor = RED_LIGHT;
+    newTheme.centerColor      = RED_OMNY;
 }
 
 - (void)setMedCompatibilityColor:(MDRadialProgressTheme *)newTheme
 {
-    newTheme.completedColor     = [UIColor colorWithRed:0.8 green:0.8 blue:0 alpha:1.0];
-    newTheme.incompletedColor   = [UIColor colorWithRed:0.9 green:0.9 blue:0 alpha:1.0];
+    newTheme.completedColor   = [UIColor colorWithRed:0.8 green:0.8 blue:0 alpha:1.0];
+    newTheme.incompletedColor = [UIColor colorWithRed:0.9 green:0.9 blue:0 alpha:1.0];
     //newTheme.centerColor        = YELLOW_COLOR;
-    newTheme.centerColor        = [UIColor colorWithRed:1 green:1 blue:0.6 alpha:1];
+    newTheme.centerColor      = [UIColor colorWithRed:1 green:1 blue:0.6 alpha:1];
 }
 
 - (void)setLowCompatibilityColor:(MDRadialProgressTheme *)newTheme
 {
-    newTheme.completedColor     = [UIColor darkGrayColor];
-    newTheme.incompletedColor   = [UIColor lightGrayColor];
-    newTheme.centerColor        = GRAY_COLOR;
+    newTheme.completedColor   = [UIColor darkGrayColor];
+    newTheme.incompletedColor = [UIColor lightGrayColor];
+    newTheme.centerColor      = GRAY_COLOR;
 }
 
 - (void)configureRadialViewForView:(UIView *)view withFrame:(CGRect)frame
@@ -97,6 +92,13 @@
     radialView7.progressCounter = [self.prefCounter integerValue];
     //[self.view addSubview:radialView7];
     [view addSubview:radialView7];
+}
+
+- (void)addChatMessageToConveration:(MessageParse *)message
+{
+    PFRelation *conversations = [self relationForKey:@"chatMessages"];
+    [conversations addObject:message];
+    [self saveInBackground];
 }
 
 - (NSString *)calculateUserDistance

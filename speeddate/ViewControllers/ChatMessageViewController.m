@@ -75,7 +75,7 @@
     self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
     
     self.messages       = [NSMutableArray new];
-    self.sortedMessages = [NSArray new];
+    _matchedUsers.chatMessages = [NSArray new];
     
     [self getMessages];
     //[self fetchCompatibleMatch];
@@ -156,11 +156,13 @@
 
 
 
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewDidAppear:animated];
+    [super viewWillDisappear:animated];
     
-    /**
+    
+    
+    /** Originally in ViewDidAppear
      *  Enable/disable springy bubbles, default is NO.
      *  You must set this from `viewDidAppear:`
      *  Note: this feature is mostly stable, but still experimental
@@ -342,7 +344,6 @@
         message.read = YES;
         [message saveInBackground];
             
-            
                 NSString *displayName   = nil;
                 NSString *senderId      = nil;
                 NSString *matchGender   = nil;
@@ -382,6 +383,9 @@
             }
             
             [self.messages addObject:chatMessage];
+        
+        [_matchedUsers addChatMessageToConveration:message];
+        
             NSLog(@"Chat Message END Created at: %@", chatMessage.date);
             //[self sortMessages:_messages byDate:@"createdAt"];
             [self finishReceivingMessage];
@@ -559,6 +563,10 @@
                                                          senderDisplayName:senderDisplayName
                                                                       date:date
                                                                       text:text];
+            
+            // Store in chatMessages array of PossibleMatchHelper
+            [_matchedUsers addChatMessageToConveration:message];
+            
             [self.messages addObject:chatMessage];
             [self sendMessageNotification:message];
             //[self sortMessages:_messages byDate:@"createdAt"];

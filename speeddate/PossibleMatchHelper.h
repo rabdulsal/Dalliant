@@ -8,6 +8,10 @@
 
 #import <Parse/Parse.h>
 #import "UserParseHelper.h"
+#import <MDRadialProgressLabel.h>
+#import <MDRadialProgressTheme.h>
+#import <MDRadialProgressView.h>
+#import "MessageParse.h"
 
 @interface PossibleMatchHelper : PFObject <PFSubclassing>
 @property (nonatomic, strong) UserParseHelper* fromUser;
@@ -17,6 +21,7 @@
 @property NSString* toUserApproved;
 @property NSString* match;
 @property NSArray *matches;
+@property NSArray *chatMessages;
 @property NSNumber *prefCounter;
 @property NSNumber *totalPrefs;
 @property NSNumber *compatibilityIndex;
@@ -29,6 +34,7 @@
 
 - (void)calculateCompatibility:(double)prefCounter with:(double)totalPreferences;
 - (void)configureRadialViewForView:(UIView *)view withFrame:(CGRect)frame;
+- (void)addChatMessageToConveration:(MessageParse *)message;
 - (NSString *)calculateUserDistance;
 - (void)compareUser:(NSArray *)userInterests andMatchInterests:(NSArray *)matchInterests forImages:(UIImageView *)image1 and:(UIImageView *)image2 and:(UIImageView *)image3 and:(UIImageView *)image4 andFinally:(UIImageView *)image5;
 

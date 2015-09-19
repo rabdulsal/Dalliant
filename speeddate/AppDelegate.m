@@ -55,10 +55,54 @@
     NSDictionary *notificationPayload = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
     
     if (notificationPayload) {
+        
+        // Updated: Payload should be id for PossibleMatchHelper, which can be used to fetch chatMessages array
+        // Create Conversation from chatMessages array
+        
+        NSString *connectionId = [notificationPayload objectForKey:@"matchId"];
+        PFQuery *connectionsQuery = [PossibleMatchHelper query];
+        [connectionsQuery getObjectInBackgroundWithId:connectionId block:^(PFObject *object, NSError *error) {
+            
+            if (!error) {
+                
+                PossibleMatchHelper *connection = (PossibleMatchHelper *)object;
+                PFRelation *conversation = [connection relationForKey:@"chatMessages"];
+                
+                [[conversation query] findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                    if (error) {
+                        // There was an error
+                    } else {
+                        // objects has all the chatMessages the current user liked.
+                        // instantiate ChatMessageVC and initialize with objects array
+                        
+                        UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
+                        ChatMessageViewController *chatVC = (ChatMessageViewController*)[mainStoryboard instantiateViewControllerWithIdentifier: @"ChatMessagesVC"];
+                        
+                        for (UserParseHelper *user in connection.matches) {
+                            
+                            if (user != [PFUser currentUser]) {
+                                chatVC.toUserParse = user;
+                            } else {
+                                chatVC.curUser = user;
+                            }
+                        }
+                        
+                        chatVC.fromConversation = true;
+                        
+                        UINavigationController *navController   = (UINavigationController *)self.window.rootViewController;
+                        [navController.visibleViewController.navigationController pushViewController:chatVC animated:YES];
+                        //[nav pushViewController:chatVC animated:YES];
+                    }
+                }];
+            } else {
+                // Handle error
+            }
+        }];
+        
         NSLog(@"Notification in AppDelegate: %@", [notificationPayload objectForKey:@"messageId"]);
         //Query if NotificationPayload is from Chat or ShareRequest based on string
         
-        // Create Message from MessageId
+        
         NSString *messageId   = [notificationPayload objectForKey:@"messageId"];
         PFQuery *messageQuery = [MessageParse query];
         
@@ -109,8 +153,6 @@
         [startUser synchronize];
         
     }
-    
-    
     
     if ([PFUser currentUser]) {
         PFQuery *usr = [UserParseHelper query];
