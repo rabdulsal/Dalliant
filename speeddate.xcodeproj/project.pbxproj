@@ -360,6 +360,7 @@
 		4CC7B8BF1A61083E000982EA /* dalliant_logo_med.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dalliant_logo_med.png; sourceTree = "<group>"; };
 		4CCED3111A92DCD800069EAD /* ChatMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChatMessageViewController.h; path = ViewControllers/ChatMessageViewController.h; sourceTree = "<group>"; };
 		4CCED3121A92DCD800069EAD /* ChatMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChatMessageViewController.m; path = ViewControllers/ChatMessageViewController.m; sourceTree = "<group>"; };
+		4CD702361BAEFC8700463090 /* IdentityRevealProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IdentityRevealProtocol.h; sourceTree = "<group>"; };
 		4CDD63D01A30A20E00AE9679 /* PodFile */ = {isa = PBXFileReference; lastKnownFileType = text; path = PodFile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		4CF56F731A2301CE008E861D /* PreferencesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesTableViewController.h; sourceTree = "<group>"; };
 		4CF56F741A2301CF008E861D /* PreferencesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesTableViewController.m; sourceTree = "<group>"; };
@@ -682,6 +683,7 @@
 		42DBCC3019AC20BB00CE6C93 /* speeddate */ = {
 			isa = PBXGroup;
 			children = (
+				4CD702351BAEFB9100463090 /* Protocols */,
 				C20F0B1A19D7E982005958C0 /* Main.storyboard */,
 				42DBCCE119AD01CB00CE6C93 /* View */,
 				42DBCCDA19ACDD7400CE6C93 /* Model */,
@@ -912,6 +914,14 @@
 				4C4D71E01AEB44D8000FE139 /* BebasNeue.otf */,
 			);
 			name = Fonts;
+			sourceTree = "<group>";
+		};
+		4CD702351BAEFB9100463090 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				4CD702361BAEFC8700463090 /* IdentityRevealProtocol.h */,
+			);
+			name = Protocols;
 			sourceTree = "<group>";
 		};
 		C20F0B1719D7CE72005958C0 /* Images */ = {

@@ -8,6 +8,7 @@
 
 #import <Parse/Parse.h>
 #import "UserParseHelper.h"
+#import "IdentityRevealProtocol.h"
 
 @interface RevealRequest : PFObject <PFSubclassing>
 
@@ -17,5 +18,6 @@
 @property (nonatomic) UserParseHelper *requestToUser;
 @property (nonatomic) NSString *requestReply;
 @property (nonatomic) NSNumber *requestClosed;
+@property (nonatomic) id <IdentityRevealDelegate> identityDelegate;
 
 @end
