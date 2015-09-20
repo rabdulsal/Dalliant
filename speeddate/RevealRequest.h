@@ -20,4 +20,7 @@
 @property (nonatomic) NSNumber *requestClosed;
 @property (nonatomic) id <IdentityRevealDelegate> identityDelegate;
 
+// Methods
+- (void)sendShareRequestFromUser:(UserParseHelper *)user toMatch:(UserParseHelper *)matchUser completion:(void(^)(BOOL *success))callback;
+
 @end

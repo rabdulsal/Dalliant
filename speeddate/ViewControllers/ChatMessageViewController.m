@@ -1061,30 +1061,18 @@
 
 - (void)sendShareRequest
 {
-    RevealRequest *revealRequest    = [RevealRequest object];
-    revealRequest.requestFromUser   = _curUser;
-    revealRequest.requestToUser     = self.toUserParse;
-    revealRequest.requestReply      = @"";
+    RevealRequest *revealRequest = [RevealRequest object];
     
-    [revealRequest saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        PFQuery *query = [PFInstallation query];
-        [query whereKey:@"objectId" equalTo:self.toUserParse.installation.objectId];
+    [revealRequest sendShareRequestFromUser:_curUser toMatch:_toUserParse completion:^(BOOL *success) {
         
-        NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
-                              @"Request to Share Identities", @"alert",
-                              [NSString stringWithFormat:@"%@", _toUserParse.nickname], @"match",
-                              /*[NSString stringWithFormat:@"%@", _matchedUsers], @"relationship",*/
-                              @"Increment", @"badge",
-                              @"Ache.caf", @"sound",
-                              nil];
-        PFPush *push = [[PFPush alloc] init];
-        [push setQuery:query];
-        [push setData:data];
-        [push sendPushInBackground];
-        self.inputToolbar.contentView.leftBarButtonItem.enabled = NO;
-        
-        [self.collectionView reloadData];
+        if (success) {
+            self.inputToolbar.contentView.leftBarButtonItem.enabled = NO;
+                
+            [self.collectionView reloadData];
+        }
     }];
+    
+    
 }
 
 #pragma mark - Report / UnMatch Actionsheet
