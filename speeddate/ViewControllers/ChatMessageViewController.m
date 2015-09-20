@@ -593,7 +593,7 @@
         
         NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
                               pushMessage, @"alert",
-                              [NSString stringWithFormat:@"%@", message.objectId], @"messageId",
+                              [NSString stringWithFormat:@"%@", message.objectId], @"messageId", // Must change to PossMatchHelper convoId
                               @"Increment", @"badge",
                               @"Ache.caf", @"sound",
                               nil];
