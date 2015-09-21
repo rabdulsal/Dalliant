@@ -64,6 +64,7 @@
     
     [self customizeApp];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchShareReply:) name:@"FetchShareReply" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:receivedMessage object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -78,9 +79,13 @@
   
 }
 
-- (void)fetchShareRequestWith:(UserParseHelper *)user
+- (void)fetchShareRequestWith:(UserParseHelper *)user // Change to FetchShareReply
 {
     NSLog(@"Fetched share request");
+    
+    // Fetch Reply based on RevealRequest.Id
+    
+    // Once Fetched send reply using RevealRequest method
     
     PFQuery *requestFromQuery = [RevealRequest query];
     [requestFromQuery whereKey:@"requestFromUser" equalTo:[UserParseHelper currentUser]];

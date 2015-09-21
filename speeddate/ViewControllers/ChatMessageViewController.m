@@ -89,7 +89,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getNewMessage:) name:receivedMessage object:nil];
     
     // Notifications for Reveal Requests and Replies
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchRevealRequest:) name:@"FetchRevealRequest" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchShareRequest:) name:@"FetchShareRequest" object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchRevealReply:) name:@"FetchRevealReply" object:nil];
     
@@ -448,20 +448,21 @@
     
 }
 
-- (void)fetchShareRequest
+- (void)fetchShareRequest//:(NSNotification *)note
 {
     NSLog(@"Fetched share request");
-    /*
-     PFQuery *requestQuery = [RevealRequest query];
-     [requestQuery whereKey:@"requestFromUser" equalTo:self.toUserParse];
-     [requestQuery whereKey:@"requestToUser" equalTo:_curUser];
-     [requestQuery whereKey:@"requestReply" equalTo:@""];
-     
-     NSArray *request = [requestQuery findObjects];
-     if ([request count] != 0) {
-     _receivedRequest = [request objectAtIndex:0];
-     }
-     */
+    
+    // Get requestId from NSNotification note
+    
+    [_receivedRequest fetchShareRequestWithId:requestId completion:^(RevealRequest *incomingRequest, BOOL *fetched) {
+        if (fetched) {
+            _receivedRequest = incomingRequest;
+            [self replyAlertView];
+        }
+    }];
+    
+    // * ----------- OLD CODE ---------------- //
+    
     PFQuery *requestFromQuery = [RevealRequest query];
     [requestFromQuery whereKey:@"requestFromUser" equalTo:_curUser];
     [requestFromQuery whereKey:@"requestToUser" equalTo:_toUserParse];
@@ -491,6 +492,7 @@
             NSLog(@"Request from Other User: %@", _receivedRequest.requestFromUser.nickname);
         }
     }
+    // * ---------------- END ---------------- //
     
     //_receivedRequest = request objectAtIndex:0];
     /*

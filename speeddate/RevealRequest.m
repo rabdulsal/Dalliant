@@ -57,6 +57,17 @@
     
 }
 
+- (void)fetchShareRequestWithId:(NSString *)shareRequestId completion:(void(^)(RevealRequest *incomingRequest, BOOL *fetched))callback
+{
+    PFQuery *request = [RevealRequest query];
+    [request getObjectInBackgroundWithId:shareRequestId block:^(PFObject *object, NSError *error) {
+        
+        if (!error) {
+            callback((RevealRequest *)object, (BOOL *)true);
+        }
+    }];
+}
+
 - (void)acceptShareRequest:(NSString *)shareRequestId
 {
     //Do stuff
