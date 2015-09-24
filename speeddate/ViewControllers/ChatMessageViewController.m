@@ -89,9 +89,10 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getNewMessage:) name:receivedMessage object:nil];
     
     // Notifications for Reveal Requests and Replies
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchShareRequest:) name:@"FetchShareRequest" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchShareRequest) name:@"FetchShareRequest" object:nil]; // Add 'note' to method to unpack RevealRequest
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchRevealReply:) name:@"FetchRevealReply" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchShareReply) name:@"FetchRevealReply" object:nil]; // Add 'note' to method to unpack RevealRequest
+
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(blockUnMatched) name:@"chatEnded" object:nil];
     
@@ -453,14 +454,14 @@
     NSLog(@"Fetched share request");
     
     // Get requestId from NSNotification note
-    
+    /* TODO: Implement Code
     [_receivedRequest fetchShareRequestWithId:requestId completion:^(RevealRequest *incomingRequest, BOOL *fetched) {
         if (fetched) {
             _receivedRequest = incomingRequest;
             [self replyAlertView];
         }
     }];
-    
+    */
     // * ----------- OLD CODE ---------------- //
     
     PFQuery *requestFromQuery = [RevealRequest query];
@@ -510,6 +511,18 @@
 - (void)fetchShareReply
 {
     NSLog(@"Share Reply run");
+    
+    /* TODO: Implement Code
+    [_receivedReply fetchShareReplyWithId:requestId completion:^(RevealRequest *incomingReply, BOOL *fetched) {
+        
+        if (fetched) {
+            _receivedReply = incomingReply;
+            [self acknowledgeAlertView];
+        }
+    }];
+    */
+    // * ------------- OLD CODE ----------------- //
+    
     PFQuery *replyQuery = [RevealRequest query];
     [replyQuery whereKey:@"requestFromUser" equalTo:_curUser];
     [replyQuery whereKey:@"requestToUser" equalTo:self.toUserParse];
@@ -524,6 +537,7 @@
         [self acknowledgeAlertView];
     }
     
+    // -------------- END ---------------- //
     /*
      [replyQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
      
@@ -889,7 +903,7 @@
     [self finishSendingMessage];
 }
 
-- (void)repliedToShareRequest
+- (void)repliedToShareRequest // TODO: Erase after Refactor
 {
     NSLog(@"Start Replied To Share Request");
     /* _matchedUsers.usersRevealed = [NSNumber numberWithBool:YES];
@@ -1065,7 +1079,7 @@
 {
     RevealRequest *revealRequest = [RevealRequest object];
     
-    [revealRequest sendShareRequestFromUser:_curUser toMatch:_toUserParse completion:^(BOOL *success) {
+    [revealRequest sendShareRequestFromUser:_curUser toMatch:_toUserParse completion:^(BOOL success) {
         
         if (success) {
             self.inputToolbar.contentView.leftBarButtonItem.enabled = NO;
@@ -1316,6 +1330,13 @@
         
         if([title isEqualToString:@"Yes"]){
             NSLog(@"Clicked Yes");
+            [_receivedRequest acceptShareRequestWithCompletion:^(BOOL shared) {
+                if (shared) {
+                    [self.collectionView reloadData];
+                    [self performSegueWithIdentifier:@"view_match" sender:nil];
+                }
+            }];
+            // TODO: Erase after Refactor
             _receivedRequest.requestReply = @"Yes";
             //_curUser.isRevealed = [NSNumber numberWithBool:YES]; <-- Update isRevealed in PossibleMatchHelper
             //[self reloadView];
@@ -1323,6 +1344,12 @@
             
         } else if ([title isEqualToString:@"No"]) {
             NSLog(@"Clicked No");
+            [_receivedRequest rejectShareRequestWithCompletion:^(BOOL rejected) {
+                if (rejected) {
+                    // Do nothing?
+                }
+            }];
+            // TODO: Erase after Refactor
             _receivedRequest.requestReply = @"No";
             //_curUser.isRevealed = [NSNumber numberWithBool:NO]; //<-- No reason to update the database
             // Show "No Reveal" animation

@@ -99,6 +99,22 @@
             }
         }];
         
+        /* ------ PUSH TO SWREVEALVC CODE --------- //
+         
+        UIStoryboard *st = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
+        DestinationController *descController = (DestinationController*)[st instantiateViewControllerWithIdentifier: @"storyboardID_DestController"];
+        UINavigationController *frontNavigationController = [[UINavigationController alloc] initWithRootViewController:descController];
+        SidebarViewController *rearViewController = (SidebarViewController*)[st instantiateViewControllerWithIdentifier: @"storyboardID_SidebarMenu"];
+        
+        RevealViewController *mainRevealController = [[SWRevealViewController alloc]  init];
+        
+        mainRevealController.rearViewController = rearViewController;
+        mainRevealController.frontViewController= frontNavigationController;
+        
+        self.window.rootViewController = mainRevealController;
+        
+        // ----------------------------------------- */
+        
         NSLog(@"Notification in AppDelegate: %@", [notificationPayload objectForKey:@"messageId"]);
         //Query if NotificationPayload is from Chat or ShareRequest based on string
         

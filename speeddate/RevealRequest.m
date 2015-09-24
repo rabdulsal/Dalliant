@@ -25,7 +25,7 @@
     return @"RevealRequest";
 }
 
-- (void)sendShareRequestFromUser:(UserParseHelper *)user toMatch:(UserParseHelper *)matchUser completion:(void(^)(BOOL *success))callback
+- (void)sendShareRequestFromUser:(UserParseHelper *)user toMatch:(UserParseHelper *)matchUser completion:(void(^)(BOOL success))callback
 {
     //Do stuff
     RevealRequest *revealRequest  = [RevealRequest object];
@@ -51,13 +51,13 @@
             [push sendPushInBackground];
             
             [identityDelegate revealRequestSent];
-            callback(&succeeded);
+            callback(succeeded);
         }
     }];
     
 }
 
-- (void)fetchShareRequestWithId:(NSString *)shareRequestId completion:(void(^)(RevealRequest *incomingRequest, BOOL *fetched))callback
+- (void)fetchShareRequestWithId:(NSString *)shareRequestId completion:(void(^)(RevealRequest *incomingRequest, BOOL fetched))callback
 {
     PFQuery *request = [RevealRequest query];
     [request getObjectInBackgroundWithId:shareRequestId block:^(PFObject *object, NSError *error) {
@@ -68,18 +68,77 @@
     }];
 }
 
-- (void)acceptShareRequest:(NSString *)shareRequestId
+- (void)fetchShareReplyWithId:(NSString *)shareRequestId completion:(void(^)(RevealRequest *incomingReply, BOOL fetched))callback
 {
-    //Do stuff
-    
-    [identityDelegate revealRequestAccepted];
+    PFQuery *request = [RevealRequest query];
+    [request getObjectInBackgroundWithId:shareRequestId block:^(PFObject *object, NSError *error) {
+        
+        if (!error) {
+            callback((RevealRequest *)object, true);
+        }
+    }];
 }
 
-- (void)rejectRevealRequest
+- (void)acceptShareRequestWithCompletion:(void (^)(BOOL shared))callback
+{
+    //Do stuff
+    self.requestReply = @"Yes";
+    [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        
+        if (succeeded) {
+            UserParseHelper *matchUser = self.requestFromUser;
+            PFQuery *query = [PFInstallation query];
+            [query whereKey:@"objectId" equalTo:matchUser.installation.objectId];
+            
+            NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
+                                  [NSString stringWithFormat:@"Identity Share Reply"], @"alert",
+                                  @"Increment", @"badge",
+                                  @"Ache.caf", @"sound",nil];
+            
+            PFPush *push = [[PFPush alloc] init];
+            [push setQuery:query];
+            [push setData:data];
+            [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    [identityDelegate revealRequestAccepted];
+                    callback(succeeded);
+                }
+            }];
+            
+        }
+    }];
+    
+}
+
+- (void)rejectShareRequestWithCompletion:(void (^)(BOOL))callback
 {
     // Do stuff
+    self.requestReply = @"No";
+    [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        
+        if (succeeded) {
+            UserParseHelper *matchUser = self.requestFromUser;
+            PFQuery *query = [PFInstallation query];
+            [query whereKey:@"objectId" equalTo:matchUser.installation.objectId];
+            
+            NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
+                                  [NSString stringWithFormat:@"Identity Share Reply"], @"alert",
+                                  @"Increment", @"badge",
+                                  @"Ache.caf", @"sound",nil];
+            
+            PFPush *push = [[PFPush alloc] init];
+            [push setQuery:query];
+            [push setData:data];
+            [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    [identityDelegate revealRequestRejected];;
+                    callback(succeeded);
+                }
+            }];
+            
+        }
+    }];
     
-    [identityDelegate revealRequestRejected];
 }
 
 @end
