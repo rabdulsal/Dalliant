@@ -448,7 +448,7 @@
     
     // Get requestId from NSNotification note
     NSString *requestId = [notification.userInfo objectForKey:@"requestId"];
-    [_receivedRequest fetchShareRequestWithId:requestId completion:^(RevealRequest *incomingRequest, BOOL fetched) {
+    [RevealRequest fetchShareRequestWithId:requestId completion:^(RevealRequest *incomingRequest, BOOL fetched) {
         if (fetched) {
             _receivedRequest = incomingRequest;
             [self replyAlertView];
@@ -506,7 +506,7 @@
     NSLog(@"Share Reply run");
     
     NSString *requestId = [notification.userInfo objectForKey:@"requestId"];
-    [_receivedReply fetchShareReplyWithId:requestId completion:^(RevealRequest *incomingReply, BOOL fetched) {
+    [RevealRequest fetchShareReplyWithId:requestId completion:^(RevealRequest *incomingReply, BOOL fetched) {
         
         if (fetched) {
             _receivedReply = incomingReply;
@@ -848,6 +848,7 @@
 
 - (void)didPressAccessoryButton:(UIButton *)sender
 {
+    // TODO: Refactor to using Enums set by Protocol
     if (!_receivedRequest && !_receivedReply) { // <-- Change to check on Matched User attribute
         
         [self shareRequestActionSheet];
@@ -1070,7 +1071,7 @@
 
 - (void)sendShareRequest
 {
-    RevealRequest *revealRequest = [RevealRequest object];
+    RevealRequest *revealRequest = [RevealRequest init];
     
     [revealRequest sendShareRequestFromUser:_curUser toMatch:_toUserParse completion:^(BOOL success) {
         

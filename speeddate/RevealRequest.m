@@ -25,15 +25,28 @@
     return @"RevealRequest";
 }
 
+- (id)init {
+    self = [super init];
+    if (self) {
+        self = [RevealRequest object];
+    }
+    return self;
+}
+
 - (void)sendShareRequestFromUser:(UserParseHelper *)user toMatch:(UserParseHelper *)matchUser completion:(void(^)(BOOL success))callback
 {
     //Do stuff
+    /*
     RevealRequest *revealRequest  = [RevealRequest object];
     revealRequest.requestFromUser = user;
     revealRequest.requestToUser   = matchUser;
     revealRequest.requestReply    = @"";
+    */
+    self.requestFromUser = user;
+    self.requestToUser   = matchUser;
+    self.requestReply    = @"";
     
-    [revealRequest saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+    [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
             PFQuery *query = [PFInstallation query];
             [query whereKey:@"objectId" equalTo:matchUser.installation.objectId];
@@ -41,7 +54,7 @@
             NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
                                     @"Request to Share Identities", @"alert",
                                     [NSString stringWithFormat:@"%@", matchUser.nickname], @"match",
-                                    [NSString stringWithFormat:@"%@", revealRequest.objectId], @"requestId", // RequestId for notification userInfo
+                                    [NSString stringWithFormat:@"%@", self.objectId], @"requestId", // RequestId for notification userInfo
                                     @"Increment", @"badge",
                                     @"Ache.caf", @"sound",
                                     nil];
@@ -57,7 +70,7 @@
     
 }
 
-- (void)fetchShareRequestWithId:(NSString *)shareRequestId completion:(void(^)(RevealRequest *incomingRequest, BOOL fetched))callback
++ (void)fetchShareRequestWithId:(NSString *)shareRequestId completion:(void(^)(RevealRequest *incomingRequest, BOOL fetched))callback
 {
     PFQuery *request = [RevealRequest query];
     [request getObjectInBackgroundWithId:shareRequestId block:^(PFObject *object, NSError *error) {
@@ -68,7 +81,7 @@
     }];
 }
 
-- (void)fetchShareReplyWithId:(NSString *)shareRequestId completion:(void(^)(RevealRequest *incomingReply, BOOL fetched))callback
++ (void)fetchShareReplyWithId:(NSString *)shareRequestId completion:(void(^)(RevealRequest *incomingReply, BOOL fetched))callback
 {
     PFQuery *request = [RevealRequest query];
     [request getObjectInBackgroundWithId:shareRequestId block:^(PFObject *object, NSError *error) {
