@@ -226,11 +226,11 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     
     NSDictionary *userInfoAlert = [userInfo objectForKey:@"aps"];
-    NSString *alertMessage = [userInfoAlert objectForKey:@"alert"];
+    NSString *alertMessage      = [userInfoAlert objectForKey:@"alert"];
     
     if ([alertMessage isEqualToString:@"Request to Share Identities"]) {
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"FetchRevealRequest" object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"FetchRevealRequest" object:self userInfo:userInfo];
             /*
              UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"In-app Reveal Request" message:@"Request received in app" delegate:self cancelButtonTitle:@"Done" otherButtonTitles: @"Anzeigen", nil];
              [alert setTag: 2];
@@ -238,7 +238,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
         */
     } else if ([alertMessage isEqualToString:@"Identity Share Reply"]) {
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"FetchRevealReply" object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"FetchRevealReply" object:self userInfo:userInfo];
         
     } else if ([alertMessage isEqualToString:@"Match Ended Chat"]) {
         

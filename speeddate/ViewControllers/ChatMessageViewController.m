@@ -7,13 +7,6 @@
 //
 
 #import "ChatMessageViewController.h"
-#import "MatchViewController.h"
-#import "ImageVC.h"
-#import "Report.h"
-#import "RevealRequest.h"
-#import <AMPopTip.h>
-#import <SCLAlertView.h>
-#import "RedeemViewController.h"
 
 @interface ChatMessageViewController ()
 {
@@ -89,9 +82,9 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getNewMessage:) name:receivedMessage object:nil];
     
     // Notifications for Reveal Requests and Replies
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchShareRequest) name:@"FetchShareRequest" object:nil]; // Add 'note' to method to unpack RevealRequest
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchShareRequest:) name:@"FetchShareRequest" object:nil]; // Add 'note' to method to unpack RevealRequest
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchShareReply) name:@"FetchRevealReply" object:nil]; // Add 'note' to method to unpack RevealRequest
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchShareReply:) name:@"FetchRevealReply" object:nil]; // Add 'note' to method to unpack RevealRequest
 
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(blockUnMatched) name:@"chatEnded" object:nil];
@@ -181,7 +174,7 @@
 {
     NSLog(@"Check Incoming request");
     // Fetch incoming ShareRequest for User to Reply
-    [self fetchShareRequest];
+    //[self fetchShareRequest]; TODO: Erase once refactored
     
     if (_receivedRequest && ![_receivedRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) {
         NSLog(@"Received Request Reply: %@", _receivedRequest.requestReply);
@@ -421,7 +414,7 @@
 {
     NSLog(@"Fetch Reveal Request run");
     // Query for Incoming RevealRequest
-    [self fetchShareRequest];
+    //[self fetchShareRequest]; TODO: Erase once refactored
     
     /*for (RevealRequest *request in objects) {
      NSLog(@"For Loop");
@@ -443,25 +436,25 @@
 {
     
     // Query for Incoming RevealRequest fromUser = _curUser with Reply
-    [self fetchShareReply];
+    //[self fetchShareReply]; TODO: Erase once refactored
     
     NSLog(@"Reveal Reply query run");
     
 }
 
-- (void)fetchShareRequest//:(NSNotification *)note
+- (void)fetchShareRequest:(NSNotification *)notification
 {
     NSLog(@"Fetched share request");
     
     // Get requestId from NSNotification note
-    /* TODO: Implement Code
-    [_receivedRequest fetchShareRequestWithId:requestId completion:^(RevealRequest *incomingRequest, BOOL *fetched) {
+    NSString *requestId = [notification.userInfo objectForKey:@"requestId"];
+    [_receivedRequest fetchShareRequestWithId:requestId completion:^(RevealRequest *incomingRequest, BOOL fetched) {
         if (fetched) {
             _receivedRequest = incomingRequest;
             [self replyAlertView];
         }
     }];
-    */
+    
     // * ----------- OLD CODE ---------------- //
     
     PFQuery *requestFromQuery = [RevealRequest query];
@@ -508,19 +501,19 @@
      }];*/
 }
 
-- (void)fetchShareReply
+- (void)fetchShareReply:(NSNotification *)notification
 {
     NSLog(@"Share Reply run");
     
-    /* TODO: Implement Code
-    [_receivedReply fetchShareReplyWithId:requestId completion:^(RevealRequest *incomingReply, BOOL *fetched) {
+    NSString *requestId = [notification.userInfo objectForKey:@"requestId"];
+    [_receivedReply fetchShareReplyWithId:requestId completion:^(RevealRequest *incomingReply, BOOL fetched) {
         
         if (fetched) {
             _receivedReply = incomingReply;
             [self acknowledgeAlertView];
         }
     }];
-    */
+    
     // * ------------- OLD CODE ----------------- //
     
     PFQuery *replyQuery = [RevealRequest query];

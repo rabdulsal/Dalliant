@@ -10,6 +10,13 @@
 #import "PossibleMatchHelper.h"
 #import "UserParseHelper.h"
 #import "MessageParse.h"
+#import "MatchViewController.h"
+#import "ImageVC.h"
+#import "Report.h"
+#import "RevealRequest.h"
+#import <AMPopTip.h>
+#import <SCLAlertView.h>
+#import "RedeemViewController.h"
 
 @interface ChatMessageViewController : JSQMessagesViewController <UIActionSheetDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 

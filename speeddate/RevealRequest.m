@@ -41,7 +41,7 @@
             NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
                                     @"Request to Share Identities", @"alert",
                                     [NSString stringWithFormat:@"%@", matchUser.nickname], @"match",
-                                    /*[NSString stringWithFormat:@"%@", _matchedUsers], @"relationship",*/
+                                    [NSString stringWithFormat:@"%@", revealRequest.objectId], @"requestId", // RequestId for notification userInfo
                                     @"Increment", @"badge",
                                     @"Ache.caf", @"sound",
                                     nil];
@@ -63,7 +63,7 @@
     [request getObjectInBackgroundWithId:shareRequestId block:^(PFObject *object, NSError *error) {
         
         if (!error) {
-            callback((RevealRequest *)object, (BOOL *)true);
+            callback((RevealRequest *)object, (BOOL)true);
         }
     }];
 }
@@ -92,6 +92,7 @@
             
             NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
                                   [NSString stringWithFormat:@"Identity Share Reply"], @"alert",
+                                  [NSString stringWithFormat:@"%@", self.objectId], @"requestId", // RequestId for notification userInfo
                                   @"Increment", @"badge",
                                   @"Ache.caf", @"sound",nil];
             
@@ -123,6 +124,7 @@
             
             NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
                                   [NSString stringWithFormat:@"Identity Share Reply"], @"alert",
+                                  [NSString stringWithFormat:@"%@", self.objectId], @"requestId",
                                   @"Increment", @"badge",
                                   @"Ache.caf", @"sound",nil];
             
