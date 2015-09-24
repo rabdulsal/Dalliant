@@ -360,7 +360,7 @@
 		4CC7B8BF1A61083E000982EA /* dalliant_logo_med.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dalliant_logo_med.png; sourceTree = "<group>"; };
 		4CCED3111A92DCD800069EAD /* ChatMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChatMessageViewController.h; path = ViewControllers/ChatMessageViewController.h; sourceTree = "<group>"; };
 		4CCED3121A92DCD800069EAD /* ChatMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChatMessageViewController.m; path = ViewControllers/ChatMessageViewController.m; sourceTree = "<group>"; };
-		4CD702361BAEFC8700463090 /* IdentityRevealProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IdentityRevealProtocol.h; sourceTree = "<group>"; };
+		4CD702371BB3A71900463090 /* IdentityRevealDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IdentityRevealDelegate.h; sourceTree = "<group>"; };
 		4CDD63D01A30A20E00AE9679 /* PodFile */ = {isa = PBXFileReference; lastKnownFileType = text; path = PodFile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		4CF56F731A2301CE008E861D /* PreferencesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesTableViewController.h; sourceTree = "<group>"; };
 		4CF56F741A2301CF008E861D /* PreferencesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesTableViewController.m; sourceTree = "<group>"; };
@@ -919,7 +919,7 @@
 		4CD702351BAEFB9100463090 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				4CD702361BAEFC8700463090 /* IdentityRevealProtocol.h */,
+				4CD702371BB3A71900463090 /* IdentityRevealDelegate.h */,
 			);
 			name = Protocols;
 			sourceTree = "<group>";
