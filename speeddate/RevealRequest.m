@@ -63,7 +63,7 @@
             [push setData:data];
             [push sendPushInBackground];
             
-            [identityDelegate revealRequestSent];
+            [identityDelegate shareRequestSent];
             callback(succeeded);
         }
     }];
@@ -114,7 +114,7 @@
             [push setData:data];
             [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (succeeded) {
-                    [identityDelegate revealRequestAccepted];
+                    [identityDelegate acceptedShareRequest];
                     callback(succeeded);
                 }
             }];
@@ -146,7 +146,7 @@
             [push setData:data];
             [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (succeeded) {
-                    [identityDelegate revealRequestRejected];;
+                    //[identityDelegate revealRequestRejected];;
                     callback(succeeded);
                 }
             }];

@@ -12,8 +12,15 @@
 #import <MDRadialProgressTheme.h>
 #import <MDRadialProgressView.h>
 #import "MessageParse.h"
+#import "IdentityRevealDelegate.h"
 
-@interface PossibleMatchHelper : PFObject <PFSubclassing>
+typedef enum {UnRevealed, Requested, Sharing, Declined} ShareState; //
+#define RevealStateString(enum) [@[@"UnRevealed",@"Requested",@"Revealed",@"Declined"] objectAtIndex:enum] // NSString *state = RevealStateString(UnRevealed);
+
+typedef enum {RequestWaiting, ReplyWaiting} RequestState; // For MessageVC to determine indicator display
+#define RequestStateString(enum) [@[@"RequestWaiting",@"ReplyWaiting"] objectAtIndex:enum] // NSString *state = RequestStateString(RequestWaiting);
+
+@interface PossibleMatchHelper : PFObject <PFSubclassing, IdentityRevealDelegate>
 @property (nonatomic, strong) UserParseHelper* fromUser;
 @property (nonatomic, strong) UserParseHelper* toUser;
 @property NSString* fromUserEmail;
@@ -31,11 +38,19 @@
 @property NSString *fromUserRating;
 @property NSNumber *toUserRedeem;
 @property NSNumber *fromUserRedeem;
+@property ShareState *toUserShareState;
+@property RequestState *toUserRequestState;
+@property ShareState *fromUserShareState;
+@property RequestState *fromUserRequestState;
+@property NSString *rvStString;
+@property NSString *rqStString;
 
 - (void)calculateCompatibility:(double)prefCounter with:(double)totalPreferences;
 - (void)configureRadialViewForView:(UIView *)view withFrame:(CGRect)frame;
 - (void)addChatMessageToConveration:(MessageParse *)message;
 - (NSString *)calculateUserDistance;
 - (void)compareUser:(NSArray *)userInterests andMatchInterests:(NSArray *)matchInterests forImages:(UIImageView *)image1 and:(UIImageView *)image2 and:(UIImageView *)image3 and:(UIImageView *)image4 andFinally:(UIImageView *)image5;
+- (void)storeShareState:(int)state;
+- (void)storeRequestState:(int)state;
 
 @end

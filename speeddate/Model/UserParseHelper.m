@@ -42,8 +42,6 @@
 @dynamic allConnections;
 @dynamic allMessages;
 @dynamic allRevealRequests;
-@dynamic revealState;
-@dynamic requestState;
 
 ////thumb photo
 @dynamic photo_thumb;
@@ -153,20 +151,6 @@
                 break;
         }
     }];
-}
-
-- (void)storeRevealState:(RevealState *)state
-{
-    self.revealState = state;
-    self.rvStString = RevealStateString((unsigned long)self.revealState);
-    [self saveInBackground];
-}
-
-- (void)storeRequestState:(RequestState *)state
-{
-    self.requestState = state;
-    self.rqStString = RequestStateString((unsigned long)self.requestState);
-    [self saveInBackground];
 }
 
 - (void)increaseCreditsBy:(int)points

@@ -8,12 +8,6 @@
 
 #import <Parse/Parse.h>
 
-typedef enum {UnRevealed=0, Requested, Revealed, Declined} RevealState; //
-#define RevealStateString(enum) [@[@"UnRevealed",@"Requested",@"Revealed",@"Declined"] objectAtIndex:enum] // NSString *state = RevealStateString(UnRevealed);
-
-typedef enum {RequestWaiting=0, ReplyWaiting} RequestState; // For MessageVC to determine indicator display
-#define RequestStateString(enum) [@[@"RequestWaiting",@"ReplyWaiting"] objectAtIndex:enum] // NSString *state = RequestStateString(RequestWaiting);
-
 @interface UserParseHelper : PFUser <PFSubclassing>
 
 @property NSNumber* age;
@@ -44,10 +38,6 @@ typedef enum {RequestWaiting=0, ReplyWaiting} RequestState; // For MessageVC to 
 @property NSMutableArray *blockedUsers;
 @property NSMutableArray *blockedBy;
 @property NSNumber *reportCount;
-@property NSString *rvStString;
-@property NSString *rqStString;
-@property RevealState *revealState;
-@property RequestState *requestState;
 
 ////thumb_photo
 @property PFFile* photo_thumb;
@@ -113,8 +103,6 @@ typedef enum {RequestWaiting=0, ReplyWaiting} RequestState; // For MessageVC to 
 - (NSString *)userWork;
 - (NSString *)userSchool;
 - (void)configureImage:(UIImage *)image picNumber:(int)photoNum;
-- (void)storeRevealState:(RevealState *)state;
-- (void)storeRequestState:(RequestState *)state;
 - (void)increaseCreditsBy:(int)points;
 - (void)decreaseCreditsBy:(int)points;
 - (void)blockUser:(NSString *)matchUser;

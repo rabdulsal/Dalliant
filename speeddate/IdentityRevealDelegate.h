@@ -10,8 +10,9 @@
 
 @protocol IdentityRevealDelegate <NSObject>
 
-- (void)revealRequestSent;
-- (void)revealRequestAccepted;
-- (void)revealRequestRejected;
+- (void)shareRequestSent;
+- (void)shareRequestAccepted;
+- (void)shareRequestRejected;
+- (void)acceptedShareRequest;
 
 @end

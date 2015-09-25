@@ -8,7 +8,7 @@
 
 #import <Parse/Parse.h>
 #import "UserParseHelper.h"
-#import "IdentityRevealProtocol.h"
+#import "IdentityRevealDelegate.h"
 
 @interface RevealRequest : PFObject <PFSubclassing>
 

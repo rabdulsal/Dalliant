@@ -26,6 +26,12 @@
 @dynamic fromUserRating;
 @dynamic toUserRedeem;
 @dynamic fromUserRedeem;
+@synthesize toUserShareState;
+@synthesize toUserRequestState;
+@synthesize fromUserRequestState;
+@synthesize fromUserShareState;
+@dynamic rvStString;
+@dynamic rqStString;
 
 + (void)load {
     [self registerSubclass];
@@ -153,6 +159,38 @@
         }
         
     }
+}
+
+- (void)storeShareState:(int)state // Must initialize .UnRevealed
+{
+    // Set up ShareState conditional for to- or from- User
+    self.rvStString = RevealStateString(state);
+    [self saveInBackground];
+}
+
+- (void)storeRequestState:(int)state // Must initialize
+{
+    // Set up ShareState conditional for to- or from- User
+    self.rqStString = RequestStateString(state);
+    [self saveInBackground];
+}
+
+#pragma mark - IdentityRevealDelegate
+
+- (void)shareRequestSent {
+    [self storeShareState:Requested];
+}
+
+- (void)shareRequestAccepted { // Set from Reply Notification, Match Accept User Request
+    [self storeShareState:Sharing];
+}
+
+- (void)shareRequestRejected { // Set from Reply Notification, Match Rejected User Request
+    [self storeShareState:Declined];
+}
+
+- (void)acceptedShareRequest { // Accepted incoming Request from Match
+    [self storeShareState:Sharing];
 }
 
 @end
