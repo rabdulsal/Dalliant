@@ -105,7 +105,7 @@
 		4CCED3131A92DCD800069EAD /* ChatMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCED3121A92DCD800069EAD /* ChatMessageViewController.m */; };
 		4CF56F751A2301CF008E861D /* PreferencesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF56F741A2301CF008E861D /* PreferencesTableViewController.m */; };
 		4CF56F781A23D0A8008E861D /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF56F771A23D0A8008E861D /* User.m */; };
-		92E8E32284B3758EB4DC35B8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BA0CC71950E48F220C437C5 /* libPods.a */; };
+		5B9E6F9D7597F0DA99569136 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A925A9AA23465DEE64B72C1 /* libPods.a */; };
 		C206B02519E28D91001A4D0C /* mnvip.png in Resources */ = {isa = PBXBuildFile; fileRef = C206B02319E28D91001A4D0C /* mnvip.png */; };
 		C206B02619E28D91001A4D0C /* mvip.png in Resources */ = {isa = PBXBuildFile; fileRef = C206B02419E28D91001A4D0C /* mvip.png */; };
 		C20F0B1919D7CE85005958C0 /* sdlogo.png in Resources */ = {isa = PBXBuildFile; fileRef = C20F0B1819D7CE85005958C0 /* sdlogo.png */; };
@@ -147,7 +147,6 @@
 		C237019519D975000024F856 /* utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = C237019419D975000024F856 /* utilities.m */; };
 		C254F8A019F6C28F00473836 /* WhoSeeMeHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = C254F89F19F6C28F00473836 /* WhoSeeMeHelper.m */; };
 		C254F8A319F6C4B000473836 /* WhoSeeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C254F8A219F6C4B000473836 /* WhoSeeViewController.m */; };
-		C25538D519D9702200C81DFE /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C25538D219D9702100C81DFE /* FacebookSDK.framework */; };
 		C25E746D19E8567B00779C23 /* libGoogleAdMobAds.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C25E746C19E8567B00779C23 /* libGoogleAdMobAds.a */; };
 		C25E746F19E8816D00779C23 /* back-m.png in Resources */ = {isa = PBXBuildFile; fileRef = C25E746E19E8816D00779C23 /* back-m.png */; };
 		C25E747119E8981200779C23 /* about@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C25E747019E8981200779C23 /* about@2x.png */; };
@@ -206,8 +205,6 @@
 		C2A90EBA19F41BBD00FC0D04 /* up2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C2A90EB919F41BBD00FC0D04 /* up2@2x.png */; };
 		C2A90EBC19F41C1E00FC0D04 /* down2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C2A90EBB19F41C1E00FC0D04 /* down2@2x.png */; };
 		C2A90EC619F423E500FC0D04 /* CollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A90EC519F423E500FC0D04 /* CollectionCell.m */; };
-		C2A90ECA19F4298100FC0D04 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2A90EC919F4298100FC0D04 /* Parse.framework */; };
-		C2A90ECC19F429B600FC0D04 /* ParseFacebookUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2A90ECB19F429B600FC0D04 /* ParseFacebookUtils.framework */; };
 		C2A90ED119F4406400FC0D04 /* UserNearMeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A90ED019F4406400FC0D04 /* UserNearMeViewController.m */; };
 		C2A90ED419F4408A00FC0D04 /* UserNearCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A90ED319F4408A00FC0D04 /* UserNearCollectionViewCell.m */; };
 		C2A90ED719F49CE900FC0D04 /* UserProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A90ED619F49CE900FC0D04 /* UserProfileViewController.m */; };
@@ -229,6 +226,7 @@
 		0BAE8A9819BBBD75009B3A52 /* MatchLocationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MatchLocationViewController.h; path = ViewControllers/MatchLocationViewController.h; sourceTree = "<group>"; };
 		0BAE8A9919BBBD75009B3A52 /* MatchLocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MatchLocationViewController.m; path = ViewControllers/MatchLocationViewController.m; sourceTree = "<group>"; };
 		0BAE8A9B19BBC0F4009B3A52 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		2A925A9AA23465DEE64B72C1 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		42236F1A19B7DEEE00539466 /* CBetterCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CBetterCollectionViewCell.h; sourceTree = "<group>"; };
 		42236F1B19B7DEEE00539466 /* CBetterCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CBetterCollectionViewCell.m; sourceTree = "<group>"; };
 		42236F1C19B7DEEE00539466 /* CBetterCollectionViewLayoutAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CBetterCollectionViewLayoutAttributes.h; sourceTree = "<group>"; };
@@ -367,7 +365,6 @@
 		4CF56F761A23D0A8008E861D /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
 		4CF56F771A23D0A8008E861D /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		6B67DF6132EF34349DB97266 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
-		9BA0CC71950E48F220C437C5 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C206B02319E28D91001A4D0C /* mnvip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mnvip.png; sourceTree = "<group>"; };
 		C206B02419E28D91001A4D0C /* mvip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mvip.png; sourceTree = "<group>"; };
 		C20F0B1819D7CE85005958C0 /* sdlogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sdlogo.png; sourceTree = "<group>"; };
@@ -441,7 +438,6 @@
 		C254F89F19F6C28F00473836 /* WhoSeeMeHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WhoSeeMeHelper.m; sourceTree = "<group>"; };
 		C254F8A119F6C4B000473836 /* WhoSeeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WhoSeeViewController.h; sourceTree = "<group>"; };
 		C254F8A219F6C4B000473836 /* WhoSeeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WhoSeeViewController.m; sourceTree = "<group>"; };
-		C25538D219D9702100C81DFE /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
 		C25E746019E8567B00779C23 /* GADAdMobExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADAdMobExtras.h; sourceTree = "<group>"; };
 		C25E746119E8567B00779C23 /* GADAdNetworkExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADAdNetworkExtras.h; sourceTree = "<group>"; };
 		C25E746219E8567B00779C23 /* GADAdSize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADAdSize.h; sourceTree = "<group>"; };
@@ -544,8 +540,6 @@
 		C2A90EBB19F41C1E00FC0D04 /* down2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "down2@2x.png"; sourceTree = "<group>"; };
 		C2A90EC419F423E500FC0D04 /* CollectionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionCell.h; sourceTree = "<group>"; };
 		C2A90EC519F423E500FC0D04 /* CollectionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionCell.m; sourceTree = "<group>"; };
-		C2A90EC919F4298100FC0D04 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
-		C2A90ECB19F429B600FC0D04 /* ParseFacebookUtils.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseFacebookUtils.framework; sourceTree = "<group>"; };
 		C2A90ECF19F4406400FC0D04 /* UserNearMeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserNearMeViewController.h; sourceTree = "<group>"; };
 		C2A90ED019F4406400FC0D04 /* UserNearMeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserNearMeViewController.m; sourceTree = "<group>"; };
 		C2A90ED219F4408A00FC0D04 /* UserNearCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserNearCollectionViewCell.h; sourceTree = "<group>"; };
@@ -571,24 +565,21 @@
 				42DBCC6419AC2B7A00CE6C93 /* AdSupport.framework in Frameworks */,
 				0BAE8A9C19BBC0F4009B3A52 /* MapKit.framework in Frameworks */,
 				C2300F9719E1A79C0044A4E5 /* libAdapterIAd.a in Frameworks */,
-				C25538D519D9702200C81DFE /* FacebookSDK.framework in Frameworks */,
 				422370DF19B7F71B00539466 /* QuartzCore.framework in Frameworks */,
 				42DBCC6E19AC2BB000CE6C93 /* CoreLocation.framework in Frameworks */,
 				42DBCC7B19AC2DE200CE6C93 /* Social.framework in Frameworks */,
 				42DBCC7A19AC2CCC00CE6C93 /* libz.dylib in Frameworks */,
-				C2A90ECC19F429B600FC0D04 /* ParseFacebookUtils.framework in Frameworks */,
 				C25E746D19E8567B00779C23 /* libGoogleAdMobAds.a in Frameworks */,
 				42DBCC7819AC2C0E00CE6C93 /* SystemConfiguration.framework in Frameworks */,
 				42DBCC7419AC2BFA00CE6C93 /* Security.framework in Frameworks */,
 				42DBCC7219AC2BEF00CE6C93 /* MobileCoreServices.framework in Frameworks */,
 				42DBCC2D19AC20BB00CE6C93 /* CoreGraphics.framework in Frameworks */,
-				C2A90ECA19F4298100FC0D04 /* Parse.framework in Frameworks */,
 				42DBCC6C19AC2BA200CE6C93 /* CFNetwork.framework in Frameworks */,
 				42DBCC6A19AC2B9500CE6C93 /* AudioToolbox.framework in Frameworks */,
 				42DBCC6819AC2B8B00CE6C93 /* Accounts.framework in Frameworks */,
 				42DBCC2F19AC20BB00CE6C93 /* UIKit.framework in Frameworks */,
 				42DBCC2B19AC20BB00CE6C93 /* Foundation.framework in Frameworks */,
-				92E8E32284B3758EB4DC35B8 /* libPods.a in Frameworks */,
+				5B9E6F9D7597F0DA99569136 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -650,13 +641,10 @@
 		42DBCC2919AC20BB00CE6C93 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C2A90ECB19F429B600FC0D04 /* ParseFacebookUtils.framework */,
-				C2A90EC919F4298100FC0D04 /* Parse.framework */,
 				C2300F9F19E1A96C0044A4E5 /* AVFoundation.framework */,
 				C2300F9D19E1A9610044A4E5 /* CoreTelephony.framework */,
 				C2300F9B19E1A9590044A4E5 /* MessageUI.framework */,
 				C2300F9919E1A8EB0044A4E5 /* iAd.framework */,
-				C25538D219D9702100C81DFE /* FacebookSDK.framework */,
 				0BAE8A9B19BBC0F4009B3A52 /* MapKit.framework */,
 				422370DE19B7F71B00539466 /* QuartzCore.framework */,
 				42DBCC7919AC2CCC00CE6C93 /* libz.dylib */,
@@ -675,7 +663,7 @@
 				42DBCC2C19AC20BB00CE6C93 /* CoreGraphics.framework */,
 				42DBCC2E19AC20BB00CE6C93 /* UIKit.framework */,
 				42DBCC4919AC20BB00CE6C93 /* XCTest.framework */,
-				9BA0CC71950E48F220C437C5 /* libPods.a */,
+				2A925A9AA23465DEE64B72C1 /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1201,6 +1189,7 @@
 				42DBCC2419AC20BB00CE6C93 /* Frameworks */,
 				42DBCC2519AC20BB00CE6C93 /* Resources */,
 				3E3F72086FB7F76309D94B4A /* Copy Pods Resources */,
+				7A622972E999DCDEC39DEAF5 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1344,6 +1333,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7A622972E999DCDEC39DEAF5 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		7BBC11EFF6BCFB0FE4791A76 /* Check Pods Manifest.lock */ = {
@@ -1574,6 +1578,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1606,6 +1611,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = (

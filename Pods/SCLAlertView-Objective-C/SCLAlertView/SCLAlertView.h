@@ -12,6 +12,7 @@
 #import <UIKit/UIKit.h>
 #endif
 #import "SCLButton.h"
+#import "SCLTextView.h"
 
 typedef NSAttributedString* (^SCLAttributedFormatBlock)(NSString *value);
 typedef void (^DismissBlock)(void);
@@ -178,11 +179,29 @@ typedef NS_ENUM(NSInteger, SCLAlertViewBackground)
  */
 @property (nonatomic) CGRect extensionBounds;
 
+/** Set status bar hidden.
+ *
+ * Status bar hidden
+ */
+@property (nonatomic) BOOL statusBarHidden;
+
+/** Set status bar style.
+ *
+ * Status bar style
+ */
+@property (nonatomic) UIStatusBarStyle statusBarStyle;
+
 /** Initialize SCLAlertView using a new window.
  *
  * Init with new window
  */
 - (instancetype)initWithNewWindow;
+
+/** Initialize SCLAlertView using a new window.
+ *
+ * Init with new window with custom width
+ */
+- (instancetype)initWithNewWindowWidth:(CGFloat)windowWidth;
 
 /** Warns that alerts is gone
  *
@@ -212,7 +231,7 @@ typedef NS_ENUM(NSInteger, SCLAlertViewBackground)
  *
  * @param title The text displayed on the textfield.
  */
-- (UITextField *)addTextField:(NSString *)title;
+- (SCLTextView *)addTextField:(NSString *)title;
 
 /** Add a custom Text Field
  *
@@ -223,15 +242,9 @@ typedef NS_ENUM(NSInteger, SCLAlertViewBackground)
 /** Add Timer Display
  *
  * @param buttonIndex The index of the button to add the timer display to.
+ * @param reverse Convert timer to countdown.
  */
-- (void)addTimerToButtonIndex:(NSInteger)buttonIndex;
-
-/** Set SubTitle Height
- *
- * @deprecated Deprecated since 0.5.2+ .
- * @param value Height of scrollable subtitle text field.
- */
-- (void)setSubTitleHeight:(CGFloat)value __deprecated;
+- (void)addTimerToButtonIndex:(NSInteger)buttonIndex reverse:(BOOL)reverse;
 
 /** Set Title font family and size
  *

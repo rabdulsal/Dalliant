@@ -29,6 +29,9 @@ SCLAlertView *alert = [[SCLAlertView alloc] init];
 [alert showEdit:self title:@"Hello Edit" subTitle:@"This is a more descriptive info text with a edit textbox" closeButtonTitle:@"Done" duration:0.0f]; // Edit
 [alert showCustom:self image:[UIImage imageNamed:@"git"] color:color title:@"Custom" subTitle:@"Add a custom icon and color for your own type of alert!" closeButtonTitle:@"OK" duration:0.0f]; // Custom
 [alert showWaiting:self title:@"Waiting..." subTitle:@"Blah de blah de blah, blah. Blah de blah de" closeButtonTitle:nil duration:5.0f];
+
+// Using custom alert width
+SCLAlertView *alert = [[SCLAlertView alloc] initWithWindowWidth:300.0f];
 ```
 
 ###SCLAlertview in a new window. (No UIViewController)
@@ -46,6 +49,9 @@ SCLAlertView *alert = [[SCLAlertView alloc] initWithNewWindow];
 [alert showEdit:@"Hello Edit" subTitle:@"This is a more descriptive info text with a edit textbox" closeButtonTitle:@"Done" duration:0.0f]; // Edit
 [alert showCustom:[UIImage imageNamed:@"git"] color:color title:@"Custom" subTitle:@"Add a custom icon and color for your own type of alert!" closeButtonTitle:@"OK" duration:0.0f]; // Custom
 [alert showWaiting:@"Waiting..." subTitle:@"Blah de blah de blah, blah. Blah de blah de" closeButtonTitle:nil duration:5.0f];
+
+// Using custom alert width
+SCLAlertView *alert = [[SCLAlertView alloc] initWithNewWindowWidth:300.0f];
 ```
 
 ###New Window: Known issues
@@ -79,14 +85,14 @@ SCLAlertView *alert = [[SCLAlertView alloc] init];
 ###Add button timer
 ```Objective-C
 //The index of the button to add the timer display to.
-[alert addTimerToButtonIndex:0];
+[alert addTimerToButtonIndex:0 reverse:NO];
 ```
 
 Example:
 
 ```Objective-C
 SCLAlertView *alert = [[SCLAlertView alloc] init];
-[alert addTimerToButtonIndex:0];
+[alert addTimerToButtonIndex:0 reverse:YES];
 [alert showInfo:self title:@"Countdown Timer" subTitle:@"This alert has a duration set, and a countdown timer on the Dismiss button to show how long is left." closeButtonTitle:@"Dismiss" duration:10.0f];
 ```
 

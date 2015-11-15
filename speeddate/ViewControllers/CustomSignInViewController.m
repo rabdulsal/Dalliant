@@ -12,8 +12,8 @@
 #import "UserParseHelper.h"
 #import "ProgressHUD.h"
 #import "AFNetworking.h"
-#import <Parse/Parse.h>
-#import <ParseFacebookUtils/PFFacebookUtils.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import "utilities.h"
 #import "AppConstant.h"
 #import "MainViewController.h"
@@ -262,7 +262,7 @@
     
     // Login PFUser using Facebook
     [ProgressHUD show:@"Signing in..." Interaction:NO];
-    [PFFacebookUtils logInWithPermissions:permissions block:^(PFUser *user, NSError *error) {
+    [PFFacebookUtils logInInBackgroundWithReadPermissions:permissions block:^(PFUser *user, NSError *error) {
         
         NSString *errorMessage = nil;
         if (user != nil)
@@ -432,13 +432,16 @@
 - (void)requestFacebook:(PFUser *)user
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 {
-    FBRequest *request = [FBRequest requestForMe];
-    [request startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error)
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
+                                  initWithGraphPath:@"/me"
+                                  parameters:nil
+                                  HTTPMethod:@"GET"];
+    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
      {
          if (error == nil)
          {
              NSDictionary *userData = (NSDictionary *)result;
-             FBAccessTokenData *token = request.session.accessTokenData;
+             FBSDKAccessToken *token = [FBSDKAccessToken currentAccessToken];
              NSLog(@"Facebook Token: %@", token);
              [self processFacebook:user UserData:userData accessToken:token];
          }
@@ -453,7 +456,7 @@
 
 #pragma mark - FETCH FACEBOOK PROFILE PHOTOS
 
-- (void)fetchProfileAlbum:(NSString *)uid forUser:(PFUser *)user withAccessToken:(FBAccessTokenData *)token userData:(NSDictionary *)userData
+- (void)fetchProfileAlbum:(NSString *)uid forUser:(PFUser *)user withAccessToken:(FBSDKAccessToken *)token userData:(NSDictionary *)userData
 {
     NSLog(@"Fetch Profile Album started");
     NSString *photosLink =[NSString stringWithFormat:@"https://graph.facebook.com/%@/albums?access_token=%@",uid,token];
@@ -485,7 +488,7 @@
     [[NSOperationQueue mainQueue] addOperation:operation];
 }
 
-- (void)fetchProfilePhotos:(NSDictionary *)responseObject atIndex:(int)index forUser:(PFUser *)user withAccessToken:(FBAccessTokenData *)token userData:(NSDictionary *)userData
+- (void)fetchProfilePhotos:(NSDictionary *)responseObject atIndex:(int)index forUser:(PFUser *)user withAccessToken:(FBSDKAccessToken *)token userData:(NSDictionary *)userData
 {
     NSString *albumid       = [[[responseObject objectForKey:@"data"]objectAtIndex:index]objectForKey:@"id"];
     NSString *albumUrl      = [NSString stringWithFormat:@"https://graph.facebook.com/%@/photos?type=album&access_token=%@",albumid,token];
@@ -648,7 +651,7 @@
 
 #pragma mark - PROCESS FACEBOOK CALLBACK
 //-------------------------------------------------------------------------------------------------------------------------------------------------
-- (void)processFacebook:(PFUser *)user UserData:(NSDictionary *)userData accessToken:(FBAccessTokenData *)token
+- (void)processFacebook:(PFUser *)user UserData:(NSDictionary *)userData accessToken:(FBSDKAccessToken *)token
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 {
     NSLog(@"Process Facebook run");

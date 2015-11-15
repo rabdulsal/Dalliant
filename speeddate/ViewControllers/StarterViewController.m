@@ -1,6 +1,6 @@
 #import "StarterViewController.h"
 
-@interface StarterViewController () <PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate>
+@interface StarterViewController () /*<PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate>*/
 
 @end
 
@@ -14,7 +14,7 @@
         [self performSegueWithIdentifier:@"mainVC" sender:nil];
     }
 }
-
+/*
 - (void)signUpViewController:(PFSignUpViewController *)signUpController didSignUpUser:(PFUser *)user
 
 {
@@ -28,5 +28,5 @@
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
-
+*/
 @end
