@@ -69,6 +69,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHide:) name:UIKeyboardWillHideNotification object:nil];
     
+    [self loadingChat];
 }
 
 - (void)customizeApp
@@ -96,25 +97,24 @@
     [requestToQuery whereKey:@"requestFromUser" equalTo:user];
     
     PFQuery *orQuery = [PFQuery orQueryWithSubqueries:@[requestFromQuery, requestToQuery]];
-    
-    
-    NSArray *requests = [[NSArray alloc] initWithArray:[orQuery findObjects]];
-    NSLog(@"Requests count: %lu", (unsigned long)[requests count]);
-    
-    for (RevealRequest *request in requests) {
-        UserParseHelper *fromRequestUser = (UserParseHelper *)[request.requestFromUser fetchIfNeeded];
+    [orQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        NSArray *requests = [objects copy];
+        NSLog(@"Requests count: %lu", (unsigned long)[requests count]);
         
-        UserParseHelper *toRequestUser = (UserParseHelper *)[request.requestToUser fetchIfNeeded];
-        
-        if ([fromRequestUser isEqual:[UserParseHelper currentUser]]) {
-            _receivedReply = request; //Equivalent to receivedReply
-            NSLog(@"Request from Me and to %@", _receivedReply.requestToUser.nickname);
-        } else if ([toRequestUser isEqual:[UserParseHelper currentUser]]) {
-            _receivedRequest = request; //Equivalent to receivedRequest
-            NSLog(@"Request from Other User: %@", _receivedRequest.requestFromUser.nickname);
+        for (RevealRequest *request in requests) {
+            UserParseHelper *fromRequestUser = (UserParseHelper *)[request.requestFromUser fetchIfNeeded];
+            
+            UserParseHelper *toRequestUser = (UserParseHelper *)[request.requestToUser fetchIfNeeded];
+            
+            if ([fromRequestUser isEqual:[UserParseHelper currentUser]]) {
+                _receivedReply = request; //Equivalent to receivedReply
+                NSLog(@"Request from Me and to %@", _receivedReply.requestToUser.nickname);
+            } else if ([toRequestUser isEqual:[UserParseHelper currentUser]]) {
+                _receivedRequest = request; //Equivalent to receivedRequest
+                NSLog(@"Request from Other User: %@", _receivedRequest.requestFromUser.nickname);
+            }
         }
-    }
-    
+    }];   
     
 }
 
@@ -127,7 +127,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
-    [self loadingChat];
+    //[self loadingChat];
 }
 
 - (void)receivedNotification:(NSNotification *)notification
@@ -243,7 +243,7 @@
         user = [self.usersArray objectAtIndex:indexPath.row];
     }
     
-    [self fetchShareRequestWith:user];
+    //[self fetchShareRequestWith:user];
     // Get Possible Matches
     _matchedUsers = [[NSArray alloc] initWithObjects:[UserParseHelper currentUser], user, nil];
     PFQuery *possMatch1 = [PossibleMatchHelper query];

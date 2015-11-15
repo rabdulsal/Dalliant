@@ -378,7 +378,7 @@
             
             [self.messages addObject:chatMessage];
         
-        [_matchedUsers addChatMessageToConveration:message];
+        //[_matchedUsers addChatMessageToConveration:message];
         
             NSLog(@"Chat Message END Created at: %@", chatMessage.date);
             //[self sortMessages:_messages byDate:@"createdAt"];
