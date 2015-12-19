@@ -573,8 +573,8 @@
                                                                       date:date
                                                                       text:text];
             
-            // Store in chatMessages array of PossibleMatchHelper
-            [_matchedUsers addChatMessageToConveration:message];
+            // Store in chatMessages array of PossibleMatchHelper *** NOT WORKING ***
+            //[_matchedUsers addChatMessageToConveration:message];
             
             [self.messages addObject:chatMessage];
             [self sendMessageNotification:message];
