@@ -102,6 +102,7 @@
 
 - (void)addChatMessageToConveration:(MessageParse *)message
 {
+    /* --- Method not working, breaks messaging logic -- */
     PFRelation *conversations = [self relationForKey:@"chatMessages"];
     [conversations addObject:message];
     [self saveInBackground];

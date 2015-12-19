@@ -25,14 +25,6 @@
     return @"RevealRequest";
 }
 
-- (id)init {
-    self = [super init];
-    if (self) {
-        self = [RevealRequest object];
-    }
-    return self;
-}
-
 - (void)sendShareRequestFromUser:(UserParseHelper *)user toMatch:(UserParseHelper *)matchUser completion:(void(^)(BOOL success))callback
 {
     //Do stuff

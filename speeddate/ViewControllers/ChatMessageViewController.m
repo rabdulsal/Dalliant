@@ -1071,7 +1071,7 @@
 
 - (void)sendShareRequest
 {
-    RevealRequest *revealRequest = [RevealRequest init];
+    RevealRequest *revealRequest = [RevealRequest object];
     
     [revealRequest sendShareRequestFromUser:_curUser toMatch:_toUserParse completion:^(BOOL success) {
         
