@@ -16,4 +16,8 @@
 
 @property UIImage *sendImage;
 
++ (void)getMessagesBetween:(UserParseHelper *)currentUser
+                  andMatch:(UserParseHelper *)match
+                completion:(void(^)(NSArray *conversation, NSError *error))callback;
+
 @end

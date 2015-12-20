@@ -20,11 +20,11 @@
 @property UIImage *toPhoto;
 @property UIImage *fromPhoto;
 @property (weak, nonatomic) IBOutlet UILabel *prizeIndicator;
-@property (strong, nonatomic) RevealRequest *receivedRequest;
+@property (strong, nonatomic) RevealRequest *incomingRequest;
 @property (weak, nonatomic) IBOutlet UIView *chatTitle;
 @property (weak, nonatomic) IBOutlet UILabel *titleText;
 @property (weak, nonatomic) IBOutlet UIImageView *titleImage;
-@property (strong, nonatomic) RevealRequest *receivedReply;
+@property (strong, nonatomic) RevealRequest *outgoingRequest;
 @property (weak, nonatomic) IBOutlet UIView *unMatchedBlocker;
 @property UIVisualEffectView *visualEffectView;
 @property (weak, nonatomic) IBOutlet UIButton *rewardButton;
@@ -178,29 +178,29 @@
     
     [RevealRequest getRequestsBetween:_curUser andMatch:_toUserParse completion:^(RevealRequest *outgoingRequest, RevealRequest *incomingRequest) {
         if (outgoingRequest) {
-            _receivedReply = outgoingRequest;
+            _outgoingRequest = outgoingRequest;
             self.inputToolbar.contentView.leftBarButtonItem.enabled = NO;
         }
         
         if (incomingRequest) {
-            _receivedRequest = incomingRequest;
+            _incomingRequest = incomingRequest;
         }
     }];
     
-    if (_receivedRequest && ![_receivedRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) {
-        NSLog(@"Received Request Reply: %@", _receivedRequest.requestReply);
+    if (_incomingRequest && ![_incomingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+        NSLog(@"Received Request Reply: %@", _incomingRequest.requestReply);
         // Reply Null
-        if (![_receivedRequest.requestReply isEqualToString:@"Yes"] && ![_receivedRequest.requestReply isEqualToString:@"No"]) {
+        if (![_incomingRequest.requestReply isEqualToString:@"Yes"] && ![_incomingRequest.requestReply isEqualToString:@"No"]) {
             NSLog(@"ReplyAlertView");
             [self replyAlertView];
             
             // 'Yes' Reply
-        } else if ([_receivedRequest.requestReply isEqualToString:@"Yes"]) {
+        } else if ([_incomingRequest.requestReply isEqualToString:@"Yes"]) {
             NSLog(@"Users Revealed!");
             [self usersRevealed];
             
         }
-    } else if ([_receivedRequest.requestReply isEqualToString:@"Yes"]) {
+    } else if ([_incomingRequest.requestReply isEqualToString:@"Yes"]) {
         NSLog(@"Users Revealed!");
         [self usersRevealed];
         
@@ -209,28 +209,28 @@
     // Fetch incoming ShareReply for User to acknowledge
     //[self fetchShareReply];
     
-    if (_receivedReply && [_receivedReply.requestToUser isEqual:_toUserParse]) {
+    if (_outgoingRequest && [_outgoingRequest.requestToUser isEqual:_toUserParse]) {
         NSLog(@"Share Reply run");
         
         //Null Reply, Null Confirm
-        if (![_receivedReply.requestReply isEqualToString:@"Yes"] && ![_receivedReply.requestReply isEqualToString:@"No"] && ![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+        if (![_outgoingRequest.requestReply isEqualToString:@"Yes"] && ![_outgoingRequest.requestReply isEqualToString:@"No"] && ![_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) {
             self.inputToolbar.contentView.leftBarButtonItem.enabled = NO;
             NSLog(@"No Request Reply, No Confirm");
         }
         // 'Yes' Reply, Null Confirm or 'No' Reply, Null confirm
-        else if (([_receivedReply.requestReply isEqualToString:@"Yes"] && ![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || ([_receivedReply.requestReply isEqualToString:@"No"] && ![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
+        else if (([_outgoingRequest.requestReply isEqualToString:@"Yes"] && ![_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || ([_outgoingRequest.requestReply isEqualToString:@"No"] && ![_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
             self.inputToolbar.contentView.leftBarButtonItem.enabled = NO;
             // Show AcknowledgeAlertView
             [self acknowledgeAlertView];
             NSLog(@"Acknowledgement View");
             
             // 'Yes' Reply, 'Yes' Confirm
-        } else if ([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]){ // User's acknowledged and shared profile
+        } else if ([_outgoingRequest.requestReply isEqualToString:@"Yes"] && [_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]){ // User's acknowledged and shared profile
             [self usersRevealed];
             NSLog(@"Revealed View");
             
             // 'No' Reply, 'Yes' Confirm
-        } else if ((!_receivedRequest && [_receivedReply.requestReply isEqualToString:@"No"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || ([_receivedRequest.requestReply isEqualToString:@"No"] && [_receivedReply.requestReply isEqualToString:@"No"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:NO]])) {
+        } else if ((!_incomingRequest && [_outgoingRequest.requestReply isEqualToString:@"No"] && [_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || ([_incomingRequest.requestReply isEqualToString:@"No"] && [_outgoingRequest.requestReply isEqualToString:@"No"] && [_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:NO]])) {
             // Request rejected
             [self shareRequestRejected];
             NSLog(@"Rejected View");
@@ -265,40 +265,47 @@
 
 - (void)getMessages
 {
-    PFQuery *query1 = [MessageParse query];
-    [query1 whereKey:@"fromUserParse" equalTo:_curUser];
-    [query1 whereKey:@"toUserParse" equalTo:self.toUserParse];
-    [query1 whereKey:@"text" notEqualTo:@""];
+//    --- DEPRECATED * USER MESSAGEPARSE CLASS METHOD
+//    PFQuery *query1 = [MessageParse query];
+//    [query1 whereKey:@"fromUserParse" equalTo:_curUser];
+//    [query1 whereKey:@"toUserParse" equalTo:self.toUserParse];
+//    [query1 whereKey:@"text" notEqualTo:@""];
+//    
+//    PFQuery *query2 = [MessageParse query];
+//    [query2 whereKey:@"fromUserParse" equalTo:self.toUserParse];
+//    [query2 whereKey:@"toUserParse" equalTo:_curUser];
+//    [query2 whereKey:@"text" notEqualTo:@""];
+//    
+//    
+//    PFQuery *orQUery = [PFQuery orQueryWithSubqueries:@[query1, query2]];
+//    [orQUery orderByAscending:@"createdAt"];
+//    
+//    // orQUery.limit = 3;
+//    // orQUery.skip = 5;
+//    [orQUery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//        NSLog(@"Retrieved Messages: %lu", (unsigned long)[objects count]);
+//        //self.messages = [objects mutableCopy];
+//        //[self.collectionView reloadData];
+//        //[self scrollCollectionView];
+//        if ([objects count] > 0) {
+//            /*
+//            NSArray *messages = [NSArray new];
+//            messages = [objects sortedArrayUsingComparator:^NSComparisonResult(PFObject *a, PFObject *b)
+//                       {
+//                           return [a.createdAt compare:b.createdAt];
+//                       }];
+//            
+//            */
+//            [self processMessages:objects];
+//        }
+//        
+//        //[self.collectionView reloadData];
+//    }];
     
-    PFQuery *query2 = [MessageParse query];
-    [query2 whereKey:@"fromUserParse" equalTo:self.toUserParse];
-    [query2 whereKey:@"toUserParse" equalTo:_curUser];
-    [query2 whereKey:@"text" notEqualTo:@""];
-    
-    
-    PFQuery *orQUery = [PFQuery orQueryWithSubqueries:@[query1, query2]];
-    [orQUery orderByAscending:@"createdAt"];
-    
-    // orQUery.limit = 3;
-    // orQUery.skip = 5;
-    [orQUery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        NSLog(@"Retrieved Messages: %lu", (unsigned long)[objects count]);
-        //self.messages = [objects mutableCopy];
-        //[self.collectionView reloadData];
-        //[self scrollCollectionView];
-        if ([objects count] > 0) {
-            /*
-            NSArray *messages = [NSArray new];
-            messages = [objects sortedArrayUsingComparator:^NSComparisonResult(PFObject *a, PFObject *b)
-                       {
-                           return [a.createdAt compare:b.createdAt];
-                       }];
-            
-            */
-            [self processMessages:objects];
+    [MessageParse getMessagesBetween:_curUser andMatch:self.toUserParse completion:^(NSArray *conversation, NSError *error) {
+        if (conversation.count > 0) {
+            [self processMessages:conversation];
         }
-        
-        //[self.collectionView reloadData];
     }];
 }
 
@@ -345,56 +352,54 @@
     */
         
     for (MessageParse *message in messages) {
-        NSLog(@"Chat Message START Created at: %@", message.createdAt);
         message.read = YES;
         [message saveInBackground];
             
-                NSString *displayName   = nil;
-                NSString *senderId      = nil;
-                NSString *matchGender   = nil;
-                
-                if ([_toUserParse.isMale isEqualToString:@"true"]) {
-                    matchGender = @"Male";
-                } else {
-                    matchGender = @"Female";
-                }
-                
-            if ([message.fromUserParse isEqual:_curUser]) {
-                senderId    = _curUser.objectId;
-                displayName = @"You";
-            } else {
-                senderId    = _toUserParse.objectId;
-                displayName = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, _toUserParse.age];
-            }
-            __block JSQMessage *chatMessage = nil;
+        NSString *displayName   = nil;
+        NSString *senderId      = nil;
+        NSString *matchGender   = nil;
+        
+        if ([_toUserParse.isMale isEqualToString:@"true"]) {
+            matchGender = @"Male";
+        } else {
+            matchGender = @"Female";
+        }
+        
+        if ([message.fromUserParse isEqual:_curUser]) {
+            senderId    = _curUser.objectId;
+            displayName = @"You";
+        } else {
+            senderId    = _toUserParse.objectId;
+            displayName = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, _toUserParse.age];
+        }
+        __block JSQMessage *chatMessage = nil;
+        
+        //PhotoMediaItem?
+        if (message.image) {
+            NSLog(@"Image file found, sender = %@", displayName);
+            PFFile *filePicture = message.image;
+            NSData *imageData = [filePicture getData];
             
-            //PhotoMediaItem?
-            if (message.image) {
-                NSLog(@"Image file found, sender = %@", displayName);
-                PFFile *filePicture = message.image;
-                NSData *imageData = [filePicture getData];
-                
-                JSQPhotoMediaItem *mediaItem = [[JSQPhotoMediaItem alloc] initWithImage:[UIImage imageWithData:imageData]];
-                
-                if ([senderId isEqualToString:_curUser.objectId]) {
-                    mediaItem.appliesMediaViewMaskAsOutgoing = YES;
-                } else mediaItem.appliesMediaViewMaskAsOutgoing = NO;
-                
-                chatMessage = [[JSQMessage alloc] initWithSenderId:senderId senderDisplayName:displayName date:message.createdAt media:mediaItem];
-                
-            } else {
-                
-                chatMessage = [[JSQMessage alloc] initWithSenderId:senderId senderDisplayName:displayName date:message.createdAt text:message.text];
-            }
+            JSQPhotoMediaItem *mediaItem = [[JSQPhotoMediaItem alloc] initWithImage:[UIImage imageWithData:imageData]];
             
-            [self.messages addObject:chatMessage];
+            if ([senderId isEqualToString:_curUser.objectId]) {
+                mediaItem.appliesMediaViewMaskAsOutgoing = YES;
+            } else mediaItem.appliesMediaViewMaskAsOutgoing = NO;
+            
+            chatMessage = [[JSQMessage alloc] initWithSenderId:senderId senderDisplayName:displayName date:message.createdAt media:mediaItem];
+            
+        } else {
+            
+            chatMessage = [[JSQMessage alloc] initWithSenderId:senderId senderDisplayName:displayName date:message.createdAt text:message.text];
+        }
         
-        //[_matchedUsers addChatMessageToConveration:message];
-        
-            NSLog(@"Chat Message END Created at: %@", chatMessage.date);
-            //[self sortMessages:_messages byDate:@"createdAt"];
-            [self finishReceivingMessage];
-        
+        [self.messages addObject:chatMessage];
+    
+    //[_matchedUsers addChatMessageToConveration:message];
+    
+        //[self sortMessages:_messages byDate:@"createdAt"];
+        [self finishReceivingMessage];
+    
     }
 }
 
@@ -461,7 +466,7 @@
     NSString *requestId = [notification.userInfo objectForKey:@"requestId"];
     [RevealRequest fetchShareRequestWithId:requestId completion:^(RevealRequest *incomingRequest, BOOL fetched) {
         if (fetched) {
-            _receivedRequest = incomingRequest;
+            _incomingRequest = incomingRequest;
             [self replyAlertView];
         }
     }];
@@ -490,24 +495,24 @@
         NSLog(@"Request to %@", toRequestUser.nickname);
         
         if ([fromRequestUser isEqual:_curUser]) {
-            _receivedReply = request; //Equivalent to receivedReply
-            NSLog(@"Request from Me and to %@", _receivedReply.requestToUser.nickname);
+            _outgoingRequest = request; //Equivalent to outgoingRequest
+            NSLog(@"Request from Me and to %@", _outgoingRequest.requestToUser.nickname);
         } else if ([toRequestUser isEqual:_curUser]) {
-            _receivedRequest = request; //Equivalent to receivedRequest
-            NSLog(@"Request from Other User: %@", _receivedRequest.requestFromUser.nickname);
+            _incomingRequest = request; //Equivalent to incomingRequest
+            NSLog(@"Request from Other User: %@", _incomingRequest.requestFromUser.nickname);
         }
     }
     // * ---------------- END ---------------- //
     
-    //_receivedRequest = request objectAtIndex:0];
+    //_incomingRequest = request objectAtIndex:0];
     /*
      [requestQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
      NSLog(@"Objects count: %lu", (unsigned long)[objects count]);
      if (!error && [objects count] != 0) {
      NSLog(@"Objects retrieved");
-     _receivedRequest = (RevealRequest *)[objects objectAtIndex:0];
+     _incomingRequest = (RevealRequest *)[objects objectAtIndex:0];
      
-     NSLog(@"Share Request %@", _receivedRequest);
+     NSLog(@"Share Request %@", _incomingRequest);
      }
      }];*/
 }
@@ -520,7 +525,7 @@
     [RevealRequest fetchShareReplyWithId:requestId completion:^(RevealRequest *incomingReply, BOOL fetched) {
         
         if (fetched) {
-            _receivedReply = incomingReply;
+            _outgoingRequest = incomingReply;
             [self acknowledgeAlertView];
         }
     }];
@@ -537,7 +542,7 @@
     NSLog(@"Share reply count: %lu", (unsigned long)[reply count]);
     if ([reply count] != 0) {
         
-        _receivedReply = [reply objectAtIndex:0];
+        _outgoingRequest = [reply objectAtIndex:0];
         [self acknowledgeAlertView];
     }
     
@@ -546,9 +551,9 @@
      [replyQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
      
      if (!error && [objects count] != 0) {
-     _receivedReply = (RevealRequest *)[objects objectAtIndex:0];
+     _outgoingRequest = (RevealRequest *)[objects objectAtIndex:0];
      
-     NSLog(@"%@'s Share Reply found.", _receivedReply.requestFromUser.nickname);
+     NSLog(@"%@'s Share Reply found.", _outgoingRequest.requestFromUser.nickname);
      }
      }];*/
 }
@@ -607,7 +612,7 @@
         
         NSString *pushMessage = nil;
         
-        if ((!_receivedRequest && !_receivedReply) || !([_receivedRequest.requestReply isEqualToString:@"Yes"] && [_receivedRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || !([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
+        if ((!_incomingRequest && !_outgoingRequest) || !([_incomingRequest.requestReply isEqualToString:@"Yes"] && [_incomingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || !([_outgoingRequest.requestReply isEqualToString:@"Yes"] && [_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
             pushMessage = [NSString stringWithFormat:@"Your Match says: %@", message.text];
         } else pushMessage = [NSString stringWithFormat:@"%@ says: %@",pushUserto,message.text];
         
@@ -860,13 +865,13 @@
 - (void)didPressAccessoryButton:(UIButton *)sender
 {
     // TODO: Refactor to using Enums set by Protocol
-    if (!_receivedRequest && !_receivedReply) { // <-- Change to check on Matched User attribute
+    if (!_incomingRequest && !_outgoingRequest) { // <-- Change to check on Matched User attribute
         
         [self shareRequestActionSheet];
         
-    } else if ([_receivedRequest.requestReply isEqualToString:@"No"] && [_receivedRequest.requestFromUser isEqual:_toUserParse] && !_receivedReply) {
+    } else if ([_incomingRequest.requestReply isEqualToString:@"No"] && [_incomingRequest.requestFromUser isEqual:_toUserParse] && !_outgoingRequest) {
         [self shareRequestActionSheet];
-    } else if ([_receivedReply.requestReply isEqualToString:@"No"] && [_receivedReply.requestToUser isEqual:_toUserParse] && !_receivedRequest) {
+    } else if ([_outgoingRequest.requestReply isEqualToString:@"No"] && [_outgoingRequest.requestToUser isEqual:_toUserParse] && !_incomingRequest) {
         [self shareRequestActionSheet];
     } else {
     
@@ -912,7 +917,7 @@
 {
     NSLog(@"Start Replied To Share Request");
     /* _matchedUsers.usersRevealed = [NSNumber numberWithBool:YES];
-     } else if ([_receivedRequest.requestReply isEqualToString:@"No"]){
+     } else if ([_incomingRequest.requestReply isEqualToString:@"No"]){
      [_matchedUsers.usersRevealed isEqualToNumber:[NSNumber numberWithBool:NO]];
      }*/
     
@@ -935,8 +940,8 @@
     [push setData:data];
     [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
-            if ([_receivedRequest.requestReply isEqualToString:@"Yes"]) {
-                NSLog(@"Received Request Reply: %@", _receivedRequest.requestReply);
+            if ([_incomingRequest.requestReply isEqualToString:@"Yes"]) {
+                NSLog(@"Received Request Reply: %@", _incomingRequest.requestReply);
                 //[self reloadView];
                 [self.collectionView reloadData];
                 [self performSegueWithIdentifier:@"view_match" sender:nil];
@@ -1120,13 +1125,13 @@
         
         // No Received Request and No Received Reply
         /*
-         if (!_receivedRequest && !_receivedReply && buttonIndex == 0) {
+         if (!_incomingRequest && !_outgoingRequest && buttonIndex == 0) {
          [self sendShareRequest];
          }
          
          // Rejected Received Reply
          
-         if (!([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestFromUser isEqual:_toUserParse] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) && buttonIndex == 0) { // <-- Change to isRevealed check on PossibleMatchHelper
+         if (!([_outgoingRequest.requestReply isEqualToString:@"Yes"] && [_outgoingRequest.requestFromUser isEqual:_toUserParse] && [_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) && buttonIndex == 0) { // <-- Change to isRevealed check on PossibleMatchHelper
          // Test purposes
          mainUser.isRevealed = true;
          [self reloadView];// Closed comment here
@@ -1231,7 +1236,7 @@
 
 - (void)acknowledgeAlertView
 {
-    if ([_receivedReply.requestReply isEqualToString:@"Yes"]) {
+    if ([_outgoingRequest.requestReply isEqualToString:@"Yes"]) {
         
         // Request Accepted
         // Reveal AlertView
@@ -1248,7 +1253,7 @@
         [alert show];
         
         
-    } else if ([_receivedReply.requestReply isEqualToString:@"No"]) {
+    } else if ([_outgoingRequest.requestReply isEqualToString:@"No"]) {
         // Request Rejected
         NSString *alertTitle = [[NSString alloc] initWithFormat:@"Your Match Declined Sharing Profiles"];
         NSString *alertMessage = [[NSString alloc] initWithFormat:@"Right now your Match doesn't want to share, but maybe they'll request to share with you later."];
@@ -1335,33 +1340,33 @@
         
         if([title isEqualToString:@"Yes"]){
             NSLog(@"Clicked Yes");
-            [_receivedRequest acceptShareRequestWithCompletion:^(BOOL shared) {
+            [_incomingRequest acceptShareRequestWithCompletion:^(BOOL shared) {
                 if (shared) {
                     [self.collectionView reloadData];
                     [self performSegueWithIdentifier:@"view_match" sender:nil];
                 }
             }];
             // TODO: Erase after Refactor
-            _receivedRequest.requestReply = @"Yes";
+            _incomingRequest.requestReply = @"Yes";
             //_curUser.isRevealed = [NSNumber numberWithBool:YES]; <-- Update isRevealed in PossibleMatchHelper
             //[self reloadView];
             // Show "You've Revealed' animation
             
         } else if ([title isEqualToString:@"No"]) {
             NSLog(@"Clicked No");
-            [_receivedRequest rejectShareRequestWithCompletion:^(BOOL rejected) {
+            [_incomingRequest rejectShareRequestWithCompletion:^(BOOL rejected) {
                 if (rejected) {
                     // Do nothing?
                 }
             }];
             // TODO: Erase after Refactor
-            _receivedRequest.requestReply = @"No";
+            _incomingRequest.requestReply = @"No";
             //_curUser.isRevealed = [NSNumber numberWithBool:NO]; //<-- No reason to update the database
             // Show "No Reveal" animation
         }
         
         //NSLog(@"Reply: %@", request.requestReply);
-        [_receivedRequest saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        [_incomingRequest saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             
             if (succeeded) {
                 
@@ -1424,8 +1429,8 @@
         
         //if ([_matchedUsers.usersRevealed isEqualToNumber:[NSNumber numberWithBool:YES] ]) {
         
-        _receivedReply.requestClosed = [NSNumber numberWithBool:YES];
-        [_receivedReply saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        _outgoingRequest.requestClosed = [NSNumber numberWithBool:YES];
+        [_outgoingRequest saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             if (succeeded) {
                 
                 // Send UserRevealed notification
@@ -1441,8 +1446,8 @@
     } else if (alertView.tag == 4) { // Share Request fromUser = _curUser, toUser Replied NO
         
         // Request rejected
-        _receivedReply.requestClosed = [NSNumber numberWithBool:YES];
-        [_receivedReply saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        _outgoingRequest.requestClosed = [NSNumber numberWithBool:YES];
+        [_outgoingRequest saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             //[self reloadView];
             [self.collectionView reloadData];
             [self shareRequestRejected];

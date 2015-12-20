@@ -79,44 +79,44 @@
     //self.searchTextField.backgroundColor = RED_DEEP;
   
 }
-
-- (void)fetchShareRequestWith:(UserParseHelper *)user // Change to FetchShareReply
-{
-    NSLog(@"Fetched share request");
-    
-    // Fetch Reply based on RevealRequest.Id
-    
-    // Once Fetched send reply using RevealRequest method
-    
-    PFQuery *requestFromQuery = [RevealRequest query];
-    [requestFromQuery whereKey:@"requestFromUser" equalTo:[UserParseHelper currentUser]];
-    [requestFromQuery whereKey:@"requestToUser" equalTo:user];
-    
-    PFQuery *requestToQuery = [RevealRequest query];
-    [requestToQuery whereKey:@"requestToUser" equalTo:[UserParseHelper currentUser]];
-    [requestToQuery whereKey:@"requestFromUser" equalTo:user];
-    
-    PFQuery *orQuery = [PFQuery orQueryWithSubqueries:@[requestFromQuery, requestToQuery]];
-    [orQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-        NSArray *requests = [objects copy];
-        NSLog(@"Requests count: %lu", (unsigned long)[requests count]);
-        
-        for (RevealRequest *request in requests) {
-            UserParseHelper *fromRequestUser = (UserParseHelper *)[request.requestFromUser fetchIfNeeded];
-            
-            UserParseHelper *toRequestUser = (UserParseHelper *)[request.requestToUser fetchIfNeeded];
-            
-            if ([fromRequestUser isEqual:[UserParseHelper currentUser]]) {
-                _receivedReply = request; //Equivalent to receivedReply
-                NSLog(@"Request from Me and to %@", _receivedReply.requestToUser.nickname);
-            } else if ([toRequestUser isEqual:[UserParseHelper currentUser]]) {
-                _receivedRequest = request; //Equivalent to receivedRequest
-                NSLog(@"Request from Other User: %@", _receivedRequest.requestFromUser.nickname);
-            }
-        }
-    }];   
-    
-}
+// ------- DEPRECATED * USE REVEALREQUEST CLASS METHOD ----------
+//- (void)fetchShareRequestWith:(UserParseHelper *)user // Change to FetchShareReply
+//{
+//    NSLog(@"Fetched share request");
+//    
+//    // Fetch Reply based on RevealRequest.Id
+//    
+//    // Once Fetched send reply using RevealRequest method
+//    
+//    PFQuery *requestFromQuery = [RevealRequest query];
+//    [requestFromQuery whereKey:@"requestFromUser" equalTo:[UserParseHelper currentUser]];
+//    [requestFromQuery whereKey:@"requestToUser" equalTo:user];
+//    
+//    PFQuery *requestToQuery = [RevealRequest query];
+//    [requestToQuery whereKey:@"requestToUser" equalTo:[UserParseHelper currentUser]];
+//    [requestToQuery whereKey:@"requestFromUser" equalTo:user];
+//    
+//    PFQuery *orQuery = [PFQuery orQueryWithSubqueries:@[requestFromQuery, requestToQuery]];
+//    [orQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+//        NSArray *requests = [objects copy];
+//        NSLog(@"Requests count: %lu", (unsigned long)[requests count]);
+//        
+//        for (RevealRequest *request in requests) {
+//            UserParseHelper *fromRequestUser = (UserParseHelper *)[request.requestFromUser fetchIfNeeded];
+//            
+//            UserParseHelper *toRequestUser = (UserParseHelper *)[request.requestToUser fetchIfNeeded];
+//            
+//            if ([fromRequestUser isEqual:[UserParseHelper currentUser]]) {
+//                _receivedReply = request; //Equivalent to receivedReply
+//                NSLog(@"Request from Me and to %@", _receivedReply.requestToUser.nickname);
+//            } else if ([toRequestUser isEqual:[UserParseHelper currentUser]]) {
+//                _receivedRequest = request; //Equivalent to receivedRequest
+//                NSLog(@"Request from Other User: %@", _receivedRequest.requestFromUser.nickname);
+//            }
+//        }
+//    }];   
+//    
+//}
 
 - (void)setPossibleMatchesFromMessages:(NSArray *)matches for:(UserTableViewCell *)cell
 {
