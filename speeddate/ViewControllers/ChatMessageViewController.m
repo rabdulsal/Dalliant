@@ -48,7 +48,7 @@
                                       self.inputToolbar.contentView.leftBarButtonItem.frame.origin.x,
                                       self.inputToolbar.contentView.leftBarButtonItem.frame.origin.y,
                                       27, 27);
-    [self.inputToolbar.contentView.leftBarButtonItem setFrame:btnImageFrame];
+    //[self.inputToolbar.contentView.leftBarButtonItem setFrame:btnImageFrame];
     [self.inputToolbar.contentView.leftBarButtonItem setImage:btnImage forState:UIControlStateNormal];
 
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage jsq_defaultTypingIndicatorImage]
@@ -175,6 +175,17 @@
     NSLog(@"Check Incoming request");
     // Fetch incoming ShareRequest for User to Reply
     //[self fetchShareRequest]; TODO: Erase once refactored
+    
+    [RevealRequest getRequestsBetween:_curUser andMatch:_toUserParse completion:^(RevealRequest *outgoingRequest, RevealRequest *incomingRequest) {
+        if (outgoingRequest) {
+            _receivedReply = outgoingRequest;
+            self.inputToolbar.contentView.leftBarButtonItem.enabled = NO;
+        }
+        
+        if (incomingRequest) {
+            _receivedRequest = incomingRequest;
+        }
+    }];
     
     if (_receivedRequest && ![_receivedRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) {
         NSLog(@"Received Request Reply: %@", _receivedRequest.requestReply);

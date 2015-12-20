@@ -21,6 +21,10 @@
 @property (nonatomic) id <IdentityRevealDelegate> identityDelegate;
 
 // Methods
++ (void)getRequestsBetween:(UserParseHelper *)currentUser
+                  andMatch:(UserParseHelper *)matchUser
+                completion:(void(^)(RevealRequest *outgoingRequest,
+                                    RevealRequest *incomingRequest))callback;
 - (void)sendShareRequestFromUser:(UserParseHelper *)user toMatch:(UserParseHelper *)matchUser completion:(void(^)(BOOL success))callback;
 + (void)fetchShareRequestWithId:(NSString *)shareRequestId completion:(void(^)(RevealRequest *incomingRequest, BOOL fetched))callback;
 + (void)fetchShareReplyWithId:(NSString *)shareRequestId completion:(void(^)(RevealRequest *incomingReply, BOOL fetched))callback;

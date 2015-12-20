@@ -25,6 +25,43 @@
     return @"RevealRequest";
 }
 
++ (void)getRequestsBetween:(UserParseHelper *)currentUser
+                  andMatch:(UserParseHelper *)matchUser
+                completion:(void(^)(RevealRequest * _Nullable outgoingRequest,
+                                    RevealRequest * _Nullable incomingRequest))callback
+{
+    PFQuery *requestFromQuery = [[self class] query];
+    [requestFromQuery whereKey:@"requestFromUser" equalTo:currentUser];
+    [requestFromQuery whereKey:@"requestToUser" equalTo:matchUser];
+    
+    PFQuery *requestToQuery = [[self class] query];
+    [requestToQuery whereKey:@"requestToUser" equalTo:currentUser];
+    [requestToQuery whereKey:@"requestFromUser" equalTo:matchUser];
+    
+    PFQuery *orQuery = [PFQuery orQueryWithSubqueries:@[requestFromQuery, requestToQuery]];
+    [orQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+     
+        if (!error) {
+            if (objects.count > 0) {
+                for (RevealRequest *request in objects) {
+                    UserParseHelper *fromRequestUser = (UserParseHelper *)[request.requestFromUser fetchIfNeeded];
+                    UserParseHelper *toRequestUser = (UserParseHelper *)[request.requestToUser fetchIfNeeded];
+                    
+                    if ([fromRequestUser isEqual:currentUser]) {
+                        callback(request, nil);
+                    } else if ([toRequestUser isEqual:currentUser]) {
+                        callback(nil, request);
+                    }
+                }
+            } else {
+                callback(nil,nil);
+            }
+        } else {
+            // Handle error
+        }
+    }];
+}
+
 - (void)sendShareRequestFromUser:(UserParseHelper *)user toMatch:(UserParseHelper *)matchUser completion:(void(^)(BOOL success))callback
 {
     //Do stuff
@@ -64,7 +101,7 @@
 
 + (void)fetchShareRequestWithId:(NSString *)shareRequestId completion:(void(^)(RevealRequest *incomingRequest, BOOL fetched))callback
 {
-    PFQuery *request = [RevealRequest query];
+    PFQuery *request = [[self class] query];
     [request getObjectInBackgroundWithId:shareRequestId block:^(PFObject *object, NSError *error) {
         
         if (!error) {
@@ -75,7 +112,7 @@
 
 + (void)fetchShareReplyWithId:(NSString *)shareRequestId completion:(void(^)(RevealRequest *incomingReply, BOOL fetched))callback
 {
-    PFQuery *request = [RevealRequest query];
+    PFQuery *request = [[self class] query];
     [request getObjectInBackgroundWithId:shareRequestId block:^(PFObject *object, NSError *error) {
         
         if (!error) {
