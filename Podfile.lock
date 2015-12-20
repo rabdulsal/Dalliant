@@ -1,6 +1,6 @@
 PODS:
-  - ActionSheetPicker-3.0 (2.0.3)
-  - AMPopTip (0.9.12)
+  - ActionSheetPicker-3.0 (2.0.4)
+  - AMPopTip (0.10.1)
   - Bolts (1.5.0):
     - Bolts/AppLinks (= 1.5.0)
     - Bolts/Tasks (= 1.5.0)
@@ -28,12 +28,12 @@ PODS:
   - KIImagePager (2.1.1)
   - MDRadialProgress (1.3.2)
   - NMRangeSlider (1.2.1)
-  - Parse (1.9.1):
-    - Bolts/Tasks (>= 1.4.0)
-  - ParseFacebookUtilsV4 (1.9.0):
-    - Bolts/Tasks (>= 1.3.0)
-    - FBSDKCoreKit (~> 4.7)
-    - FBSDKLoginKit (~> 4.7)
+  - Parse (1.11.0):
+    - Bolts/Tasks (~> 1.5)
+  - ParseFacebookUtilsV4 (1.9.1):
+    - Bolts/Tasks (>= 1.5)
+    - FBSDKCoreKit (~> 4.8)
+    - FBSDKLoginKit (~> 4.8)
     - Parse (~> 1.9)
   - SCLAlertView-Objective-C (0.7.9)
   - TDBadgedCell (3.0)
@@ -57,8 +57,8 @@ DEPENDENCIES:
   - TDBadgedCell
 
 SPEC CHECKSUMS:
-  ActionSheetPicker-3.0: 11f2053085d3088dc1ef9d38a9f11c18b528dd9e
-  AMPopTip: 3c98a9b38148868366b57765064bd9565f653038
+  ActionSheetPicker-3.0: 860466cb4a66854e6acb590071ecee404b48f49d
+  AMPopTip: b0b5d009f3ed47b10f118438a18e0ab5cd03c40d
   Bolts: 722ab9a4f8b50fc4ed1b9998a5a7a2b3f16d80b4
   EAIntroView: df7dc18da73e1831d06878b9c0e13da78e6bb3ce
   FBSDKCoreKit: 66a935d17b6e00b6b64e604f2eb9b72c9ab7deb8
@@ -70,8 +70,8 @@ SPEC CHECKSUMS:
   KIImagePager: 3294254e5e3f76c62edc8bd89da4d0b5ed010b19
   MDRadialProgress: 1068574b9b4b870f64b605b07f734385bde5104d
   NMRangeSlider: 317ded652431eb90501c8421d9cddc3930d891e6
-  Parse: 54a965c8c19a6dde90284ab654dbcc77ef8c001b
-  ParseFacebookUtilsV4: aadebfaaaf4a45bf0a0992863bf48c8fc49189e3
+  Parse: 886af46a0a677402f6374bb97ac212e795f70afe
+  ParseFacebookUtilsV4: eab9b4ade12f0800b4d30f6b808bca55ce17a0e9
   SCLAlertView-Objective-C: e36ab12dc1ec4ff6f932888083b21d71a3a1ad23
   TDBadgedCell: 8e5314066fd8c2d8b6e3fc5dec824f5ded78bdc5
 
