@@ -51,6 +51,24 @@
     }];
 }
 
++ (void)getNewMessageBetween:(UserParseHelper *)currentUser
+                    andMatch:(UserParseHelper *)match
+                  completion:(void(^)(NSArray *messages, NSError *error))callback
+{
+    PFQuery *query = [MessageParse query];
+    [query whereKey:@"fromUserParse" equalTo:match];
+    [query whereKey:@"toUserParse" equalTo:currentUser];
+    [query whereKey:@"read" equalTo:[NSNumber numberWithBool:NO]]; // <-- Key to determine if Message is read - add to TDBadgeCell logic for
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            callback(objects,nil);
+        } else {
+            // Handle error
+        }
+    }];
+}
+
 - (NSString *)description
 {
     return [NSString stringWithFormat:@"from:%@\n to:%@\n text:%@\n date:%@\n",self.fromUserParse, self.toUserParse, self.text, self.createdAt];

@@ -19,5 +19,8 @@
 + (void)getMessagesBetween:(UserParseHelper *)currentUser
                   andMatch:(UserParseHelper *)match
                 completion:(void(^)(NSArray *conversation, NSError *error))callback;
++ (void)getNewMessageBetween:(UserParseHelper *)currentUser
+                    andMatch:(UserParseHelper *)match
+                  completion:(void(^)(NSArray *messages, NSError *error))callback;
 
 @end

@@ -313,15 +313,34 @@
 
 - (void)getNewMessage:(NSNotification *)note
 {
+//    --- DEPRECATED * USE CLASS METHOD ---
+//    PFQuery *query = [MessageParse query];
+//    [query whereKey:@"fromUserParse" equalTo:self.toUserParse];
+//    [query whereKey:@"toUserParse" equalTo:_curUser];
+//    [query whereKey:@"read" equalTo:[NSNumber numberWithBool:NO]]; // <-- Key to determine if Message is read - add to TDBadgeCell logic for
+//    
+//    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//        if ([objects count] > 0) {
+//            
+//            /**
+//             *  Show the typing indicator to be shown
+//             */
+//            self.showTypingIndicator = !self.showTypingIndicator;
+//            
+//            /**
+//             *  Scroll to actually view the indicator
+//             */
+//            [self scrollToBottomAnimated:YES];
+//
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                [self processMessages:objects];
+//            });
+//        }
+//        
+//    }];
     
-    PFQuery *query = [MessageParse query];
-    [query whereKey:@"fromUserParse" equalTo:self.toUserParse];
-    [query whereKey:@"toUserParse" equalTo:_curUser];
-    [query whereKey:@"read" equalTo:[NSNumber numberWithBool:NO]]; // <-- Key to determine if Message is read - add to TDBadgeCell logic for
-    
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if ([objects count] > 0) {
-            
+    [MessageParse getNewMessageBetween:_curUser andMatch:self.toUserParse completion:^(NSArray *messages, NSError *error) {
+        if (!error) {
             /**
              *  Show the typing indicator to be shown
              */
@@ -331,12 +350,11 @@
              *  Scroll to actually view the indicator
              */
             [self scrollToBottomAnimated:YES];
-
+            
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self processMessages:objects];
+                [self processMessages:messages];
             });
         }
-        
     }];
 }
 
