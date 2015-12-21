@@ -32,6 +32,11 @@ class ShareRelationship : PFObject, PFSubclassing, IdentityRevealDelegate {
         return "ShareRelationship"
     }
     
+    func fetchShareRelationshipBetween(currentUser: UserParseHelper, andMatch match: UserParseHelper) {
+        var query = ShareRelationship.query()
+        query?.whereKey("firstRequestedSharer", equalTo: currentUser)
+    }
+    
     //MARK: Protocol Methods
     func shareRequestSentFromUser(currentUser: UserParseHelper!, toMatch match: UserParseHelper!) {
         print("ShareRelationship protocol run!")
