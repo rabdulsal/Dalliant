@@ -60,6 +60,7 @@
 		42F5B28619B0C4CB0036938B /* Chat.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42F5B28519B0C4CB0036938B /* Chat.xcassets */; };
 		4C03549B1A7D7AD800658BE9 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C03549A1A7D7AD800658BE9 /* TutorialViewController.m */; };
 		4C475FE21A7C9C8D00CB9283 /* more.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C475FE11A7C9C8D00CB9283 /* more.png */; };
+		4C48680F1C27A21100ADFDC9 /* ShareRelationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C48680E1C27A21100ADFDC9 /* ShareRelationship.swift */; settings = {ASSET_TAGS = (); }; };
 		4C4D71DB1AE5D33E000FE139 /* UserRatingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4D71DA1AE5D33E000FE139 /* UserRatingViewController.m */; };
 		4C4D71DE1AE6F458000FE139 /* UserRating2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4D71DD1AE6F458000FE139 /* UserRating2ViewController.m */; };
 		4C4D71E11AEB44D8000FE139 /* BebasNeue.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4C4D71E01AEB44D8000FE139 /* BebasNeue.otf */; };
@@ -305,6 +306,8 @@
 		4C0354991A7D7AD800658BE9 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
 		4C03549A1A7D7AD800658BE9 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
 		4C475FE11A7C9C8D00CB9283 /* more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = more.png; sourceTree = "<group>"; };
+		4C48680D1C27A21000ADFDC9 /* speeddate-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "speeddate-Bridging-Header.h"; sourceTree = "<group>"; };
+		4C48680E1C27A21100ADFDC9 /* ShareRelationship.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareRelationship.swift; sourceTree = "<group>"; };
 		4C4D71D91AE5D33E000FE139 /* UserRatingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserRatingViewController.h; sourceTree = "<group>"; };
 		4C4D71DA1AE5D33E000FE139 /* UserRatingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserRatingViewController.m; sourceTree = "<group>"; };
 		4C4D71DC1AE6F458000FE139 /* UserRating2ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserRating2ViewController.h; sourceTree = "<group>"; };
@@ -864,6 +867,8 @@
 				C254F89F19F6C28F00473836 /* WhoSeeMeHelper.m */,
 				4C4F7B591AE429CC0014C737 /* UserRating.h */,
 				4C4F7B5A1AE429CC0014C737 /* UserRating.m */,
+				4C48680E1C27A21100ADFDC9 /* ShareRelationship.swift */,
+				4C48680D1C27A21000ADFDC9 /* speeddate-Bridging-Header.h */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1206,6 +1211,7 @@
 		42DBCC1F19AC20BB00CE6C93 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = Studio76;
 				TargetAttributes = {
@@ -1435,6 +1441,7 @@
 				0BA4ECB219AE1EE200302E92 /* SidebarTableViewController.m in Sources */,
 				C237018119D974390024F856 /* AFHTTPRequestOperation.m in Sources */,
 				C254F8A019F6C28F00473836 /* WhoSeeMeHelper.m in Sources */,
+				4C48680F1C27A21100ADFDC9 /* ShareRelationship.swift in Sources */,
 				C237018919D974390024F856 /* AFURLSessionManager.m in Sources */,
 				C2300F8919E190700044A4E5 /* TermsViewController.m in Sources */,
 				C2A90ED419F4408A00FC0D04 /* UserNearCollectionViewCell.m in Sources */,
@@ -1519,6 +1526,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				DEFINES_MODULE = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1535,6 +1543,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = speeddate;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -1558,6 +1567,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				DEFINES_MODULE = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1567,6 +1577,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_MODULE_NAME = speeddate;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1579,6 +1590,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1589,6 +1601,7 @@
 				GCC_PREFIX_HEADER = "speeddate/speeddate-Prefix.pch";
 				INFOPLIST_FILE = "speeddate/speeddate-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/speeddate",
@@ -1601,6 +1614,8 @@
 				);
 				PRODUCT_NAME = Dalliant;
 				PROVISIONING_PROFILE = "204b1525-e9e3-453d-ae72-ea5b54043bd0";
+				SWIFT_OBJC_BRIDGING_HEADER = "speeddate/speeddate-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1612,6 +1627,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1622,6 +1638,7 @@
 				GCC_PREFIX_HEADER = "speeddate/speeddate-Prefix.pch";
 				INFOPLIST_FILE = "speeddate/speeddate-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/speeddate",
@@ -1634,6 +1651,7 @@
 				);
 				PRODUCT_NAME = Dalliant;
 				PROVISIONING_PROFILE = "204b1525-e9e3-453d-ae72-ea5b54043bd0";
+				SWIFT_OBJC_BRIDGING_HEADER = "speeddate/speeddate-Bridging-Header.h";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

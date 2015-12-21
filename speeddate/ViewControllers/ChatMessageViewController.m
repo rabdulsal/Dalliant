@@ -7,6 +7,7 @@
 //
 
 #import "ChatMessageViewController.h"
+#import "speeddate-Swift.h"
 
 @interface ChatMessageViewController ()
 {
@@ -1105,8 +1106,18 @@
 
 - (void)sendShareRequest
 {
-    RevealRequest *revealRequest = [RevealRequest object];
+    //Check if prior ShareRelationship exists
     
+    //If so...
+    
+    //If not...create new ShareRelationship, send RevealRequest
+    ShareRelationship *shareRelationship = [ShareRelationship objectWithClassName:@"ShareRelationship"];
+    shareRelationship.firstRequestedSharer = _curUser;
+    shareRelationship.secondRequestedSharer = _toUserParse;
+    [shareRelationship saveInBackground];
+    
+    RevealRequest *revealRequest = [RevealRequest object];
+    revealRequest.identityDelegate = shareRelationship;
     [revealRequest sendShareRequestFromUser:_curUser toMatch:_toUserParse completion:^(BOOL success) {
         
         if (success) {

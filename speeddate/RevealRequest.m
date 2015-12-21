@@ -92,7 +92,7 @@
             [push setData:data];
             [push sendPushInBackground];
             
-            [identityDelegate shareRequestSent];
+            [identityDelegate shareRequestSentFromUser:user toMatch:matchUser];
             callback(succeeded);
         }
     }];
@@ -143,7 +143,7 @@
             [push setData:data];
             [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (succeeded) {
-                    [identityDelegate acceptedShareRequest];
+                    [identityDelegate shareRequestFromMatch:matchUser acceptedByUser:self.requestToUser];
                     callback(succeeded);
                 }
             }];
@@ -175,7 +175,7 @@
             [push setData:data];
             [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (succeeded) {
-                    //[identityDelegate revealRequestRejected];;
+                    [identityDelegate shareRequestFromMatch:matchUser rejectedByUser:self.requestToUser];
                     callback(succeeded);
                 }
             }];
