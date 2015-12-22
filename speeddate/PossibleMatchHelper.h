@@ -14,12 +14,6 @@
 #import "MessageParse.h"
 #import "IdentityRevealDelegate.h"
 
-typedef enum {UnRevealed, Requested, Sharing, Declined} ShareState; //
-#define RevealStateString(enum) [@[@"UnRevealed",@"Requested",@"Revealed",@"Declined"] objectAtIndex:enum] // NSString *state = RevealStateString(UnRevealed);
-
-typedef enum {RequestWaiting, ReplyWaiting} RequestState; // For MessageVC to determine indicator display
-#define RequestStateString(enum) [@[@"RequestWaiting",@"ReplyWaiting"] objectAtIndex:enum] // NSString *state = RequestStateString(RequestWaiting);
-
 @interface PossibleMatchHelper : PFObject <PFSubclassing, IdentityRevealDelegate>
 @property (nonatomic, strong) UserParseHelper* fromUser;
 @property (nonatomic, strong) UserParseHelper* toUser;
@@ -38,10 +32,6 @@ typedef enum {RequestWaiting, ReplyWaiting} RequestState; // For MessageVC to de
 @property NSString *fromUserRating;
 @property NSNumber *toUserRedeem;
 @property NSNumber *fromUserRedeem;
-@property ShareState *toUserShareState;
-@property RequestState *toUserRequestState;
-@property ShareState *fromUserShareState;
-@property RequestState *fromUserRequestState;
 @property NSString *rvStString;
 @property NSString *rqStString;
 

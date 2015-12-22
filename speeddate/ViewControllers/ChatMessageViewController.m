@@ -1111,9 +1111,11 @@
     //If so...
     
     //If not...create new ShareRelationship, send RevealRequest
-    ShareRelationship *shareRelationship = [ShareRelationship objectWithClassName:@"ShareRelationship"];
-    shareRelationship.firstRequestedSharer = _curUser;
-    shareRelationship.secondRequestedSharer = _toUserParse;
+    ShareRelationship *shareRelationship     = [ShareRelationship objectWithClassName:@"ShareRelationship"];
+    shareRelationship.firstRequestedSharer   = _curUser.nickname;
+    shareRelationship.firstSharerShareState  = ShareStateNotSharing;
+    shareRelationship.secondRequestedSharer  = _toUserParse.nickname;
+    shareRelationship.secondSharerShareState = ShareStateNotSharing;
     [shareRelationship saveInBackground];
     
     RevealRequest *revealRequest = [RevealRequest object];
