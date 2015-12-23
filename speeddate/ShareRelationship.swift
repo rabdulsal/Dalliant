@@ -18,7 +18,6 @@ import Foundation
     @NSManaged var secondRequestedSharer: String
     @NSManaged var firstSharerShareState: Int
     @NSManaged var secondSharerShareState: Int
-    var userShareRelation: ShareRelationship?
     
     let fSharer = "firstRequestedSharer", sSharer = "secondRequestedSharer"
 
@@ -27,6 +26,7 @@ import Foundation
     let kRequestAcceptedNotification = "requestAcceptedNotification"
     let kRequestRejectedNotification = "requestRejectedNotification"
 
+    //MARK: Parse Initializers
     override class func initialize() {
         struct Static {
             static var onceToken : dispatch_once_t = 0;
@@ -39,8 +39,9 @@ import Foundation
     static func parseClassName() -> String {
         return "ShareRelationship"
     }
-    
-    @objc class func fetchShareRelationshipBetween(currentUser: UserParseHelper, andMatch match: UserParseHelper, completion:((sharerelation: ShareRelationship, error: NSError?) -> Void)) {
+
+    //MARK: Class Methods
+    @objc class func fetchShareRelationshipBetween(currentUser: UserParseHelper, andMatch match: UserParseHelper, completion:((sharerelation: ShareRelationship?, error: NSError?) -> Void)) {
         if let query1 = ShareRelationship.query(), query2 = ShareRelationship.query() {
             query1.whereKey("firstRequestedSharer", equalTo: currentUser.nickname)
             query1.whereKey("secondRequestedSharer", equalTo: match.nickname)
@@ -51,35 +52,40 @@ import Foundation
             orQuery.findObjectsInBackgroundWithBlock({ (objects, error) -> Void in
                 if (error == nil) {
                     let relation = objects?.first as! ShareRelationship
-                    completion(sharerelation: relation,error: nil)
-                    
+                    if (objects?.count > 0) {
+                        completion(sharerelation: relation,error: nil)
+                    } else {
+                        completion(sharerelation: nil, error: nil)
+                    }
                 } else {
-                    // No relationships
+                    // TODO: Handle error
                 }   
             })
         }
     }
     
-    func currentUserIsFirstSharer(currentUser: UserParseHelper) -> Bool {
-        return currentUser.nickname == userShareRelation!.firstRequestedSharer
-    }
-    
-    func userShareState(currentUser: UserParseHelper) -> Int {
-        if (currentUser.nickname == userShareRelation!.firstRequestedSharer) {
-            return userShareRelation!.firstSharerShareState
+    //MARK: Instance Methods
+//    Method may not be needed
+//    func userIsFirstSharer(currentUser: UserParseHelper, inShareRelationship shareRelation: ShareRelationship) -> Bool {
+//        return currentUser.nickname == shareRelation.firstRequestedSharer
+//    }
+    // Get User ShareState
+    func userShareState(currentUser: UserParseHelper, forShareRelation shareRelation: ShareRelationship) -> Int {
+        if (currentUser.nickname == shareRelation.firstRequestedSharer) {
+            return shareRelation.firstSharerShareState
         } else {
-            return userShareRelation!.secondSharerShareState
+            return shareRelation.secondSharerShareState
         }
     }
-    
-    func setCurrentUser(currentUser: UserParseHelper, shareState: ShareState, completion:((success: Bool, error: NSError?) -> Void)) {
-        if self.currentUserIsFirstSharer(currentUser) {
-            userShareRelation?.firstSharerShareState = shareState.rawValue
+    // Set User ShareState
+    func setCurrentUser(currentUser: UserParseHelper, shareState: ShareState, forRelation shareRelationship: ShareRelationship, completion:((success: Bool, error: NSError?) -> Void)) {
+        if currentUser.nickname == shareRelationship.firstRequestedSharer {
+            shareRelationship.firstSharerShareState = shareState.rawValue
         } else {
-            userShareRelation?.secondSharerShareState = shareState.rawValue
+            shareRelationship.secondSharerShareState = shareState.rawValue
         }
         
-        userShareRelation?.saveInBackgroundWithBlock({ (succeeded, error) -> Void in
+        shareRelationship.saveInBackgroundWithBlock({ (succeeded, error) -> Void in
             if succeeded {
                //Set off Notification to update MessagesVC and ChatMessageVC UI
                 completion(success: succeeded, error: nil)
@@ -102,8 +108,7 @@ import Foundation
         */
         ShareRelationship.fetchShareRelationshipBetween(currentUser, andMatch: match) { (sharerelation, error) -> Void in
             if error == nil {
-                self.userShareRelation = sharerelation
-                self.setCurrentUser(currentUser, shareState: .Requested, completion: { (success, error) -> Void in
+                self.setCurrentUser(currentUser, shareState: .Requested, forRelation: sharerelation!, completion: { (success, error) -> Void in
                     if success {
                         NSNotificationCenter.defaultCenter().postNotificationName(self.kRequestSentNotification, object: nil, userInfo:["article":self])
                     } else {

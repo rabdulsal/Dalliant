@@ -145,6 +145,12 @@
     
 //    self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
 //    matchAvatar = nil;
+    /*
+     * Fetch ShareRelationship
+     *
+     *
+     * [self fetchShareRelationship];
+     */
     [self checkIncomingShareRequestsAndReplies];
     
     // If Matches have both Shared Profile, show Prize Indicator
@@ -446,8 +452,8 @@
 
 -(void)fetchShareRelationship
 {
-    [[ShareRelationship new] fetchShareRelationshipBetween:_curUser andMatch:_toUserParse completion:^(ShareRelationship * _Nonnull relationship, NSError * _Nullable error) {
-        if (!error) {
+    [ShareRelationship fetchShareRelationshipBetween:_curUser andMatch:_toUserParse completion:^(ShareRelationship * _Nullable relationship, NSError * _Nullable error) {
+        if (relationship) {
             self.userShareRelation = relationship;
         } else {
             // TODO: Handle error
