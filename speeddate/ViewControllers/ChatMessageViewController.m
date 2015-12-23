@@ -29,6 +29,7 @@
 @property (weak, nonatomic) IBOutlet UIView *unMatchedBlocker;
 @property UIVisualEffectView *visualEffectView;
 @property (weak, nonatomic) IBOutlet UIButton *rewardButton;
+@property (nonatomic) ShareRelationship *userShareRelation;
 - (IBAction)popFromChat:(id)sender;
 - (IBAction)rewardButtonPressed:(id)sender;
 
@@ -440,6 +441,17 @@
     [possMatch1 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         //for (PossibleMatchHelper *match in objects) {
         _matchedUsers = [objects objectAtIndex:0];
+    }];
+}
+
+-(void)fetchShareRelationship
+{
+    [[ShareRelationship new] fetchShareRelationshipBetween:_curUser andMatch:_toUserParse completion:^(ShareRelationship * _Nonnull relationship, NSError * _Nullable error) {
+        if (!error) {
+            self.userShareRelation = relationship;
+        } else {
+            // TODO: Handle error
+        }
     }];
 }
 
@@ -884,6 +896,7 @@
 - (void)didPressAccessoryButton:(UIButton *)sender
 {
     // TODO: Refactor to using Enums set by Protocol
+    // if currentUser's shareState == NotSharing
     if (!_incomingRequest && !_outgoingRequest) { // <-- Change to check on Matched User attribute
         
         [self shareRequestActionSheet];
@@ -894,7 +907,7 @@
         [self shareRequestActionSheet];
     } else {
     
-        // If Share Request Sent & Accepted, allow camera
+        // If currentUser's shareState == Sharing, allow camera
         UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
         imagePicker.delegate = self;
         imagePicker.allowsEditing = NO;

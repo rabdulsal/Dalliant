@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ShareRelationship : PFObject, PFSubclassing, IdentityRevealDelegate {
+@objc class ShareRelationship : PFObject, PFSubclassing, IdentityRevealDelegate {
     
     @objc enum ShareState: Int {
         case NotSharing, Requested, Sharing, Rejected
@@ -40,20 +40,18 @@ class ShareRelationship : PFObject, PFSubclassing, IdentityRevealDelegate {
         return "ShareRelationship"
     }
     
-    func fetchShareRelationshipBetween(currentUser: UserParseHelper, andMatch match: UserParseHelper, completion:((sharerelation: ShareRelationship, error: NSError?) -> Void)? = nil) {
+    @objc class func fetchShareRelationshipBetween(currentUser: UserParseHelper, andMatch match: UserParseHelper, completion:((sharerelation: ShareRelationship, error: NSError?) -> Void)) {
         if let query1 = ShareRelationship.query(), query2 = ShareRelationship.query() {
-            query1.whereKey(fSharer, equalTo: currentUser.nickname)
-            query1.whereKey(sSharer, equalTo: match.nickname)
-            query2.whereKey(fSharer, equalTo: match.nickname)
-            query2.whereKey(sSharer, equalTo: currentUser.nickname)
+            query1.whereKey("firstRequestedSharer", equalTo: currentUser.nickname)
+            query1.whereKey("secondRequestedSharer", equalTo: match.nickname)
+            query2.whereKey("firstRequestedSharer", equalTo: match.nickname)
+            query2.whereKey("secondRequestedSharer", equalTo: currentUser.nickname)
             
             let orQuery = PFQuery.orQueryWithSubqueries([query1,query2])
             orQuery.findObjectsInBackgroundWithBlock({ (objects, error) -> Void in
                 if (error == nil) {
                     let relation = objects?.first as! ShareRelationship
-                    if let completion = completion {
-                        completion(sharerelation: relation,error: nil)
-                    }
+                    completion(sharerelation: relation,error: nil)
                     
                 } else {
                     // No relationships
@@ -64,6 +62,14 @@ class ShareRelationship : PFObject, PFSubclassing, IdentityRevealDelegate {
     
     func currentUserIsFirstSharer(currentUser: UserParseHelper) -> Bool {
         return currentUser.nickname == userShareRelation!.firstRequestedSharer
+    }
+    
+    func userShareState(currentUser: UserParseHelper) -> Int {
+        if (currentUser.nickname == userShareRelation!.firstRequestedSharer) {
+            return userShareRelation!.firstSharerShareState
+        } else {
+            return userShareRelation!.secondSharerShareState
+        }
     }
     
     func setCurrentUser(currentUser: UserParseHelper, shareState: ShareState, completion:((success: Bool, error: NSError?) -> Void)) {
@@ -94,7 +100,7 @@ class ShareRelationship : PFObject, PFSubclassing, IdentityRevealDelegate {
          * if cUser is 1stSh : relation.1stSh -> RQT
          *
         */
-        self.fetchShareRelationshipBetween(currentUser, andMatch: match) { (sharerelation, error) -> Void in
+        ShareRelationship.fetchShareRelationshipBetween(currentUser, andMatch: match) { (sharerelation, error) -> Void in
             if error == nil {
                 self.userShareRelation = sharerelation
                 self.setCurrentUser(currentUser, shareState: .Requested, completion: { (success, error) -> Void in
