@@ -10,9 +10,12 @@
 
 @protocol IdentityRevealDelegate <NSObject>
 
-- (void)shareRequestSentFromUser:(UserParseHelper *)currentUser toMatch:(UserParseHelper *)match; //Outgoing
-- (void)shareRequestFromMatch:(UserParseHelper *)match acceptedByUser:(UserParseHelper *)currentUser; //Incoming
-- (void)shareRequestFromMatch:(UserParseHelper *)match rejectedByUser:(UserParseHelper *)currentUser; //Incoming
-- (void)shareRequestFromUser:(UserParseHelper *)currentUser acceptedByMatch:(UserParseHelper *)match; //Outgoing
+//Outgoing Actions
+- (void)shareRequestSentFromUser:(UserParseHelper *)currentUser toMatch:(UserParseHelper *)match; // Requested
+- (void)shareRequestFromMatch:(UserParseHelper *)match acceptedByUser:(UserParseHelper *)currentUser; // Sharing
+
+//Incoming notifications
+- (void)currentUserShareRequest:(UserParseHelper *)currentUser rejectedByMatch:(UserParseHelper *)match; // Sharing
+- (void)currentUserShareRequest:(UserParseHelper *)currentUser acceptedByMatch:(UserParseHelper *)match; // Rejected
 
 @end

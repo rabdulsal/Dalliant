@@ -60,7 +60,7 @@
 		42F5B28619B0C4CB0036938B /* Chat.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42F5B28519B0C4CB0036938B /* Chat.xcassets */; };
 		4C03549B1A7D7AD800658BE9 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C03549A1A7D7AD800658BE9 /* TutorialViewController.m */; };
 		4C475FE21A7C9C8D00CB9283 /* more.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C475FE11A7C9C8D00CB9283 /* more.png */; };
-		4C48680F1C27A21100ADFDC9 /* ShareRelationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C48680E1C27A21100ADFDC9 /* ShareRelationship.swift */; settings = {ASSET_TAGS = (); }; };
+		4C48680F1C27A21100ADFDC9 /* ShareRelationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C48680E1C27A21100ADFDC9 /* ShareRelationship.swift */; };
 		4C4D71DB1AE5D33E000FE139 /* UserRatingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4D71DA1AE5D33E000FE139 /* UserRatingViewController.m */; };
 		4C4D71DE1AE6F458000FE139 /* UserRating2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4D71DD1AE6F458000FE139 /* UserRating2ViewController.m */; };
 		4C4D71E11AEB44D8000FE139 /* BebasNeue.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4C4D71E01AEB44D8000FE139 /* BebasNeue.otf */; };
@@ -552,6 +552,7 @@
 		C2CC355619F5825E00AC86D1 /* UIImageView+UIActivityIndicatorForSDWebImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+UIActivityIndicatorForSDWebImage.h"; sourceTree = "<group>"; };
 		C2CC355719F5825E00AC86D1 /* UIImageView+UIActivityIndicatorForSDWebImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+UIActivityIndicatorForSDWebImage.m"; sourceTree = "<group>"; };
 		C2CC355919F58ACD00AC86D1 /* mask_profile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mask_profile.png; sourceTree = "<group>"; };
+		DC63BB8A1C2B9518006959F5 /* ShareRequestDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShareRequestDelegate.h; sourceTree = "<group>"; };
 		E59D335F9BB03E3FF54B1F17 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -913,6 +914,7 @@
 			isa = PBXGroup;
 			children = (
 				4CD702371BB3A71900463090 /* IdentityRevealDelegate.h */,
+				DC63BB8A1C2B9518006959F5 /* ShareRequestDelegate.h */,
 			);
 			name = Protocols;
 			sourceTree = "<group>";

@@ -9,13 +9,14 @@
 #import "RevealRequest.h"
 #import <Parse/PFObject+Subclass.h>
 
-@implementation RevealRequest 
+@implementation RevealRequest
 
 @dynamic requestFromUser;
 @dynamic requestToUser;
 @dynamic requestReply;
 @dynamic requestClosed;
 @synthesize identityDelegate;
+@synthesize shareDelegate;
 
 + (void)load {
     [self registerSubclass];
@@ -25,6 +26,7 @@
     return @"RevealRequest";
 }
 
+#pragma mark - Class Fetch Methods
 + (void)getRequestsBetween:(UserParseHelper *)currentUser
                   andMatch:(UserParseHelper *)matchUser
                 completion:(void(^)(RevealRequest * _Nullable outgoingRequest,
@@ -62,6 +64,55 @@
     }];
 }
 
+
++ (void)fetchShareRequestWithId:(NSString *)shareRequestId completion:(void(^)(RevealRequest *incomingRequest, BOOL fetched))callback
+{
+    PFQuery *request = [[self class] query];
+    [request getObjectInBackgroundWithId:shareRequestId block:^(PFObject *object, NSError *error) {
+        
+        if (!error) {
+            callback((RevealRequest *)object, (BOOL)true);
+        }
+    }];
+}
+
++ (void)fetchShareReplyWithId:(NSString *)shareRequestId completion:(void(^)(RevealRequest *incomingReply, BOOL fetched))callback
+{
+    PFQuery *request = [[self class] query];
+    [request getObjectInBackgroundWithId:shareRequestId block:^(PFObject *object, NSError *error) {
+        
+        if (!error) {
+            callback((RevealRequest *)object, true);
+        }
+    }];
+}
+
+#pragma mark - Request Update Methods
+
+- (void)notifyCurrentUser:(UserParseHelper *)currentUser ofReplyToShareRequestFromMatch:(UserParseHelper *)match
+{
+    if (self.requestReply == [NSNumber numberWithBool:NO] && self.requestClosed == nil) {
+        
+        [identityDelegate currentUserShareRequest:currentUser rejectedByMatch:match];
+        
+    } else if (self.requestReply == [NSNumber numberWithBool:YES] && self.requestClosed == nil) {
+        [identityDelegate currentUserShareRequest:currentUser acceptedByMatch:match];
+    
+    }
+    
+}
+
+- (void)notifyCurrentUser:(UserParseHelper *)currentUser ofIncomingShareRequestFromMatch:(UserParseHelper *)match
+{
+    if (self.requestReply == nil && self.requestClosed == nil) {
+        // Match Sent ShareRequest
+        [shareDelegate shareRequestReceived];
+    }
+    
+}
+
+#pragma mark - Instance Action Methods
+
 - (void)sendShareRequestFromUser:(UserParseHelper *)user toMatch:(UserParseHelper *)matchUser completion:(void(^)(BOOL success))callback
 {
     //Do stuff
@@ -73,7 +124,7 @@
     */
     self.requestFromUser = user;
     self.requestToUser   = matchUser;
-    self.requestReply    = @"";
+    //self.requestReply    = @"";
     
     [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
@@ -99,32 +150,11 @@
     
 }
 
-+ (void)fetchShareRequestWithId:(NSString *)shareRequestId completion:(void(^)(RevealRequest *incomingRequest, BOOL fetched))callback
-{
-    PFQuery *request = [[self class] query];
-    [request getObjectInBackgroundWithId:shareRequestId block:^(PFObject *object, NSError *error) {
-        
-        if (!error) {
-            callback((RevealRequest *)object, (BOOL)true);
-        }
-    }];
-}
-
-+ (void)fetchShareReplyWithId:(NSString *)shareRequestId completion:(void(^)(RevealRequest *incomingReply, BOOL fetched))callback
-{
-    PFQuery *request = [[self class] query];
-    [request getObjectInBackgroundWithId:shareRequestId block:^(PFObject *object, NSError *error) {
-        
-        if (!error) {
-            callback((RevealRequest *)object, true);
-        }
-    }];
-}
 
 - (void)acceptShareRequestWithCompletion:(void (^)(BOOL shared))callback
 {
     //Do stuff
-    self.requestReply = @"Yes";
+    self.requestReply = [NSNumber numberWithBool:YES];
     [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         
         if (succeeded) {
@@ -156,7 +186,7 @@
 - (void)rejectShareRequestWithCompletion:(void (^)(BOOL))callback
 {
     // Do stuff
-    self.requestReply = @"No";
+    self.requestReply = [NSNumber numberWithBool:NO];
     [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         
         if (succeeded) {
@@ -175,7 +205,10 @@
             [push setData:data];
             [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (succeeded) {
-                    [identityDelegate shareRequestFromMatch:matchUser rejectedByUser:self.requestToUser];
+                    /*
+                     * Nothing happens to current User when Rejecting
+                     *[identityDelegate shareRequestFromMatch:matchUser rejectedByUser:self.requestToUser];
+                     */
                     callback(succeeded);
                 }
             }];

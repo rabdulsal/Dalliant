@@ -70,11 +70,11 @@ import Foundation
 //        return currentUser.nickname == shareRelation.firstRequestedSharer
 //    }
     // Get User ShareState
-    func userShareState(currentUser: UserParseHelper, forShareRelation shareRelation: ShareRelationship) -> Int {
-        if (currentUser.nickname == shareRelation.firstRequestedSharer) {
-            return shareRelation.firstSharerShareState
+    func getCurrentUserShareState(currentUser: UserParseHelper) -> Int {
+        if (currentUser.nickname == self.firstRequestedSharer) {
+            return self.firstSharerShareState
         } else {
-            return shareRelation.secondSharerShareState
+            return self.secondSharerShareState
         }
     }
     // Set User ShareState
@@ -110,7 +110,8 @@ import Foundation
             if error == nil {
                 self.setCurrentUser(currentUser, shareState: .Requested, forRelation: sharerelation!, completion: { (success, error) -> Void in
                     if success {
-                        NSNotificationCenter.defaultCenter().postNotificationName(self.kRequestSentNotification, object: nil, userInfo:["article":self])
+                        //NSNotificationCenter.defaultCenter().postNotificationName(self.kRequestSentNotification, object: nil, userInfo:["article":self])
+                        NSNotificationCenter.defaultCenter().postNotificationName(self.kRequestSentNotification, object: nil)
                     } else {
                         // Handle error
                     }
@@ -122,21 +123,53 @@ import Foundation
         
     }
     
-    func shareRequestFromUser(currentUser: UserParseHelper!, acceptedByMatch match: UserParseHelper!) {
-        //Fetch ShareRelationship from Parse based on first/secondRequestSharer - currentUser
-        //Set first/secondSharerState
-        //Set off Notification to update MessagesVC and ChatMessageVC UI
-    }
-    
+    //Outgoing Actions
     func shareRequestFromMatch(match: UserParseHelper!, acceptedByUser currentUser: UserParseHelper!) {
-        //Fetch ShareRelationship from Parse based on first/secondRequestSharer
-        //Set first/secondSharerState
-        //Set off Notification to update MessagesVC and ChatMessageVC UI
+        /*
+        *   Fetch ShareRelation, set ShareState
+        */
+        ShareRelationship.fetchShareRelationshipBetween(currentUser, andMatch: match) { (sharerelation, error) -> Void in
+            if error == nil {
+                self.setCurrentUser(currentUser, shareState: .Sharing, forRelation: sharerelation!, completion: { (success, error) -> Void in
+                    if success {
+                        //NSNotificationCenter.defaultCenter().postNotificationName(self.kRequestAcceptedNotification, object: nil, userInfo: ["article":self])
+                        NSNotificationCenter.defaultCenter().postNotificationName(self.kRequestAcceptedNotification, object: nil)
+                    }
+                })
+            }
+        }
     }
     
-    func shareRequestFromMatch(match: UserParseHelper!, rejectedByUser currentUser: UserParseHelper!) {
-        //Fetch ShareRelationship from Parse based on first/secondRequestSharer
-        //Set first/secondSharerState
-        //Set off Notification to update MessagesVC and ChatMessageVC UI
+    //Incoming notifications
+    func currentUserShareRequest(currentUser: UserParseHelper!, acceptedByMatch match: UserParseHelper!) {
+        /*
+        * Fetch ShareRelation, set ShareState, send Notification
+        */
+        ShareRelationship.fetchShareRelationshipBetween(currentUser, andMatch: match) { (sharerelation, error) -> Void in
+            if error == nil {
+                self.setCurrentUser(currentUser, shareState: .Rejected, forRelation: sharerelation!, completion: { (success, error) -> Void in
+                    if success {
+                        //NSNotificationCenter.defaultCenter().postNotificationName(self.kRequestRejectedNotification, object: nil, userInfo: ["article":self])
+                        NSNotificationCenter.defaultCenter().postNotificationName(self.kRequestRejectedNotification, object: nil)
+                    }
+                })
+            }
+        }
+    }
+    
+    func currentUserShareRequest(currentUser: UserParseHelper!, rejectedByMatch match: UserParseHelper!) {
+        /*
+        * Fetch ShareRelation, set ShareState, send Notification
+        */
+        ShareRelationship.fetchShareRelationshipBetween(currentUser, andMatch: match) { (sharerelation, error) -> Void in
+            if error == nil {
+                self.setCurrentUser(currentUser, shareState: .Sharing, forRelation: sharerelation!, completion: { (success, error) -> Void in
+                    if success {
+                        //NSNotificationCenter.defaultCenter().postNotificationName(self.kRequestAcceptedNotification, object: nil, userInfo: ["article":self])
+                        NSNotificationCenter.defaultCenter().postNotificationName(self.kRequestAcceptedNotification, object: nil)
+                    }
+                })
+            }
+        }
     }
 }
