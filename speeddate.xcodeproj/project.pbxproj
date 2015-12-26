@@ -212,6 +212,9 @@
 		C2CC355819F5825E00AC86D1 /* UIImageView+UIActivityIndicatorForSDWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CC355719F5825E00AC86D1 /* UIImageView+UIActivityIndicatorForSDWebImage.m */; };
 		C2CC355A19F58ACD00AC86D1 /* mask_profile.png in Resources */ = {isa = PBXBuildFile; fileRef = C2CC355919F58ACD00AC86D1 /* mask_profile.png */; };
 		DC63BB961C2E5727006959F5 /* DalliantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC63BB951C2E5727006959F5 /* DalliantTests.swift */; };
+		DC63BBA01C2E5A8C006959F5 /* RevealRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBDB1961A427A11006A9F1F /* RevealRequest.m */; };
+		DC63BBA11C2E5C03006959F5 /* ShareRelationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C48680E1C27A21100ADFDC9 /* ShareRelationship.swift */; };
+		DC63BBA31C2E5DE9006959F5 /* speeddateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 42DBCC5519AC20BB00CE6C93 /* speeddateTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1553,7 +1556,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC63BBA31C2E5DE9006959F5 /* speeddateTests.m in Sources */,
+				DC63BBA01C2E5A8C006959F5 /* RevealRequest.m in Sources */,
 				DC63BB961C2E5727006959F5 /* DalliantTests.swift in Sources */,
+				DC63BBA11C2E5C03006959F5 /* ShareRelationship.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1751,6 +1757,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dalliant.DalliantTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "speeddate/speeddate-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Dalliant.app/Dalliant";
 			};
@@ -1771,6 +1778,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dalliant.DalliantTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "speeddate/speeddate-Bridging-Header.h";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Dalliant.app/Dalliant";
 			};
 			name = Release;

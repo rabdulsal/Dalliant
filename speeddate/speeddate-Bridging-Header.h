@@ -6,3 +6,4 @@
 #import <Parse/Parse.h>
 #import "UserParseHelper.h"
 #import "IdentityRevealDelegate.h"
+#import "RevealRequest.h"

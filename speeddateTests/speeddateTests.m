@@ -7,6 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "RevealRequest.h"
 
 @interface speeddateTests : XCTestCase
 
@@ -29,6 +30,11 @@
 - (void)testExample
 {
     XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
+}
+
+- (void)testRevealRequest
+{
+    
 }
 
 @end
