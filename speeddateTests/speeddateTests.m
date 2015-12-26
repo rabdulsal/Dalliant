@@ -26,7 +26,7 @@
 {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
-    [self getUser];
+    [self getUsers];
 }
 
 - (void)tearDown
@@ -40,18 +40,73 @@
     XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
 }
 
-- (void)testRevealRequest
+- (void)testSendRevealRequest
 {
-    NSLog(@"Test USer: %@", testUser.nickname);
-    NSLog(@"Test Match: %@", testMatch.nickname);
+    XCTAssertNotNil(testMatch, @"Test Match should not be nil");
+    XCTAssertNotNil(testUser, @"Test User should not be nil");
+    NSString *description = @"Test User sent RevealRequst to Test Match";
+    XCTestExpectation *expection = [self expectationWithDescription:description];
+    
+    RevealRequest *request = [RevealRequest object];
+    [request sendShareRequestFromUser:testUser toMatch:testMatch completion:^(BOOL success) {
+        //
+        if (success) {
+            // Fetch RevealRequest
+            
+            [RevealRequest fetchShareRequestWithId:request.objectId completion:^(RevealRequest *incomingRequest, BOOL fetched) {
+                if (incomingRequest) {
+                    
+                    XCTAssertNotNil(incomingRequest.objectId, @"Incoming Request should not be nil");
+                }
+                
+                [expection fulfill];
+            }];
+            
+        }
+        
+    }];
+    
+    [self waitForExpectationsWithTimeout:10 handler:nil];
+}
+
+- (void)testAcceptRevealRequest
+{
+    NSString *description = @"Test User accepted RevealRequest from Test Match";
+    XCTestExpectation *expection = [self expectationWithDescription:description];
+    
+    // Fetch RevealRequest
+    [RevealRequest getRequestsBetween:testUser andMatch:testMatch completion:^(RevealRequest *outgoingRequest, RevealRequest *incomingRequest) {
+        if (outgoingRequest) {
+            
+            [outgoingRequest acceptShareRequestWithCompletion:^(BOOL shared) {
+                if (shared) {
+                    XCTAssertTrue(outgoingRequest.requestReply == [NSNumber numberWithBool:YES], @"Reply to request should be 'YES'");
+                }
+            }];
+            [expection fulfill];
+        }
+        
+        if (incomingRequest) {
+            
+            [incomingRequest acceptShareRequestWithCompletion:^(BOOL shared) {
+                if (shared) {
+                    XCTAssertTrue(incomingRequest.requestReply == [NSNumber numberWithBool:YES], @"Reply to request should be 'YES'");
+                }
+            }];
+            [expection fulfill];
+        } 
+    }];
+    
+    [self waitForExpectationsWithTimeout:10 handler:nil];
+    
 }
 
 #pragma mark - Helper Methods
 
-- (void)getUser
+- (void)getUsers
 {
-    NSString *userID = @"ovDKmA2OwE";
-    NSString *matchID = @"OqGlWzfsYe";
+    NSString *userID = @"ovDKmA2OwE"; //Madison
+    NSString *matchID = @"OqGlWzfsYe"; //Rashad
     NSString *description = @"Get Test User and Test Match";
     XCTestExpectation *expectation = [self expectationWithDescription:description];
     
@@ -72,6 +127,18 @@
     }];
     
     [self waitForExpectationsWithTimeout:10 handler:nil];
+}
+
+- (void)verifyExistingMatches
+{
+    
+}
+
+- (void)fetchRequest
+{
+    [RevealRequest getRequestsBetween:testUser andMatch:testMatch completion:^(RevealRequest *outgoingRequest, RevealRequest *incomingRequest) {
+        //
+    }];
 }
 
 @end
