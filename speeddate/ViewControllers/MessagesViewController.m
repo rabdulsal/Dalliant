@@ -40,8 +40,8 @@
 @property int progressTotal;
 @property int progressCounter;
 @property NSArray *matchedUsers;
-@property RevealRequest *receivedRequest;
-@property RevealRequest *receivedReply;
+@property RevealRequest *incomingRequest;
+@property RevealRequest *outgoingRequest;
 @property UIVisualEffectView *visualEffectView;
 
 @end
@@ -107,11 +107,11 @@
 //            UserParseHelper *toRequestUser = (UserParseHelper *)[request.requestToUser fetchIfNeeded];
 //            
 //            if ([fromRequestUser isEqual:[UserParseHelper currentUser]]) {
-//                _receivedReply = request; //Equivalent to receivedReply
-//                NSLog(@"Request from Me and to %@", _receivedReply.requestToUser.nickname);
+//                _outgoingRequest = request; //Equivalent to outgoingRequest
+//                NSLog(@"Request from Me and to %@", _outgoingRequest.requestToUser.nickname);
 //            } else if ([toRequestUser isEqual:[UserParseHelper currentUser]]) {
-//                _receivedRequest = request; //Equivalent to receivedRequest
-//                NSLog(@"Request from Other User: %@", _receivedRequest.requestFromUser.nickname);
+//                _incomingRequest = request; //Equivalent to incomingRequest
+//                NSLog(@"Request from Other User: %@", _incomingRequest.requestFromUser.nickname);
 //            }
 //        }
 //    }];   
@@ -272,16 +272,16 @@
                 cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
             }
             
-            if ((_receivedReply && _receivedRequest) || _receivedRequest) {
-                if ([_receivedRequest.requestReply isEqualToString:@"Yes"] && [_receivedRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_receivedRequest.requestFromUser isEqual:user]) {
+            if ((_outgoingRequest && _incomingRequest) || _incomingRequest) {
+                if (_incomingRequest.requestReply == [NSNumber numberWithBool:YES] && [_incomingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_incomingRequest.requestFromUser isEqual:user]) {
                     cell.nameTextLabel.text = user.nickname;
                     [_visualEffectView removeFromSuperview];
                     NSLog(@"%@ revealed!", user.nickname);
                 }
             }
             
-            if ((_receivedRequest && _receivedReply) || _receivedReply) {
-                if ([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_receivedReply.requestToUser isEqual:user]) {
+            if ((_incomingRequest && _outgoingRequest) || _outgoingRequest) {
+                if (_outgoingRequest.requestReply == [NSNumber numberWithBool:YES] && [_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_outgoingRequest.requestToUser isEqual:user]) {
                     cell.nameTextLabel.text = user.nickname;
                     [_visualEffectView removeFromSuperview];
                     NSLog(@"%@ revealed!", user.nickname);
@@ -347,17 +347,17 @@
     [cell setSelectedBackgroundView:bgColorView];
     
     // Indicator Label logic
-    if ([_receivedRequest.requestFromUser isEqual:user]) {
+    if ([_incomingRequest.requestFromUser isEqual:user]) {
         
-        if (![_receivedRequest.requestReply isEqualToString:@"No"] && ![_receivedRequest.requestReply isEqualToString:@"Yes"]) {
+        if (_incomingRequest.requestReply != [NSNumber numberWithBool:YES] && _incomingRequest.requestReply != [NSNumber numberWithBool:YES]) {
             cell.indicatorLabel.hidden = NO;
             cell.indicatorLabel.backgroundColor = [UIColor purpleColor];
         }
     }
     
-    if ([_receivedReply.requestToUser isEqual:user]) {
+    if ([_outgoingRequest.requestToUser isEqual:user]) {
         
-        if (([_receivedReply.requestReply isEqualToString:@"Yes"] && ![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || ([_receivedReply.requestReply isEqualToString:@"No"] && ![_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
+        if ((_outgoingRequest.requestReply == [NSNumber numberWithBool:YES] && ![_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || (_outgoingRequest.requestReply == [NSNumber numberWithBool:NO] && ![_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
             cell.indicatorLabel.hidden = NO;
             cell.indicatorLabel.backgroundColor = RED_LIGHT;
         }

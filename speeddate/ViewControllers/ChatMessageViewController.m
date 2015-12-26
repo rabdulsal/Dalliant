@@ -223,7 +223,7 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
             /*
              * Notified Accept or Reject Reply from Match
              */
-            [_outgoingRequest notifyOfReplyToShareRequest];
+            [_outgoingRequest notifyCurrentUser:_curUser ofReplyToShareRequestFromMatch:_toUserParse];
         }
         
         if (incomingRequest) {

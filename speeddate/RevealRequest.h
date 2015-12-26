@@ -9,7 +9,6 @@
 #import <Parse/Parse.h>
 #import "UserParseHelper.h"
 #import "IdentityRevealDelegate.h"
-#import "ShareRequestDelegate.h"
 
 @interface RevealRequest : PFObject <PFSubclassing>
 
@@ -20,7 +19,6 @@
 @property (nonatomic) NSNumber *requestReply;
 @property (nonatomic) NSNumber *requestClosed;
 @property (nonatomic) id <IdentityRevealDelegate> identityDelegate;
-@property (nonatomic) id <ShareRequestDelegate> shareDelegate;
 
 // Methods
 + (void)getRequestsBetween:(UserParseHelper *)currentUser
@@ -32,7 +30,6 @@
 + (void)fetchShareReplyWithId:(NSString *)shareRequestId completion:(void(^)(RevealRequest *incomingReply, BOOL fetched))callback;
 - (void)acceptShareRequestWithCompletion:(void(^)(BOOL shared))callback;
 - (void)rejectShareRequestWithCompletion:(void(^)(BOOL rejected))callback;
-- (void)notifyOfReplyToShareRequest;
-- (void)notifyOfIncomingShareRequest;
+- (void)notifyCurrentUser:(UserParseHelper *)currentUser ofReplyToShareRequestFromMatch:(UserParseHelper *)match;
 
 @end

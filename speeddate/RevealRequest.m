@@ -16,7 +16,6 @@
 @dynamic requestReply;
 @dynamic requestClosed;
 @synthesize identityDelegate;
-@synthesize shareDelegate;
 
 + (void)load {
     [self registerSubclass];
@@ -98,15 +97,6 @@
     } else if (self.requestReply == [NSNumber numberWithBool:YES] && self.requestClosed == nil) {
         [identityDelegate currentUserShareRequest:currentUser acceptedByMatch:match];
     
-    }
-    
-}
-
-- (void)notifyCurrentUser:(UserParseHelper *)currentUser ofIncomingShareRequestFromMatch:(UserParseHelper *)match
-{
-    if (self.requestReply == nil && self.requestClosed == nil) {
-        // Match Sent ShareRequest
-        [shareDelegate shareRequestReceived];
     }
     
 }

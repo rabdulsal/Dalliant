@@ -41,8 +41,8 @@
 @property ILTranslucentView *translucentView;
 @property (weak, nonatomic) IBOutlet UIButton *reportUser;
 @property (weak, nonatomic) IBOutlet UIButton *matchOptionsLabel;
-@property RevealRequest *receivedRequest;
-@property RevealRequest *receivedReply;
+@property RevealRequest *incomingRequest;
+@property RevealRequest *outgoingRequest;
 
 - (IBAction)matchOptionsButton:(id)sender;
 
@@ -91,16 +91,16 @@
     _imagePager.pageControl.pageIndicatorTintColor = [UIColor blackColor];
     _imagePager.pageControl.center = CGPointMake(CGRectGetWidth(_imagePager.frame) / 2, CGRectGetHeight(_imagePager.frame) - 42);
     
-    if (_receivedRequest) {
-        if ([_receivedRequest.requestReply isEqualToString:@"Yes"] && [_receivedRequest.requestFromUser isEqual:_matchUser]) {
+    if (_incomingRequest) {
+        if (_incomingRequest.requestReply == [NSNumber numberWithBool:YES] && [_incomingRequest.requestFromUser isEqual:_matchUser]) {
             NSLog(@"Before TranslucentView removed");
             [_translucentView removeFromSuperview];
             NSLog(@"After TranslucentView removed");
         }
     }
     
-    if (_receivedReply) {
-        if ([_receivedReply.requestReply isEqualToString:@"Yes"] && [_receivedReply.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_receivedReply.requestToUser isEqual:_matchUser]) {
+    if (_outgoingRequest) {
+        if (_outgoingRequest.requestReply == [NSNumber numberWithBool:YES] && [_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_outgoingRequest.requestToUser isEqual:_matchUser]) {
             [_translucentView removeFromSuperview];
         }
     }
@@ -174,10 +174,10 @@
         UserParseHelper *toRequestUser = (UserParseHelper *)[request.requestToUser fetchIfNeeded];
         
         if ([fromRequestUser isEqual:[UserParseHelper currentUser]]) {
-            _receivedReply = request; //Equivalent to receivedReply
+            _outgoingRequest = request; //Equivalent to outgoingRequest
             NSLog(@"Request from Me");
         } else if ([toRequestUser isEqual:[UserParseHelper currentUser]]) {
-            _receivedRequest = request; //Equivalent to receivedRequest
+            _incomingRequest = request; //Equivalent to incomingRequest
             NSLog(@"Request from Other User");
         }
     }
