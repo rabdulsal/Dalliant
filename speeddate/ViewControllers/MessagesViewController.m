@@ -25,10 +25,13 @@
 #import "MatchViewController.h"
 #import "RevealRequest.h"
 #import "ChatMessageViewController.h"
+#import "speeddate-Swift.h"
 
 #define SECONDS_DAY 24*60*60
 
-@interface MessagesViewController () <UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface MessagesViewController () <UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate> {
+    int userShareState;
+}
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UITextField *searchTextField;
@@ -219,7 +222,7 @@
                 }
             }
 //            }// End Chat erase conditional
-            NSLog(@"Message Created at: %@", message.createdAt);
+            //NSLog(@"Message Created at: %@", message.createdAt);
         }
         
         [self.tableView reloadData];
@@ -271,27 +274,34 @@
                 NSString *matchGender = @"Female";
                 cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
             }
-            
-            if ((_outgoingRequest && _incomingRequest) || _incomingRequest) {
-                if (_incomingRequest.requestReply == [NSNumber numberWithBool:YES] && [_incomingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_incomingRequest.requestFromUser isEqual:user]) {
-                    cell.nameTextLabel.text = user.nickname;
-                    [_visualEffectView removeFromSuperview];
-                    NSLog(@"%@ revealed!", user.nickname);
+//          DEPRECATED USE SHARESTATE
+//            if ((_outgoingRequest && _incomingRequest) || _incomingRequest) {
+//                if (_incomingRequest.requestReply == [NSNumber numberWithBool:YES] && [_incomingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_incomingRequest.requestFromUser isEqual:user]) {
+//                    cell.nameTextLabel.text = user.nickname;
+//                    [_visualEffectView removeFromSuperview];
+//                    NSLog(@"%@ revealed!", user.nickname);
+//                }
+//            }
+//            
+//            if ((_incomingRequest && _outgoingRequest) || _outgoingRequest) {
+//                if (_outgoingRequest.requestReply == [NSNumber numberWithBool:YES] && [_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_outgoingRequest.requestToUser isEqual:user]) {
+//                    cell.nameTextLabel.text = user.nickname;
+//                    [_visualEffectView removeFromSuperview];
+//                    NSLog(@"%@ revealed!", user.nickname);
+//                }
+//            }
+            [ShareRelationship fetchShareRelationshipBetween:[UserParseHelper currentUser] andMatch:user completion:^(ShareRelationship * _Nullable relationship, NSError * _Nullable error) {
+                if (relationship) {
+                    userShareState = [relationship getCurrentUserShareState:[UserParseHelper currentUser]];
+                    if (userShareState == ShareStateSharing) {
+                        cell.nameTextLabel.text = user.nickname;
+                        [_visualEffectView removeFromSuperview];
+                    }
+                } else if (error) {
+                    // Handle Error
                 }
-            }
-            
-            if ((_incomingRequest && _outgoingRequest) || _outgoingRequest) {
-                if (_outgoingRequest.requestReply == [NSNumber numberWithBool:YES] && [_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_outgoingRequest.requestToUser isEqual:user]) {
-                    cell.nameTextLabel.text = user.nickname;
-                    [_visualEffectView removeFromSuperview];
-                    NSLog(@"%@ revealed!", user.nickname);
-                }
-            }
-            
+            }];
         }];
-            
-        
-        
     }];
     
     //[self setPossibleMatchesFromMessages:_matchedUsers for:cell];
@@ -347,21 +357,23 @@
     [cell setSelectedBackgroundView:bgColorView];
     
     // Indicator Label logic
-    if ([_incomingRequest.requestFromUser isEqual:user]) {
-        
-        if (_incomingRequest.requestReply != [NSNumber numberWithBool:YES] && _incomingRequest.requestReply != [NSNumber numberWithBool:YES]) {
-            cell.indicatorLabel.hidden = NO;
-            cell.indicatorLabel.backgroundColor = [UIColor purpleColor];
+    [RevealRequest getRequestsBetween:[UserParseHelper currentUser] andMatch:user completion:^(RevealRequest *outgoingRequest, RevealRequest *incomingRequest) {
+        if (incomingRequest && [incomingRequest.requestFromUser isEqual:user]) {
+            _incomingRequest = incomingRequest;
+            if (_incomingRequest.requestReply == nil /*[NSNumber numberWithBool:YES] && _incomingRequest.requestReply != [NSNumber numberWithBool:YES]*/) {
+                cell.indicatorLabel.hidden = NO;
+                cell.indicatorLabel.backgroundColor = [UIColor purpleColor];
+            }
         }
-    }
-    
-    if ([_outgoingRequest.requestToUser isEqual:user]) {
         
-        if ((_outgoingRequest.requestReply == [NSNumber numberWithBool:YES] && ![_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || (_outgoingRequest.requestReply == [NSNumber numberWithBool:NO] && ![_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
-            cell.indicatorLabel.hidden = NO;
-            cell.indicatorLabel.backgroundColor = RED_LIGHT;
+        if (outgoingRequest && [outgoingRequest.requestToUser isEqual:user]) {
+            _outgoingRequest = outgoingRequest;
+            if ((_outgoingRequest.requestReply != nil && _outgoingRequest.requestClosed != [NSNumber numberWithBool:YES]) /*|| (_outgoingRequest.requestReply == [NSNumber numberWithBool:NO] && ![_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])*/) {
+                cell.indicatorLabel.hidden = NO;
+                cell.indicatorLabel.backgroundColor = RED_LIGHT;
+            }
         }
-    }
+    }];
     
     return cell;
 }

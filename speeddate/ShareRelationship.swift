@@ -51,8 +51,8 @@ import Foundation
             let orQuery = PFQuery.orQueryWithSubqueries([query1,query2])
             orQuery.findObjectsInBackgroundWithBlock({ (objects, error) -> Void in
                 if (error == nil) {
-                    let relation = objects?.first as! ShareRelationship
                     if (objects?.count > 0) {
+                        let relation = objects?.first as! ShareRelationship
                         completion(sharerelation: relation,error: nil)
                     } else {
                         completion(sharerelation: nil, error: nil)

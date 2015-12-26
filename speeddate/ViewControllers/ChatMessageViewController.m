@@ -48,7 +48,7 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
     
     // Do any additional setup after loading the view.
    
-    [self configureNavigationTitleView:@"Match" forShareState:userShareState];
+    [self configureNavigationTitleView:@"Match"];
     
     UIImage *btnImage = [UIImage imageNamed:@"reveal"];
     CGRect btnImageFrame = CGRectMake(
@@ -120,7 +120,7 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
     
 }
 
-- (void)configureNavigationTitleView: (NSString *)title forShareState: (int)shareState {
+- (void)configureNavigationTitleView: (NSString *)title {
     // Configure ChatUI NOTE: must set custom image dimensions via CGRectMake
     
     _titleImage.layer.borderWidth = 2;
@@ -132,7 +132,7 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
         _titleImage.image = [UIImage imageWithData:data];
     }];
     
-    if (shareState == ShareStateSharing) {
+    if (userShareState == ShareStateSharing) {
         [_visualEffectView removeFromSuperview];
         _titleText.text = _toUserParse.nickname;
     } else {
@@ -164,7 +164,10 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
      */
     [self fetchShareRelationshipWithBlock:^(BOOL success, NSError * _Nullable error) {
         if (success) {
-            [self checkIncomingShareRequestsAndReplies];
+            if (userShareState == ShareStateRequested) {
+                self.inputToolbar.contentView.leftBarButtonItem.enabled = NO;
+                [self checkIncomingShareRequestsAndReplies];
+            }
         } else {
             // TODO: Handle error
         }
@@ -218,7 +221,6 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
     [RevealRequest getRequestsBetween:_curUser andMatch:_toUserParse completion:^(RevealRequest *outgoingRequest, RevealRequest *incomingRequest) {
         if (outgoingRequest) {
             _outgoingRequest = outgoingRequest;
-            self.inputToolbar.contentView.leftBarButtonItem.enabled = NO;
             
             /*
              * Notified Accept or Reject Reply from Match
@@ -1051,7 +1053,7 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
 - (void)usersRevealed
 {
     CGFloat chatCam = self.inputToolbar.contentView.frame.origin.y + 5;
-    [self configureNavigationTitleView:_toUserParse.nickname forShareState:userShareState];
+    [self configureNavigationTitleView:_toUserParse.nickname];
     self.inputToolbar.contentView.leftBarButtonItem.enabled = YES;
     //[_blurImageView removeFromSuperview];
     UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(self.inputToolbar.contentView.leftBarButtonItem.frame.origin.x, chatCam, 30, 23)];
