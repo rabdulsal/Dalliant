@@ -8,8 +8,15 @@
 
 #import <XCTest/XCTest.h>
 #import "RevealRequest.h"
+#import "UserParseHelper.h"
+#import <Parse/Parse.h>
 
-@interface speeddateTests : XCTestCase
+@interface speeddateTests : XCTestCase {
+    
+    UserParseHelper *testUser;
+    UserParseHelper *testMatch;
+}
+
 
 @end
 
@@ -19,6 +26,7 @@
 {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
+    [self getUser];
 }
 
 - (void)tearDown
@@ -34,7 +42,36 @@
 
 - (void)testRevealRequest
 {
+    NSLog(@"Test USer: %@", testUser.nickname);
+    NSLog(@"Test Match: %@", testMatch.nickname);
+}
+
+#pragma mark - Helper Methods
+
+- (void)getUser
+{
+    NSString *userID = @"ovDKmA2OwE";
+    NSString *matchID = @"OqGlWzfsYe";
+    NSString *description = @"Get Test User and Test Match";
+    XCTestExpectation *expectation = [self expectationWithDescription:description];
     
+    PFQuery *userQuery = [UserParseHelper query];
+    PFQuery *matchQuery = [UserParseHelper query];
+    [userQuery getObjectInBackgroundWithId:userID block:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        if (!error) {
+            testUser = (UserParseHelper *)object;
+        
+            [matchQuery getObjectInBackgroundWithId:matchID block:^(PFObject * _Nullable object, NSError * _Nullable error) {
+                if (!error) {
+                    testMatch = (UserParseHelper *)object;
+                    
+                    [expectation fulfill];
+                }
+            }];
+        }
+    }];
+    
+    [self waitForExpectationsWithTimeout:10 handler:nil];
 }
 
 @end

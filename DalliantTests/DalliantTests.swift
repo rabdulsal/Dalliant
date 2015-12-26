@@ -34,7 +34,7 @@ class DalliantTests: XCTestCase {
     
     func testRevealRequest() {
         let request = ShareRelationship()
-        Reveal
+        
     }
     
 }

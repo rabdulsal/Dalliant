@@ -1744,6 +1744,7 @@
 		};
 		DC63BB9B1C2E5727006959F5 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6B67DF6132EF34349DB97266 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_WARN_UNREACHABLE_CODE = YES;
