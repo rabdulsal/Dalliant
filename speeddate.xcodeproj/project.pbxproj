@@ -211,7 +211,18 @@
 		C2A90ED719F49CE900FC0D04 /* UserProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A90ED619F49CE900FC0D04 /* UserProfileViewController.m */; };
 		C2CC355819F5825E00AC86D1 /* UIImageView+UIActivityIndicatorForSDWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CC355719F5825E00AC86D1 /* UIImageView+UIActivityIndicatorForSDWebImage.m */; };
 		C2CC355A19F58ACD00AC86D1 /* mask_profile.png in Resources */ = {isa = PBXBuildFile; fileRef = C2CC355919F58ACD00AC86D1 /* mask_profile.png */; };
+		DC63BB961C2E5727006959F5 /* DalliantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC63BB951C2E5727006959F5 /* DalliantTests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DC63BB981C2E5727006959F5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 42DBCC1F19AC20BB00CE6C93 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 42DBCC2619AC20BB00CE6C93;
+			remoteInfo = speeddate;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		0B0F422719B62BE00056F04D /* PossibleMatchHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PossibleMatchHelper.h; sourceTree = "<group>"; };
@@ -553,6 +564,9 @@
 		C2CC355719F5825E00AC86D1 /* UIImageView+UIActivityIndicatorForSDWebImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+UIActivityIndicatorForSDWebImage.m"; sourceTree = "<group>"; };
 		C2CC355919F58ACD00AC86D1 /* mask_profile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mask_profile.png; sourceTree = "<group>"; };
 		DC63BB8A1C2B9518006959F5 /* ShareRequestDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShareRequestDelegate.h; sourceTree = "<group>"; };
+		DC63BB931C2E5727006959F5 /* DalliantTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DalliantTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DC63BB951C2E5727006959F5 /* DalliantTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DalliantTests.swift; sourceTree = "<group>"; };
+		DC63BB971C2E5727006959F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E59D335F9BB03E3FF54B1F17 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -584,6 +598,13 @@
 				42DBCC2F19AC20BB00CE6C93 /* UIKit.framework in Frameworks */,
 				42DBCC2B19AC20BB00CE6C93 /* Foundation.framework in Frameworks */,
 				5B9E6F9D7597F0DA99569136 /* libPods.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DC63BB901C2E5727006959F5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -628,6 +649,7 @@
 				4CDD63D01A30A20E00AE9679 /* PodFile */,
 				42DBCC3019AC20BB00CE6C93 /* speeddate */,
 				42DBCC4F19AC20BB00CE6C93 /* speeddateTests */,
+				DC63BB941C2E5727006959F5 /* DalliantTests */,
 				42DBCC2919AC20BB00CE6C93 /* Frameworks */,
 				42DBCC2819AC20BB00CE6C93 /* Products */,
 				D181382D74292167CFE94555 /* Pods */,
@@ -638,6 +660,7 @@
 			isa = PBXGroup;
 			children = (
 				42DBCC2719AC20BB00CE6C93 /* Dalliant.app */,
+				DC63BB931C2E5727006959F5 /* DalliantTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1184,6 +1207,15 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		DC63BB941C2E5727006959F5 /* DalliantTests */ = {
+			isa = PBXGroup;
+			children = (
+				DC63BB951C2E5727006959F5 /* DalliantTests.swift */,
+				DC63BB971C2E5727006959F5 /* Info.plist */,
+			);
+			path = DalliantTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1207,18 +1239,40 @@
 			productReference = 42DBCC2719AC20BB00CE6C93 /* Dalliant.app */;
 			productType = "com.apple.product-type.application";
 		};
+		DC63BB921C2E5727006959F5 /* DalliantTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DC63BB9A1C2E5727006959F5 /* Build configuration list for PBXNativeTarget "DalliantTests" */;
+			buildPhases = (
+				DC63BB8F1C2E5727006959F5 /* Sources */,
+				DC63BB901C2E5727006959F5 /* Frameworks */,
+				DC63BB911C2E5727006959F5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DC63BB991C2E5727006959F5 /* PBXTargetDependency */,
+			);
+			name = DalliantTests;
+			productName = DalliantTests;
+			productReference = DC63BB931C2E5727006959F5 /* DalliantTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		42DBCC1F19AC20BB00CE6C93 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0700;
+				LastSwiftUpdateCheck = 0720;
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = Studio76;
 				TargetAttributes = {
 					42DBCC2619AC20BB00CE6C93 = {
 						DevelopmentTeam = 42B272KRRJ;
+					};
+					DC63BB921C2E5727006959F5 = {
+						CreatedOnToolsVersion = 7.2;
+						TestTargetID = 42DBCC2619AC20BB00CE6C93;
 					};
 				};
 			};
@@ -1236,6 +1290,7 @@
 			projectRoot = "";
 			targets = (
 				42DBCC2619AC20BB00CE6C93 /* speeddate */,
+				DC63BB921C2E5727006959F5 /* DalliantTests */,
 			);
 		};
 /* End PBXProject section */
@@ -1322,6 +1377,13 @@
 				C25E747C19EBFF6800779C23 /* heart_menu@2x.png in Resources */,
 				4C9452AC1ABE63BD0053A951 /* Match_Meetup.png in Resources */,
 				C2300F8419E18E030044A4E5 /* normBtn.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DC63BB911C2E5727006959F5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1487,7 +1549,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DC63BB8F1C2E5727006959F5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DC63BB961C2E5727006959F5 /* DalliantTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DC63BB991C2E5727006959F5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 42DBCC2619AC20BB00CE6C93 /* speeddate */;
+			targetProxy = DC63BB981C2E5727006959F5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		42DBCC3319AC20BB00CE6C93 /* InfoPlist.strings */ = {
@@ -1658,6 +1736,45 @@
 			};
 			name = Release;
 		};
+		DC63BB9B1C2E5727006959F5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = DalliantTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dalliant.DalliantTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Dalliant.app/Dalliant";
+			};
+			name = Debug;
+		};
+		DC63BB9C1C2E5727006959F5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = DalliantTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dalliant.DalliantTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Dalliant.app/Dalliant";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1678,6 +1795,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		DC63BB9A1C2E5727006959F5 /* Build configuration list for PBXNativeTarget "DalliantTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DC63BB9B1C2E5727006959F5 /* Debug */,
+				DC63BB9C1C2E5727006959F5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
