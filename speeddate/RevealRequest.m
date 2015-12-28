@@ -90,11 +90,11 @@
 
 - (void)notifyCurrentUser:(UserParseHelper *)currentUser ofReplyToShareRequestFromMatch:(UserParseHelper *)match
 {
-    if (self.requestReply == [NSNumber numberWithBool:NO] && self.requestClosed == nil) {
+    if ([self.requestReply isEqualToNumber:[NSNumber numberWithBool:NO]] && self.requestClosed == nil) {
         
         [identityDelegate currentUserShareRequest:currentUser rejectedByMatch:match];
         
-    } else if (self.requestReply == [NSNumber numberWithBool:YES] && self.requestClosed == nil) {
+    } else if ([self.requestReply isEqualToNumber:[NSNumber numberWithBool:YES]] && self.requestClosed == nil) {
         [identityDelegate currentUserShareRequest:currentUser acceptedByMatch:match];
     
     }

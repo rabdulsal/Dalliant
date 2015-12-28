@@ -104,8 +104,8 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(blockUnMatched) name:@"chatEnded" object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(shareRequestRejected) name:kRequestRejectedNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(usersRevealed) name:kRequestAcceptedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acknowledgeAlertView) name:kRequestRejectedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acknowledgeAlertView) name:kRequestAcceptedNotification object:nil];
 }
 
 - (void)customizeVC
@@ -162,16 +162,7 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
      * Fetch ShareRelationship
      *
      */
-    [self fetchShareRelationshipWithBlock:^(BOOL success, NSError * _Nullable error) {
-        if (success) {
-            if (userShareState == ShareStateRequested) {
-                self.inputToolbar.contentView.leftBarButtonItem.enabled = NO;
-                [self checkIncomingShareRequestsAndReplies];
-            }
-        } else {
-            // TODO: Handle error
-        }
-    }];
+    [self fetchShareRelationship];
     
     // If Matches have both Shared Profile, show Prize Indicator
 }
@@ -198,21 +189,22 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
     
 }
 
--(void)fetchShareRelationshipWithBlock:(void(^)(BOOL success, NSError * _Nullable error))callback
+-(void)fetchShareRelationship
 {
     [ShareRelationship fetchShareRelationshipBetween:_curUser andMatch:_toUserParse completion:^(ShareRelationship * _Nullable relationship, NSError * _Nullable error) {
         if (relationship) {
             userShareState = [relationship getCurrentUserShareState:_curUser];
-            callback(true,nil);
-        } else if (!relationship) {
-            callback(true,nil);
+            if (userShareState == ShareStateRequested) {
+                self.inputToolbar.contentView.leftBarButtonItem.enabled = NO;
+                [self checkRequestsForShareRelationship:relationship];
+            }
         } else {
             // TODO: Handle error
         }
     }];
 }
 
-- (void)checkIncomingShareRequestsAndReplies
+- (void)checkRequestsForShareRelationship:(ShareRelationship *)relationship
 {
     NSLog(@"Check Incoming request");
     // Fetch incoming ShareRequest for User to Reply
@@ -221,7 +213,7 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
     [RevealRequest getRequestsBetween:_curUser andMatch:_toUserParse completion:^(RevealRequest *outgoingRequest, RevealRequest *incomingRequest) {
         if (outgoingRequest) {
             _outgoingRequest = outgoingRequest;
-            
+            _outgoingRequest.identityDelegate = relationship;
             /*
              * Notified Accept or Reject Reply from Match
              */
@@ -1019,7 +1011,7 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
     [push setData:data];
     [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
-            if (_incomingRequest.requestReply == [NSNumber numberWithBool:YES]) {
+            if ([_incomingRequest.requestReply isEqualToNumber:[NSNumber numberWithBool:YES]]) {
                 NSLog(@"Received Request Reply: %@", _incomingRequest.requestReply);
                 //[self reloadView];
                 [self.collectionView reloadData];
@@ -1327,7 +1319,7 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
 
 - (void)acknowledgeAlertView
 {
-    if (_outgoingRequest.requestReply == [NSNumber numberWithBool:YES]) {
+    if ([_outgoingRequest.requestReply isEqualToNumber:[NSNumber numberWithBool:YES]]) {
         
         // Request Accepted
         // Reveal AlertView
@@ -1344,7 +1336,7 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
         [alert show];
         
         
-    } else if (_outgoingRequest.requestReply == [NSNumber numberWithBool:NO]) {
+    } else if ([_outgoingRequest.requestReply isEqualToNumber:[NSNumber numberWithBool:NO]]) {
         // Request Rejected
         NSString *alertTitle = @"Your Match Declined Sharing Profiles";
         NSString *alertMessage = [[NSString alloc] initWithFormat:@"Right now your Match doesn't want to share, but maybe they'll request to share with you later."];

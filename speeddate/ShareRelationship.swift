@@ -147,10 +147,10 @@ import Foundation
         */
         ShareRelationship.fetchShareRelationshipBetween(currentUser, andMatch: match) { (sharerelation, error) -> Void in
             if error == nil {
-                self.setCurrentUser(currentUser, shareState: .Rejected, forRelation: sharerelation!, completion: { (success, error) -> Void in
+                self.setCurrentUser(currentUser, shareState: .Sharing, forRelation: sharerelation!, completion: { (success, error) -> Void in
                     if success {
                         //NSNotificationCenter.defaultCenter().postNotificationName(self.kRequestRejectedNotification, object: nil, userInfo: ["article":self])
-                        NSNotificationCenter.defaultCenter().postNotificationName(self.kRequestRejectedNotification, object: nil)
+                        NSNotificationCenter.defaultCenter().postNotificationName(self.kRequestAcceptedNotification, object: nil)
                     }
                 })
             }
@@ -163,10 +163,10 @@ import Foundation
         */
         ShareRelationship.fetchShareRelationshipBetween(currentUser, andMatch: match) { (sharerelation, error) -> Void in
             if error == nil {
-                self.setCurrentUser(currentUser, shareState: .Sharing, forRelation: sharerelation!, completion: { (success, error) -> Void in
+                self.setCurrentUser(currentUser, shareState: .Rejected, forRelation: sharerelation!, completion: { (success, error) -> Void in
                     if success {
                         //NSNotificationCenter.defaultCenter().postNotificationName(self.kRequestAcceptedNotification, object: nil, userInfo: ["article":self])
-                        NSNotificationCenter.defaultCenter().postNotificationName(self.kRequestAcceptedNotification, object: nil)
+                        NSNotificationCenter.defaultCenter().postNotificationName(self.kRequestRejectedNotification, object: nil)
                     }
                 })
             }

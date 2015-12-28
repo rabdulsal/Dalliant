@@ -29,6 +29,9 @@
 
 #define SECONDS_DAY 24*60*60
 
+
+NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
+
 @interface MessagesViewController () <UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate> {
     int userShareState;
 }
@@ -69,6 +72,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchShareReply:) name:@"FetchShareReply" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:receivedMessage object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTableView) name:kRequestUpdateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHide:) name:UIKeyboardWillHideNotification object:nil];
     
@@ -229,6 +233,11 @@
     }];
 }
 
+- (void)updateTableView
+{
+    [self.tableView reloadData];
+}
+
 #pragma mark TableView Delegate - Includes Blurring
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -276,7 +285,7 @@
             }
 //          DEPRECATED USE SHARESTATE
 //            if ((_outgoingRequest && _incomingRequest) || _incomingRequest) {
-//                if (_incomingRequest.requestReply == [NSNumber numberWithBool:YES] && [_incomingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_incomingRequest.requestFromUser isEqual:user]) {
+//                if (_incomingRequest.requestReply isEqualToNumber:[NSNumber numberWithBool:YES] && [_incomingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_incomingRequest.requestFromUser isEqual:user]) {
 //                    cell.nameTextLabel.text = user.nickname;
 //                    [_visualEffectView removeFromSuperview];
 //                    NSLog(@"%@ revealed!", user.nickname);
@@ -284,7 +293,7 @@
 //            }
 //            
 //            if ((_incomingRequest && _outgoingRequest) || _outgoingRequest) {
-//                if (_outgoingRequest.requestReply == [NSNumber numberWithBool:YES] && [_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_outgoingRequest.requestToUser isEqual:user]) {
+//                if (_outgoingRequest.requestReply isEqualToNumber:[NSNumber numberWithBool:YES] && [_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_outgoingRequest.requestToUser isEqual:user]) {
 //                    cell.nameTextLabel.text = user.nickname;
 //                    [_visualEffectView removeFromSuperview];
 //                    NSLog(@"%@ revealed!", user.nickname);
@@ -368,7 +377,7 @@
         
         if (outgoingRequest && [outgoingRequest.requestToUser isEqual:user]) {
             _outgoingRequest = outgoingRequest;
-            if ((_outgoingRequest.requestReply != nil && _outgoingRequest.requestClosed != [NSNumber numberWithBool:YES]) /*|| (_outgoingRequest.requestReply == [NSNumber numberWithBool:NO] && ![_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])*/) {
+            if ((_outgoingRequest.requestReply != nil && ![_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) /*|| (_outgoingRequest.requestReply isEqualToNumber:[NSNumber numberWithBool:NO] && ![_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])*/) {
                 cell.indicatorLabel.hidden = NO;
                 cell.indicatorLabel.backgroundColor = RED_LIGHT;
             }
