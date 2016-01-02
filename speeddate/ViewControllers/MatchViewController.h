@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "UserParseHelper.h"
 #import "PossibleMatchHelper.h"
+#import "RevealRequest.h"
+#import "speeddate-Swift.h"
 
 @interface MatchViewController : UIViewController
 @property UIImage *userImage;
@@ -22,6 +24,7 @@
 @property (nonatomic) IBOutlet UILabel *userName;
 @property (nonatomic) double *compatibilityIndex;
 @property PossibleMatchHelper *possibleMatch;
+@property int userShareState;
 @property BOOL fromConversation;
 
 - (void)setUserPhotosArray:(UserParseHelper *)match;

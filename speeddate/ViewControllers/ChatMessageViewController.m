@@ -20,7 +20,6 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
     JSQMessagesBubbleImage *bubbleImageIncoming;
     //JSQMessagesAvatarImage *userAvatar;
     JSQMessagesAvatarImage *matchAvatar;
-    int userShareState;
 }
 @property NSMutableArray *messages;
 @property NSArray *sortedMessages;
@@ -35,6 +34,7 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
 @property (weak, nonatomic) IBOutlet UIView *unMatchedBlocker;
 @property UIVisualEffectView *visualEffectView;
 @property (weak, nonatomic) IBOutlet UIButton *rewardButton;
+@property (nonatomic) int userShareState;
 - (IBAction)popFromChat:(id)sender;
 - (IBAction)rewardButtonPressed:(id)sender;
 
@@ -47,16 +47,6 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
     [super viewDidLoad];
     
     // Do any additional setup after loading the view.
-   
-    [self configureNavigationTitleView:@"Match"];
-    
-    UIImage *btnImage = [UIImage imageNamed:@"reveal"];
-    CGRect btnImageFrame = CGRectMake(
-                                      self.inputToolbar.contentView.leftBarButtonItem.frame.origin.x,
-                                      self.inputToolbar.contentView.leftBarButtonItem.frame.origin.y,
-                                      27, 27);
-    //[self.inputToolbar.contentView.leftBarButtonItem setFrame:btnImageFrame];
-    [self.inputToolbar.contentView.leftBarButtonItem setImage:btnImage forState:UIControlStateNormal];
 
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage jsq_defaultTypingIndicatorImage]
                                                                               style:UIBarButtonItemStyleBordered
@@ -91,6 +81,35 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
     
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    //    self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
+    //    matchAvatar = nil;
+    /*
+     * Fetch ShareRelationship
+     *
+     */
+    [self fetchShareRelationship];
+    
+    // If Matches have both Shared Profile, show Prize Indicator
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    
+    
+    /** Originally in ViewDidAppear
+     *  Enable/disable springy bubbles, default is NO.
+     *  You must set this from `viewDidAppear:`
+     *  Note: this feature is mostly stable, but still experimental
+     */
+    //self.collectionView.collectionViewLayout.springinessEnabled = YES;
+}
+
 - (void)configureNotifications
 {
     // Notification to fetch New Message
@@ -120,7 +139,7 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
     
 }
 
-- (void)configureNavigationTitleView: (NSString *)title {
+- (void)configureNavigationTitleView {
     // Configure ChatUI NOTE: must set custom image dimensions via CGRectMake
     
     _titleImage.layer.borderWidth = 2;
@@ -132,15 +151,76 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
         _titleImage.image = [UIImage imageWithData:data];
     }];
     
-    if (userShareState == ShareStateSharing) {
+    if (_userShareState == ShareStateSharing) {
         [_visualEffectView removeFromSuperview];
         _titleText.text = _toUserParse.nickname;
     } else {
         [self blurImages:_titleImage];
-        _titleText.text = title;
+        _titleText.text = @"Match";
     }
     
     [self.navigationItem setTitleView:_chatTitle];
+}
+
+#pragma mark - TabBar UI Configs
+
+- (void)configureToolBar
+{
+    switch (_userShareState) {
+        case ShareStateRequested:
+            [self toolbarRequested];
+            break;
+        case ShareStateRejected:
+            [self toolbarRejected];
+            break;
+        case ShareStateSharing:
+            [self toolbarSharing];
+            break;
+        default:
+            [self toolbarNotSharing];
+            break;
+    }
+    
+}
+
+- (void)toolbarNotSharing
+{
+    UIImage *btnImage = [UIImage imageNamed:@"reveal"];
+    CGRect btnImageFrame = CGRectMake(self.inputToolbar.contentView.leftBarButtonItem.frame.origin.x,
+                                      self.inputToolbar.contentView.leftBarButtonItem.frame.origin.y,
+                                      27, 27);
+    //[self.inputToolbar.contentView.leftBarButtonItem setFrame:btnImageFrame];
+    [self.inputToolbar.contentView.leftBarButtonItem setImage:btnImage forState:UIControlStateNormal];
+}
+
+- (void)toolbarRequested
+{
+    [self toolbarNotSharing];
+    self.inputToolbar.contentView.leftBarButtonItem.enabled = NO;
+}
+
+- (void)toolbarSharing
+{
+    CGFloat chatCam = self.inputToolbar.contentView.frame.origin.y + 5;
+    self.inputToolbar.contentView.leftBarButtonItem.enabled = YES;
+    //[_blurImageView removeFromSuperview];
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(self.inputToolbar.contentView.leftBarButtonItem.frame.origin.x, chatCam, 30, 23)];
+    UIImage *btnImage = [UIImage imageNamed:@"camera"];
+    [button setImage:btnImage forState:UIControlStateNormal];
+    self.inputToolbar.contentView.leftBarButtonItem = button;
+}
+
+- (void)toolbarRejected
+{
+    UIImage *btnImage = [UIImage imageNamed:@"No_icon"];
+    //Disable left input button
+    // Replace with Left Input button configuration
+    [self.inputToolbar.contentView.leftBarButtonItem setImage:btnImage forState:UIControlStateNormal];
+    self.inputToolbar.contentView.leftBarButtonItem.enabled = NO;
+    self.inputToolbar.contentView.leftBarButtonItem.alpha = 1.0;
+    //No Avatar photo
+    self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
+    matchAvatar = nil;
 }
 
 - (void)blurImages:(UIImageView *)imageView
@@ -150,37 +230,6 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
     _visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
     _visualEffectView.frame = imageView.bounds;
     [imageView addSubview:_visualEffectView];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-//    self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
-//    matchAvatar = nil;
-    /*
-     * Fetch ShareRelationship
-     *
-     */
-    [self fetchShareRelationship];
-    
-    // If Matches have both Shared Profile, show Prize Indicator
-}
-
-
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    
-    
-    
-    /** Originally in ViewDidAppear
-     *  Enable/disable springy bubbles, default is NO.
-     *  You must set this from `viewDidAppear:`
-     *  Note: this feature is mostly stable, but still experimental
-     */
-    //self.collectionView.collectionViewLayout.springinessEnabled = YES;
 }
 
 - (void)popVC
@@ -193,11 +242,16 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
 {
     [ShareRelationship fetchShareRelationshipBetween:_curUser andMatch:_toUserParse completion:^(ShareRelationship * _Nullable relationship, NSError * _Nullable error) {
         if (relationship) {
-            userShareState = [relationship getCurrentUserShareState:_curUser];
-            if (userShareState == ShareStateRequested) {
-                self.inputToolbar.contentView.leftBarButtonItem.enabled = NO;
+            _userShareState = [relationship getCurrentUserShareState:_curUser];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self configureNavigationTitleView];
+                [self configureToolBar];
                 [self checkRequestsForShareRelationship:relationship];
-            }
+            });
+//            if (_userShareState == ShareStateRequested) {
+//                [self configureToolBar];
+//                [self checkRequestsForShareRelationship:relationship];
+//            }
         } else {
             // TODO: Handle error
         }
@@ -206,10 +260,6 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
 
 - (void)checkRequestsForShareRelationship:(ShareRelationship *)relationship
 {
-    NSLog(@"Check Incoming request");
-    // Fetch incoming ShareRequest for User to Reply
-    //[self fetchShareRequest]; TODO: Erase once refactored
-    
     [RevealRequest getRequestsBetween:_curUser andMatch:_toUserParse completion:^(RevealRequest *outgoingRequest, RevealRequest *incomingRequest) {
         if (outgoingRequest) {
             _outgoingRequest = outgoingRequest;
@@ -233,60 +283,6 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
             }
         }
     }];
-    
-    // --- WRAP ALL IN ShareRequestProtocol ---
-//    if (_incomingRequest && ![_incomingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) {
-//        NSLog(@"Received Request Reply: %@", _incomingRequest.requestReply);
-//        // Reply Null
-//        if (![_incomingRequest.requestReply isEqualToString:@"Yes"] && ![_incomingRequest.requestReply isEqualToString:@"No"]) {
-//            NSLog(@"ReplyAlertView");
-//            [self replyAlertView];
-//            
-//            // 'Yes' Reply
-//        } else if ([_incomingRequest.requestReply isEqualToString:@"Yes"]) {
-//            NSLog(@"Users Revealed!");
-//            [self usersRevealed];
-//            
-//        }
-//    } else if ([_incomingRequest.requestReply isEqualToString:@"Yes"]) {
-//        NSLog(@"Users Revealed!");
-//        [self usersRevealed];
-//        
-//    }
-//    
-//    // Fetch incoming ShareReply for User to acknowledge
-//    //[self fetchShareReply];
-//    
-//    if (_outgoingRequest && [_outgoingRequest.requestToUser isEqual:_toUserParse]) {
-//        NSLog(@"Share Reply run");
-//        
-//        //Null Reply, Null Confirm | Ignore -
-//        if (![_outgoingRequest.requestReply isEqualToString:@"Yes"] && ![_outgoingRequest.requestReply isEqualToString:@"No"] && ![_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) {
-//            self.inputToolbar.contentView.leftBarButtonItem.enabled = NO;
-//            NSLog(@"No Request Reply, No Confirm");
-//        }
-//        // 'Yes' Reply, Null Confirm or 'No' Reply, Null confirm
-//        else if (([_outgoingRequest.requestReply isEqualToString:@"Yes"] && ![_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || ([_outgoingRequest.requestReply isEqualToString:@"No"] && ![_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])) {
-//            self.inputToolbar.contentView.leftBarButtonItem.enabled = NO;
-//            // Show AcknowledgeAlertView
-//            [self acknowledgeAlertView];
-//            NSLog(@"Acknowledgement View");
-//            
-//            // 'Yes' Reply, 'Yes' Confirm
-//        } else if ([_outgoingRequest.requestReply isEqualToString:@"Yes"] && [_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]){ // User's acknowledged and shared profile
-//            [self usersRevealed];
-//            NSLog(@"Revealed View");
-//            
-//            // 'No' Reply, 'Yes' Confirm
-//        } else if ((!_incomingRequest && [_outgoingRequest.requestReply isEqualToString:@"No"] && [_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || ([_incomingRequest.requestReply isEqualToString:@"No"] && [_outgoingRequest.requestReply isEqualToString:@"No"] && [_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:NO]])) {
-//            // Request rejected
-//            [self shareRequestRejected];
-//            NSLog(@"Rejected View");
-//            
-//            // No Reply, No confirm -> Acknow AlertView
-//        }
-//    }
-    // --- END PROTOCOL LOGIC ---
 }
 
 - (void)getAvatarPhotos
@@ -314,43 +310,6 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
 
 - (void)getMessages
 {
-//    --- DEPRECATED * USER MESSAGEPARSE CLASS METHOD
-//    PFQuery *query1 = [MessageParse query];
-//    [query1 whereKey:@"fromUserParse" equalTo:_curUser];
-//    [query1 whereKey:@"toUserParse" equalTo:self.toUserParse];
-//    [query1 whereKey:@"text" notEqualTo:@""];
-//    
-//    PFQuery *query2 = [MessageParse query];
-//    [query2 whereKey:@"fromUserParse" equalTo:self.toUserParse];
-//    [query2 whereKey:@"toUserParse" equalTo:_curUser];
-//    [query2 whereKey:@"text" notEqualTo:@""];
-//    
-//    
-//    PFQuery *orQUery = [PFQuery orQueryWithSubqueries:@[query1, query2]];
-//    [orQUery orderByAscending:@"createdAt"];
-//    
-//    // orQUery.limit = 3;
-//    // orQUery.skip = 5;
-//    [orQUery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//        NSLog(@"Retrieved Messages: %lu", (unsigned long)[objects count]);
-//        //self.messages = [objects mutableCopy];
-//        //[self.collectionView reloadData];
-//        //[self scrollCollectionView];
-//        if ([objects count] > 0) {
-//            /*
-//            NSArray *messages = [NSArray new];
-//            messages = [objects sortedArrayUsingComparator:^NSComparisonResult(PFObject *a, PFObject *b)
-//                       {
-//                           return [a.createdAt compare:b.createdAt];
-//                       }];
-//            
-//            */
-//            [self processMessages:objects];
-//        }
-//        
-//        //[self.collectionView reloadData];
-//    }];
-    
     [MessageParse getMessagesBetween:_curUser andMatch:self.toUserParse completion:^(NSArray *conversation, NSError *error) {
         if (conversation.count > 0) {
             [self processMessages:conversation];
@@ -362,32 +321,6 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
 
 - (void)getNewMessage:(NSNotification *)note
 {
-//    --- DEPRECATED * USE CLASS METHOD ---
-//    PFQuery *query = [MessageParse query];
-//    [query whereKey:@"fromUserParse" equalTo:self.toUserParse];
-//    [query whereKey:@"toUserParse" equalTo:_curUser];
-//    [query whereKey:@"read" equalTo:[NSNumber numberWithBool:NO]]; // <-- Key to determine if Message is read - add to TDBadgeCell logic for
-//    
-//    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//        if ([objects count] > 0) {
-//            
-//            /**
-//             *  Show the typing indicator to be shown
-//             */
-//            self.showTypingIndicator = !self.showTypingIndicator;
-//            
-//            /**
-//             *  Scroll to actually view the indicator
-//             */
-//            [self scrollToBottomAnimated:YES];
-//
-//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//                [self processMessages:objects];
-//            });
-//        }
-//        
-//    }];
-    
     [MessageParse getNewMessageBetween:_curUser andMatch:self.toUserParse completion:^(NSArray *messages, NSError *error) {
         if (!error) {
             /**
@@ -409,15 +342,6 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
 
 - (void)processMessages:(NSArray *)messages
 {
-    //Order Messages
-    /*
-    objects = [objects sortedArrayUsingComparator:
-               ^NSComparisonResult(PFObject *a, PFObject *b)
-               {
-                   return [a.createdAt compare:b.createdAt];
-               }];
-    */
-        
     for (MessageParse *message in messages) {
         message.read = YES;
         [message saveInBackground];
@@ -537,51 +461,6 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
             [self replyAlertView];
         }
     }];
-    
-    // * ----------- OLD CODE ---------------- //
-    
-    PFQuery *requestFromQuery = [RevealRequest query];
-    [requestFromQuery whereKey:@"requestFromUser" equalTo:_curUser];
-    [requestFromQuery whereKey:@"requestToUser" equalTo:_toUserParse];
-    
-    PFQuery *requestToQuery = [RevealRequest query];
-    [requestToQuery whereKey:@"requestToUser" equalTo:_curUser];
-    [requestToQuery whereKey:@"requestFromUser" equalTo:_toUserParse];
-    
-    PFQuery *orQuery = [PFQuery orQueryWithSubqueries:@[requestFromQuery, requestToQuery]];
-    
-    
-    NSArray *requests = [[NSArray alloc] initWithArray:[orQuery findObjects]];
-    NSLog(@"Requests count: %lu", (unsigned long)[requests count]);
-    
-    for (RevealRequest *request in requests) {
-        UserParseHelper *fromRequestUser = (UserParseHelper *)[request.requestFromUser fetchIfNeeded];
-        NSLog(@"Request from %@", fromRequestUser.nickname);
-        
-        UserParseHelper *toRequestUser = (UserParseHelper *)[request.requestToUser fetchIfNeeded];
-        NSLog(@"Request to %@", toRequestUser.nickname);
-        
-        if ([fromRequestUser isEqual:_curUser]) {
-            _outgoingRequest = request; //Equivalent to outgoingRequest
-            NSLog(@"Request from Me and to %@", _outgoingRequest.requestToUser.nickname);
-        } else if ([toRequestUser isEqual:_curUser]) {
-            _incomingRequest = request; //Equivalent to incomingRequest
-            NSLog(@"Request from Other User: %@", _incomingRequest.requestFromUser.nickname);
-        }
-    }
-    // * ---------------- END ---------------- //
-    
-    //_incomingRequest = request objectAtIndex:0];
-    /*
-     [requestQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-     NSLog(@"Objects count: %lu", (unsigned long)[objects count]);
-     if (!error && [objects count] != 0) {
-     NSLog(@"Objects retrieved");
-     _incomingRequest = (RevealRequest *)[objects objectAtIndex:0];
-     
-     NSLog(@"Share Request %@", _incomingRequest);
-     }
-     }];*/
 }
 
 - (void)fetchShareReply:(NSNotification *)notification
@@ -596,33 +475,6 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
             [self acknowledgeAlertView];
         }
     }];
-    
-    // * ------------- OLD CODE ----------------- //
-    
-    PFQuery *replyQuery = [RevealRequest query];
-    [replyQuery whereKey:@"requestFromUser" equalTo:_curUser];
-    [replyQuery whereKey:@"requestToUser" equalTo:self.toUserParse];
-    [replyQuery whereKey:@"requestReply" notEqualTo:@""];
-    
-    NSMutableArray *reply = [[NSMutableArray alloc] initWithArray:[replyQuery findObjects]];
-    
-    NSLog(@"Share reply count: %lu", (unsigned long)[reply count]);
-    if ([reply count] != 0) {
-        
-        _outgoingRequest = [reply objectAtIndex:0];
-        [self acknowledgeAlertView];
-    }
-    
-    // -------------- END ---------------- //
-    /*
-     [replyQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-     
-     if (!error && [objects count] != 0) {
-     _outgoingRequest = (RevealRequest *)[objects objectAtIndex:0];
-     
-     NSLog(@"%@'s Share Reply found.", _outgoingRequest.requestFromUser.nickname);
-     }
-     }];*/
 }
 
 #pragma mark - JSQMessagesViewController method overrides
@@ -679,7 +531,7 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
         
         NSString *pushMessage = nil;
         
-        if (/*(!_incomingRequest && !_outgoingRequest) || !([_incomingRequest.requestReply isEqualToString:@"Yes"] && [_incomingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || !([_outgoingRequest.requestReply isEqualToString:@"Yes"] && [_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])*/userShareState != ShareStateSharing) {
+        if (/*(!_incomingRequest && !_outgoingRequest) || !([_incomingRequest.requestReply isEqualToString:@"Yes"] && [_incomingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) || !([_outgoingRequest.requestReply isEqualToString:@"Yes"] && [_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])*/_userShareState != ShareStateSharing) {
             pushMessage = [NSString stringWithFormat:@"Your Match says: %@", message.text];
         } else pushMessage = [NSString stringWithFormat:@"%@ says: %@",pushUserto,message.text];
         
@@ -931,18 +783,7 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
 
 - (void)didPressAccessoryButton:(UIButton *)sender
 {
-    // TODO: Refactor to using Enums set by Protocol
-    // if currentUser's shareState == NotSharing
-//
-//    if (!_incomingRequest && !_outgoingRequest) { // <-- Change to check on Matched User attribute
-//        
-//        [self shareRequestActionSheet];
-//        
-//    } else if ([_incomingRequest.requestReply isEqualToString:@"No"] && [_incomingRequest.requestFromUser isEqual:_toUserParse] && !_outgoingRequest) {
-//        [self shareRequestActionSheet];
-//    } else if ([_outgoingRequest.requestReply isEqualToString:@"No"] && [_outgoingRequest.requestToUser isEqual:_toUserParse] && !_incomingRequest) {
-//        [self shareRequestActionSheet];
-    if (userShareState != ShareStateSharing) {
+    if (_userShareState != ShareStateSharing) {
         [self shareRequestActionSheet];
     } else {
     
@@ -1031,27 +872,14 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
 
 - (void)shareRequestRejected
 {
-    UIImage *btnImage = [UIImage imageNamed:@"No_icon"];
-    //Disable left input button
-    // Replace with Left Input button configuration
-    [self.inputToolbar.contentView.leftBarButtonItem setImage:btnImage forState:UIControlStateNormal];
-    self.inputToolbar.contentView.leftBarButtonItem.enabled = NO;
-    self.inputToolbar.contentView.leftBarButtonItem.alpha = 1.0;
-    //No Avatar photo
-    self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
-    matchAvatar = nil;
+    // TODO: Erase after refactoring?
 }
 
 - (void)usersRevealed
 {
-    CGFloat chatCam = self.inputToolbar.contentView.frame.origin.y + 5;
-    [self configureNavigationTitleView:_toUserParse.nickname];
-    self.inputToolbar.contentView.leftBarButtonItem.enabled = YES;
-    //[_blurImageView removeFromSuperview];
-    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(self.inputToolbar.contentView.leftBarButtonItem.frame.origin.x, chatCam, 30, 23)];
-    UIImage *btnImage = [UIImage imageNamed:@"camera"];
-    [button setImage:btnImage forState:UIControlStateNormal];
-    self.inputToolbar.contentView.leftBarButtonItem = button;
+    [self configureNavigationTitleView];
+    [self configureToolBar];
+    
     [self showCameraTooltip];
     
     //[self showPrizeIndicator];
@@ -1226,7 +1054,6 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
          */
         if (buttonIndex == 0) {
             [self sendShareRequest];
-            NSLog(@"Share Request button pressed.");
         }
         
     } else if (actionSheet.tag == 2) { // <-- Clicked Match Options Button
@@ -1358,13 +1185,14 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
         //if ([[segue identifier] isEqualToString:@"userprofileSee"]) {
         // Move to ViewDidLoad
         NSLog(@"View Profile Pressed");
-        MatchViewController *matchVC    = [[MatchViewController alloc]init];
-        matchVC                         = segue.destinationViewController;
+        MatchViewController *matchVC = [[MatchViewController alloc]init];
+        matchVC                      = segue.destinationViewController;
         //matchVC.userFBPic.image             = _toUserParse.photo;
-        matchVC.user                    = _curUser;
-        matchVC.matchUser               = _toUserParse;
-        matchVC.possibleMatch           = _matchedUsers;
-        matchVC.fromConversation        = true;
+        matchVC.user                 = _curUser;
+        matchVC.matchUser            = _toUserParse;
+        matchVC.possibleMatch        = _matchedUsers;
+        matchVC.userShareState       = _userShareState;
+        matchVC.fromConversation     = true;
         
         [matchVC setUserPhotosArray:matchVC.matchUser];
     } else if ([segue.identifier isEqualToString:@"chatImage"]) {
@@ -1395,30 +1223,7 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
     // Handle the Alert after Current User has Replied to Received Request
     
     if (alertView.tag == 1) {
-        /*
-         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{ // 1
-         dispatch_group_t downloadGroup = dispatch_group_create(); // 2
-         dispatch_group_enter(downloadGroup); // 3
-         NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
-         NSString *reply = [[NSString alloc] init];
-         
-         if([title isEqualToString:@"Yes"]){
-         NSLog(@"Clicked Yes");
-         reply = @"Yes";
-         //_curUser.isRevealed = [NSNumber numberWithBool:YES]; <-- Update isRevealed in PossibleMatchHelper
-         //[self reloadView];
-         // Show "You've Revealed' animation
-         
-         } else if ([title isEqualToString:@"No"]) {
-         NSLog(@"Clicked No");
-         reply = @"No";
-         //_curUser.isRevealed = [NSNumber numberWithBool:NO]; //<-- No reason to update the database
-         // Show "No Reveal" animation
-         }
-         dispatch_group_leave(downloadGroup); // 4
-         dispatch_group_wait(downloadGroup, DISPATCH_TIME_FOREVER); // 5
-         dispatch_async(dispatch_get_main_queue(), ^{
-         */
+        
         NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
         
         if([title isEqualToString:@"Yes"]){
@@ -1429,55 +1234,42 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
                     [self performSegueWithIdentifier:@"view_match" sender:nil];
                 }
             }];
-            // TODO: Erase after Refactor
-            //_incomingRequest.requestReply = [NSNumber numberWithBool:YES];
-            //_curUser.isRevealed = [NSNumber numberWithBool:YES]; <-- Update isRevealed in PossibleMatchHelper
-            //[self reloadView];
-            // Show "You've Revealed' animation
             
         } else if ([title isEqualToString:@"No"]) {
             NSLog(@"Clicked No");
-            [_incomingRequest rejectShareRequestWithCompletion:^(BOOL rejected) {
-                if (rejected) {
-                    // Do nothing?
-                }
-            }];
-            // TODO: Erase after Refactor
-            //_incomingRequest.requestReply = [NSNumber numberWithBool:NO];
-            //_curUser.isRevealed = [NSNumber numberWithBool:NO]; //<-- No reason to update the database
-            // Show "No Reveal" animation
+            [_incomingRequest rejectShareRequestWithCompletion:nil];
         }
-        
-        //NSLog(@"Reply: %@", request.requestReply);
-        [_incomingRequest saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            
-            if (succeeded) {
-                
-                // Push Reveal Reply Updates Notification
-                NSLog(@"Request-Reply saved.");
-                
-                // if _curUSer Reply = YES
-                [self repliedToShareRequest];
-                /*
-                 // Push Reveal Reply Updates Notification
-                 PFQuery *query = [PFInstallation query];
-                 PFUser *pushUser = _curUser;
-                 NSString *pushUserto = pushUser[@"nickname"];
-                 [query whereKey:@"objectId" equalTo:self.toUserParse.installation.objectId];
-                 
-                 NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
-                 [NSString stringWithFormat:@"Identity Share Reply"], @"alert",
-                 @"Increment", @"badge",
-                 @"Ache.caf", @"sound",
-                 nil];
-                 
-                 PFPush *push = [[PFPush alloc] init];
-                 [push setQuery:query];
-                 [push setData:data];
-                 [push sendPushInBackground];
-                 */
-            }
-        }];
+//        --- NOT NEEDED? ---
+//        //NSLog(@"Reply: %@", request.requestReply);
+//        [_incomingRequest saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+//            
+//            if (succeeded) {
+//                
+//                // Push Reveal Reply Updates Notification
+//                NSLog(@"Request-Reply saved.");
+//                
+//                // if _curUSer Reply = YES
+//                [self repliedToShareRequest];
+//                /*
+//                 // Push Reveal Reply Updates Notification
+//                 PFQuery *query = [PFInstallation query];
+//                 PFUser *pushUser = _curUser;
+//                 NSString *pushUserto = pushUser[@"nickname"];
+//                 [query whereKey:@"objectId" equalTo:self.toUserParse.installation.objectId];
+//                 
+//                 NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
+//                 [NSString stringWithFormat:@"Identity Share Reply"], @"alert",
+//                 @"Increment", @"badge",
+//                 @"Ache.caf", @"sound",
+//                 nil];
+//                 
+//                 PFPush *push = [[PFPush alloc] init];
+//                 [push setQuery:query];
+//                 [push setData:data];
+//                 [push sendPushInBackground];
+//                 */
+//            }
+//        }];
         
         
         //}); // 6
@@ -1513,6 +1305,7 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
         //if ([_matchedUsers.usersRevealed isEqualToNumber:[NSNumber numberWithBool:YES] ]) {
         
         _outgoingRequest.requestClosed = [NSNumber numberWithBool:YES];
+        _userShareState = ShareStateSharing; // TODO: Refactor so set by delegate
         [_outgoingRequest saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             if (succeeded) {
                 
@@ -1530,10 +1323,11 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
         
         // Request rejected
         _outgoingRequest.requestClosed = [NSNumber numberWithBool:YES];
+        _userShareState = ShareStateRejected; // TODO: Refactor so set by delegate
         [_outgoingRequest saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             //[self reloadView];
             [self.collectionView reloadData];
-            [self shareRequestRejected];
+            [self configureToolBar];
         }];
         
         

@@ -25,7 +25,6 @@
 #import <ILTranslucentView.h>
 #import "Report.h"
 #import "MessageParse.h"
-#import "RevealRequest.h"
 #define MARGIN 50
 
 @interface MatchViewController () <UIAlertViewDelegate, UIActionSheetDelegate>
@@ -41,8 +40,8 @@
 @property ILTranslucentView *translucentView;
 @property (weak, nonatomic) IBOutlet UIButton *reportUser;
 @property (weak, nonatomic) IBOutlet UIButton *matchOptionsLabel;
-@property RevealRequest *incomingRequest;
-@property RevealRequest *outgoingRequest;
+@property (nonatomic) RevealRequest *incomingRequest;
+@property (nonatomic) RevealRequest *outgoingRequest;
 
 - (IBAction)matchOptionsButton:(id)sender;
 
@@ -85,25 +84,26 @@
 {
     [super viewWillAppear:animated];
     
-    [self fetchShareRequest];
+    //[self fetchShareRequest]; <-- Not Needed?
     
     _imagePager.pageControl.currentPageIndicatorTintColor = [UIColor lightGrayColor];
     _imagePager.pageControl.pageIndicatorTintColor = [UIColor blackColor];
     _imagePager.pageControl.center = CGPointMake(CGRectGetWidth(_imagePager.frame) / 2, CGRectGetHeight(_imagePager.frame) - 42);
     
-    if (_incomingRequest) {
-        if (_incomingRequest.requestReply == [NSNumber numberWithBool:YES] && [_incomingRequest.requestFromUser isEqual:_matchUser]) {
-            NSLog(@"Before TranslucentView removed");
-            [_translucentView removeFromSuperview];
-            NSLog(@"After TranslucentView removed");
-        }
-    }
-    
-    if (_outgoingRequest) {
-        if (_outgoingRequest.requestReply == [NSNumber numberWithBool:YES] && [_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_outgoingRequest.requestToUser isEqual:_matchUser]) {
-            [_translucentView removeFromSuperview];
-        }
-    }
+    if (_userShareState == ShareStateSharing) [_translucentView removeFromSuperview];
+//    if (_incomingRequest) {
+//        if ([_incomingRequest.requestReply isEqualToNumber:[NSNumber numberWithBool:YES]] && [_incomingRequest.requestFromUser isEqual:_matchUser]) {
+//            NSLog(@"Before TranslucentView removed");
+//            [_translucentView removeFromSuperview];
+//            NSLog(@"After TranslucentView removed");
+//        }
+//    }
+//    
+//    if (_outgoingRequest) {
+//        if ([_outgoingRequest.requestReply isEqualToNumber:[NSNumber numberWithBool:YES]] && [_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_outgoingRequest.requestToUser isEqual:_matchUser]) {
+//            [_translucentView removeFromSuperview];
+//        }
+//    }
     
     /*
     UIImageView *iv = [[UIImageView alloc] initWithFrame:self.view.frame];
@@ -152,7 +152,7 @@
      */
 }
 
-- (void)fetchShareRequest
+- (void)fetchShareRequest // NOT NEEDED?
 {
     PFQuery *requestFromQuery = [RevealRequest query];
     [requestFromQuery whereKey:@"requestFromUser" equalTo:[UserParseHelper currentUser]];
@@ -199,48 +199,28 @@
     button.layer.borderColor = RED_LIGHT.CGColor;
 }
 
+- (void)setUserImageFromPhoto:(PFFile *)photo
+{
+    NSData *imageData = [photo getData];
+    if (imageData) {
+        UIImage *matchImage = [[UIImage alloc] initWithData:imageData];
+        NSLog(@"MatchImage: %@", matchImage);
+        [self.getPhotoArray addObject:matchImage];
+    }
+}
+
 - (void)setUserPhotosArray:(UserParseHelper *)match
 {
     // Fetch the matchUser
     self.getPhotoArray = [NSMutableArray new];
     
-    if (match.photo) {
-        NSData *imageData = [match.photo getData];
-        if (imageData) {
-            UIImage *matchImage = [[UIImage alloc] initWithData:imageData];
-            NSLog(@"MatchImage: %@", matchImage);
-            [self.getPhotoArray addObject:matchImage];
-        }
-    }
+    if (match.photo) [self setUserImageFromPhoto:match.photo];
     
-    if (match.photo1) {
-        NSData *imageData = [match.photo1 getData];
-        if (imageData) {
-            UIImage *matchImage = [[UIImage alloc] initWithData:imageData];
-            NSLog(@"MatchImage: %@", matchImage);
-            [self.getPhotoArray addObject:matchImage];
-        }
-    }
+    if (match.photo1) [self setUserImageFromPhoto:match.photo1];
     
-    if (match.photo2) {
-        NSData *imageData = [match.photo2 getData];
-        if (imageData) {
-            UIImage *matchImage = [[UIImage alloc] initWithData:imageData];
-            NSLog(@"MatchImage: %@", matchImage);
-            [self.getPhotoArray addObject:matchImage];
-        }
-    }
+    if (match.photo2) [self setUserImageFromPhoto:match.photo2];
     
-    if (match.photo3) {
-        NSData *imageData = [match.photo3 getData];
-        if (imageData) {
-            UIImage *matchImage = [[UIImage alloc] initWithData:imageData];
-            NSLog(@"MatchImage: %@", matchImage);
-            [self.getPhotoArray addObject:matchImage];
-        }
-        
-        
-    }
+    if (match.photo3) [self setUserImageFromPhoto:match.photo3];
 }
 
 - (NSArray *) arrayWithImages:(KIImagePager*)pager
