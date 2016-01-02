@@ -47,7 +47,7 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
     [super viewDidLoad];
     
     // Do any additional setup after loading the view.
-
+    [self configureNavigationTitleView];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage jsq_defaultTypingIndicatorImage]
                                                                               style:UIBarButtonItemStyleBordered
                                                                              target:self
@@ -151,15 +151,19 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
         _titleImage.image = [UIImage imageWithData:data];
     }];
     
-    if (_userShareState == ShareStateSharing) {
+    [self setNavbarTitleView];
+    [self.navigationItem setTitleView:_chatTitle];
+}
+
+- (void)setNavbarTitleView
+{
+    if (_userShareState == ShareStateSharing && _visualEffectView != nil) {
         [_visualEffectView removeFromSuperview];
         _titleText.text = _toUserParse.nickname;
-    } else {
+    } else if (_visualEffectView == nil) {
         [self blurImages:_titleImage];
         _titleText.text = @"Match";
     }
-    
-    [self.navigationItem setTitleView:_chatTitle];
 }
 
 #pragma mark - TabBar UI Configs
@@ -243,11 +247,11 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
     [ShareRelationship fetchShareRelationshipBetween:_curUser andMatch:_toUserParse completion:^(ShareRelationship * _Nullable relationship, NSError * _Nullable error) {
         if (relationship) {
             _userShareState = [relationship getCurrentUserShareState:_curUser];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self configureNavigationTitleView];
-                [self configureToolBar];
-                [self checkRequestsForShareRelationship:relationship];
-            });
+            //dispatch_async(dispatch_get_main_queue(), ^{
+            [self setNavbarTitleView];
+            [self configureToolBar];
+            [self checkRequestsForShareRelationship:relationship];
+            //});
 //            if (_userShareState == ShareStateRequested) {
 //                [self configureToolBar];
 //                [self checkRequestsForShareRelationship:relationship];
@@ -877,7 +881,7 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
 
 - (void)usersRevealed
 {
-    [self configureNavigationTitleView];
+    [self setNavbarTitleView];
     [self configureToolBar];
     
     [self showCameraTooltip];
