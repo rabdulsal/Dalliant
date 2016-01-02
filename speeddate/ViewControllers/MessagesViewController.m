@@ -131,10 +131,11 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
     //PFQuery *both = [PFQuery orQueryWithSubqueries:@[messageQueryFrom, messageQueryTo]];
 }
 
-- (void)viewWillAppear:(BOOL)animated
+- (void)viewDidAppear:(BOOL)animated
 {
-    [super viewWillAppear:YES];
+    [super viewDidAppear:YES];
     //[self loadingChat];
+    [self updateTableView];
 }
 
 - (void)receivedNotification:(NSNotification *)notification
@@ -269,20 +270,20 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
         [_matchUser configureRadialViewForView:cell.contentView withFrame:frame];
         //[self configureRadialView:cell];
         //}
-        
+        if (!cell.userImageView.image) {
         [user.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
             
             cell.userImageView.image = [UIImage imageWithData:data];
             
-            [self blurImages:cell.userImageView];
-            
-            if ([user.isMale isEqualToString:@"true"]) {
-                NSString *matchGender = @"Male";
-                cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
-            } else {
-                NSString *matchGender = @"Female";
-                cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
-            }
+//            [self blurImages:cell.userImageView];
+//            
+//            if ([user.isMale isEqualToString:@"true"]) {
+//                NSString *matchGender = @"Male";
+//                cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
+//            } else {
+//                NSString *matchGender = @"Female";
+//                cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
+//            }
 //          DEPRECATED USE SHARESTATE
 //            if ((_outgoingRequest && _incomingRequest) || _incomingRequest) {
 //                if (_incomingRequest.requestReply isEqualToNumber:[NSNumber numberWithBool:YES] && [_incomingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_incomingRequest.requestFromUser isEqual:user]) {
@@ -302,15 +303,17 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
             [ShareRelationship fetchShareRelationshipBetween:[UserParseHelper currentUser] andMatch:user completion:^(ShareRelationship * _Nullable relationship, NSError * _Nullable error) {
                 if (relationship) {
                     userShareState = [relationship getCurrentUserShareState:[UserParseHelper currentUser]];
-                    if (userShareState == ShareStateSharing) {
-                        cell.nameTextLabel.text = user.nickname;
-                        [_visualEffectView removeFromSuperview];
-                    }
+//                    if (userShareState == ShareStateSharing) {
+//                        cell.nameTextLabel.text = user.nickname;
+//                        [_visualEffectView removeFromSuperview];
+//                    }
+                    [self setUserData:user forCell:cell];
                 } else if (error) {
                     // Handle Error
                 }
             }];
         }];
+        } else [self setUserData:user forCell:cell];
     }];
     
     //[self setPossibleMatchesFromMessages:_matchedUsers for:cell];
@@ -396,6 +399,19 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
     _visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
     _visualEffectView.frame = imageView.bounds;
     [imageView addSubview:_visualEffectView];
+}
+
+- (void)setUserData:(UserParseHelper *)user forCell:(UserTableViewCell *)cell
+{
+    if (userShareState == ShareStateSharing && _visualEffectView != nil) {
+        cell.nameTextLabel.text = user.nickname;
+        [_visualEffectView removeFromSuperview];
+    } else if (_visualEffectView == nil) {
+        [self blurImages:cell.userImageView];
+        NSString *matchGender;
+        matchGender = [user.isMale isEqualToString:@"true"] ? @"Male" : @"Female";
+        cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
