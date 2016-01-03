@@ -13,6 +13,7 @@
 NSString * const kRequestSentNotification     = @"requestSentNotification";
 NSString * const kRequestAcceptedNotification = @"requestAcceptedNotification";
 NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
+//NSString * const kRequestUpdateNotification   = @"requestUpdateNotification";
 
 @interface ChatMessageViewController ()
 {
@@ -124,7 +125,7 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(blockUnMatched) name:@"chatEnded" object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acknowledgeAlertView) name:kRequestRejectedNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acknowledgeAlertView) name:kRequestAcceptedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acknowledgeAlertView) name:@"requestUpdateNotification" object:nil];
 }
 
 - (void)customizeVC
@@ -990,11 +991,7 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
 
 - (void)sendShareRequest
 {
-    //Check if prior ShareRelationship exists
-    
-    //If so...
-    
-    //If not...create new ShareRelationship, send RevealRequest
+    //ShareRelationship will be created when initial Connection is made
     ShareRelationship *shareRelationship     = [ShareRelationship objectWithClassName:@"ShareRelationship"];
     shareRelationship.firstRequestedSharer   = _curUser.nickname;
     shareRelationship.firstSharerShareState  = ShareStateNotSharing;

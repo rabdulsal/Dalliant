@@ -25,6 +25,7 @@ import Foundation
     let kRequestSentNotification     = "requestSentNotification"
     let kRequestAcceptedNotification = "requestAcceptedNotification"
     let kRequestRejectedNotification = "requestRejectedNotification"
+    let kRequestUpdateNotification   = "requestUpdateNotification"
 
     //MARK: Parse Initializers
     override class func initialize() {
@@ -150,7 +151,7 @@ import Foundation
                 self.setCurrentUser(currentUser, shareState: .Sharing, forRelation: sharerelation!, completion: { (success, error) -> Void in
                     if success {
                         //NSNotificationCenter.defaultCenter().postNotificationName(self.kRequestRejectedNotification, object: nil, userInfo: ["article":self])
-                        NSNotificationCenter.defaultCenter().postNotificationName(self.kRequestAcceptedNotification, object: nil)
+                        NSNotificationCenter.defaultCenter().postNotificationName(self.kRequestUpdateNotification, object: nil)
                     }
                 })
             }

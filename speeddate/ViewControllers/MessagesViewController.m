@@ -49,6 +49,7 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
 @property RevealRequest *incomingRequest;
 @property RevealRequest *outgoingRequest;
 @property UIVisualEffectView *visualEffectView;
+@property NSMutableDictionary *matchDict;
 
 @end
 
@@ -135,7 +136,7 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
 {
     [super viewDidAppear:YES];
     //[self loadingChat];
-    [self updateTableView];
+    //[self updateTableView];
 }
 
 - (void)receivedNotification:(NSNotification *)notification
@@ -163,6 +164,7 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
 - (void)loadingChat
 {
     NSLog(@"Loading chat run");
+    _matchDict = [NSMutableDictionary new];
     self.usersArray = [NSMutableArray new];
     self.messages = [NSMutableArray new];
     self.filteredAllUsersArray = [NSArray new];
@@ -197,15 +199,29 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
 //            } else {
                 
             // Display message
+            UserParseHelper * __block match;
                 
             if(![message.fromUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
                 NSUInteger count = users.count;
                 [users addObject:message.fromUserParse];
                 if (users.count > count) {
                     [message.fromUserParse fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                        
+                        match = message.fromUserParse;
                         [self.messages addObject:message];
-                        [self.usersArray addObject:message.fromUserParse];
+                        [self.usersArray addObject:match];
+                        /*
+                         * TODO: query PossibleMatch, ShareRelationship & RevealRequest based on message.fromUserParse and add to possibleMatch arraycreate dictionary, of form
+                         * { userName:
+                         *  {   "message" : message, 
+                         *      "possibleMatch" : possMatch,
+                         *      "shareRelation" : shareRelation
+                         *      "outgoingRequest" : outgoingRequest,
+                         *      "incomingRequest" : incomingRequest
+                         *  } 
+                         * }
+                         */
+                        // TODO: [self createUserCache]
+                        _matchDict[message.fromUserParse.nickname] = @{@"possibleMatch":@"testMatch"};
                         NSInteger position = [self.usersArray indexOfObject:message.fromUserParse];
                         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:position inSection:0];
                         [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -218,9 +234,59 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
                 if (users.count > count) {
                     [message.toUserParse fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error) {
                         
+                        match = message.toUserParse;
                         [self.messages addObject:message];
-                        [self.usersArray addObject:message.toUserParse];
-                        NSInteger position = [self.usersArray indexOfObject:message.toUserParse];
+                        [self.usersArray addObject:match];
+                        // TODO: [self createUserCache]
+                        NSString *userName = message.toUserParse.nickname;
+                        _matchDict[userName] = [NSMutableDictionary new];
+                        [_matchDict[userName] addObject:match forKey:@"matchUser"];
+                        
+                        //Fetch PossibleMatch
+                        [PossibleMatchHelper getConnectionsBetweenCurrentUser:[UserParseHelper currentUser] andMatch:message.toUserParse completion:^(PossibleMatchHelper *connection, NSError *error) {
+                            if (!error) {
+                                [_matchDict[userName] addObject:connection forKey:@"matchConnection"];
+                                
+                                //Fetch ShareRelationship
+                                [ShareRelationship fetchShareRelationshipBetween:[UserParseHelper currentUser] andMatch:match completion:^(ShareRelationship * _Nullable shareRelation, NSError * _Nullable error) {
+                                    if (error) {
+                                        
+                                        // No prior ShareRelationship exists, so create one
+                                        ShareRelationship *shareRelationship     = [ShareRelationship objectWithClassName:@"ShareRelationship"];
+                                        shareRelationship.firstRequestedSharer   = [UserParseHelper currentUser].nickname;
+                                        shareRelationship.firstSharerShareState  = ShareStateNotSharing;
+                                        shareRelationship.secondRequestedSharer  = match.nickname;
+                                        shareRelationship.secondSharerShareState = ShareStateNotSharing;
+                                        [shareRelationship saveInBackground];
+                                        
+                                        [_matchDict[userName] addObject:shareRelationship forKey:@"shareRelation"];
+                                        
+                                    } else {
+                                        // Prior ShareRelation exists
+                                        [_matchDict[userName] addObject:shareRelation forKey:@"sharerelation"];
+                                    }
+                                    
+                                    //Fetch Reveal
+                                    [RevealRequest getRequestsBetween:[UserParseHelper currentUser] andMatch:match completion:^(RevealRequest *outgoingRequest, RevealRequest *incomingRequest) {
+                                        if (outgoingRequest) {
+                                            
+                                            [_matchDict[userName] addObject:outgoingRequest forKey:@"outgoingRequest"];
+                                        }
+                                        
+                                        if (incomingRequest) {
+                                            
+                                            [_matchDict[userName] addObject:incomingRequest forKey:@"incomingRequest"];
+                                        }
+                                    }];
+                                }];
+                                
+                            } else {
+                                // Handle error
+                            }
+                            
+                        }];
+                        
+                        NSInteger position = [self.usersArray indexOfObject:match];
                         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:position inSection:0];
                         [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
                     }];
@@ -236,7 +302,7 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
 
 - (void)updateTableView
 {
-    [self.tableView reloadData];
+    [self reloadView];
 }
 
 #pragma mark TableView Delegate - Includes Blurring
@@ -244,6 +310,7 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UserTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    // TODO: cell method configureCell
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.indicatorLabel.hidden = YES;
     cell.indicatorLabel.layer.cornerRadius = cell.indicatorLabel.frame.size.width/2;
@@ -257,7 +324,7 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
     }
     
     //[self fetchShareRequestWith:user];
-    // Get Possible Matches
+    // Get Match Relationship based on index position, query done above
     _matchedUsers = [[NSArray alloc] initWithObjects:[UserParseHelper currentUser], user, nil];
     PFQuery *possMatch1 = [PossibleMatchHelper query];
     [possMatch1 whereKey:@"matches" containsAllObjectsInArray:_matchedUsers];
@@ -271,49 +338,59 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
         //[self configureRadialView:cell];
         //}
         if (!cell.userImageView.image) {
-        [user.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-            
-            cell.userImageView.image = [UIImage imageWithData:data];
-            
-//            [self blurImages:cell.userImageView];
-//            
-//            if ([user.isMale isEqualToString:@"true"]) {
-//                NSString *matchGender = @"Male";
-//                cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
-//            } else {
-//                NSString *matchGender = @"Female";
-//                cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
-//            }
-//          DEPRECATED USE SHARESTATE
-//            if ((_outgoingRequest && _incomingRequest) || _incomingRequest) {
-//                if (_incomingRequest.requestReply isEqualToNumber:[NSNumber numberWithBool:YES] && [_incomingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_incomingRequest.requestFromUser isEqual:user]) {
-//                    cell.nameTextLabel.text = user.nickname;
-//                    [_visualEffectView removeFromSuperview];
-//                    NSLog(@"%@ revealed!", user.nickname);
-//                }
-//            }
-//            
-//            if ((_incomingRequest && _outgoingRequest) || _outgoingRequest) {
-//                if (_outgoingRequest.requestReply isEqualToNumber:[NSNumber numberWithBool:YES] && [_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_outgoingRequest.requestToUser isEqual:user]) {
-//                    cell.nameTextLabel.text = user.nickname;
-//                    [_visualEffectView removeFromSuperview];
-//                    NSLog(@"%@ revealed!", user.nickname);
-//                }
-//            }
-            [ShareRelationship fetchShareRelationshipBetween:[UserParseHelper currentUser] andMatch:user completion:^(ShareRelationship * _Nullable relationship, NSError * _Nullable error) {
-                if (relationship) {
-                    userShareState = [relationship getCurrentUserShareState:[UserParseHelper currentUser]];
-//                    if (userShareState == ShareStateSharing) {
-//                        cell.nameTextLabel.text = user.nickname;
-//                        [_visualEffectView removeFromSuperview];
-//                    }
-                    [self setUserData:user forCell:cell];
-                } else if (error) {
-                    // Handle Error
+            [user.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                
+                cell.userImageView.image = [UIImage imageWithData:data];
+                if (_visualEffectView == nil && userShareState != ShareStateSharing) {
+                    [self blurImages:cell.userImageView];
+                    NSString *matchGender;
+                    matchGender = [user.isMale isEqualToString:@"true"] ? @"Male" : @"Female";
+                    cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
                 }
+    //            [self blurImages:cell.userImageView];
+    //            
+    //            if ([user.isMale isEqualToString:@"true"]) {
+    //                NSString *matchGender = @"Male";
+    //                cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
+    //            } else {
+    //                NSString *matchGender = @"Female";
+    //                cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
+    //            }
+    //          DEPRECATED USE SHARESTATE
+    //            if ((_outgoingRequest && _incomingRequest) || _incomingRequest) {
+    //                if (_incomingRequest.requestReply isEqualToNumber:[NSNumber numberWithBool:YES] && [_incomingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_incomingRequest.requestFromUser isEqual:user]) {
+    //                    cell.nameTextLabel.text = user.nickname;
+    //                    [_visualEffectView removeFromSuperview];
+    //                    NSLog(@"%@ revealed!", user.nickname);
+    //                }
+    //            }
+    //            
+    //            if ((_incomingRequest && _outgoingRequest) || _outgoingRequest) {
+    //                if (_outgoingRequest.requestReply isEqualToNumber:[NSNumber numberWithBool:YES] && [_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_outgoingRequest.requestToUser isEqual:user]) {
+    //                    cell.nameTextLabel.text = user.nickname;
+    //                    [_visualEffectView removeFromSuperview];
+    //                    NSLog(@"%@ revealed!", user.nickname);
+    //                }
+    //            }
+                [ShareRelationship fetchShareRelationshipBetween:[UserParseHelper currentUser]
+                                                        andMatch:user
+                                                      completion:^(ShareRelationship * _Nullable relationship, NSError * _Nullable error) {
+                    if (relationship) {
+                        userShareState = [relationship getCurrentUserShareState:[UserParseHelper currentUser]];
+    //                    if (userShareState == ShareStateSharing) {
+    //                        cell.nameTextLabel.text = user.nickname;
+    //                        [_visualEffectView removeFromSuperview];
+    //                    }
+                        if (userShareState == ShareStateSharing && _visualEffectView != nil) {
+                            cell.nameTextLabel.text = user.nickname;
+                            [_visualEffectView removeFromSuperview];
+                        }
+                    } else if (error) {
+                        // Handle Error
+                    }
+                }];
             }];
-        }];
-        } else [self setUserData:user forCell:cell];
+        }
     }];
     
     //[self setPossibleMatchesFromMessages:_matchedUsers for:cell];
@@ -338,6 +415,8 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
     cell.accessoryView = accesory;
     
     MessageParse *message = [self.messages objectAtIndex:indexPath.row];
+    
+    // TODO: cell method updateLabelsFromMessage:message
     cell.lastMessageLabel.text = message.text;
     if (!message.text && message.image) {
         cell.lastMessageLabel.text = @"Image";
@@ -363,14 +442,16 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
     }
     
     cell.dateLabel.text = [dateFormatter stringFromDate:[message createdAt]];
+    
+    // TODO: add to configureCell method
     UIView *bgColorView = [[UIView alloc] init];
     //bgColorView.backgroundColor = RED_COLOR;
     bgColorView.backgroundColor = WHITE_COLOR;
     [cell setSelectedBackgroundView:bgColorView];
     
-    // Indicator Label logic
+    // TODO: Query Requests above with Messages and PossibleMatch; add here via index position
     [RevealRequest getRequestsBetween:[UserParseHelper currentUser] andMatch:user completion:^(RevealRequest *outgoingRequest, RevealRequest *incomingRequest) {
-        if (incomingRequest && [incomingRequest.requestFromUser isEqual:user]) {
+        if (incomingRequest) {
             _incomingRequest = incomingRequest;
             if (_incomingRequest.requestReply == nil /*[NSNumber numberWithBool:YES] && _incomingRequest.requestReply != [NSNumber numberWithBool:YES]*/) {
                 cell.indicatorLabel.hidden = NO;
@@ -378,7 +459,7 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
             }
         }
         
-        if (outgoingRequest && [outgoingRequest.requestToUser isEqual:user]) {
+        if (outgoingRequest) {
             _outgoingRequest = outgoingRequest;
             if ((_outgoingRequest.requestReply != nil && ![_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) /*|| (_outgoingRequest.requestReply isEqualToNumber:[NSNumber numberWithBool:NO] && ![_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])*/) {
                 cell.indicatorLabel.hidden = NO;
@@ -403,15 +484,7 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
 
 - (void)setUserData:(UserParseHelper *)user forCell:(UserTableViewCell *)cell
 {
-    if (userShareState == ShareStateSharing && _visualEffectView != nil) {
-        cell.nameTextLabel.text = user.nickname;
-        [_visualEffectView removeFromSuperview];
-    } else if (_visualEffectView == nil) {
-        [self blurImages:cell.userImageView];
-        NSString *matchGender;
-        matchGender = [user.isMale isEqualToString:@"true"] ? @"Male" : @"Female";
-        cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
-    }
+    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -590,6 +663,8 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
     [self.view removeFromSuperview];
     self.view = nil; // unloads the view
     [parent addSubview:self.view]; //reloads the view from the nib
+    
+    [self.tableView reloadData];
 }
 
 #pragma mark GADRequest generation

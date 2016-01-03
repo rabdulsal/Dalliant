@@ -37,6 +37,21 @@
     return @"PossibleMatch";
 }
 
++ (void)getConnectionsBetweenCurrentUser:(UserParseHelper *)currentUser
+                                andMatch:(UserParseHelper *)match
+                              completion:(void(^)(PossibleMatchHelper * _Nullable connection, NSError * _Nullable error))callback
+{
+    PFQuery *possMatch1 = [PossibleMatchHelper query];
+    [possMatch1 whereKey:@"matches" containsAllObjectsInArray:@[currentUser,match]];
+    [possMatch1 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            callback((PossibleMatchHelper *)[objects firstObject],nil);
+        } else {
+            // Handle error
+        }
+    }];
+}
+
 - (void)calculateCompatibility:(double)prefCounter with:(double)totalPreferences
 {
     //NSNumber *indexCalculation = @20.1;

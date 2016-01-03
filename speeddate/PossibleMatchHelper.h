@@ -35,6 +35,9 @@
 @property NSString *rvStString;
 @property NSString *rqStString;
 
++ (void)getConnectionsBetweenCurrentUser:(UserParseHelper *)currentUser
+                                andMatch:(UserParseHelper *)match
+                              completion:(void(^)(PossibleMatchHelper *connection, NSError *error))callback;
 - (void)calculateCompatibility:(double)prefCounter with:(double)totalPreferences;
 - (void)configureRadialViewForView:(UIView *)view withFrame:(CGRect)frame;
 - (void)addChatMessageToConveration:(MessageParse *)message;

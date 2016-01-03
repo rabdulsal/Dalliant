@@ -31,6 +31,11 @@
     
 }
 
+- (void)configureCellForUserInfo:(NSMutableDictionary *)userInfo
+{
+    
+}
+
 - (void)setInterests:(NSArray *)userInterests
 {
     NSString *interest;
