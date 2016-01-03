@@ -200,6 +200,7 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
                 
             // Display message
             UserParseHelper * __block match;
+            NSString * __block userName;
                 
             if(![message.fromUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
                 NSUInteger count = users.count;
@@ -209,20 +210,14 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
                         match = message.fromUserParse;
                         [self.messages addObject:message];
                         [self.usersArray addObject:match];
-                        /*
-                         * TODO: query PossibleMatch, ShareRelationship & RevealRequest based on message.fromUserParse and add to possibleMatch arraycreate dictionary, of form
-                         * { userName:
-                         *  {   "message" : message, 
-                         *      "possibleMatch" : possMatch,
-                         *      "shareRelation" : shareRelation
-                         *      "outgoingRequest" : outgoingRequest,
-                         *      "incomingRequest" : incomingRequest
-                         *  } 
-                         * }
-                         */
-                        // TODO: [self createUserCache]
-                        _matchDict[message.fromUserParse.nickname] = @{@"possibleMatch":@"testMatch"};
-                        NSInteger position = [self.usersArray indexOfObject:message.fromUserParse];
+                        
+                        // Set userName key for cache
+                        userName = match.nickname;
+                        [self fetchAllConnectionsSharingAndRequestsWithCurrentUser:[UserParseHelper currentUser]
+                                                                         andMatch:match
+                                                                         forCache:userName];
+                        
+                        NSInteger position = [self.usersArray indexOfObject:match];
                         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:position inSection:0];
                         [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
                     }];
@@ -237,54 +232,12 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
                         match = message.toUserParse;
                         [self.messages addObject:message];
                         [self.usersArray addObject:match];
-                        // TODO: [self createUserCache]
-                        NSString *userName = message.toUserParse.nickname;
-                        _matchDict[userName] = [NSMutableDictionary new];
-                        [_matchDict[userName] addObject:match forKey:@"matchUser"];
                         
-                        //Fetch PossibleMatch
-                        [PossibleMatchHelper getConnectionsBetweenCurrentUser:[UserParseHelper currentUser] andMatch:message.toUserParse completion:^(PossibleMatchHelper *connection, NSError *error) {
-                            if (!error) {
-                                [_matchDict[userName] addObject:connection forKey:@"matchConnection"];
-                                
-                                //Fetch ShareRelationship
-                                [ShareRelationship fetchShareRelationshipBetween:[UserParseHelper currentUser] andMatch:match completion:^(ShareRelationship * _Nullable shareRelation, NSError * _Nullable error) {
-                                    if (error) {
-                                        
-                                        // No prior ShareRelationship exists, so create one
-                                        ShareRelationship *shareRelationship     = [ShareRelationship objectWithClassName:@"ShareRelationship"];
-                                        shareRelationship.firstRequestedSharer   = [UserParseHelper currentUser].nickname;
-                                        shareRelationship.firstSharerShareState  = ShareStateNotSharing;
-                                        shareRelationship.secondRequestedSharer  = match.nickname;
-                                        shareRelationship.secondSharerShareState = ShareStateNotSharing;
-                                        [shareRelationship saveInBackground];
-                                        
-                                        [_matchDict[userName] addObject:shareRelationship forKey:@"shareRelation"];
-                                        
-                                    } else {
-                                        // Prior ShareRelation exists
-                                        [_matchDict[userName] addObject:shareRelation forKey:@"sharerelation"];
-                                    }
-                                    
-                                    //Fetch Reveal
-                                    [RevealRequest getRequestsBetween:[UserParseHelper currentUser] andMatch:match completion:^(RevealRequest *outgoingRequest, RevealRequest *incomingRequest) {
-                                        if (outgoingRequest) {
-                                            
-                                            [_matchDict[userName] addObject:outgoingRequest forKey:@"outgoingRequest"];
-                                        }
-                                        
-                                        if (incomingRequest) {
-                                            
-                                            [_matchDict[userName] addObject:incomingRequest forKey:@"incomingRequest"];
-                                        }
-                                    }];
-                                }];
-                                
-                            } else {
-                                // Handle error
-                            }
-                            
-                        }];
+                        // Set userName key for cache
+                        userName = message.toUserParse.nickname;
+                        [self fetchAllConnectionsSharingAndRequestsWithCurrentUser:[UserParseHelper currentUser]
+                                                                         andMatch:match
+                                                                         forCache:userName];
                         
                         NSInteger position = [self.usersArray indexOfObject:match];
                         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:position inSection:0];
@@ -303,6 +256,58 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
 - (void)updateTableView
 {
     [self reloadView];
+}
+
+- (void)fetchAllConnectionsSharingAndRequestsWithCurrentUser:(UserParseHelper *)currentUser
+                                                   andMatch:(UserParseHelper *)match
+                                                   forCache:(NSString *)userName
+{
+    _matchDict[userName] = [NSMutableDictionary new];
+    [_matchDict[userName] addObject:match forKey:@"matchUser"];
+    
+    //Fetch PossibleMatch
+    [PossibleMatchHelper getConnectionsBetweenCurrentUser:currentUser andMatch:match completion:^(PossibleMatchHelper *connection, NSError *error) {
+        if (!error) {
+            [_matchDict[userName] addObject:connection forKey:@"matchConnection"];
+            
+            //Fetch ShareRelationship
+            [ShareRelationship fetchShareRelationshipBetween:currentUser andMatch:match completion:^(ShareRelationship * _Nullable shareRelation, NSError * _Nullable error) {
+                if (error) {
+                    
+                    // No prior ShareRelationship exists, so create one
+                    ShareRelationship *shareRelationship     = [ShareRelationship objectWithClassName:@"ShareRelationship"];
+                    shareRelationship.firstRequestedSharer   = [UserParseHelper currentUser].nickname;
+                    shareRelationship.firstSharerShareState  = ShareStateNotSharing;
+                    shareRelationship.secondRequestedSharer  = match.nickname;
+                    shareRelationship.secondSharerShareState = ShareStateNotSharing;
+                    [shareRelationship saveInBackground];
+                    
+                    [_matchDict[userName] addObject:shareRelationship forKey:@"shareRelation"];
+                    
+                } else {
+                    // Prior ShareRelation exists
+                    [_matchDict[userName] addObject:shareRelation forKey:@"shareRelation"];
+                }
+                
+                //Fetch Reveal
+                [RevealRequest getRequestsBetween:currentUser andMatch:match completion:^(RevealRequest *outgoingRequest, RevealRequest *incomingRequest) {
+                    if (outgoingRequest) {
+                        
+                        [_matchDict[userName] addObject:outgoingRequest forKey:@"outgoingRequest"];
+                    }
+                    
+                    if (incomingRequest) {
+                        
+                        [_matchDict[userName] addObject:incomingRequest forKey:@"incomingRequest"];
+                    }
+                }];
+            }];
+            
+        } else {
+            // Handle error
+        }
+        
+    }];
 }
 
 #pragma mark TableView Delegate - Includes Blurring
