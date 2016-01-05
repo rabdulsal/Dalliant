@@ -213,9 +213,10 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
                         
                         // Set userName key for cache
                         userName = match.nickname;
-                        [self fetchAllConnectionsSharingAndRequestsWithCurrentUser:[UserParseHelper currentUser]
-                                                                         andMatch:match
-                                                                         forCache:userName];
+                        [self fetchAllResources:message
+                                 forCurrentUser:[UserParseHelper currentUser]
+                                       andMatch:match
+                                       forCache:userName];
                         
                         NSInteger position = [self.usersArray indexOfObject:match];
                         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:position inSection:0];
@@ -234,10 +235,11 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
                         [self.usersArray addObject:match];
                         
                         // Set userName key for cache
-                        userName = message.toUserParse.nickname;
-                        [self fetchAllConnectionsSharingAndRequestsWithCurrentUser:[UserParseHelper currentUser]
-                                                                         andMatch:match
-                                                                         forCache:userName];
+                        userName = match.nickname;
+                        [self fetchAllResources:message
+                                 forCurrentUser:[UserParseHelper currentUser]
+                                       andMatch:match
+                                       forCache:userName];
                         
                         NSInteger position = [self.usersArray indexOfObject:match];
                         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:position inSection:0];
@@ -249,7 +251,7 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
             //NSLog(@"Message Created at: %@", message.createdAt);
         }
         
-        [self.tableView reloadData];
+        //[self.tableView reloadData]; NOT NEEDED?
     }];
 }
 
@@ -258,12 +260,14 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
     [self reloadView];
 }
 
-- (void)fetchAllConnectionsSharingAndRequestsWithCurrentUser:(UserParseHelper *)currentUser
-                                                   andMatch:(UserParseHelper *)match
-                                                   forCache:(NSString *)userName
+- (void)fetchAllResources:(MessageParse *)message
+           forCurrentUser:(UserParseHelper *)currentUser
+                 andMatch:(UserParseHelper *)match
+                 forCache:(NSString *)userName;
 {
     _matchDict[userName] = [NSMutableDictionary new];
     [_matchDict[userName] addObject:match forKey:@"matchUser"];
+    [_matchDict[userName] addObject:message forKey:@"message"];
     
     //Fetch PossibleMatch
     [PossibleMatchHelper getConnectionsBetweenCurrentUser:currentUser andMatch:match completion:^(PossibleMatchHelper *connection, NSError *error) {
@@ -272,6 +276,8 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
             
             //Fetch ShareRelationship
             [ShareRelationship fetchShareRelationshipBetween:currentUser andMatch:match completion:^(ShareRelationship * _Nullable shareRelation, NSError * _Nullable error) {
+                
+                NSInteger shareState;
                 if (error) {
                     
                     // No prior ShareRelationship exists, so create one
@@ -282,11 +288,15 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
                     shareRelationship.secondSharerShareState = ShareStateNotSharing;
                     [shareRelationship saveInBackground];
                     
-                    [_matchDict[userName] addObject:shareRelationship forKey:@"shareRelation"];
-                    
+                    shareState = [shareRelationship getCurrentUserShareState:currentUser];
                 } else {
                     // Prior ShareRelation exists
-                    [_matchDict[userName] addObject:shareRelation forKey:@"shareRelation"];
+                    shareState = [shareRelation getCurrentUserShareState:currentUser];
+                }
+                
+                if (shareState) {
+                    NSNumber *state = [NSNumber numberWithInteger:shareState];
+                   [_matchDict[userName] addObject:state forKey:@"shareState"];
                 }
                 
                 //Fetch Reveal
@@ -300,7 +310,11 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
                         
                         [_matchDict[userName] addObject:incomingRequest forKey:@"incomingRequest"];
                     }
+                    
+                    [self.tableView reloadData];
                 }];
+                
+                [self.tableView reloadData];
             }];
             
         } else {
@@ -315,11 +329,6 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UserTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
-    // TODO: cell method configureCell
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.indicatorLabel.hidden = YES;
-    cell.indicatorLabel.layer.cornerRadius = cell.indicatorLabel.frame.size.width/2;
-    cell.indicatorLabel.layer.masksToBounds = YES;
     
     UserParseHelper *user;
     if (self.filteredAllUsersArray.count) {
@@ -328,151 +337,12 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
         user = [self.usersArray objectAtIndex:indexPath.row];
     }
     
-    //[self fetchShareRequestWith:user];
-    // Get Match Relationship based on index position, query done above
-    _matchedUsers = [[NSArray alloc] initWithObjects:[UserParseHelper currentUser], user, nil];
-    PFQuery *possMatch1 = [PossibleMatchHelper query];
-    [possMatch1 whereKey:@"matches" containsAllObjectsInArray:_matchedUsers];
-    //[possMatch1 findObjects];
-    [possMatch1 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        //for (PossibleMatchHelper *match in objects) {
-        _matchUser = [objects objectAtIndex:0];
-        
-        CGRect frame = CGRectMake(190, 8, 45, 45);
-        [_matchUser configureRadialViewForView:cell.contentView withFrame:frame];
-        //[self configureRadialView:cell];
-        //}
-        if (!cell.userImageView.image) {
-            [user.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                
-                cell.userImageView.image = [UIImage imageWithData:data];
-                if (_visualEffectView == nil && userShareState != ShareStateSharing) {
-                    [self blurImages:cell.userImageView];
-                    NSString *matchGender;
-                    matchGender = [user.isMale isEqualToString:@"true"] ? @"Male" : @"Female";
-                    cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
-                }
-    //            [self blurImages:cell.userImageView];
-    //            
-    //            if ([user.isMale isEqualToString:@"true"]) {
-    //                NSString *matchGender = @"Male";
-    //                cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
-    //            } else {
-    //                NSString *matchGender = @"Female";
-    //                cell.nameTextLabel.text = [[NSString alloc] initWithFormat:@"%@, %@", matchGender, user.age];
-    //            }
-    //          DEPRECATED USE SHARESTATE
-    //            if ((_outgoingRequest && _incomingRequest) || _incomingRequest) {
-    //                if (_incomingRequest.requestReply isEqualToNumber:[NSNumber numberWithBool:YES] && [_incomingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_incomingRequest.requestFromUser isEqual:user]) {
-    //                    cell.nameTextLabel.text = user.nickname;
-    //                    [_visualEffectView removeFromSuperview];
-    //                    NSLog(@"%@ revealed!", user.nickname);
-    //                }
-    //            }
-    //            
-    //            if ((_incomingRequest && _outgoingRequest) || _outgoingRequest) {
-    //                if (_outgoingRequest.requestReply isEqualToNumber:[NSNumber numberWithBool:YES] && [_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]] && [_outgoingRequest.requestToUser isEqual:user]) {
-    //                    cell.nameTextLabel.text = user.nickname;
-    //                    [_visualEffectView removeFromSuperview];
-    //                    NSLog(@"%@ revealed!", user.nickname);
-    //                }
-    //            }
-                [ShareRelationship fetchShareRelationshipBetween:[UserParseHelper currentUser]
-                                                        andMatch:user
-                                                      completion:^(ShareRelationship * _Nullable relationship, NSError * _Nullable error) {
-                    if (relationship) {
-                        userShareState = [relationship getCurrentUserShareState:[UserParseHelper currentUser]];
-    //                    if (userShareState == ShareStateSharing) {
-    //                        cell.nameTextLabel.text = user.nickname;
-    //                        [_visualEffectView removeFromSuperview];
-    //                    }
-                        if (userShareState == ShareStateSharing && _visualEffectView != nil) {
-                            cell.nameTextLabel.text = user.nickname;
-                            [_visualEffectView removeFromSuperview];
-                        }
-                    } else if (error) {
-                        // Handle Error
-                    }
-                }];
-            }];
-        }
-    }];
-    
-    //[self setPossibleMatchesFromMessages:_matchedUsers for:cell];
-    
-    
-    // Revealed conditional -----------------------------------------------------
-    
-    
-    
-    // ----------------------------------------------------------------------------
-    
-    //cell.nameTextLabel.textColor = WHITE_COLOR;
-    cell.userImageView.layer.cornerRadius = cell.userImageView.frame.size.height / 2;
-    cell.userImageView.layer.masksToBounds = YES;
-    /*
-    cell.userImageView.layer.borderWidth = 1.0,
-    cell.userImageView.layer.borderColor = WHITE_COLOR.CGColor;
-    */
-    UIImageView *accesory = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"accesory"]];
-    accesory.frame = CGRectMake(15, 0, 15, 15);
-    accesory.contentMode = UIViewContentModeScaleAspectFit;
-    cell.accessoryView = accesory;
-    
-    MessageParse *message = [self.messages objectAtIndex:indexPath.row];
-    
-    // TODO: cell method updateLabelsFromMessage:message
-    cell.lastMessageLabel.text = message.text;
-    if (!message.text && message.image) {
-        cell.lastMessageLabel.text = @"Image";
-    }
-    if (!message.read && [message.toUserParse.objectId isEqualToString:[UserParseHelper currentUser].objectId]) {
-        cell.nameTextLabel.textColor = RED_LIGHT;
-        [cell.lastMessageLabel setFont:[UIFont boldSystemFontOfSize:13]];
-        cell.lastMessageLabel.textColor = RED_LIGHT;
-        cell.dateLabel.textColor = RED_LIGHT;
-    } else {
-        //cell.lastMessageLabel.textColor = WHITE_COLOR;
-        cell.nameTextLabel.textColor = [UIColor lightGrayColor];
-        cell.lastMessageLabel.textColor = [UIColor lightGrayColor];
-        cell.dateLabel.textColor = [UIColor lightGrayColor];
-    }
-    //cell.dateLabel.textColor = WHITE_COLOR;
-    NSDateFormatter *dateFormatter = [NSDateFormatter new];
-    [dateFormatter setDoesRelativeDateFormatting:YES];
-    if ([[message createdAt] timeIntervalSinceNow] * -1 < SECONDS_DAY) {
-        dateFormatter.timeStyle = NSDateFormatterShortStyle;
-    } else {
-        dateFormatter.dateStyle = NSDateFormatterShortStyle;
-    }
-    
-    cell.dateLabel.text = [dateFormatter stringFromDate:[message createdAt]];
-    
-    // TODO: add to configureCell method
-    UIView *bgColorView = [[UIView alloc] init];
-    //bgColorView.backgroundColor = RED_COLOR;
-    bgColorView.backgroundColor = WHITE_COLOR;
-    [cell setSelectedBackgroundView:bgColorView];
-    
-    // TODO: Query Requests above with Messages and PossibleMatch; add here via index position
-    [RevealRequest getRequestsBetween:[UserParseHelper currentUser] andMatch:user completion:^(RevealRequest *outgoingRequest, RevealRequest *incomingRequest) {
-        if (incomingRequest) {
-            _incomingRequest = incomingRequest;
-            if (_incomingRequest.requestReply == nil /*[NSNumber numberWithBool:YES] && _incomingRequest.requestReply != [NSNumber numberWithBool:YES]*/) {
-                cell.indicatorLabel.hidden = NO;
-                cell.indicatorLabel.backgroundColor = [UIColor purpleColor];
-            }
-        }
-        
-        if (outgoingRequest) {
-            _outgoingRequest = outgoingRequest;
-            if ((_outgoingRequest.requestReply != nil && ![_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) /*|| (_outgoingRequest.requestReply isEqualToNumber:[NSNumber numberWithBool:NO] && ![_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])*/) {
-                cell.indicatorLabel.hidden = NO;
-                cell.indicatorLabel.backgroundColor = RED_LIGHT;
-            }
-        }
-    }];
-    
+    // TODO: cell method configureCell
+    [cell configureCellWithUserCache:_matchDict[user.nickname]];
+    CGRect frame = CGRectMake(190, 8, 45, 45);
+    [cell configureRadialViewForFrame:frame];
+    // --- MOVING TO CLASS METHOD ---
+    // ------------------
     return cell;
 }
 

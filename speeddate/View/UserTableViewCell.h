@@ -24,5 +24,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *image5;
 
 - (void)setInterests:(NSArray *)userInterests;
+- (void)configureCellWithUserCache:(NSMutableDictionary *)userCache;
+- (void)configureRadialViewForFrame:(CGRect)frame;
 
 @end
