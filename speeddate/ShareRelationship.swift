@@ -42,6 +42,31 @@ import Foundation
     }
 
     //MARK: Class Methods
+    @objc class func createShareRelationshipBetween(currentUser: UserParseHelper, andMatch match: UserParseHelper, completion:((shareRelation: ShareRelationship?, error: NSError?) -> Void)) {
+        /*
+        * ShareRelationship *shareRelationship     = [ShareRelationship objectWithClassName:@"ShareRelationship"];
+        * shareRelationship.firstRequestedSharer   = [UserParseHelper currentUser].nickname;
+        * shareRelationship.firstSharerShareState  = ShareStateNotSharing;
+        * shareRelationship.secondRequestedSharer  = match.nickname;
+        * shareRelationship.secondSharerShareState = ShareStateNotSharing;
+        * [shareRelationship saveInBackground];
+         *
+         */
+        let shareRelationship = ShareRelationship()
+        shareRelationship.firstRequestedSharer   = currentUser.nickname
+        shareRelationship.firstSharerShareState  = ShareState.NotSharing.rawValue
+        shareRelationship.secondRequestedSharer  = match.nickname
+        shareRelationship.secondSharerShareState = ShareState.NotSharing.rawValue
+        shareRelationship.saveInBackgroundWithBlock { (success, error) -> Void in
+            
+            if success {
+                completion(shareRelation: shareRelationship, error: nil)
+            } else  {
+                completion(shareRelation: nil, error: error)
+            }
+        }
+    }
+    
     @objc class func fetchShareRelationshipBetween(currentUser: UserParseHelper, andMatch match: UserParseHelper, completion:((sharerelation: ShareRelationship?, error: NSError?) -> Void)) {
         if let query1 = ShareRelationship.query(), query2 = ShareRelationship.query() {
             query1.whereKey("firstRequestedSharer", equalTo: currentUser.nickname)

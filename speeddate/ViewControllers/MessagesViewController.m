@@ -87,44 +87,6 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
     //self.searchTextField.backgroundColor = RED_DEEP;
   
 }
-// ------- DEPRECATED * USE REVEALREQUEST CLASS METHOD ----------
-//- (void)fetchShareRequestWith:(UserParseHelper *)user // Change to FetchShareReply
-//{
-//    NSLog(@"Fetched share request");
-//    
-//    // Fetch Reply based on RevealRequest.Id
-//    
-//    // Once Fetched send reply using RevealRequest method
-//    
-//    PFQuery *requestFromQuery = [RevealRequest query];
-//    [requestFromQuery whereKey:@"requestFromUser" equalTo:[UserParseHelper currentUser]];
-//    [requestFromQuery whereKey:@"requestToUser" equalTo:user];
-//    
-//    PFQuery *requestToQuery = [RevealRequest query];
-//    [requestToQuery whereKey:@"requestToUser" equalTo:[UserParseHelper currentUser]];
-//    [requestToQuery whereKey:@"requestFromUser" equalTo:user];
-//    
-//    PFQuery *orQuery = [PFQuery orQueryWithSubqueries:@[requestFromQuery, requestToQuery]];
-//    [orQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-//        NSArray *requests = [objects copy];
-//        NSLog(@"Requests count: %lu", (unsigned long)[requests count]);
-//        
-//        for (RevealRequest *request in requests) {
-//            UserParseHelper *fromRequestUser = (UserParseHelper *)[request.requestFromUser fetchIfNeeded];
-//            
-//            UserParseHelper *toRequestUser = (UserParseHelper *)[request.requestToUser fetchIfNeeded];
-//            
-//            if ([fromRequestUser isEqual:[UserParseHelper currentUser]]) {
-//                _outgoingRequest = request; //Equivalent to outgoingRequest
-//                NSLog(@"Request from Me and to %@", _outgoingRequest.requestToUser.nickname);
-//            } else if ([toRequestUser isEqual:[UserParseHelper currentUser]]) {
-//                _incomingRequest = request; //Equivalent to incomingRequest
-//                NSLog(@"Request from Other User: %@", _incomingRequest.requestFromUser.nickname);
-//            }
-//        }
-//    }];   
-//    
-//}
 
 - (void)setPossibleMatchesFromMessages:(NSArray *)matches for:(UserTableViewCell *)cell
 {
@@ -277,18 +239,14 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
             //Fetch ShareRelationship
             [ShareRelationship fetchShareRelationshipBetween:currentUser andMatch:match completion:^(ShareRelationship * _Nullable shareRelation, NSError * _Nullable error) {
                 
-                NSInteger shareState;
+                NSInteger __block shareState;
                 if (error) {
                     
                     // No prior ShareRelationship exists, so create one
-                    ShareRelationship *shareRelationship     = [ShareRelationship objectWithClassName:@"ShareRelationship"];
-                    shareRelationship.firstRequestedSharer   = [UserParseHelper currentUser].nickname;
-                    shareRelationship.firstSharerShareState  = ShareStateNotSharing;
-                    shareRelationship.secondRequestedSharer  = match.nickname;
-                    shareRelationship.secondSharerShareState = ShareStateNotSharing;
-                    [shareRelationship saveInBackground];
+                    [ShareRelationship createShareRelationshipBetween:currentUser andMatch:match completion:^(ShareRelationship * _Nullable shareRelation, NSError * _Nullable error) {
+                        shareState = [shareRelation getCurrentUserShareState:currentUser];
+                    }];
                     
-                    shareState = [shareRelationship getCurrentUserShareState:currentUser];
                 } else {
                     // Prior ShareRelation exists
                     shareState = [shareRelation getCurrentUserShareState:currentUser];
@@ -337,29 +295,12 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
         user = [self.usersArray objectAtIndex:indexPath.row];
     }
     
-    // TODO: cell method configureCell
     [cell configureCellWithUserCache:_matchDict[user.nickname]];
+    
     CGRect frame = CGRectMake(190, 8, 45, 45);
     [cell configureRadialViewForFrame:frame];
-    // --- MOVING TO CLASS METHOD ---
-    // ------------------
-    return cell;
-}
-
-#pragma mark - Blur Images
-
-- (void)blurImages:(UIImageView *)imageView
-{
-    UIVisualEffect *blurEffect;
-    blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
-    _visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-    _visualEffectView.frame = imageView.bounds;
-    [imageView addSubview:_visualEffectView];
-}
-
-- (void)setUserData:(UserParseHelper *)user forCell:(UserTableViewCell *)cell
-{
     
+    return cell;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -416,33 +357,6 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
         vc.curUser          = [UserParseHelper currentUser];
         vc.matchedUsers     = _matchUser;
         vc.fromConversation = true;
-        /*
-        UserMessagesViewController *vc = segue.destinationViewController;
-        //vc.matchedUsers = _matchUser;
-        
-        if (self.filteredAllUsersArray.count) {
-            vc.toUserParse = [self.filteredAllUsersArray objectAtIndex:self.tableView.indexPathForSelectedRow.row];
-            vc.curUser = [UserParseHelper currentUser];
-            vc.fromConversation = true;
-        } else {
-            vc.toUserParse = [self.usersArray objectAtIndex:self.tableView.indexPathForSelectedRow.row];
-            vc.curUser = [UserParseHelper currentUser];
-            vc.fromConversation = true;
-        }
-         */
-        /*
-        MatchViewController *matchVC = [[MatchViewController alloc]init];
-        matchVC = segue.destinationViewController;
-        //PossibleMatchHelper *matchRelationship = [self.matchRelationships objectAtIndex:self.tableView.indexPathForSelectedRow.row];
-        //matchVC.userFBPic.image             = _toUserParse.photo;
-        UserParseHelper *match  = _matchUser.toUser;
-        matchVC.matchUser       = (UserParseHelper *)[match fetchIfNeeded];
-        matchVC.possibleMatch   = _matchUser;
-        matchVC.getPhotoArray   = [NSMutableArray new];
-        matchVC.user            = [UserParseHelper currentUser];
-        
-        [matchVC setUserPhotosArray:matchVC.matchUser];
-         */
     }
 }
 

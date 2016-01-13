@@ -74,15 +74,6 @@
 
 - (void)setVarsFromCache:(NSMutableDictionary *)userCache
 {
-    /* userCache keys:
-     *
-     * @"matchConnection"
-     * @"shareRelation"
-     * @"outgoingRequest"
-     * @"incomingRequest"
-     *
-     */
-    
     _matchUser       = [userCache objectForKey:@"matchUser"];
     _message         = [userCache objectForKey:@"message"];
     _shareRelation   = [[userCache objectForKey:@"shareState"] intValue];
@@ -161,7 +152,10 @@
         self.indicatorLabel.backgroundColor = [UIColor purpleColor];
     }
 
-    if (_outgoingRequest && _outgoingRequest.requestReply != nil && ![_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+    if (_outgoingRequest &&
+        _outgoingRequest.requestReply != nil &&
+        ![_outgoingRequest.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])
+    {
         self.indicatorLabel.hidden = NO;
         self.indicatorLabel.backgroundColor = RED_LIGHT;
     }
