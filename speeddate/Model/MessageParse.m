@@ -22,6 +22,27 @@
     return @"MessageParse";
 }
 
++ (void)getAllMessagesFromCurrentUser:(UserParseHelper *)currentUser
+                           completion:(void(^)(NSArray *messages, NSError * _Nullable error))callback
+{
+    PFQuery *messageQueryFrom = [MessageParse query];
+    [messageQueryFrom whereKey:@"fromUserParse" equalTo:[UserParseHelper currentUser]];
+    PFQuery *messageQueryTo = [MessageParse query];
+    [messageQueryTo whereKey:@"toUserParse" equalTo:[UserParseHelper currentUser]];
+    PFQuery *both = [PFQuery orQueryWithSubqueries:@[messageQueryFrom, messageQueryTo]];
+    [both orderByDescending:@"createdAt"];
+    //[both orderByDescending:@"compatibilityIndex"]; // <-- Won't work for now, need a compatibility attribute on messages somehow
+    
+    [both findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        
+        if (!error) {
+            callback(objects,nil);
+        } else {
+            // Handle error
+        }
+    }];
+}
+
 + (void)getMessagesBetween:(UserParseHelper *)currentUser
                   andMatch:(UserParseHelper *)match
                 completion:(void(^)(NSArray *conversation, NSError * _Nullable error))callback

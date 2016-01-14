@@ -131,15 +131,8 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
     self.messages = [NSMutableArray new];
     self.filteredAllUsersArray = [NSArray new];
     
-    PFQuery *messageQueryFrom = [MessageParse query];
-    [messageQueryFrom whereKey:@"fromUserParse" equalTo:[UserParseHelper currentUser]];
-    PFQuery *messageQueryTo = [MessageParse query];
-    [messageQueryTo whereKey:@"toUserParse" equalTo:[UserParseHelper currentUser]];
-    PFQuery *both = [PFQuery orQueryWithSubqueries:@[messageQueryFrom, messageQueryTo]];
-    [both orderByDescending:@"createdAt"];
-    //[both orderByDescending:@"compatibilityIndex"]; // <-- Won't work for now, need a compatibility attribute on messages somehow
-    
-    [both findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    [MessageParse getAllMessagesFromCurrentUser:[UserParseHelper currentUser] completion:^(NSArray *messages, NSError *error) {
+        
         NSMutableSet *users = [NSMutableSet new];
         
         //Order Messages
@@ -150,7 +143,7 @@ NSString * const kRequestUpdateNotification = @"requestUpdateNotification";
          return [b.createdAt compare:a.createdAt];
          }];
         */
-        for (MessageParse *message in objects) {
+        for (MessageParse *message in messages) {
             
             // Erase old Messages Conditional below
             

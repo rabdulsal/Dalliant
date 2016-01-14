@@ -90,13 +90,15 @@
 
 - (void)notifyCurrentUser:(UserParseHelper *)currentUser ofReplyToShareRequestFromMatch:(UserParseHelper *)match
 {
-    if ([self.requestReply isEqualToNumber:[NSNumber numberWithBool:NO]] && ![self.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) {
-        
+    if ([self.requestReply isEqualToNumber:[NSNumber numberWithBool:NO]] &&
+        ![self.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])
+    {
         [identityDelegate currentUserShareRequest:currentUser rejectedByMatch:match];
-        
-    } else if ([self.requestReply isEqualToNumber:[NSNumber numberWithBool:YES]] && ![self.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+    }
+    else if ([self.requestReply isEqualToNumber:[NSNumber numberWithBool:YES]] &&
+             ![self.requestClosed isEqualToNumber:[NSNumber numberWithBool:YES]])
+    {
         [identityDelegate currentUserShareRequest:currentUser acceptedByMatch:match];
-    
     }
     
 }

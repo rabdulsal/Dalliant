@@ -245,18 +245,14 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
 
 -(void)fetchShareRelationship
 {
-    [ShareRelationship fetchShareRelationshipBetween:_curUser andMatch:_toUserParse completion:^(ShareRelationship * _Nullable relationship, NSError * _Nullable error) {
+    [ShareRelationship fetchShareRelationshipBetween:_curUser
+                                            andMatch:_toUserParse
+                                          completion:^(ShareRelationship * _Nullable relationship, NSError * _Nullable error) {
         if (relationship) {
             _userShareState = [relationship getCurrentUserShareState:_curUser];
-            //dispatch_async(dispatch_get_main_queue(), ^{
             [self setNavbarTitleView];
             [self configureToolBar];
             [self checkRequestsForShareRelationship:relationship];
-            //});
-//            if (_userShareState == ShareStateRequested) {
-//                [self configureToolBar];
-//                [self checkRequestsForShareRelationship:relationship];
-//            }
         } else {
             // TODO: Handle error
         }
@@ -265,7 +261,9 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
 
 - (void)checkRequestsForShareRelationship:(ShareRelationship *)relationship
 {
-    [RevealRequest getRequestsBetween:_curUser andMatch:_toUserParse completion:^(RevealRequest *outgoingRequest, RevealRequest *incomingRequest) {
+    [RevealRequest getRequestsBetween:_curUser
+                             andMatch:_toUserParse
+                           completion:^(RevealRequest *outgoingRequest, RevealRequest *incomingRequest) {
         if (outgoingRequest) {
             _outgoingRequest = outgoingRequest;
             _outgoingRequest.identityDelegate = relationship;
@@ -788,28 +786,27 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
 
 - (void)didPressAccessoryButton:(UIButton *)sender
 {
-    if (_userShareState != ShareStateSharing) {
-        [self shareRequestActionSheet];
-    } else {
+    _userShareState != ShareStateSharing ? [self shareRequestActionSheet] : [self configureCamera];
+}
+
+- (void)configureCamera
+{
+    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+    imagePicker.delegate = self;
+    imagePicker.allowsEditing = NO;
     
-        // If currentUser's shareState == Sharing, allow camera
-        UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-        imagePicker.delegate = self;
-        imagePicker.allowsEditing = NO;
-        
-        // if-conditional for using camera vs. photolibrary
-        if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-            imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
-        } else {
-            imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-        }
-        
-        //imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary; <-- PhotoLibrary on device for Testing purposes
-        imagePicker.navigationBarHidden = YES;
-        imagePicker.toolbarHidden = YES;
-        //imagePicker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:imagePicker.sourceType]; <-- Comment-out Video option
-        [self presentViewController:imagePicker animated:YES completion:nil];
+    // if-conditional for using camera vs. photolibrary
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+    } else {
+        imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     }
+    
+    //imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary; <-- PhotoLibrary on device for Testing purposes
+    imagePicker.navigationBarHidden = YES;
+    imagePicker.toolbarHidden = YES;
+    //imagePicker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:imagePicker.sourceType]; <-- Comment-out Video option
+    [self presentViewController:imagePicker animated:YES completion:nil];
 }
 
 - (void)shareRequestActionSheet
