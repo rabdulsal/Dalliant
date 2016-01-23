@@ -211,6 +211,7 @@
 		C2A90ED719F49CE900FC0D04 /* UserProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A90ED619F49CE900FC0D04 /* UserProfileViewController.m */; };
 		C2CC355819F5825E00AC86D1 /* UIImageView+UIActivityIndicatorForSDWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = C2CC355719F5825E00AC86D1 /* UIImageView+UIActivityIndicatorForSDWebImage.m */; };
 		C2CC355A19F58ACD00AC86D1 /* mask_profile.png in Resources */ = {isa = PBXBuildFile; fileRef = C2CC355919F58ACD00AC86D1 /* mask_profile.png */; };
+		DC24EBDF1C49CA2C0008A301 /* FacebookLogin.m in Sources */ = {isa = PBXBuildFile; fileRef = DC24EBDE1C49CA2C0008A301 /* FacebookLogin.m */; };
 		DC63BB961C2E5727006959F5 /* DalliantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC63BB951C2E5727006959F5 /* DalliantTests.swift */; };
 		DC63BBA01C2E5A8C006959F5 /* RevealRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBDB1961A427A11006A9F1F /* RevealRequest.m */; };
 		DC63BBA11C2E5C03006959F5 /* ShareRelationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C48680E1C27A21100ADFDC9 /* ShareRelationship.swift */; };
@@ -566,6 +567,9 @@
 		C2CC355619F5825E00AC86D1 /* UIImageView+UIActivityIndicatorForSDWebImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+UIActivityIndicatorForSDWebImage.h"; sourceTree = "<group>"; };
 		C2CC355719F5825E00AC86D1 /* UIImageView+UIActivityIndicatorForSDWebImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+UIActivityIndicatorForSDWebImage.m"; sourceTree = "<group>"; };
 		C2CC355919F58ACD00AC86D1 /* mask_profile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mask_profile.png; sourceTree = "<group>"; };
+		DC24EBDD1C49CA2C0008A301 /* FacebookLogin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FacebookLogin.h; sourceTree = "<group>"; };
+		DC24EBDE1C49CA2C0008A301 /* FacebookLogin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FacebookLogin.m; sourceTree = "<group>"; };
+		DC24EBE01C4A08C20008A301 /* FaceBookLoginDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FaceBookLoginDelegate.h; sourceTree = "<group>"; };
 		DC63BB8A1C2B9518006959F5 /* ShareRequestDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShareRequestDelegate.h; sourceTree = "<group>"; };
 		DC63BB931C2E5727006959F5 /* DalliantTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DalliantTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC63BB951C2E5727006959F5 /* DalliantTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DalliantTests.swift; sourceTree = "<group>"; };
@@ -896,6 +900,8 @@
 				4C4F7B5A1AE429CC0014C737 /* UserRating.m */,
 				4C48680E1C27A21100ADFDC9 /* ShareRelationship.swift */,
 				4C48680D1C27A21000ADFDC9 /* speeddate-Bridging-Header.h */,
+				DC24EBDD1C49CA2C0008A301 /* FacebookLogin.h */,
+				DC24EBDE1C49CA2C0008A301 /* FacebookLogin.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -941,6 +947,7 @@
 			children = (
 				4CD702371BB3A71900463090 /* IdentityRevealDelegate.h */,
 				DC63BB8A1C2B9518006959F5 /* ShareRequestDelegate.h */,
+				DC24EBE01C4A08C20008A301 /* FaceBookLoginDelegate.h */,
 			);
 			name = Protocols;
 			sourceTree = "<group>";
@@ -1521,6 +1528,7 @@
 				C25E75F219EF29D500779C23 /* UIImage+RoundedCornerAdditions.m in Sources */,
 				42BD2AFE19AE5A1B00FCC817 /* UserTableViewCell.m in Sources */,
 				422370E519B7FB8B00539466 /* CCoverflowCollectionViewLayout.m in Sources */,
+				DC24EBDF1C49CA2C0008A301 /* FacebookLogin.m in Sources */,
 				C25E764019EF5C3900779C23 /* APIDownload.m in Sources */,
 				C25E763019EF5C1200779C23 /* SDWebImageCompat.m in Sources */,
 				42DBCCD619ACD87000CE6C93 /* MessagesViewController.m in Sources */,
@@ -1812,6 +1820,7 @@
 				DC63BB9C1C2E5727006959F5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

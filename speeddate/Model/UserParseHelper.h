@@ -103,6 +103,7 @@
 - (NSString *)userWork;
 - (NSString *)userSchool;
 - (void)configureImage:(UIImage *)image picNumber:(int)photoNum;
++ (NSInteger)calculateUserAge:(NSString *)birthday;
 - (void)increaseCreditsBy:(int)points;
 - (void)decreaseCreditsBy:(int)points;
 - (void)blockUser:(NSString *)matchUser;

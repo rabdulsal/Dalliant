@@ -153,6 +153,21 @@
     }];
 }
 
++ (NSInteger)calculateUserAge:(NSString *)birthday
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat: @"MM/dd/yyyy"];
+    NSDate *birthdate = [formatter dateFromString:birthday];
+    
+    NSDate* now = [NSDate date];
+    NSDateComponents* ageComponents = [[NSCalendar currentCalendar]
+                                       components:NSYearCalendarUnit
+                                       fromDate:birthdate
+                                       toDate:now
+                                       options:0];
+    return [ageComponents year];
+}
+
 - (void)increaseCreditsBy:(int)points
 {
     self.credits = [NSNumber numberWithInteger:self.credits.intValue + points];
