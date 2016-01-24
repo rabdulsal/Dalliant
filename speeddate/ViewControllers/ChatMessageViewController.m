@@ -8,6 +8,9 @@
 
 #import "ChatMessageViewController.h"
 #import "speeddate-Swift.h"
+#import <MobileCoreServices/UTCoreTypes.h>
+#import <MediaPlayer/MediaPlayer.h>
+#import <AssetsLibrary/AssetsLibrary.h>
 
 // Notificications
 NSString * const kRequestSentNotification     = @"requestSentNotification";
@@ -805,7 +808,7 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
     //imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary; <-- PhotoLibrary on device for Testing purposes
     imagePicker.navigationBarHidden = YES;
     imagePicker.toolbarHidden = YES;
-    //imagePicker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:imagePicker.sourceType]; <-- Comment-out Video option
+    imagePicker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:imagePicker.sourceType]; //<-- Comment-out Video option
     [self presentViewController:imagePicker animated:YES completion:nil];
 }
 
@@ -934,54 +937,85 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
     [popTip showText:@"Unlocked a prize! Press here!" direction:AMPopTipDirectionDown maxWidth:100 inView:self.navigationController.view fromFrame:titleFrame duration:5];
 }
 
-#pragma mark - ImagePickerControllerDelegate
+#pragma mark - ImagePickerControllerDelegate & Methods
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
+    NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
     
-    UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
-    
-    //Save image to Parse
-    
-    MessageParse *message   = [MessageParse object];
-    message.fromUserParse   = _curUser;
-    message.toUserParse     = self.toUserParse;
-    message.read            = NO;
-    message.sendImage       = image;
-    /*
-    NSInteger item = [self.collectionView numberOfItemsInSection:0];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:0];
-    [self.collectionView insertItemsAtIndexPaths:@[indexPath]];
-    [self scrollCollectionView];
-    */
-    
-    PFFile *file = [PFFile fileWithData:UIImageJPEGRepresentation(image, 0.9)];
-    [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        message.image = file;
-        [message saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            PFQuery *query = [PFInstallation query];
-            PFUser *pushUser = _curUser;
-            NSString *pushUserto = pushUser[@"nickname"];
-            [query whereKey:@"objectId" equalTo:self.toUserParse.installation.objectId];
+    if (CFStringCompare ((__bridge_retained CFStringRef) mediaType, kUTTypeMovie, 0) == kCFCompareEqualTo) // If Movie
+    {
+        NSString *moviePath = [[info objectForKey:UIImagePickerControllerMediaURL] path];
+        if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(moviePath))
+        {
+            JSQVideoMediaItem *video = [[JSQVideoMediaItem alloc] initWithFileURL:[NSURL URLWithString:moviePath] isReadyToPlay:YES];
+            JSQMessage *videoMessage = [JSQMessage messageWithSenderId:_curUser.objectId displayName:_curUser.nickname media:video];
             
-            NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
-                                  [NSString stringWithFormat:@"%@ send image",pushUserto], @"alert",
-                                  [NSString stringWithFormat:@"%@", message.objectId], @"messageId",
-                                  @"Increment", @"badge",
-                                  @"Ache.caf", @"sound",
-                                  nil];
-            PFPush *push = [[PFPush alloc] init];
-            
-            [push setQuery:query];
-            [push setData:data];
-            [push sendPushInBackground];
-            
-            [self addPhotoMediaMessageWithImage:image];
-            
+            [self.messages addObject:videoMessage];
+            //[self sortMessages:_messages byDate:@"createdAt"];
+            [self finishSendingMessage];
             [self dismissViewControllerAnimated:YES completion:nil];
+            UISaveVideoAtPathToSavedPhotosAlbum(moviePath,self,@selector(video:didFinishSavingWithError:contextInfo:),nil); // Save to Photo Album
+            
+        } 
+    }
+    else if (CFStringCompare ((__bridge_retained CFStringRef) mediaType, kUTTypeImage, 0) == kCFCompareEqualTo) // If Image
+    {
+        UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
+        
+        //Save image to Parse
+        
+        MessageParse *message   = [MessageParse object];
+        message.fromUserParse   = _curUser;
+        message.toUserParse     = self.toUserParse;
+        message.read            = NO;
+        message.sendImage       = image;
+        /*
+        NSInteger item = [self.collectionView numberOfItemsInSection:0];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:0];
+        [self.collectionView insertItemsAtIndexPaths:@[indexPath]];
+        [self scrollCollectionView];
+        */
+        
+        PFFile *file = [PFFile fileWithData:UIImageJPEGRepresentation(image, 0.9)];
+        [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            message.image = file;
+            [message saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                PFQuery *query = [PFInstallation query];
+                PFUser *pushUser = _curUser;
+                NSString *pushUserto = pushUser[@"nickname"];
+                [query whereKey:@"objectId" equalTo:self.toUserParse.installation.objectId];
+                
+                NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
+                                      [NSString stringWithFormat:@"%@ send image",pushUserto], @"alert",
+                                      [NSString stringWithFormat:@"%@", message.objectId], @"messageId",
+                                      @"Increment", @"badge",
+                                      @"Ache.caf", @"sound",
+                                      nil];
+                PFPush *push = [[PFPush alloc] init];
+                
+                [push setQuery:query];
+                [push setData:data];
+                [push sendPushInBackground];
+                
+                [self addPhotoMediaMessageWithImage:image];
+                
+                [self dismissViewControllerAnimated:YES completion:nil];
+            }];
         }];
-    }];
-     
+    }
+}
+
+-(void)video:(NSString*)videoPath didFinishSavingWithError:(NSError*)error contextInfo:(void*)contextInfo {
+    if (error) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Video Saving Failed"
+                                                       delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Video Saved" message:@"Saved To Photo Album"
+                                                       delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 #pragma mark - Reveal Request

@@ -216,6 +216,9 @@
 		DC63BBA01C2E5A8C006959F5 /* RevealRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBDB1961A427A11006A9F1F /* RevealRequest.m */; };
 		DC63BBA11C2E5C03006959F5 /* ShareRelationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C48680E1C27A21100ADFDC9 /* ShareRelationship.swift */; };
 		DC63BBA31C2E5DE9006959F5 /* speeddateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 42DBCC5519AC20BB00CE6C93 /* speeddateTests.m */; };
+		DCB35E951C55451700D49968 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCB35E941C55451700D49968 /* AssetsLibrary.framework */; };
+		DCB35E971C55452500D49968 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCB35E961C55452500D49968 /* CoreMedia.framework */; };
+		DCB35E991C55453900D49968 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCB35E981C55453900D49968 /* MediaPlayer.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -574,6 +577,9 @@
 		DC63BB931C2E5727006959F5 /* DalliantTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DalliantTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC63BB951C2E5727006959F5 /* DalliantTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DalliantTests.swift; sourceTree = "<group>"; };
 		DC63BB971C2E5727006959F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DCB35E941C55451700D49968 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		DCB35E961C55452500D49968 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		DCB35E981C55453900D49968 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		E59D335F9BB03E3FF54B1F17 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -582,6 +588,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCB35E991C55453900D49968 /* MediaPlayer.framework in Frameworks */,
+				DCB35E971C55452500D49968 /* CoreMedia.framework in Frameworks */,
+				DCB35E951C55451700D49968 /* AssetsLibrary.framework in Frameworks */,
 				C2300FA019E1A96C0044A4E5 /* AVFoundation.framework in Frameworks */,
 				C2300F9E19E1A9610044A4E5 /* CoreTelephony.framework in Frameworks */,
 				C2300F9C19E1A9590044A4E5 /* MessageUI.framework in Frameworks */,
@@ -675,6 +684,9 @@
 		42DBCC2919AC20BB00CE6C93 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DCB35E981C55453900D49968 /* MediaPlayer.framework */,
+				DCB35E961C55452500D49968 /* CoreMedia.framework */,
+				DCB35E941C55451700D49968 /* AssetsLibrary.framework */,
 				C2300F9F19E1A96C0044A4E5 /* AVFoundation.framework */,
 				C2300F9D19E1A9610044A4E5 /* CoreTelephony.framework */,
 				C2300F9B19E1A9590044A4E5 /* MessageUI.framework */,
@@ -1685,8 +1697,9 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1706,8 +1719,9 @@
 					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/tools/Jet/JetCreator",
 					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/tools/lib",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dalliantapp.speeddate;
 				PRODUCT_NAME = Dalliant;
-				PROVISIONING_PROFILE = "204b1525-e9e3-453d-ae72-ea5b54043bd0";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "speeddate/speeddate-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				WRAPPER_EXTENSION = app;
@@ -1722,8 +1736,9 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1743,8 +1758,9 @@
 					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/tools/Jet/JetCreator",
 					"$(PROJECT_DIR)/speeddate/Desktop/adt-bundle-mac-x86_64-20140321/sdk/tools/lib",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dalliantapp.speeddate;
 				PRODUCT_NAME = Dalliant;
-				PROVISIONING_PROFILE = "204b1525-e9e3-453d-ae72-ea5b54043bd0";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "speeddate/speeddate-Bridging-Header.h";
 				WRAPPER_EXTENSION = app;
 			};
