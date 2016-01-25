@@ -768,23 +768,25 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
     
     if (message.isMediaMessage) {
         id<JSQMessageMediaData> copyMediaData = message.media;
-        JSQPhotoMediaItem *photoItemCopy = [((JSQPhotoMediaItem *)copyMediaData) copy];
-        photoItemCopy.appliesMediaViewMaskAsOutgoing = NO;
-        UIImage *imageMessage = photoItemCopy.image;
+        //if ([message.media isKindOfClass:[JSQVideoMediaItem class]]){ //Must check somehow if photo or video
+            // Convert video to GIF
         
-            /**
-             *  Set image to nil to simulate "downloading" the image
-             *  and show the placeholder view
-             */
-        
-        [self performSegueWithIdentifier:@"chatImage" sender:imageMessage];
-    } else {
-        
-        
-        
+            JSQVideoMediaItem *videoItemCopy = [((JSQVideoMediaItem *)copyMediaData) copy];
+            videoItemCopy.appliesMediaViewMaskAsOutgoing = NO;
+            // Push to GIF-viewer
+            [self performSegueWithIdentifier:@"chatImage" sender:nil];
+//        } else if ([copyMediaData isKindOfClass:[JSQPhotoMediaItem class]]){
+//            JSQPhotoMediaItem *photoItemCopy = [((JSQPhotoMediaItem *)copyMediaData) copy];
+//            photoItemCopy.appliesMediaViewMaskAsOutgoing = NO;
+//            UIImage *imageMessage = photoItemCopy.image; // Crashes if not image
+//            /**
+//             *  Set image to nil to simulate "downloading" the image
+//             *  and show the placeholder view
+//             */
+//            
+//            [self performSegueWithIdentifier:@"chatImage" sender:imageMessage];
+//        }
     }
-    
-    
 }
 
 - (void)didPressAccessoryButton:(UIButton *)sender

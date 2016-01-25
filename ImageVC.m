@@ -33,7 +33,7 @@
     _reportButton.layer.borderColor = WHITE_COLOR.CGColor;
     _reportButton.layer.cornerRadius = _reportButton.frame.size.width/2;
     
-    _imageView.image = _image;
+    if (_image) _imageView.image = _image;
 }
 
 - (void)didReceiveMemoryWarning {
