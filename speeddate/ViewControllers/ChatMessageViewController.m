@@ -11,6 +11,7 @@
 #import <MobileCoreServices/UTCoreTypes.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import <AssetsLibrary/AssetsLibrary.h>
+#import "NSGIF.h"
 
 // Notificications
 NSString * const kRequestSentNotification     = @"requestSentNotification";
@@ -773,8 +774,14 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
         
             JSQVideoMediaItem *videoItemCopy = [((JSQVideoMediaItem *)copyMediaData) copy];
             videoItemCopy.appliesMediaViewMaskAsOutgoing = NO;
-            // Push to GIF-viewer
-            [self performSegueWithIdentifier:@"chatImage" sender:nil];
+            [NSGIF createGIFfromURL:videoItemCopy.fileURL withFrameCount:30 delayTime:.010 loopCount:0 completion:^(NSURL *GifURL) {
+                NSLog(@"Finished generating GIF: %@", GifURL);
+                
+                NSDictionary *mediaDict = [[NSDictionary alloc] initWithObjectsAndKeys:GifURL,@"vidLink", nil];
+                // Push to GIF-viewer
+                [self performSegueWithIdentifier:@"chatImage" sender:mediaDict];
+            }];
+        
 //        } else if ([copyMediaData isKindOfClass:[JSQPhotoMediaItem class]]){
 //            JSQPhotoMediaItem *photoItemCopy = [((JSQPhotoMediaItem *)copyMediaData) copy];
 //            photoItemCopy.appliesMediaViewMaskAsOutgoing = NO;
@@ -947,19 +954,21 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
     
     if (CFStringCompare ((__bridge_retained CFStringRef) mediaType, kUTTypeMovie, 0) == kCFCompareEqualTo) // If Movie
     {
-        NSString *moviePath = [[info objectForKey:UIImagePickerControllerMediaURL] path];
-        if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(moviePath))
-        {
-            JSQVideoMediaItem *video = [[JSQVideoMediaItem alloc] initWithFileURL:[NSURL URLWithString:moviePath] isReadyToPlay:YES];
+        NSURL *moviePath = [info objectForKey:UIImagePickerControllerMediaURL];
+        // Turn to NSData and save to Parse
+        // NSData *movieData = [NSData dataWithContentsOfURL:moviePath];
+        /*if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(moviePath))
+        {*/
+        JSQVideoMediaItem *video = [[JSQVideoMediaItem alloc] initWithFileURL:moviePath isReadyToPlay:YES];
             JSQMessage *videoMessage = [JSQMessage messageWithSenderId:_curUser.objectId displayName:_curUser.nickname media:video];
             
             [self.messages addObject:videoMessage];
             //[self sortMessages:_messages byDate:@"createdAt"];
             [self finishSendingMessage];
             [self dismissViewControllerAnimated:YES completion:nil];
-            UISaveVideoAtPathToSavedPhotosAlbum(moviePath,self,@selector(video:didFinishSavingWithError:contextInfo:),nil); // Save to Photo Album
+            //UISaveVideoAtPathToSavedPhotosAlbum(moviePath,self,@selector(video:didFinishSavingWithError:contextInfo:),nil); // Save to Photo Album
             
-        } 
+        //}
     }
     else if (CFStringCompare ((__bridge_retained CFStringRef) mediaType, kUTTypeImage, 0) == kCFCompareEqualTo) // If Image
     {
@@ -1234,9 +1243,18 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
         ImageVC *vc = segue.destinationViewController;
         [vc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
         //UIImageView *imageView = (UIImageView *)sender;
-        vc.user                    = _curUser;
-        vc.matchUser               = _toUserParse;
-        vc.image                   = (UIImage *)sender;
+        NSDictionary *mediaDict = sender;
+        vc.user                 = _curUser;
+        vc.matchUser            = _toUserParse;
+        
+        if ([mediaDict objectForKey:@"image"]) {
+            vc.image = (UIImage *)[mediaDict objectForKey:@"image"];
+        }
+        
+        if ([mediaDict objectForKey:@"vidLink"]) {
+            vc.gifURL = (NSURL *)[mediaDict objectForKey:@"vidLink"];
+        }
+        
         //vc.imageFrame.image     = vc.image;
          
     } else if ([segue.identifier isEqualToString:@"redeemView"]) {

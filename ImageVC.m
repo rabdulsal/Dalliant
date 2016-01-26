@@ -34,11 +34,22 @@
     _reportButton.layer.cornerRadius = _reportButton.frame.size.width/2;
     
     if (_image) _imageView.image = _image;
+    
+    if (_gifURL) [self showGIF];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)showGIF
+{
+    FLAnimatedImage *image = [FLAnimatedImage animatedImageWithGIFData:[NSData dataWithContentsOfURL:_gifURL]];
+    FLAnimatedImageView *imageView = [[FLAnimatedImageView alloc] init];
+    imageView.animatedImage = image;
+    imageView.frame = CGRectMake(0.0, 62.0, 332.0, 445.0);
+    [self.view addSubview:imageView];
 }
 
 - (IBAction)closeView:(id)sender {

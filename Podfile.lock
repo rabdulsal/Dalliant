@@ -21,6 +21,7 @@ PODS:
     - FBSDKCoreKit
   - FBSDKShareKit (4.8.0):
     - FBSDKCoreKit
+  - FLAnimatedImage (1.0.10)
   - ILTranslucentView (0.0.1)
   - JSQMessagesViewController (7.2.0):
     - JSQSystemSoundPlayer (~> 2.0.1)
@@ -28,6 +29,7 @@ PODS:
   - KIImagePager (2.1.1)
   - MDRadialProgress (1.3.2)
   - NMRangeSlider (1.2.1)
+  - NSGIF (1.2)
   - Parse (1.11.0):
     - Bolts/Tasks (~> 1.5)
   - ParseFacebookUtilsV4 (1.9.1):
@@ -46,11 +48,13 @@ DEPENDENCIES:
   - FBSDKCoreKit
   - FBSDKLoginKit
   - FBSDKShareKit
+  - FLAnimatedImage (~> 1.0)
   - ILTranslucentView (~> 0.0.1)
   - JSQMessagesViewController
   - KIImagePager (~> 2.1)
   - MDRadialProgress
   - NMRangeSlider (~> 1.2)
+  - NSGIF (~> 1.0)
   - Parse
   - ParseFacebookUtilsV4
   - SCLAlertView-Objective-C
@@ -64,12 +68,14 @@ SPEC CHECKSUMS:
   FBSDKCoreKit: 66a935d17b6e00b6b64e604f2eb9b72c9ab7deb8
   FBSDKLoginKit: d893fcbb98d854496925e9ff73c67b896982d3c4
   FBSDKShareKit: e7577ee3adf80fc04fb656dd133fbb522250672b
+  FLAnimatedImage: e16a1e1cef08e4c509b47e4acbe3923f65c16135
   ILTranslucentView: 47a0518657294173963d8e74806a070ab5700e47
   JSQMessagesViewController: 73cab48aa92fc2d512f3b6724f3425cc47a19eb5
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   KIImagePager: 3294254e5e3f76c62edc8bd89da4d0b5ed010b19
   MDRadialProgress: 1068574b9b4b870f64b605b07f734385bde5104d
   NMRangeSlider: 317ded652431eb90501c8421d9cddc3930d891e6
+  NSGIF: 73b435330174a9d04db9886a232c605a3e8139b5
   Parse: 886af46a0a677402f6374bb97ac212e795f70afe
   ParseFacebookUtilsV4: eab9b4ade12f0800b4d30f6b808bca55ce17a0e9
   SCLAlertView-Objective-C: e36ab12dc1ec4ff6f932888083b21d71a3a1ad23

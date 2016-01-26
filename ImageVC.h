@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "UserParseHelper.h"
+#import "FLAnimatedImage.h"
 
 @interface ImageVC : UIViewController
 
+@property NSURL *gifURL;
 @property UIImage *image;
 @property UserParseHelper *user;
 @property UserParseHelper *matchUser;
