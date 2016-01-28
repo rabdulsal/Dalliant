@@ -393,7 +393,7 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
             NSString *urlString = [[NSString alloc] initWithData:videoData encoding:NSUTF16StringEncoding]; // Or any other appropriate encoding
             //NSString *urlString = [videoData base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
             NSURL *url = [[NSURL alloc] initWithString:fileVideo.url];
-            JSQVideoMediaItem *mediaItem = [[JSQVideoMediaItem alloc] initWithFileURL:url isReadyToPlay:YES];
+            JSQVideoMediaItem *mediaItem = [[JSQVideoMediaItem alloc] initWithFileURL:url isReadyToPlay:YES]; // TODO: Set to NO, then convert to GIF and set to YES w/in block using 'mediaItem.isReadyToPlay = YES'
             
             if ([senderId isEqualToString:_curUser.objectId]) {
                 mediaItem.appliesMediaViewMaskAsOutgoing = YES;
@@ -787,12 +787,15 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
     
     JSQMessage *message = [self.messages objectAtIndex:indexPath.item];
     
-    if (message.isMediaMessage) {
+    if (message.isMediaMessage)
+    {
         id<JSQMessageMediaData> copyMediaData = message.media;
-        //if ([message.media isKindOfClass:[JSQVideoMediaItem class]]){ //Must check somehow if photo or video
+        JSQVideoMediaItem *videoItemCopy = [((JSQVideoMediaItem *)copyMediaData) copy];
+        
+        if ([videoItemCopy respondsToSelector:@selector(fileURL)]) //Must check somehow if photo or video
+        {
             // Convert video to GIF
         
-            JSQVideoMediaItem *videoItemCopy = [((JSQVideoMediaItem *)copyMediaData) copy];
             videoItemCopy.appliesMediaViewMaskAsOutgoing = NO;
             [NSGIF createGIFfromURL:videoItemCopy.fileURL withFrameCount:30 delayTime:.010 loopCount:0 completion:^(NSURL *GifURL) {
                 NSLog(@"Finished generating GIF: %@", GifURL);
@@ -802,17 +805,19 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
                 [self performSegueWithIdentifier:@"chatImage" sender:mediaDict];
             }];
         
-//        } else if ([copyMediaData isKindOfClass:[JSQPhotoMediaItem class]]){
-//            JSQPhotoMediaItem *photoItemCopy = [((JSQPhotoMediaItem *)copyMediaData) copy];
-//            photoItemCopy.appliesMediaViewMaskAsOutgoing = NO;
-//            UIImage *imageMessage = photoItemCopy.image; // Crashes if not image
-//            /**
-//             *  Set image to nil to simulate "downloading" the image
-//             *  and show the placeholder view
-//             */
-//            
-//            [self performSegueWithIdentifier:@"chatImage" sender:imageMessage];
-//        }
+        }
+        else // If image
+        {
+            JSQPhotoMediaItem *photoItemCopy = [((JSQPhotoMediaItem *)copyMediaData) copy];
+            photoItemCopy.appliesMediaViewMaskAsOutgoing = NO;
+            UIImage *imageMessage = photoItemCopy.image; // Crashes if not image
+            /**
+             *  Set image to nil to simulate "downloading" the image
+             *  and show the placeholder view
+             */
+            NSDictionary *mediaDict = [[NSDictionary alloc] initWithObjectsAndKeys:imageMessage,@"image", nil];
+            [self performSegueWithIdentifier:@"chatImage" sender:mediaDict];
+        }
     }
 }
 
