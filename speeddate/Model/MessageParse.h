@@ -9,6 +9,7 @@
 @property NSString* toUserParseEmail;
 @property (nonatomic, strong) NSString *text;
 @property (nonatomic, strong) PFFile *image;
+@property (nonatomic, strong) PFFile *video;
 @property (nonatomic, strong) NSDate *createdAt;
 @property (nonatomic) BOOL read;
 @property (nonatomic) BOOL isRevealed;

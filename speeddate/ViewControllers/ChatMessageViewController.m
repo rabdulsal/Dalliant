@@ -386,6 +386,21 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
             
             chatMessage = [[JSQMessage alloc] initWithSenderId:senderId senderDisplayName:displayName date:message.createdAt media:mediaItem];
             
+        } else if (message.video) {
+            
+            PFFile *fileVideo = message.video;
+            NSData *videoData = [fileVideo getData];
+            NSString *urlString = [[NSString alloc] initWithData:videoData encoding:NSUTF16StringEncoding]; // Or any other appropriate encoding
+            //NSString *urlString = [videoData base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+            NSURL *url = [[NSURL alloc] initWithString:fileVideo.url];
+            JSQVideoMediaItem *mediaItem = [[JSQVideoMediaItem alloc] initWithFileURL:url isReadyToPlay:YES];
+            
+            if ([senderId isEqualToString:_curUser.objectId]) {
+                mediaItem.appliesMediaViewMaskAsOutgoing = YES;
+            } else mediaItem.appliesMediaViewMaskAsOutgoing = NO;
+            
+            chatMessage = [[JSQMessage alloc] initWithSenderId:senderId senderDisplayName:displayName date:message.createdAt media:mediaItem];
+            
         } else {
             
             chatMessage = [[JSQMessage alloc] initWithSenderId:senderId senderDisplayName:displayName date:message.createdAt text:message.text];
@@ -399,6 +414,11 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
         [self finishReceivingMessage];
     
     }
+}
+
+- (void)processMessageMediaItem
+{
+    
 }
 
 - (void)sortMessages:(NSMutableArray *)messages byDate:(NSString *)date
@@ -956,25 +976,41 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
     {
         NSURL *moviePath = [info objectForKey:UIImagePickerControllerMediaURL];
         // Turn to NSData and save to Parse
-        // NSData *movieData = [NSData dataWithContentsOfURL:moviePath];
+        NSData *movieData = [NSData dataWithContentsOfURL:moviePath];
+        
+        MessageParse *message   = [MessageParse object];
+        message.fromUserParse   = _curUser;
+        message.toUserParse     = self.toUserParse;
+        message.read            = NO;
+        //message.video           = [PFFile fileWithData:movieData];
         /*if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(moviePath))
         {*/
-        JSQVideoMediaItem *video = [[JSQVideoMediaItem alloc] initWithFileURL:moviePath isReadyToPlay:YES];
-            JSQMessage *videoMessage = [JSQMessage messageWithSenderId:_curUser.objectId displayName:_curUser.nickname media:video];
-            
-            [self.messages addObject:videoMessage];
-            //[self sortMessages:_messages byDate:@"createdAt"];
-            [self finishSendingMessage];
-            [self dismissViewControllerAnimated:YES completion:nil];
-            //UISaveVideoAtPathToSavedPhotosAlbum(moviePath,self,@selector(video:didFinishSavingWithError:contextInfo:),nil); // Save to Photo Album
-            
-        //}
+        PFFile *file = [PFFile fileWithData:movieData contentType:@"video/mp4"];
+        [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            message.video = file;
+            [message saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                if (succeeded)
+                {
+                    JSQVideoMediaItem *video = [[JSQVideoMediaItem alloc] initWithFileURL:moviePath isReadyToPlay:YES];
+                    JSQMessage *videoMessage = [JSQMessage messageWithSenderId:_curUser.objectId displayName:_curUser.nickname media:video];
+                    
+                    [self.messages addObject:videoMessage];
+                    //[self sortMessages:_messages byDate:@"createdAt"];
+                    [self finishSendingMessage];
+                    [self dismissViewControllerAnimated:YES completion:nil];
+                    //UISaveVideoAtPathToSavedPhotosAlbum(moviePath,self,@selector(video:didFinishSavingWithError:contextInfo:),nil); // Save to Photo Album
+                    
+                    //}
+                }
+            }];
+        }];
+        
     }
     else if (CFStringCompare ((__bridge_retained CFStringRef) mediaType, kUTTypeImage, 0) == kCFCompareEqualTo) // If Image
     {
         UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
         
-        //Save image to Parse
+        //TODO: Turn 'Save image to Parse' into Class Method
         
         MessageParse *message   = [MessageParse object];
         message.fromUserParse   = _curUser;

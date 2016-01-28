@@ -1,25 +1,18 @@
 PODS:
   - ActionSheetPicker-3.0 (2.0.4)
   - AMPopTip (0.10.1)
-  - Bolts (1.5.0):
-    - Bolts/AppLinks (= 1.5.0)
-    - Bolts/Tasks (= 1.5.0)
-  - Bolts/AppLinks (1.5.0):
+  - Bolts (1.6.0):
+    - Bolts/AppLinks (= 1.6.0)
+    - Bolts/Tasks (= 1.6.0)
+  - Bolts/AppLinks (1.6.0):
     - Bolts/Tasks
-  - Bolts/Tasks (1.5.0)
+  - Bolts/Tasks (1.6.0)
   - EAIntroView (2.6.4)
-  - FBSDKCoreKit (4.8.0):
-    - Bolts (~> 1.1)
-    - FBSDKCoreKit/arc (= 4.8.0)
-    - FBSDKCoreKit/no-arc (= 4.8.0)
-  - FBSDKCoreKit/arc (4.8.0):
-    - Bolts (~> 1.1)
-  - FBSDKCoreKit/no-arc (4.8.0):
-    - Bolts (~> 1.1)
-    - FBSDKCoreKit/arc
-  - FBSDKLoginKit (4.8.0):
+  - FBSDKCoreKit (4.9.1):
+    - Bolts (~> 1.5)
+  - FBSDKLoginKit (4.9.1):
     - FBSDKCoreKit
-  - FBSDKShareKit (4.8.0):
+  - FBSDKShareKit (4.9.1):
     - FBSDKCoreKit
   - FLAnimatedImage (1.0.10)
   - ILTranslucentView (0.0.1)
@@ -30,14 +23,15 @@ PODS:
   - MDRadialProgress (1.3.2)
   - NMRangeSlider (1.2.1)
   - NSGIF (1.2)
-  - Parse (1.11.0):
+  - Parse (1.12.0):
     - Bolts/Tasks (~> 1.5)
-  - ParseFacebookUtilsV4 (1.9.1):
+  - ParseFacebookUtilsV4 (1.11.0):
     - Bolts/Tasks (>= 1.5)
-    - FBSDKCoreKit (~> 4.8)
-    - FBSDKLoginKit (~> 4.8)
-    - Parse (~> 1.9)
-  - SCLAlertView-Objective-C (0.7.9)
+    - FBSDKCoreKit (~> 4.9.0-beta)
+    - FBSDKLoginKit (~> 4.9.0-beta)
+    - FBSDKTVOSKit (~> 4.9.0-beta)
+    - Parse (~> 1.11)
+  - SCLAlertView-Objective-C (0.8.2)
   - TDBadgedCell (3.0)
 
 DEPENDENCIES:
@@ -63,11 +57,11 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   ActionSheetPicker-3.0: 860466cb4a66854e6acb590071ecee404b48f49d
   AMPopTip: b0b5d009f3ed47b10f118438a18e0ab5cd03c40d
-  Bolts: 722ab9a4f8b50fc4ed1b9998a5a7a2b3f16d80b4
+  Bolts: f52a250053bb517ca874523c3913776359ab3def
   EAIntroView: df7dc18da73e1831d06878b9c0e13da78e6bb3ce
-  FBSDKCoreKit: 66a935d17b6e00b6b64e604f2eb9b72c9ab7deb8
-  FBSDKLoginKit: d893fcbb98d854496925e9ff73c67b896982d3c4
-  FBSDKShareKit: e7577ee3adf80fc04fb656dd133fbb522250672b
+  FBSDKCoreKit: aee20b6d9855f15b618d4fddd1a5ad45f5a4a59d
+  FBSDKLoginKit: ec22dc49bd372b064e93d6773df4ffefb3a552a2
+  FBSDKShareKit: b8c8ef0ed173f9fc1b3c8df384a0202ce53008d4
   FLAnimatedImage: e16a1e1cef08e4c509b47e4acbe3923f65c16135
   ILTranslucentView: 47a0518657294173963d8e74806a070ab5700e47
   JSQMessagesViewController: 73cab48aa92fc2d512f3b6724f3425cc47a19eb5
@@ -76,9 +70,9 @@ SPEC CHECKSUMS:
   MDRadialProgress: 1068574b9b4b870f64b605b07f734385bde5104d
   NMRangeSlider: 317ded652431eb90501c8421d9cddc3930d891e6
   NSGIF: 73b435330174a9d04db9886a232c605a3e8139b5
-  Parse: 886af46a0a677402f6374bb97ac212e795f70afe
-  ParseFacebookUtilsV4: eab9b4ade12f0800b4d30f6b808bca55ce17a0e9
-  SCLAlertView-Objective-C: e36ab12dc1ec4ff6f932888083b21d71a3a1ad23
+  Parse: de2c52a9a1421b91ae7594ab8ce191afd184f19b
+  ParseFacebookUtilsV4: 216e03bd560404eed09a4875c75f0c1cdf758070
+  SCLAlertView-Objective-C: de137408b04f3587551fa98b876b3cbc612cee79
   TDBadgedCell: 8e5314066fd8c2d8b6e3fc5dec824f5ded78bdc5
 
 COCOAPODS: 0.39.0

@@ -8,6 +8,7 @@
 @dynamic fromUserParseEmail;
 @dynamic text;
 @dynamic image;
+@dynamic video;
 @dynamic createdAt;
 @dynamic read;
 @dynamic isRevealed;

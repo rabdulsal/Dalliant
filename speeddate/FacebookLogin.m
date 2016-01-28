@@ -50,7 +50,8 @@
     
     // Login PFUser using Facebook
     [ProgressHUD show:@"Signing in..." Interaction:NO];
-    [PFFacebookUtils logInInBackgroundWithReadPermissions:permissions block:^(PFUser *user, NSError *error) {
+    
+    [PFFacebookUtils logInInBackgroundWithReadPermissions:permissions block:^(PFUser * _Nullable user, NSError * _Nullable error) {
         
         NSString *errorMessage = nil;
         if (user != nil)
