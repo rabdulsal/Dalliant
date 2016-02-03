@@ -8,6 +8,7 @@
 
 #import "RevealRequest.h"
 #import <Parse/PFObject+Subclass.h>
+#import "speeddate-Swift.h"
 
 @implementation RevealRequest
 
@@ -120,6 +121,8 @@
     
     [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
+            PushNotificationManager *pn = [[PushNotificationManager alloc] initWithMatchName:@"test" matchId:@"test" installationId:@"test" requestId:@"test"];
+            
             PFQuery *query = [PFInstallation query];
             [query whereKey:@"objectId" equalTo:matchUser.installation.objectId];
                 

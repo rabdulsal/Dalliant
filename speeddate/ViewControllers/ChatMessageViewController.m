@@ -121,15 +121,14 @@ NSString * const kRequestRejectedNotification = @"requestRejectedNotification";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getNewMessage:) name:receivedMessage object:nil];
     
     // Notifications for Reveal Requests and Replies
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchShareRequest:) name:@"FetchShareRequest" object:nil]; // Add 'note' to method to unpack RevealRequest
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchShareRequest:) name:@"FetchShareRequest" object:nil]; // Notification name must include Match's Id to ensure receipt in correct Conversation
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchShareReply:) name:@"FetchRevealReply" object:nil]; // Notification name must include Match's Id to ensure receipt in correct Conversation
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchShareReply:) name:@"FetchRevealReply" object:nil]; // Add 'note' to method to unpack RevealRequest
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(blockUnMatched) name:@"chatEnded" object:nil];// Notification name must include Match's Id to ensure receipt in correct Conversation
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(blockUnMatched) name:@"chatEnded" object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acknowledgeAlertView) name:kRequestRejectedNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acknowledgeAlertView) name:@"requestUpdateNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acknowledgeAlertView) name:kRequestRejectedNotification object:nil]; // Notification name must include Match's Id to ensure receipt in correct Conversation
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acknowledgeAlertView) name:@"requestUpdateNotification" object:nil]; // Notification name must include Match's Id to ensure receipt in correct Conversation
 }
 
 - (void)customizeVC
