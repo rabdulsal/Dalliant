@@ -57,16 +57,16 @@
         if (user != nil)
         {
             self.user = user;
-            if (_user[PF_USER_FACEBOOKID] == nil)
-            {
-                NSLog(@"User in new");
+//            if (_user[PF_USER_FACEBOOKID] == nil)
+//            {
+                // New USer
                 [self requestFacebook];
-            }
-            else { // Comment-out for testing
-                NSLog(@"User is cached");
-                //[self userLoggedIn:user];
-                [loginDelegate oldUserLoggedIn:_user];
-            }
+//            }
+//            else { // Comment-out for testing
+//
+//                // Old User
+//                [loginDelegate oldUserLoggedIn:_user];
+//            }
         }
         
         else if (error)
@@ -118,7 +118,7 @@
 - (void)requestFacebook
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 {
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"/me"
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"/me?fields=birthday,first_name,bio,work,email,photos"
                                                                    parameters:nil
                                                                    HTTPMethod:@"GET"];
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
@@ -128,7 +128,14 @@
              self.userData = (NSDictionary *)result;
              self.accessToken = [FBSDKAccessToken currentAccessToken];
              NSLog(@"Facebook Token: %@", _accessToken);
-             [self processFacebook];
+             [self processFacebookDataWithCompletion:^(BOOL success, NSError *error) {
+                 if (success) {
+                     [loginDelegate newUserLoggedIn:_user];
+                 } else {
+                     [PFUser logOut];
+                     [ProgressHUD showError:error.userInfo[@"error"]];
+                 }
+             }];
          }
          else if ([[[[error userInfo] objectForKey:@"error"] objectForKey:@"type"]
                    isEqualToString: @"OAuthException"]) { // Since the request failed, we can check if it was due to an invalid session
@@ -139,8 +146,86 @@
      }];
 }
 
+- (void)processFacebookDataWithCompletion:(void(^)(BOOL success, NSError *error))callBack
+{
+    // Load User Info
+    [self configureUserInfoWithCompletion:^(BOOL success, NSError *error) {
+        if (success) {
+            callBack(success,nil);
+        } else {
+            callBack(!success,error);
+        }
+    }];
+    
+    // Fetch and store Album photos
+}
+
+- (void)configureUserInfoWithCompletion:(void(^)(BOOL success, NSError *error))callBack
+{
+    _user[@"email"]     = _userData[@"email"];
+    _user[@"username"]  = _userData[@"id"];
+    //user[@"password"] = userData[@"id"];
+    _user[@"nickname"]  = _userData[@"first_name"];
+    _user[@"distance"]  = [NSNumber numberWithDouble:1.6];
+    _user[@"sexuality"] = [NSNumber numberWithInt:2];
+    
+    // Age calculation
+    _user[@"age"] = [NSNumber numberWithInteger:[UserParseHelper calculateUserAge:_userData[@"birthday"]]];
+    
+    // Gender
+    if ([_userData[@"gender"] isEqualToString:@"male"]) {
+        _user[@"isMale"] = @"true";
+    } else _user[@"isMale"] = @"false";
+    
+    // About
+    if (_userData[@"bio"]) {
+        _user[@"desc"] = _userData[@"bio"];
+    } else _user[@"desc"] = @"No Bio info";
+    
+    // Employment
+    if (_userData[@"work"]) {
+        _user[@"work"] = _userData[@"work"];
+    } else NSLog(@"No Work Data");
+    
+    // Education
+    if (_userData[@"education"]) {
+        _user[@"school"] = _userData[@"education"];
+    } else NSLog(@"No School Data");
+    //user[@"photo"] = filePicture;
+    _user[PF_USER_FACEBOOKID] = _userData[@"id"];
+    //  user[PF_USER_FULLNAME] = userData[@"name"]; // <-- Be sure to uncomment
+    // user[PF_USER_FULLNAME_LOWER] = [userData[@"name"] lowercaseString];
+    // user[PF_USER_FACEBOOKID] = userData[@"id"];
+    // user[PF_USER_PICTURE] = filePicture;
+    //user[@"photo_thumb"] = fileThumbnail; // <-- Be sure to uncomment
+    [_user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error){
+        
+        if (!error)
+         {
+             //  [self dismissViewControllerAnimated:YES completion:nil];
+             [self getFacebookPhotosWithCompletion:^(BOOL photosRetrieved, NSArray *photos, NSError *error) {
+                 if (photosRetrieved) {
+                     
+                     // Loop through photos and save to Parse/add to Singleton
+                     [self processFacebookPhotos:photos withCompletion:^(BOOL photoProcessed, NSError *error) {
+                         if (photoProcessed) {
+                             
+                             // Trigger callBack
+                             callBack(photoProcessed,nil);
+                         } else callBack(!photoProcessed,error);
+                     }];
+                 } else callBack(!photosRetrieved,error);
+             }];
+             
+             //  _startScreen =[[MainViewController alloc]initWithNibName:@"Main" bundle:nil];
+             // [self presentViewController:_startScreen animated:YES completion:nil];
+         }
+         else callBack(!succeeded, error);
+     }];
+}
+
 //-------------------------------------------------------------------------------------------------------------------------------------------------
-- (void)processFacebook
+- (void)processFacebook // Only fetches Large Photo?
 //-------------------------------------------------------------------------------------------------------------------------------------------------
 {
     NSLog(@"Process Facebook run");
@@ -171,11 +256,11 @@
        }];*/
          //-----------------------------------------------------------------------------------------------------------------------------------------
          NSLog(@"AFNetworking operation started");
-         [self fetchProfileAlbum:_userData[@"id"]];
+         //[self fetchProfileAlbum:_userData[@"id"]];
          
          
      }
-                                     failure:^(AFHTTPRequestOperation *operation, NSError *error)
+        failure:^(AFHTTPRequestOperation *operation, NSError *error)
      {
          NSLog(@"AFNetworking failed");
          [PFUser logOut];
@@ -186,12 +271,45 @@
     
 }
 
-- (void)fetchProfileAlbum:(NSString *)uid
+- (void)getFacebookPhotosWithCompletion:(void(^)(BOOL photosRetrieved, NSArray *photos, NSError *error))callBack
 {
-    NSLog(@"Fetch Profile Album started");
-    NSString *photosLink =[NSString stringWithFormat:@"https://graph.facebook.com/%@/albums?access_token=%@",uid,_accessToken];
+    [self fetchProfileAlbumWithCompletion:^(BOOL albumFetched, NSArray *profilePhotos, NSError *error) {
+        if (albumFetched) {
+            callBack(albumFetched,profilePhotos,nil);
+        } else {
+            callBack(!albumFetched,nil,error);
+        }
+    }];
+}
+
+- (void)processFacebookPhotos:(NSArray *)facebookPhotos withCompletion:(void(^)(BOOL photoProcessed, NSError *error))callBack
+{
+    for (int i=0; i < [facebookPhotos count]; i++) {
+        
+        UIImage *photo = facebookPhotos[i];
+        NSString *pPhotoStr = [NSString stringWithFormat:@"photo%d",i];
+        
+        if (photo.size.width > 140) photo = ResizeImage(photo, 140, 140);
+        
+        PFFile *file = [PFFile fileWithName:pPhotoStr data:UIImageJPEGRepresentation(photo, 0.9)];
+        [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (succeeded) {
+                
+                NSString *uPhotoStr = [NSString stringWithFormat:@"photo%d",i+1];
+                _user[uPhotoStr] = file;
+                callBack(succeeded,nil);
+                
+            } else callBack(!succeeded,error);
+            
+        }];
+    }
+}
+
+- (void)fetchProfileAlbumWithCompletion:(void(^)(BOOL albumFetched, NSArray *profilePhotos, NSError *error))callBack
+{
+    NSString *photosLink =[NSString stringWithFormat:@"https://graph.facebook.com/%@/albums?access_token=%@",_userData[@"id"],[_accessToken tokenString]];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:photosLink]];
-    NSLog(@"Photoslink: %@", photosLink);
+    
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     operation.responseSerializer = [AFJSONResponseSerializer serializer];
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -201,60 +319,58 @@
         
         for (int i=0; i < allAlbumsCount; i++) {
             NSString *album = [[[(NSDictionary *)responseObject objectForKey:@"data"] objectAtIndex:i] objectForKey:@"name"];
-            NSLog(@"Fetch album: %@", album);
+            
             if ([album isEqualToString:@"Profile Pictures"])
             {
-                _profilePhotosCount = (int)[[[(NSDictionary *)responseObject objectForKey:@"data"] objectAtIndex:i] objectForKey:@"count"];
-                //NSLog(@"Profile count: %@", _profilePhotosCount);
-                [self fetchProfilePhotos:responseObject atIndex:i];
-                i = allAlbumsCount;
+                _profilePhotosCount = (int)[[[(NSDictionary *)responseObject objectForKey:@"data"] objectAtIndex:i] objectForKey:@"count"]; // Cache value and use to check if there are new FB Profile Photos
+                
+                [self fetchProfilePhotos:responseObject atIndex:i withCompletion:^(BOOL photosFetched, NSArray *albumPhotos, NSError *error) {
+                    if (photosFetched) {
+                        callBack(photosFetched,albumPhotos,nil);
+                    } else {
+                        callBack(!photosFetched,nil,error);
+                    }
+                }];
+                break;
             }
         }
-        
-        
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Error: %@", error.description);
+        callBack(false,nil,error);
     }];
     [[NSOperationQueue mainQueue] addOperation:operation];
 }
 
-- (void)fetchProfilePhotos:(NSDictionary *)responseObject atIndex:(int)index
+- (void)fetchProfilePhotos:(NSDictionary *)responseObject atIndex:(int)index withCompletion:(void(^)(BOOL photosFetched, NSArray *albumPhotos, NSError *error))callBack
 {
     NSString *albumid       = [[[responseObject objectForKey:@"data"]objectAtIndex:index]objectForKey:@"id"];
     NSString *albumUrl      = [NSString stringWithFormat:@"https://graph.facebook.com/%@/photos?type=album&access_token=%@",albumid,_accessToken];
-    NSURLRequest *request2  = [NSURLRequest requestWithURL:[NSURL URLWithString:albumUrl]];
-    NSLog(@"Photo URL: %@", albumUrl);
+    NSURLRequest *albumReq  = [NSURLRequest requestWithURL:[NSURL URLWithString:albumUrl]];
     
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request2];
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:albumReq];
     operation.responseSerializer = [AFJSONResponseSerializer serializer];
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         
-        // Check the below URL in the browser - initialize Loop thru indices here
-        //NSString *profilePicURL=[[[[[(NSDictionary *)responseObject objectForKey:@"data"]objectAtIndex:0]objectForKey:@"images"]objectAtIndex:0]objectForKey:@"source"];
-        //NSLog(@"Pic URL: %@", profilePicURL);
-        [self configureUserImageForResponse:(NSDictionary *)responseObject];
+        [self configureUserImageForResponse:(NSDictionary *)responseObject withCompletion:^(BOOL photosSaved, NSArray *albumPhotos, NSError *error) {
+            if (photosSaved) {
+                callBack(photosSaved,albumPhotos,nil);
+            } else callBack(!photosSaved,nil,error);
+        }];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Error: %@", error.description);
+        callBack(false,nil,error);
     }];
     [[NSOperationQueue mainQueue] addOperation:operation];
 }
 
-- (void)configureUserImageForResponse:(NSDictionary *)response // TODO: turn into public callback method on UserParseHelper
+- (void)configureUserImageForResponse:(NSDictionary *)response withCompletion:(void(^)(BOOL photosSaved, NSArray *albumPhotos, NSError *error))callBack // TODO: turn into public callback method on UserParseHelper
 {
-    
-    NSInteger photoCount = 4;
-    
-    if (_profilePhotosCount < 4) {
-        photoCount = _profilePhotosCount;
-    }
+    NSInteger photoCount = _profilePhotosCount < 4 ? _profilePhotosCount : 4;
     
     for (int i = 0; i < photoCount; i++) {
         // Get Pic URL
         NSString *picURL = [[[[[response objectForKey:@"data"]objectAtIndex:i]objectForKey:@"images"]objectAtIndex:1]objectForKey:@"source"];
-        // Set Image (May need to make network request to retrieve Image)
-        NSLog(@"PicString: %@", picURL);
         NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:picURL]];
+        
         AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
         operation.responseSerializer = [AFImageResponseSerializer serializer];
         [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -304,7 +420,9 @@
                   }*/
             
             if (i == 3) {//<-- must be changed to a variable looking at the last image available in an array
-                NSLog(@"Run i = %d", i);
+                
+                // Saving single Profile photo to Parse
+                /*
                 if (image.size.width > 140) image = ResizeImage(image, 140, 140);
                 PFFile *file = [PFFile fileWithName:@"photo.jpg" data:UIImageJPEGRepresentation(image, 0.9)];
                 [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
@@ -314,64 +432,12 @@
                     } else [ProgressHUD showError:@"Network error."];
                     
                 }];
-                
-                _user[@"email"] = _userData[@"email"];
-                _user[@"username"] = _userData[@"id"];
-                //user[@"password"] = userData[@"id"];
-                _user[@"nickname"] = _userData[@"first_name"];
-                _user[@"distance"] = [NSNumber numberWithDouble:1.6];
-                _user[@"sexuality"] = [NSNumber numberWithInt:2];
-                // Age calculation
-                _user[@"age"] = [NSNumber numberWithInteger:[UserParseHelper calculateUserAge:_userData[@"birthday"]]];
-                // Gender
-                if ([_userData[@"gender"] isEqualToString:@"male"]) {
-                    _user[@"isMale"] = @"true";
-                } else _user[@"isMale"] = @"false";
-                // About
-                if (_userData[@"bio"]) {
-                    _user[@"desc"] = _userData[@"bio"];
-                } else _user[@"desc"] = @"No Bio info";
-                // Employment
-                if (_userData[@"work"]) {
-                    _user[@"work"] = _userData[@"work"];
-                } else NSLog(@"No Work Data");
-                // Education
-                if (_userData[@"education"]) {
-                    _user[@"school"] = _userData[@"education"];
-                } else NSLog(@"No School Data");
-                //user[@"photo"] = filePicture;
-                _user[PF_USER_FACEBOOKID] = _userData[@"id"];
-                //  user[PF_USER_FULLNAME] = userData[@"name"]; // <-- Be sure to uncomment
-                // user[PF_USER_FULLNAME_LOWER] = [userData[@"name"] lowercaseString];
-                // user[PF_USER_FACEBOOKID] = userData[@"id"];
-                // user[PF_USER_PICTURE] = filePicture;
-                //user[@"photo_thumb"] = fileThumbnail; // <-- Be sure to uncomment
-                if (_user[@"photo"]) {
-                    NSLog(@"Photo exists");
-                }else NSLog(@"Photo DOESN'T exist");
-                if (_user[@"photo_thumb"]) {
-                    NSLog(@"Photo Thumb exists");
-                }else NSLog(@"Photo Thumb DOESN'T exist");
-                NSLog(@"Image assets count: %ld", (unsigned long)[_fbImageAssets count]);
-                [_user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
-                 {
-                     if (error == nil)
-                     {
-                         //  [self dismissViewControllerAnimated:YES completion:nil];
-                         [loginDelegate newUserLoggedIn:_user];
-                         //  _startScreen =[[MainViewController alloc]initWithNibName:@"Main" bundle:nil];
-                         // [self presentViewController:_startScreen animated:YES completion:nil];
-                     }
-                     else
-                     {
-                         [PFUser logOut];
-                         [ProgressHUD showError:error.userInfo[@"error"]];
-                     }
-                 }];
+                */
+                callBack(true,_fbImageAssets,nil);
             }
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"Error: %@", error.description);
+            callBack(false,nil,error);
         }];
         [[NSOperationQueue mainQueue] addOperation:operation];
     }

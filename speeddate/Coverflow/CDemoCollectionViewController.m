@@ -48,97 +48,85 @@
     
     mainUser = [User singleObj];
     
+    /*
+     *  mainUser.imageAssets is an array-store of Facebook images fetched in FacebookLogin class
+     */
+    
     if ([mainUser.imageAssets count] > 0) {
-        PFQuery *query = [UserParseHelper query];
-        [query getObjectInBackgroundWithId:[UserParseHelper currentUser].objectId
-                                     block:^(PFObject *object, NSError *error) {
-                                         self.user = (UserParseHelper *)object;
-        _assets = [NSMutableArray new];
-        UIImage *image = [UIImage imageNamed:@"userPlaceholder"]; // <-- Circle w/ plus-sign in middle; Replace w/ Facebook Profile Images
-        for (int i = 0; i < 4; i++) {
-            [self.assets addObject:image];
-        }
         
-        for (int i = 0; i < [mainUser.imageAssets count]; i++) {
-            UIImage *image = [mainUser.imageAssets objectAtIndex:i];
-            image = ResizeImage(image, 140, 140);
-            /* NSData *imageData = UIImageJPEGRepresentation(image, 0.9);
+        // If imageAssets exist, fetch User from Parse
+        
+        PFQuery *query = [UserParseHelper query];
+        [query getObjectInBackgroundWithId:[UserParseHelper currentUser].objectId block:^(PFObject *object, NSError *error) {
             
-            PFFile *file = [PFFile fileWithName:@"Image.jpg" data:imageData];
-            NSLog(@"Photo Image File BEFORE save: %@", file);
-            [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (succeeded) {
-                    NSLog(@"Photo Image File AFTER save: %@", file);
-                    if (i == 0) {
-                        self.user.photo = file;
-                        
-                        [self.user saveInBackground];
-                        NSLog(@"Photo 0 uploaded file: %@", self.user.photo);
-                    } else if (i == 1) {
-                        self.user.photo1 = file;
-                        
-                        [self.user saveInBackground];
-                        NSLog(@"Photo 1 uploaded file: %@", self.user.photo1);
-                    }
-                
-                } else {
-                    NSLog(@"Error - %@", error.description);
-                    return ;
-                }
-                
-                
-            }]; */
-            [self configureImage:image selection:i];
+            self.user = (UserParseHelper *)object;
+            _assets = [NSMutableArray new];
+            UIImage *image = [UIImage imageNamed:@"userPlaceholder"]; // <-- Circle w/ plus-sign in middle; Replace w/ Facebook Profile Images
             
-        }
-                                     }];
+            // Pre-load Placeholder into imageCell
+            for (int i = 0; i < 4; i++) {
+                [self.assets addObject:image];
+            }
+            
+            // Loop through .imageAssets and save to Parse
+            for (int i = 0; i < [mainUser.imageAssets count]; i++) {
+                UIImage *image = [mainUser.imageAssets objectAtIndex:i];
+                image = ResizeImage(image, 140, 140);
+                
+                [self configureImage:image selection:i];
+                
+            }
+        }];
         
     } else {
-    self.assets = [NSMutableArray new];
-    self.assets_thumb = [NSMutableArray new];
-    PFQuery *query = [UserParseHelper query];
-    self.collectionView.decelerationRate = UIScrollViewDecelerationRateFast;
-    [query getObjectInBackgroundWithId:[UserParseHelper currentUser].objectId
-                                 block:^(PFObject *object, NSError *error)
-     {
-         UIImage *image = [UIImage imageNamed:@"userPlaceholder"]; // <-- Circle w/ plus-sign in middle; Replace w/ Facebook Profile Images
-         for (int i = 0; i < 4; i++) {
-             [self.assets addObject:image];
-         }
-         self.user = (UserParseHelper *)object;
+        
+        // .imageAssets don't exist
+        self.assets = [NSMutableArray new];
+        self.assets_thumb = [NSMutableArray new];
+        PFQuery *query = [UserParseHelper query];
+        self.collectionView.decelerationRate = UIScrollViewDecelerationRateFast;
+        [query getObjectInBackgroundWithId:[UserParseHelper currentUser].objectId
+                                     block:^(PFObject *object, NSError *error)
+         {
+             // Set Placeholder images
+             UIImage *image = [UIImage imageNamed:@"userPlaceholder"]; // <-- Circle w/ plus-sign in middle; Replace w/ Facebook Profile Images
+             for (int i = 0; i < 4; i++) {
+                 [self.assets addObject:image];
+             }
+             self.user = (UserParseHelper *)object;
 
-// ---------------------------------- REPLACE WITH IMAGES FROM FACEBOOK ----------------------------------------
-         [self.user.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-             if (!error) {
-                 NSLog(@"User photo: %@", _user.photo);
-[self.assets replaceObjectAtIndex:0 withObject:[UIImage imageWithData:data]];             }
-             [self.collectionView reloadData];
+    // ---------------------------------- REPLACE WITH IMAGES FROM FACEBOOK ----------------------------------------
+             [self.user.photo getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                 if (!error) {
+                     NSLog(@"User photo: %@", _user.photo);
+    [self.assets replaceObjectAtIndex:0 withObject:[UIImage imageWithData:data]];             }
+                 [self.collectionView reloadData];
+             }];
+             [self.user.photo1 getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                 if (!error) {
+                     NSLog(@"User photo1: %@", _user.photo1);
+    [self.assets replaceObjectAtIndex:1 withObject:[UIImage imageWithData:data]];             }
+                 [self.collectionView reloadData];
+             }];
+             [self.user.photo2 getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                 if (!error) {
+                     NSLog(@"User photo2: %@", _user.photo2);
+    [self.assets replaceObjectAtIndex:2 withObject:[UIImage imageWithData:data]];             }
+                 [self.collectionView reloadData];
+             }];
+             [self.user.photo3 getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                 if (!error) {
+                     NSLog(@"User photo3: %@", _user.photo3);
+    [self.assets replaceObjectAtIndex:3 withObject:[UIImage imageWithData:data]];             }
+                 [self.collectionView reloadData];
+             }];
+             [self.user.photo4 getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                 if (!error) {
+                     NSLog(@"User photo4: %@", _user.photo4);
+    [self.assets replaceObjectAtIndex:4 withObject:[UIImage imageWithData:data]];             }
+                 [self.collectionView reloadData];
+             }];
          }];
-         [self.user.photo1 getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-             if (!error) {
-                 NSLog(@"User photo1: %@", _user.photo1);
-[self.assets replaceObjectAtIndex:1 withObject:[UIImage imageWithData:data]];             }
-             [self.collectionView reloadData];
-         }];
-         [self.user.photo2 getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-             if (!error) {
-                 NSLog(@"User photo2: %@", _user.photo2);
-[self.assets replaceObjectAtIndex:2 withObject:[UIImage imageWithData:data]];             }
-             [self.collectionView reloadData];
-         }];
-         [self.user.photo3 getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-             if (!error) {
-                 NSLog(@"User photo3: %@", _user.photo3);
-[self.assets replaceObjectAtIndex:3 withObject:[UIImage imageWithData:data]];             }
-             [self.collectionView reloadData];
-         }];
-         [self.user.photo4 getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-             if (!error) {
-                 NSLog(@"User photo4: %@", _user.photo4);
-[self.assets replaceObjectAtIndex:4 withObject:[UIImage imageWithData:data]];             }
-             [self.collectionView reloadData];
-         }];
-     }];
         
     } // End mainUser.imageAssets conditional
 }
@@ -227,39 +215,7 @@
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:self.selectedImage inSection:0];
         // Refactored code
         [self configureImage:image atIndexPath:indexPath];
-        /*
-        [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
-         PFFile *file = [PFFile fileWithData:UIImageJPEGRepresentation(image,0.9)];
         
-        //
-        [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (error) {
-                return ;
-            }
-            switch (self.selectedImage) {
-                case 1:
-                    self.user.photo1 = file;
-                    
-                    break;
-                case 2:
-                    self.user.photo2 = file;
-                    break;
-                case 3:
-                    self.user.photo3 = file;
-                    break;
-                case 4:
-                    self.user.photo4 = file;
-                    break;
-                default:
-                    self.user.photo = file;
-                    
-                    break;
-            }
-            [self.user saveInBackground];
-           // [self.user deleteEventually];
-            
-        }];*/
-
     }
 }
 
@@ -275,32 +231,6 @@
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem:self.selectedImage inSection:0];
     // Refactored code
     [self configureImage:image atIndexPath:indexPath];
-    /*
-    [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
-    PFFile *file = [PFFile fileWithData:UIImageJPEGRepresentation(image,0.9)];
-    [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (error) {
-            return ;
-        }
-        switch (self.selectedImage) {
-            case 1:
-                self.user.photo1 = file;
-                break;
-            case 2:
-                self.user.photo2 = file;
-                break;
-            case 3:
-                self.user.photo3 = file;
-                break;
-            case 4:
-                self.user.photo4 = file;
-                break;
-            default:
-                self.user.photo = file;
-                break;
-        }
-        [self.user saveInBackground];
-    }];*/
     
     ////// save thumb
     UIImage *image_thumb = [info objectForKey:UIImagePickerControllerEditedImage];
@@ -311,32 +241,6 @@
     NSIndexPath *indexPath_thumb = [NSIndexPath indexPathForItem:self.selectedImage inSection:0];
     
     [self configureImage:image_thumb atIndexPath:indexPath_thumb];
-    /*
-    [self.collectionView reloadItemsAtIndexPaths:@[indexPath_thumb]];
-    PFFile *file_thumb = [PFFile fileWithData:UIImageJPEGRepresentation(image_thumb,0.9)];
-    [file_thumb saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (error) {
-            return ;
-        }
-        switch (self.selectedImage) {
-            case 1:
-                self.user.photo1_thumb = file_thumb;
-                break;
-            case 2:
-                self.user.photo2_thumb = file_thumb;
-                break;
-            case 3:
-                self.user.photo3_thumb = file_thumb;
-                break;
-            case 4:
-                self.user.photo4_thumb = file_thumb;
-                break;
-            default:
-                self.user.photo_thumb = file_thumb;
-                break;
-        }
-        [self.user saveInBackground];
-    }]; */
 }
 
 - (void)configureImage:(UIImage *)image atIndexPath:(NSIndexPath *)indexPath
@@ -375,34 +279,34 @@
     [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (!error) {
             
-        
-        switch (index) {
-            case 0:
-                self.user.photo = file;
-                self.user.photo_thumb = file;
-                break;
-            case 1:
-                self.user.photo1 = file;
-                break;
-            case 2:
-                self.user.photo2 = file;
-                break;
-            case 3:
-                self.user.photo3 = file;
-                break;
-            
-        }
-        [self.user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            // MUST REFACTOR!
-            if (index == 3) {
-                for (int i = 0; i < [mainUser.imageAssets count]; i++) {
-                    [_assets replaceObjectAtIndex:i withObject:[mainUser.imageAssets objectAtIndex:i]];
-                }
-                [mainUser.imageAssets removeAllObjects];
-                [self.collectionView reloadData];
+            switch (index) {
+                case 0:
+                    self.user.photo = file;
+                    self.user.photo_thumb = file;
+                    break;
+                case 1:
+                    self.user.photo1 = file;
+                    break;
+                case 2:
+                    self.user.photo2 = file;
+                    break;
+                case 3:
+                    self.user.photo3 = file;
+                    break;
+                
             }
-            
-        }];
+            [self.user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+
+                // Replace Placeholder image with .imageAsset data
+                if (index == 3) {
+                    for (int i = 0; i < [mainUser.imageAssets count]; i++) {
+                        [_assets replaceObjectAtIndex:i withObject:[mainUser.imageAssets objectAtIndex:i]];
+                    }
+                    [mainUser.imageAssets removeAllObjects];
+                    [self.collectionView reloadData];
+                }
+                
+            }];
         } else return ;
     }];
 }
