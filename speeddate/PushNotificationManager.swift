@@ -8,66 +8,58 @@
 
 import Foundation
 
-@objc class PushNotificationManager: NSObject {
+@objc class PushNotificationManager : NSObject {
     
-    init(matchName: String, matchId: String, installationId: String, requestId: String) {
+    let matchName: String!
+    let matchId: String!
+    let requestId: String!
+    let installationId: String!
+    let requestType: RequestType!
+    
+    @objc enum RequestType : Int {
+        case ShareRequest
+        case ShareReply
+    }
+    
+    init(matchName: String,
+        matchId: String,
+        installationId: String,
+        requestId: String,
+        requestType: RequestType) {
+        self.matchName      = matchName
+        self.matchId        = matchId
+        self.installationId = installationId
+        self.requestId      = requestId
+        self.requestType    = requestType
+    }
+    
+    @objc func sendShareRequestPushNotificationToUser(completion:((succeeded: Bool, error: NSError?) -> Void)) {
+    
+        var notificationData = [
+            "match"     : matchName,
+            "requestId" : requestId,
+            "badge"     : "Increment",
+            "sound"     : "Ache.caf"
+        ]
         
-    }
-    
-    func sendShareRequestPushNotificationToUser(
-        userNickname: String,
-        withInstallationId installId: String,
-        andRequestId requestId: String,
-        completion:((succeeded: Bool, error: NSError?) -> Void)) {
-            
-            let query = PFInstallation.query()
-            query?.whereKey("objectId", equalTo: installId)
-            //[query whereKey:@"objectId" equalTo:matchUser.installation.objectId];
-            
-            let notificationData = [
-                "alert" : "Request to Share Identities",
-                "match" : userNickname,
-                "requestId" : requestId,
-                "badge" : "Increment",
-                "sound" : "Ache.caf"
-            ]
-            
-            let push = PFPush()
-            push.setQuery(query)
-            push.setData(notificationData)
-            push.sendPushInBackgroundWithBlock { (success, error) -> Void in
-                if success {
-                    completion(succeeded: success, error: nil)
-                } else {
-                    completion(succeeded: false, error: error)
-                }
+        switch self.requestType! {
+            case .ShareRequest: notificationData["alert"] = "Request to Share Identities"
+            case .ShareReply: notificationData["alert"]   = "Identity Share Reply"
+        }
+        
+        let query = PFInstallation.query()
+        query?.whereKey("objectId", equalTo: installationId)
+        
+        let push = PFPush()
+        push.setQuery(query)
+        push.setData(notificationData)
+        push.sendPushInBackgroundWithBlock { (success, error) -> Void in
+            if success {
+                completion(succeeded: success, error: nil)
+            } else {
+                completion(succeeded: false, error: error)
             }
-    }
-    
-    func sendShareRequestReplyPushNotification(userNickname: String,
-        withInstallationId installId: String,
-        andRequestId requestId: String,
-        completion:((succeeded: Bool, error: NSError?) -> Void)) {
-            let query = PFInstallation.query()
-            query?.whereKey("objectId", equalTo: installId)
-            
-            let notificationData = [
-                "alert" : "Identity Share Reply",
-                "requestId" : requestId,
-                "badge" : "Increment",
-                "sound" : "Ache.caf"
-            ]
-            
-            let push = PFPush()
-            push.setQuery(query)
-            push.setData(notificationData)
-            push.sendPushInBackgroundWithBlock { (success, error) -> Void in
-                if success {
-                    completion(succeeded: success, error: nil)
-                } else {
-                    completion(succeeded: false, error: error)
-                }
-            }
+        }
     }
     
 }

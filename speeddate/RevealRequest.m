@@ -121,30 +121,20 @@
     
     [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
-            PushNotificationManager *pn = [[PushNotificationManager alloc] initWithMatchName:@"test" matchId:@"test" installationId:@"test" requestId:@"test"];
             
-            PFQuery *query = [PFInstallation query];
-            [query whereKey:@"objectId" equalTo:matchUser.installation.objectId];
-                
-            NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    @"Request to Share Identities", @"alert",
-                                    [NSString stringWithFormat:@"%@", matchUser.nickname], @"match",
-                                    [NSString stringWithFormat:@"%@", self.objectId], @"requestId", // RequestId for notification userInfo
-                                    @"Increment", @"badge",
-                                    @"Ache.caf", @"sound",
-                                    nil];
-            PFPush *push = [[PFPush alloc] init];
-            [push setQuery:query];
-            [push setData:data];
-            [push sendPushInBackground];
-            
-            [identityDelegate shareRequestSentFromUser:user toMatch:matchUser];
-            callback(succeeded);
+            [self sendPushNotificationTo:matchUser withRequestType:RequestTypeShareRequest andCompletionBlock:^(PushNotificationManager *pushNotification) {
+                [pushNotification sendShareRequestPushNotificationToUser:^(BOOL success, NSError * _Nullable error) {
+                    if (success) {
+                        [identityDelegate shareRequestSentFromUser:user toMatch:matchUser];
+                        callback(succeeded);
+                    } else {
+                        // Handle Error
+                    }
+                }];
+            }];
         }
     }];
-    
 }
-
 
 - (void)acceptShareRequestWithCompletion:(void (^)(BOOL shared))callback
 {
@@ -154,28 +144,34 @@
         
         if (succeeded) {
             UserParseHelper *matchUser = self.requestFromUser;
-            PFQuery *query = [PFInstallation query];
-            [query whereKey:@"objectId" equalTo:matchUser.installation.objectId];
             
-            NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
-                                  [NSString stringWithFormat:@"Identity Share Reply"], @"alert",
-                                  [NSString stringWithFormat:@"%@", self.objectId], @"requestId", // RequestId for notification userInfo
-                                  @"Increment", @"badge",
-                                  @"Ache.caf", @"sound",nil];
-            
-            PFPush *push = [[PFPush alloc] init];
-            [push setQuery:query];
-            [push setData:data];
-            [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (succeeded) {
-                    [identityDelegate shareRequestFromMatch:matchUser acceptedByUser:self.requestToUser];
-                    callback(succeeded);
-                }
+            [self sendPushNotificationTo:matchUser
+                         withRequestType:RequestTypeShareReply
+                      andCompletionBlock:^(PushNotificationManager *pushNotification) {
+                [pushNotification sendShareRequestPushNotificationToUser:^(BOOL success, NSError * _Nullable error) {
+                    if (success) {
+                        [identityDelegate shareRequestFromMatch:matchUser acceptedByUser:self.requestToUser];
+                        callback(succeeded);
+                    } else {
+                        // Handle Error
+                    }
+                }];
             }];
-            
         }
     }];
+}
+
+- (void)sendPushNotificationTo:(UserParseHelper *)match
+               withRequestType:(RequestType)requestType
+            andCompletionBlock:(void (^)(PushNotificationManager *pushNotification))completion
+{
+    PushNotificationManager *pushNotification = [[PushNotificationManager alloc] initWithMatchName:match.nickname
+                                                                             matchId:match.objectId
+                                                                      installationId:match.installation.objectId
+                                                                           requestId:self.objectId
+                                                                         requestType:requestType];
     
+    completion(pushNotification);
 }
 
 - (void)rejectShareRequestWithCompletion:(void (^)(BOOL))callback
@@ -186,31 +182,16 @@
         
         if (succeeded) {
             UserParseHelper *matchUser = self.requestFromUser;
-            PFQuery *query = [PFInstallation query];
-            [query whereKey:@"objectId" equalTo:matchUser.installation.objectId];
-            
-            NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
-                                  [NSString stringWithFormat:@"Identity Share Reply"], @"alert",
-                                  [NSString stringWithFormat:@"%@", self.objectId], @"requestId",
-                                  @"Increment", @"badge",
-                                  @"Ache.caf", @"sound",nil];
-            
-            PFPush *push = [[PFPush alloc] init];
-            [push setQuery:query];
-            [push setData:data];
-            [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (succeeded) {
-                    /*
-                     * Nothing happens to current User when Rejecting
-                     *[identityDelegate shareRequestFromMatch:matchUser rejectedByUser:self.requestToUser];
-                     */
-                    callback(succeeded);
-                }
+            [self sendPushNotificationTo:matchUser
+                         withRequestType:RequestTypeShareReply
+                      andCompletionBlock:^(PushNotificationManager *pushNotification) {
+                [pushNotification sendShareRequestPushNotificationToUser:^(BOOL success, NSError * _Nullable error) {
+                    if (success) callback(succeeded);
+                    else callback(error); // TODO: Ensure works!!!
+                }];
             }];
-            
         }
-    }];
-    
+    }];    
 }
 
 @end

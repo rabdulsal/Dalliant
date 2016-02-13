@@ -62,7 +62,7 @@
                 NSLog(@"User in new");
                 [self requestFacebook];
             }
-            else {
+            else { // Comment-out for testing
                 NSLog(@"User is cached");
                 //[self userLoggedIn:user];
                 [loginDelegate oldUserLoggedIn:_user];
