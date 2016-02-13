@@ -15,8 +15,11 @@
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import "AppConstant.h"
 #import "utilities.h"
+#import "User.h"
 
-@interface FacebookLogin ()
+@interface FacebookLogin () {
+    User *mainUser;
+}
 
 @property (nonatomic) id <FaceBookLoginDelegate> loginDelegate;
 @property (nonatomic) PFUser *user;
@@ -36,7 +39,7 @@
     if ((self = [super init])) {
         
         self.loginDelegate = delegate;
-        
+        mainUser = [User singleObj];
     }
     return self;
     
@@ -284,25 +287,30 @@
 
 - (void)processFacebookPhotos:(NSArray *)facebookPhotos withCompletion:(void(^)(BOOL photoProcessed, NSError *error))callBack
 {
-    for (int i=0; i < [facebookPhotos count]; i++) {
-        
-        UIImage *photo = facebookPhotos[i];
-        NSString *pPhotoStr = [NSString stringWithFormat:@"photo%d",i];
-        
-        if (photo.size.width > 140) photo = ResizeImage(photo, 140, 140);
-        
-        PFFile *file = [PFFile fileWithName:pPhotoStr data:UIImageJPEGRepresentation(photo, 0.9)];
-        [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (succeeded) {
-                
-                NSString *uPhotoStr = [NSString stringWithFormat:@"photo%d",i+1];
-                _user[uPhotoStr] = file;
-                callBack(succeeded,nil);
-                
-            } else callBack(!succeeded,error);
-            
-        }];
-    }
+//    for (int i=0; i < [facebookPhotos count]; i++) {
+//        
+//        UIImage *photo = facebookPhotos[i];
+//        NSString *pPhotoStr = [NSString stringWithFormat:@"photo%d",i];
+//        
+//        if (photo.size.width > 140) photo = ResizeImage(photo, 140, 140);
+//        
+//        PFFile *file = [PFFile fileWithName:pPhotoStr data:UIImageJPEGRepresentation(photo, 0.9)];
+//        [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+//            if (succeeded) {
+//                
+//                NSString *uPhotoStr = [NSString stringWithFormat:@"photo%d",i+1];
+//                _user[uPhotoStr] = file;
+//                callBack(succeeded,nil);
+//                
+//            } else callBack(!succeeded,error);
+//            
+//        }];
+//    }
+    
+    mainUser.imageAssets = _fbImageAssets;
+    if ([mainUser.imageAssets count] > 0) {
+        callBack(true,nil);
+    } else callBack (false, nil);
 }
 
 - (void)fetchProfileAlbumWithCompletion:(void(^)(BOOL albumFetched, NSArray *profilePhotos, NSError *error))callBack
