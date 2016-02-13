@@ -343,7 +343,7 @@
 - (void)fetchProfilePhotos:(NSDictionary *)responseObject atIndex:(int)index withCompletion:(void(^)(BOOL photosFetched, NSArray *albumPhotos, NSError *error))callBack
 {
     NSString *albumid       = [[[responseObject objectForKey:@"data"]objectAtIndex:index]objectForKey:@"id"];
-    NSString *albumUrl      = [NSString stringWithFormat:@"https://graph.facebook.com/%@/photos?type=album&access_token=%@",albumid,_accessToken];
+    NSString *albumUrl      = [NSString stringWithFormat:@"https://graph.facebook.com/%@/photos?type=album&access_token=%@",albumid,[_accessToken tokenString]];
     NSURLRequest *albumReq  = [NSURLRequest requestWithURL:[NSURL URLWithString:albumUrl]];
     
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:albumReq];
@@ -364,8 +364,9 @@
 
 - (void)configureUserImageForResponse:(NSDictionary *)response withCompletion:(void(^)(BOOL photosSaved, NSArray *albumPhotos, NSError *error))callBack // TODO: turn into public callback method on UserParseHelper
 {
+    _fbImageAssets = [NSMutableArray new];
+//    NSInteger photoCount = _profilePhotosCount < 4 ? _profilePhotosCount : 4;
     NSInteger photoCount = _profilePhotosCount < 4 ? _profilePhotosCount : 4;
-    
     for (int i = 0; i < photoCount; i++) {
         // Get Pic URL
         NSString *picURL = [[[[[response objectForKey:@"data"]objectAtIndex:i]objectForKey:@"images"]objectAtIndex:1]objectForKey:@"source"];
@@ -433,7 +434,7 @@
                     
                 }];
                 */
-                callBack(true,_fbImageAssets,nil);
+                callBack([_fbImageAssets count] > 0,_fbImageAssets,nil);
             }
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
