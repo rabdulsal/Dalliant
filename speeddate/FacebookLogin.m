@@ -60,16 +60,16 @@
         if (user != nil)
         {
             self.user = user;
-//            if (_user[PF_USER_FACEBOOKID] == nil)
-//            {
+            if (_user[PF_USER_FACEBOOKID] == nil)
+            {
                 // New USer
                 [self requestFacebook];
-//            }
-//            else { // Comment-out for testing
-//
-//                // Old User
-//                [loginDelegate oldUserLoggedIn:_user];
-//            }
+            }
+            else { // Comment-out for testing
+
+                // Old User
+                [loginDelegate oldUserLoggedIn:_user];
+            }
         }
         
         else if (error)
@@ -89,30 +89,6 @@
             }
             
         }
-        /*
-         if (!user) {
-         NSLog(@"There is no User for some reason.");
-         
-         
-         if (!error) {
-         NSLog(@"Uh oh. The user cancelled the Facebook login.");
-         errorMessage = @"Uh oh. The user cancelled the Facebook login.";
-         
-         else {
-         NSLog(@"Uh oh. An error occurred: %@", error);
-         errorMessage = [error localizedDescription];
-         
-         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log In Error"
-         message:errorMessage
-         delegate:nil
-         cancelButtonTitle:nil
-         otherButtonTitles:@"Dismiss", nil];
-         [alert show];
-         }
-         
-         } else {
-         
-         } */
     }];
 }
 
@@ -205,7 +181,6 @@
         
         if (!error)
          {
-             //  [self dismissViewControllerAnimated:YES completion:nil];
              [self getFacebookPhotosWithCompletion:^(BOOL photosRetrieved, NSArray *photos, NSError *error) {
                  if (photosRetrieved) {
                      
@@ -219,9 +194,6 @@
                      }];
                  } else callBack(!photosRetrieved,error);
              }];
-             
-             //  _startScreen =[[MainViewController alloc]initWithNibName:@"Main" bundle:nil];
-             // [self presentViewController:_startScreen animated:YES completion:nil];
          }
          else callBack(!succeeded, error);
      }];
@@ -311,6 +283,7 @@
     if ([mainUser.imageAssets count] > 0) {
         callBack(true,nil);
     } else callBack (false, nil);
+    
 }
 
 - (void)fetchProfileAlbumWithCompletion:(void(^)(BOOL albumFetched, NSArray *profilePhotos, NSError *error))callBack
@@ -373,8 +346,8 @@
 - (void)configureUserImageForResponse:(NSDictionary *)response withCompletion:(void(^)(BOOL photosSaved, NSArray *albumPhotos, NSError *error))callBack // TODO: turn into public callback method on UserParseHelper
 {
     _fbImageAssets = [NSMutableArray new];
-//    NSInteger photoCount = _profilePhotosCount < 4 ? _profilePhotosCount : 4;
     NSInteger photoCount = _profilePhotosCount < 4 ? _profilePhotosCount : 4;
+
     for (int i = 0; i < photoCount; i++) {
         // Get Pic URL
         NSString *picURL = [[[[[response objectForKey:@"data"]objectAtIndex:i]objectForKey:@"images"]objectAtIndex:1]objectForKey:@"source"];
@@ -384,64 +357,11 @@
         operation.responseSerializer = [AFImageResponseSerializer serializer];
         [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
             UIImage *image = (UIImage *)responseObject;
-            // Declare Pic name
-            NSString *picName;
+            
             [_fbImageAssets addObject:image];
-            // Set Pic name based on image # iteration
-            /*
-             if (i == 0) {
-             NSLog(@"Run i = 0");
-             //-----------------------------------------------------------------------------------------------------------------------------------------
-             if (image.size.width > 140) image = ResizeImage(image, 140, 140);
-             //-----------------------------------------------------------------------------------------------------------------------------------------
-             PFFile *filePicture = [PFFile fileWithName:@"picture.jpg" data:UIImageJPEGRepresentation(image, 0.9)];
-             [filePicture saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
-             {
-             if (error != nil) [ProgressHUD showError:@"Network error."];
-             }];
-             
-             user[@"photo"] = filePicture;
-             
-             //-----------------------------------------------------------------------------------------------------------------------------------------
-             if (image.size.width > 34) image = ResizeImage(image, 34, 34);
-             //-----------------------------------------------------------------------------------------------------------------------------------------
-             PFFile *fileThumbnail = [PFFile fileWithName:@"thumbnail.jpg" data:UIImageJPEGRepresentation(image, 0.9)];
-             [fileThumbnail saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
-             {
-             if (error != nil) [ProgressHUD showError:@"Network error."];
-             }];
-             
-             user[@"photo_thumb"] = fileThumbnail;
-             
-             }*/ /*else { <-- PROBABLY DELETE
-                  picName = [[NSString alloc] initWithFormat:@"photo%@", [NSNumber numberWithInt:i]];
-                  NSLog(@"picName: %@", picName);
-                  // Store image as file then set user[picName]
-                  //[self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
-                  PFFile *file = [PFFile fileWithData:UIImageJPEGRepresentation(image,0.9)];
-                  [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                  if (succeeded) {
-                  user[picName] = file;
-                  NSLog(@"Saved User pic: %@", user[picName]);
-                  } else [ProgressHUD showError:@"Network error."];
-                  
-                  }];
-                  }*/
             
             if (i == 3) {//<-- must be changed to a variable looking at the last image available in an array
                 
-                // Saving single Profile photo to Parse
-                /*
-                if (image.size.width > 140) image = ResizeImage(image, 140, 140);
-                PFFile *file = [PFFile fileWithName:@"photo.jpg" data:UIImageJPEGRepresentation(image, 0.9)];
-                [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                    if (succeeded) {
-                        _user[@"photo1"] = file;
-                        
-                    } else [ProgressHUD showError:@"Network error."];
-                    
-                }];
-                */
                 callBack([_fbImageAssets count] > 0,_fbImageAssets,nil);
             }
             
